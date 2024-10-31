@@ -1,0 +1,16 @@
+[   {
+        "label": "Student"
+    },
+    {
+        "label": "Employed"
+    },
+    {
+        "label": "Self-Employed"
+    },
+    {
+        "label": "Unemployed"
+    },
+    {
+        "label": "Retired"
+    }
+]

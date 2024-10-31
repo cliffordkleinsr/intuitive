@@ -8,7 +8,7 @@ const DAY_IN_MS = 1000 * 60 * 60 * 24;
 
 export const sessionCookieName = 'auth-session';
 
-function generateSessionToken(): string {
+export function generateSessionToken(): string {
 	const bytes = crypto.getRandomValues(new Uint8Array(20));
 	const token = encodeBase32LowerCaseNoPadding(bytes);
 	return token;
@@ -34,7 +34,16 @@ export async function validateSession(sessionId: string) {
 	const [result] = await db
 		.select({
 			// Adjust user table here to tweak returned data
-			user: { id: table.UsersTable.id, username: table.UsersTable.fullname },
+			user: { 
+				id: table.UsersTable.id,
+				fullname: table.UsersTable.fullname,
+				email: table.UsersTable.email,
+				role: table.UsersTable.role,
+				isEmailVerified: table.UsersTable.isEmailVerified,
+				gender: table.UsersTable.gender,
+				age: table.UsersTable.age,
+				pfp: table.UsersTable.pfp,
+			},
 			session: table.sessionsTable
 		})
 		.from(table.sessionsTable)
