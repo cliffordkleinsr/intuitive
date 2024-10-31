@@ -74,8 +74,9 @@ export const actions: Actions = {
 		}
 
 		// create a session in the database
-		const session = await auth.createSession(existingUser.id)
 		const token = auth.generateSessionToken()
+		const session = await auth.createSession(existingUser.id, token)
+		
 		setSessionTokenCookie(cookies, token, session.expiresAt)
 
 		const redirectTo = url.searchParams.get('redirectTo');
@@ -98,7 +99,7 @@ export const actions: Actions = {
 			if (state.Ver) {
 				redirect(
 					302,
-					'/agent-dash',
+					'/agent-console',
 					{ type: 'success', message: 'Logged In Successfully' },
 					cookies
 				);

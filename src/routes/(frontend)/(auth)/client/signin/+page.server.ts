@@ -21,7 +21,7 @@ export const load: PageServerLoad = async ({ locals: { user }, url }) => {
 	if (user) {
 		if (user.role === 'CLIENT') {
 			// redirect('/client-dash',  {type: "error", message:"User Already Logged In"}, cookies)
-			redirect(302, handleLoginRedirect('/client-dash', url, 'User Already Logged In'));
+			redirect(302, handleLoginRedirect('/client-console', url, 'User Already Logged In'));
 		}
 	}
 	return {
@@ -72,19 +72,19 @@ export const actions: Actions = {
 		}
 
 		// create a session in the database
-		const session = await auth.createSession(existingUser.id);
 		const token = auth.generateSessionToken()
-		setSessionTokenCookie(cookies, token, session.expiresAt)
+		const session = await auth.createSession(existingUser.id, token)
+		setSessionTokenCookie(cookies, session.id, session.expiresAt)
 
-		const redirectTo = url.searchParams.get('redirectTo');
-		if (redirectTo) {
-			redirect(
-				302,
-				`/${redirectTo.slice(1)}`,
-				{ type: 'success', message: 'Logged In Successfully' },
-				cookies
-			);
-		}
+		// const redirectTo = url.searchParams.get('redirectTo');
+		// if (redirectTo) {
+		// 	redirect(
+		// 		302,
+		// 		`/${redirectTo.slice(1)}`,
+		// 		{ type: 'success', message: 'Logged In Successfully' },
+		// 		cookies
+		// 	);
+		// }
 		if (existingUser.verified) {
 			redirect(
 				302,

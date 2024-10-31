@@ -20,9 +20,8 @@ import {
 	setpackageExpired
 } from '$lib/server/db/db_utils';
 
-export const load: LayoutServerLoad = async ({ locals: { user, session }, url }) => {
+export const load: LayoutServerLoad = async ({ locals: { user }, url }) => {
 	let validate = false;
-	if (!session) redirect(302, handleLoginRedirect('/client/signin', url));
 	if (!user) {
 		// redirect('/client/signin', {type: "error", message:"You Must Be logged In to view this page"}, cookies)
 		redirect(302, handleLoginRedirect('/client/signin', url));

@@ -38,7 +38,7 @@
 
 	let { data, children } = $props()
 	let { notif, payment } = data;
-	let messages = notif
+	let messages = $state(notif)
 	let dialogOpen = $state(false);
 	// if ($notifications.messages.length > 0) {
 	//   notifications.update(msg => ({
