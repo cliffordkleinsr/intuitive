@@ -1,0 +1,187 @@
+[
+	{
+		"id": 1,
+		"serviceName": "corp_rep",
+		"title": "Corporate reputation",
+		"sub": "At Intuitive insights, we understand the critical importance of corporate reputation in today's business landscape. Your reputation is more than just a reflection of your company's actions. It's a valuable asset that can influence stakeholder trust, investor confidence, and consumer loyalty.",
+		"services": [
+			{
+				"id": 1,
+				"Name": "Corporate social responsibility",
+				"content": "We provide you with insights that help you in designing and implementing CSR initiatives that demonstrate the company’s commitment to ethical practices, sustainability, and community engagement, thereby enhancing its reputation."
+			},
+			{
+				"id": 2,
+				"Name": "Stakeholder engagement",
+				"content": "We help you gather feedback from your stakeholders and this helps you to understand the best way to build and maintain relationships with key stakeholders such as customers, employees, investors, regulators, and the community to foster trust and loyalty."
+			},
+			{
+				"id": 3,
+				"Name": "Public relations",
+				"content": "Our strategies help you determine the perfect way in managing relationships with the media personnel and other stakeholders to positively influence public perception, including press releases, media outreach, and event management."
+			},
+			{
+				"id": 4,
+				"Name": "Digital reputation management",
+				"content": "Managing the company’s online presence, including social media channels, review sites, and search engine results can be quite tough and stressful but we ensure you have a positive digital footprint."
+			},
+			{
+				"id": 5,
+				"Name": "Reputation monitoring and analysis",
+				"content": "Our strategies help you in continuously tracking and analyzing public sentiment, media coverage, and online discussions to proactively address potential issues and measure reputation health."
+			}
+		],
+		"img": "corp_rep"
+	},
+	{
+		"id": 2,
+		"serviceName": "brand_image",
+		"title": "Brand image",
+		"sub": "Brand image at Intuitive insights encompasses the perceptions, associations, and emotional connections that clients have with a brand. It includes not just brand recognition but also the whole perception that customers have of the brand.",
+		"services": [
+			{
+				"id": 1,
+				"Name": "Brand loyalty",
+				"content": "We help you determine the level of loyalty and advocacy among stakeholders towards the brand, as well as factors influencing recommendation and referral behavior."
+			},
+			{
+				"id": 2,
+				"Name": "Brand personality",
+				"content": "We evaluate clients' perceptions of our brand's personality traits, such as being friendly, professional, innovative or traditional."
+			},
+			{
+				"id": 3,
+				"Name": "Brand consistency",
+				"content": "Evaluate the consistency of the brand's messaging, visuals, and experiences across various touchpoints, including websites, marketing materials, and physical facilities."
+			},
+			{
+				"id": 4,
+				"Name": "Brand identity",
+				"content": "Our insights help you in creating and refining the perfect visual elements and messaging that represent the brand, including logos, color schemes, taglines, and brand guidelines."
+			},
+			{
+				"id": 5,
+				"Name": "Brand advocacy",
+				"content": "Our brand advocacy technique helps you to determine the best brand advocates among customers, employees, and other stakeholders who can positively influence public perception through testimonials, reviews, and word-of-mouth recommendations."
+			}
+		],
+		"img": "brand_image"
+	},
+	{
+		"id": 3,
+		"serviceName": "customer_experience",
+		"title": "Customer experience",
+		"sub": "Under Intuitive insights, customer experience encompasses the entirety of interactions and engagements that clients have with a business across all touchpoints and stages of their journey.",
+		"services": [
+			{
+				"id": 1,
+				"Name": "Customer journey mapping",
+				"content": "We provide assistance in analyzing and visualizing the end-to-end experience of customers as they interact with a brand, identifying pain points, and opportunities for improvement."
+			},
+			{
+				"id": 2,
+				"Name": "Customer satisfaction",
+				"content": "Our team of experts help in collecting feedback from customers to measure their satisfaction levels with products, services, and overall brand experience and this helps the client in making better decisions."
+			},
+			{
+				"id": 3,
+				"Name": "Customer loyalty programs",
+				"content": "We help assess clients' satisfaction with brand loyalty programs, including rewards, discounts, and special offers."
+			},
+			{
+				"id": 4,
+				"Name": "Customer experience analytics",
+				"content": "By using data analytics to measure and analyze various aspects of the customer experience, such as satisfaction, loyalty, and churn rates, helps you to make data-driven decisions."
+			},
+			{
+				"id": 5,
+				"Name": "Customer service",
+				"content": "Measure customers' satisfaction with the quality and responsiveness of customer service provided by representatives, including handling inquiries, resolving issues, and providing assistance."
+			},
+			{
+				"id": 6,
+				"Name": "Customer relationship management",
+				"content": "We help you in managing interactions and relationships with current and potential customers. This involves organizing, automating, and synchronizing sales, marketing, customer service, and technical support."
+			}
+		],
+		"img": "customer_experience"
+	},
+	{
+		"id": 4,
+		"serviceName": "product_assessment",
+		"title": "Product assessment",
+		"sub": "Intuitive insights product assessment offers a comprehensive service designed to evaluate the market viability, user experience, and overall performance of products through targeted polling and data analysis.",
+		"services": [
+			{
+				"id": 1,
+				"Name": "Product testing",
+				"content": "Our priority is to help you in conducting thorough testing of products to evaluate their performance, reliability, safety, and compliance with regulations and standards."
+			},
+			{
+				"id": 2,
+				"Name": "Quality assurance and quality control",
+				"content": "We have favorable Implementing processes to ensure that products meet predefined quality standards throughout the manufacturing or development process."
+			},
+			{
+				"id": 3,
+				"Name": "Competitive analysis",
+				"content": "We help you in assessing how a product compares to competitors' offerings in terms of features, pricing, quality, and market positioning."
+			},
+			{
+				"id": 4,
+				"Name": "Product benchmarking",
+				"content": "We provide assistance in identifying and comparing a product's performance, features, and quality against industry benchmarks or best practices to identify areas for improvement."
+			},
+			{
+				"id": 5,
+				"Name": "User feedback collection",
+				"content": "We help solicit feedback from users through surveys, interviews, and user testing sessions to understand their opinions, experiences, and suggestions for product improvement."
+			},
+			{
+				"id": 6,
+				"Name": "Performance analysis",
+				"content": "Our team of experts help in analyzing data related to product performance, such as sales figures, customer feedback, and return rates, to assess its success and identify areas for enhancement."
+			}
+		],
+		"img": "product_assessment"
+	},
+	{
+		"id": 4,
+		"serviceName": "market_reaserch",
+		"title": "Market research",
+		"sub": "Intuitive insights market research provides a robust service aimed at uncovering key market trends, consumer behaviors, and competitive landscapes through comprehensive data collection and analysis. ",
+		"services": [
+			{
+				"id": 1,
+				"Name": "Market segmentation",
+				"content": "Our experts help in identifying and categorizing the market into distinct groups based on characteristics such as demographics, behavior, needs, or preferences."
+			},
+			{
+				"id": 2,
+				"Name": "Consumer behavior analysis",
+				"content": "We assist you in studying the behavior, attitudes, motivations, and decision-making processes of consumers to predict future trends and preferences."
+			},
+			{
+				"id": 3,
+				"Name": "Market trend analysis",
+				"content": "We help you in understanding market trends by monitoring and analyzing trends, shifts, and developments in the market, industry, or economy to identify opportunities and threats."
+			},
+			{
+				"id": 4,
+				"Name": "Pricing research",
+				"content": "We help you in determining the optimal pricing strategy for products or services through pricing analysis, elasticity testing, and willingness-to-pay studies."
+			},
+			{
+				"id": 5,
+				"Name": "Market forecasting",
+				"content": "Our experts help in predicting future market trends, demand, and sales volumes based on historical data, economic indicators, and industry analysis."
+			},
+			{
+				"id": 6,
+				"Name": "Market opportunity assessment",
+				"content": "We help you in evaluating potential market opportunities, niches, or gaps based on unmet needs, emerging trends, or underserved customer segments."
+			}
+		],
+		"img": "market_reaserch"
+	}
+]
