@@ -38,7 +38,7 @@ const handleBots: Handle = createHandler({
 	log: true,
 
 	// whether to block on failure (vs just warn, for testing)
-	block: false,
+	block: true,
 
 	// block direct ip access (no hostname provided)
 	ip_access: true,
