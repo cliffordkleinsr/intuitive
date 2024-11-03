@@ -4,7 +4,7 @@
 	"type": "module",
 	"scripts": {
 		"dev": "vite dev",
-		"build": "node -r dotenv/config build",
+		"build": "vite build --mode development",
 		"preview": "vite preview",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
@@ -55,7 +55,6 @@
 		"@tanstack/table-core": "^8.20.5",
 		"@types/bcrypt": "^5.0.2",
 		"bcrypt": "^5.1.1",
-		"dotenv": "^16.4.5",
 		"drizzle-orm": "^0.33.0",
 		"lucide-svelte": "^0.454.0",
 		"mode-watcher": "^0.4.1",
