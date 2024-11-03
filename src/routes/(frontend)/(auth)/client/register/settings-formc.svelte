@@ -37,7 +37,8 @@
 	import { useId } from 'bits-ui';
 
 	// KitLoad<MiddleWare>
-	export let data: SuperValidated<Infer<RegisterCSchema>>;
+	// export let data: SuperValidated<Infer<RegisterCSchema>>;
+	let { data }: { data: SuperValidated<Infer<RegisterCSchema>> } = $props();
 
 	const form = superForm(data, {
 		validators: zodClient(registerCSchema),
@@ -53,27 +54,20 @@
 			}
 		}
 	});
- 	const triggerId = useId();
+	const triggerId = useId();
 	const { form: formData, enhance, message, delayed } = form;
 
 	// command
-	let open: boolean = false;
+	let open: boolean = $state(false);
 
-	const props = {
+	const Pageprops = {
 		title: 'Client Sign Up • Intuitive Insights KE',
 		description: 'Gather insightful feedback, analyze data, and make informed decisions.',
 		type: 'Website'
 	};
-	// selects
-	let previousCounty = '';
-	let previousSector = ''
-	$: if ($formData.county !== previousCounty) {
-		$formData.subctys = 'Select your area sub-county';
-		previousCounty = $formData.county;
-	}
 </script>
 
-<Meta {...props} />
+<Meta {...Pageprops} />
 <div class="mb-5 mt-10 flex flex-1 justify-center">
 	<Breadcrumb.Root>
 		<Breadcrumb.List>
@@ -91,7 +85,6 @@
 		</Breadcrumb.List>
 	</Breadcrumb.Root>
 </div>
-
 
 <form method="post" class="m-2" use:enhance>
 	<Card.Root class="mx-auto max-w-lg">
@@ -169,7 +162,8 @@
 												role="combobox"
 												{...props}
 											>
-												{counties.find((f) => f.name === $formData.county)?.name ?? 'Select a County'}
+												{counties.find((f) => f.name === $formData.county)?.name ??
+													'Select a County'}
 												<ChevronsUpDown class="ml-2 h-4 w-4 shrink-0 opacity-50" />
 											</Popover.Trigger>
 											<input hidden value={$formData.county} name={props.name} />
@@ -212,13 +206,9 @@
 								<Form.Control>
 									{#snippet children({ props })}
 										<Form.Label>Sub-County</Form.Label>
-										<Select.Root
-											type="single"
-											bind:value={$formData.subctys}
-											name={props.name}
-										>
+										<Select.Root type="single" bind:value={$formData.subctys} name={props.name}>
 											<Select.Trigger {...props}>
-												{$formData.subctys ?? "Select your area sub-county"}
+												{$formData.subctys ?? 'Select your area sub-county'}
 												<!-- <Select.Value placeholder="Select your area sub-county" /> -->
 											</Select.Trigger>
 											<Select.Content>
@@ -233,6 +223,7 @@
 										<!-- <input hidden bind:value={$formData.subctys} name={props.name} /> -->
 									{/snippet}
 								</Form.Control>
+								<Form.Description>Select your area sub-county.</Form.Description>
 								<Form.FieldErrors />
 							</Form.Field>
 						</div>
@@ -243,13 +234,9 @@
 						<Form.Control>
 							{#snippet children({ props })}
 								<Form.Label>Sectors</Form.Label>
-								<Select.Root
-									type="single"
-									bind:value={$formData.sector}
-									name={props.name}
-								>
+								<Select.Root type="single" bind:value={$formData.sector} name={props.name}>
 									<Select.Trigger {...props}>
-										{$formData.sector ?? "Select your a sector"}
+										{$formData.sector ?? 'Select your a sector'}
 										<!-- <Select.Value placeholder="Select a Sector" /> -->
 									</Select.Trigger>
 									<Select.Content side="bottom">
@@ -311,5 +298,4 @@
 		</Card.Content>
 		<!-- <SuperDebug data={$formData}/> -->
 	</Card.Root>
-	
 </form>

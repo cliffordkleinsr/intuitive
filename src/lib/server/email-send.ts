@@ -1,5 +1,5 @@
 import nodemailer, { type Transporter } from 'nodemailer';
-import { SECRET_SMTP2GO_PASSWORD, SECRET_SMTP2GO_USERNAME } from '$env/static/private'
+import { SECRET_SMTP2GO_PASSWORD, SECRET_SMTP2GO_USERNAME } from '$env/static/private';
 
 export default async function sendEmail(
 	email: string,
@@ -12,7 +12,7 @@ export default async function sendEmail(
 	transporter = nodemailer.createTransport({
 		host: 'mail.smtp2go.com',
 		port: 2525,
-		secure: false,
+		secure: true,
 		auth: {
 			user: SECRET_SMTP2GO_USERNAME,
 			pass: SECRET_SMTP2GO_PASSWORD

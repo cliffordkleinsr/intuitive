@@ -65,7 +65,7 @@
 </div>
 <div class="mb-56 w-full place-content-center">
 	<!-- <SuperDebug data={$formData}/> -->
-	<form action="?/login" method="POST" use:enhance>
+	<form action="" method="POST" use:enhance>
 		<Card.Root class="mx-auto mb-16 max-w-sm lg:mx-auto lg:max-w-sm">
 			<Card.Header>
 				<Card.Title class="text-xl text-primary">Login</Card.Title>

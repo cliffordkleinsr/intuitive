@@ -5,26 +5,37 @@
 	import { Toaster } from '$lib/components/ui/sonner';
 	import { getFlash } from 'sveltekit-flash-message';
 	import { page } from '$app/stores';
+	import { navigating } from '$app/stores';
+	import Clockloader from '$lib/custom/blocks/spinner/Clockloader.svelte';
 
 	const flash = getFlash(page);
 
 	$effect(() => {
 		if ($flash) {
-		switch ($flash.type) {
-			case 'success':
-				toast.success($flash.message);
-				break;
-			case 'error':
-				toast.error($flash.message);
-				break;
-			case 'warning':
-				toast.warning($flash.message);
-				break;
+			switch ($flash.type) {
+				case 'success':
+					toast.success($flash.message);
+					break;
+				case 'error':
+					toast.error($flash.message);
+					break;
+			}
+			$flash = undefined;
 		}
-		$flash = undefined;
-	}
-	})
-	let { children } = $props();
+	});
+	let { data, children } = $props();
 </script>
+
+<ModeWatcher />
 <Toaster position="top-right" richColors />
-{@render children()}
+{#if $navigating}
+	<div class="absolute left-1/2 top-80 items-center">
+		<Clockloader size="60" color="#FF3E00" unit="px" duration="5s" />
+	</div>
+	<div class=" ml-14 mt-48 lg:mt-64">
+		<p class="text-center font-semibold italic">{data.quote}</p>
+		<p class=" text-center text-xs italic">by {data.author}</p>
+	</div>
+{:else}
+	{@render children()}
+{/if}

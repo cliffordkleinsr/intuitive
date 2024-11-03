@@ -17,7 +17,7 @@ import * as auth from '$lib/server/auth.js';
 import { redirect } from 'sveltekit-flash-message/server';
 import { handleLoginRedirect } from '$lib/custom/functions/helpers';
 import type { Actions, PageServerLoad } from './$types';
-import bcrypt from "bcrypt";
+import bcrypt from 'bcrypt';
 import { setSessionTokenCookie } from '$lib/server/session';
 
 export const load: PageServerLoad = async ({ locals: { user }, url }) => {
@@ -32,7 +32,7 @@ export const load: PageServerLoad = async ({ locals: { user }, url }) => {
 	};
 };
 export const actions: Actions = {
-	login: async ({ request, cookies, url }) => {
+	default: async ({ request, cookies, url }) => {
 		let validate = false;
 		const form = await superValidate(request, zod(signinRSchema));
 		// validate
@@ -74,10 +74,8 @@ export const actions: Actions = {
 		}
 
 		// create a session in the database
-		const token = auth.generateSessionToken()
-		const session = await auth.createSession(existingUser.id, token)
-		
-		setSessionTokenCookie(cookies, token, session.expiresAt)
+		const session = await auth.createSession(existingUser.id);
+		setSessionTokenCookie(cookies, session.id, session.expiresAt);
 
 		const redirectTo = url.searchParams.get('redirectTo');
 		if (redirectTo) {
@@ -89,13 +87,13 @@ export const actions: Actions = {
 			);
 		}
 
-		const [state] = await db
-			.select({
-				Ver: smsVerification.verified
-			})
-			.from(smsVerification)
-			.where(eq(smsVerification.userId, existingUser.id));
 		if (validate) {
+			const [state] = await db
+				.select({
+					Ver: smsVerification.verified
+				})
+				.from(smsVerification)
+				.where(eq(smsVerification.userId, existingUser.id));
 			if (state.Ver) {
 				redirect(
 					302,
@@ -107,12 +105,17 @@ export const actions: Actions = {
 				redirect(
 					302,
 					'/agent/verify',
-					{ type: 'warning', message: 'Phone Number is Not Verified!' },
+					{ type: 'error', message: 'Phone Number is Not Verified!' },
 					cookies
 				);
 			}
 		} else {
-			redirect(302, '/agent-dash', { type: 'success', message: 'Logged In Successfully' }, cookies);
+			redirect(
+				302,
+				'/agent-console',
+				{ type: 'success', message: 'Logged In Successfully' },
+				cookies
+			);
 		}
 	}
 };

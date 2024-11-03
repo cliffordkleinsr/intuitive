@@ -34,27 +34,33 @@
 <form class="grid gap-4" method="POST" use:enhance>
 	<div class="grid gap-2">
 		<Form.Field {form} name="name">
-			<Form.Control let:attrs>
-				<Form.Label>Name</Form.Label>
-				<Input {...attrs} type="text" bind:value={$formData.name} />
+			<Form.Control>
+				{#snippet children({ props })}
+					<Form.Label>Name</Form.Label>
+					<Input {...props} type="text" bind:value={$formData.name} />
+				{/snippet}
 			</Form.Control>
 			<Form.FieldErrors />
 		</Form.Field>
 	</div>
 	<div class="grid gap-2">
 		<Form.Field {form} name="email">
-			<Form.Control let:attrs>
-				<Form.Label>Email</Form.Label>
-				<Input {...attrs} type="email" bind:value={$formData.email} />
+			<Form.Control>
+				{#snippet children({ props })}
+					<Form.Label>Email</Form.Label>
+					<Input {...props} type="email" bind:value={$formData.email} />
+				{/snippet}
 			</Form.Control>
 			<Form.FieldErrors />
 		</Form.Field>
 	</div>
 	<div class="grid gap-2">
 		<Form.Field {form} name="subject">
-			<Form.Control let:attrs>
-				<Form.Label>Label</Form.Label>
-				<Textarea {...attrs} bind:value={$formData.subject} />
+			<Form.Control>
+				{#snippet children({ props })}
+					<Form.Label>Label</Form.Label>
+					<Textarea {...props} bind:value={$formData.subject} />
+				{/snippet}
 			</Form.Control>
 			<Form.FieldErrors />
 		</Form.Field>

@@ -1,12 +1,9 @@
 <script lang="ts">
 	import { page } from '$app/stores';
+	import type { SEO } from '$lib/types';
 
-	interface SEO {
-		title:string,
-		description:string,
-		type:string
-	}
-	let { title, description, type}:SEO = $props()
+	
+	let { title, description, type }: SEO = $props();
 
 	const base = $derived($page.url.href);
 </script>

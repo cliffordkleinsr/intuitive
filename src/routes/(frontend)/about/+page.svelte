@@ -2,17 +2,17 @@
 	import Meta from '$lib/custom/seo/meta.svelte';
 	import type { PageData } from './$types';
 	import SettingsQuestion from './settings-question.svelte';
-	import { CldImage } from 'svelte-cloudinary';
-	export let data: PageData;
+	// import { CldImage } from 'svelte-cloudinary';
+	let { data }: { data: PageData } = $props();
 
-	const props = {
+	const pageprops = {
 		title: 'About • Intuitive Insights KE',
 		description: 'Gather insightful feedback, analyze data, and make informed decisions.',
 		type: 'Website'
 	};
 </script>
 
-<Meta {...props} />
+<Meta {...pageprops} />
 
 <main class="flex-1">
 	<section class="w-full bg-muted py-12 md:py-24 lg:py-32">

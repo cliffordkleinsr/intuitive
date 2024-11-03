@@ -15,7 +15,7 @@ import * as auth from '$lib/server/auth.js';
 import { redirect } from 'sveltekit-flash-message/server';
 import { handleLoginRedirect } from '$lib/custom/functions/helpers';
 import { setSessionTokenCookie } from '$lib/server/session';
-import bcrypt from "bcrypt";
+import bcrypt from 'bcrypt';
 
 export const load: PageServerLoad = async ({ locals: { user }, url }) => {
 	if (user) {
@@ -65,26 +65,25 @@ export const actions: Actions = {
 			);
 		}
 		// Verify the password
-		const validPassword = await bcrypt.compare(password, existingUser.password,);
+		const validPassword = await bcrypt.compare(password, existingUser.password);
 
 		if (!validPassword) {
 			return setError(form, 'password', 'Incorrect Password');
 		}
 
 		// create a session in the database
-		const token = auth.generateSessionToken()
-		const session = await auth.createSession(existingUser.id, token)
-		setSessionTokenCookie(cookies, session.id, session.expiresAt)
+		const session = await auth.createSession(existingUser.id);
+		setSessionTokenCookie(cookies, session.id, session.expiresAt);
 
-		// const redirectTo = url.searchParams.get('redirectTo');
-		// if (redirectTo) {
-		// 	redirect(
-		// 		302,
-		// 		`/${redirectTo.slice(1)}`,
-		// 		{ type: 'success', message: 'Logged In Successfully' },
-		// 		cookies
-		// 	);
-		// }
+		const redirectTo = url.searchParams.get('redirectTo');
+		if (redirectTo) {
+			redirect(
+				302,
+				`/${redirectTo.slice(1)}`,
+				{ type: 'success', message: 'Logged In Successfully' },
+				cookies
+			);
+		}
 		if (existingUser.verified) {
 			redirect(
 				302,
@@ -96,7 +95,7 @@ export const actions: Actions = {
 			redirect(
 				302,
 				'/client/verify/email',
-				{ type: 'warning', message: 'Email Not Verified!' },
+				{ type: 'error', message: 'Email Not Verified!' },
 				cookies
 			);
 		}

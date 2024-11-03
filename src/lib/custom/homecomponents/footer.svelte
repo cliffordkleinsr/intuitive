@@ -1,7 +1,7 @@
 <script>
 	import { Separator } from '$lib/components/ui/separator';
 
-	const year = $state(new Date().getFullYear())
+	const year = $state(new Date().getFullYear());
 </script>
 
 <Separator />

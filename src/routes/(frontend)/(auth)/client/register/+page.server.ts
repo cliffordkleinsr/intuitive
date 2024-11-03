@@ -10,7 +10,7 @@ import { db } from '$lib/server/db';
 import { emailVerification } from '$lib/server/db/schema';
 import { sendVerificationEmail } from '$lib/server/emailconfigs/email-messages';
 import { setSessionTokenCookie } from '$lib/server/session';
-import bcrypt from "bcrypt";
+import bcrypt from 'bcrypt';
 
 export const load: PageServerLoad = async ({ locals: { user }, url }) => {
 	if (user) {
@@ -35,7 +35,12 @@ export const actions: Actions = {
 				alertText: 'Please Check your entries, the form contains invalid data'
 			});
 		}
-
+		if (form.valid) {
+			return message(form, {
+				alertType: 'error',
+				alertText: 'Not Authorised'
+			});
+		}
 		// await db.delete(emailVerificationCodes)
 		// await deleteClientUsers()
 		// destructure form.data for some operations and insertions
@@ -101,9 +106,8 @@ export const actions: Actions = {
 			//     path: '/email-verification'
 			// })
 			//  create a session in the database
-			const session = await auth.createSession(userid)
-			const token = auth.generateSessionToken()
-			setSessionTokenCookie(cookies, token, session.expiresAt)
+			const session = await auth.createSession(userid);
+			setSessionTokenCookie(cookies, '', session.expiresAt);
 			// const session = await lucia.createSession(userid, {});
 			// const sessionCookie = lucia.createSessionCookie(session.id);
 
@@ -142,5 +146,3 @@ export const actions: Actions = {
 		}
 	}
 };
-
-

@@ -51,7 +51,7 @@ export const actions: Actions = {
 		const { name, email, subject } = form.data;
 		try {
 			// ksend email
-			// await sendQuestionEmail(name, email, subject)
+			await sendQuestionEmail(name, email, subject);
 		} catch (err) {
 			console.error(err);
 

@@ -47,12 +47,7 @@ export const registerRSchema = z
 			})
 			.min(2, { message: 'Please select a valid sub county' })
 			.max(25, { message: 'Please select a valid sub county' }),
-		income: z
-			.string({
-				required_error: 'Must be valid Income Bracket.'
-			})
-			.min(2, { message: 'Must be a valid Income Bracket' })
-			.optional(),
+		income: z.string().optional(),
 		// .default("Select an income bracket"),
 		employment: z
 			.string({
@@ -64,12 +59,7 @@ export const registerRSchema = z
 				required_error: 'Must be valid Education Bracket.'
 			})
 			.min(2, { message: 'Must be a Education Bracket.' }),
-		sector: z
-			.string({
-				required_error: 'Must be valid Sector'
-			})
-			.min(2, { message: 'Must be a valid Sector' })
-			.optional(),
+		sector: z.string().optional(),
 		// .default("Select a Sector"),
 		password: z
 			.string({ required_error: 'Password is required' })

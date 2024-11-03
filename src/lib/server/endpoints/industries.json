@@ -28,7 +28,7 @@
 			}
 		],
 		"examples": "A luxury resort experiencing declining bookings can thrive with a robust reputation management program. By addressing customer complaints and promoting positive experiences, the resort can revamp its brand image and ensure every guest feels valued. Regular product assessments and market research help refine offerings and identify emerging travel trends, paving the way for a successful recovery in a competitive market.",
-		"image": "hotel"
+		"image": "https://res.cloudinary.com/dmy8yp9el/image/upload/v1725874657/hotel.avif"
 	},
 	{
 		"id": 2,
@@ -59,7 +59,7 @@
 			}
 		],
 		"examples": "A regional hospital looking to improve patient satisfaction can benefit from our services that identify key areas for enhancement. We provide honest insights that help strengthen their commitment to patient safety while ensuring treatments and technologies remain up-to-date. Our market research allows the hospital to tailor services to meet community needs effectively, enabling them to excel in delivering exceptional healthcare.",
-		"image": "healthcare"
+		"image": "https://res.cloudinary.com/dmy8yp9el/image/upload/v1725874862/healthcare.avif"
 	},
 	{
 		"id": 3,
@@ -90,7 +90,7 @@
 			}
 		],
 		"examples": "A mid-sized retail business can enhance its reputation and boost sales by implementing a reputation management program that emphasizes sustainability and quality while addressing customer feedback transparently. By developing a strong customer experience strategy, the business can increase satisfaction and loyalty. Regular product evaluations ensure that offerings remain high-quality and relevant, while market research helps refine product lines and marketing strategies, positioning the company to thrive in the competitive retail landscape.",
-		"image": "retail"
+		"image": "https://res.cloudinary.com/dmy8yp9el/image/upload/v1725875014/retail.avif"
 	},
 	{
 		"id": 4,
@@ -121,12 +121,12 @@
 			}
 		],
 		"examples": "A financial services company can enhance its brand image and boost customer acquisition by implementing a reputation management program focused on security and customer service. A strong customer experience strategy, and regular evaluations ensure offerings remain innovative and tailored to client needs. Market analysis provides insights into trends and preferences, enabling the firm to adapt effectively and compete successfully with fintech startups, digital-only banks, and established financial institutions while delivering exceptional services.",
-		"image": "finance"
+		"image": "https://res.cloudinary.com/dmy8yp9el/image/upload/v1725875013/finance.avif"
 	},
 	{
 		"id": 5,
 		"industryName": "ngo",
-		"title": "NGO's",
+		"title": "NGOs",
 		"challenge": "The nonprofit sector thrives by fostering transparency, accountability, and public trust. By effectively managing relationships with donors, beneficiaries, and partners, NGOs can strengthen their reputation. Regular program evaluation and clear communication of their impact help build long-lasting, positive connections with stakeholders, ensuring continued success in their mission.",
 		"solution": "Intuitive Insights provide solutions to these challenges in various ways:",
 		"checks": [
@@ -152,6 +152,6 @@
 			}
 		],
 		"examples": "An NGO seeking to enhance its services and strengthen community engagement can benefit from a reputation management program focused on transparency and effective impact communication. By introducing stakeholder experience strategies and regularly evaluating programs, the NGO can ensure its services remain impactful and aligned with community needs. Comprehensive donor research allows the organization to refine its fundraising strategies and messaging, enabling it to thrive in the nonprofit landscape while continuing to deliver high-impact services.",
-		"image": "ngo"
+		"image": "https://res.cloudinary.com/dmy8yp9el/image/upload/v1728476344/ngo.jpg"
 	}
 ]

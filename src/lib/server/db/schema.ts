@@ -1,4 +1,13 @@
-import { pgTable, serial, text, integer, timestamp, boolean, pgEnum, uuid } from 'drizzle-orm/pg-core';
+import {
+	pgTable,
+	serial,
+	text,
+	integer,
+	timestamp,
+	boolean,
+	pgEnum,
+	uuid
+} from 'drizzle-orm/pg-core';
 // refs
 export const UserRole = pgEnum('UserRole', ['ADMIN', 'CLIENT', 'AGENT']);
 export const QuestionType = pgEnum('QuestionType', [
@@ -11,7 +20,6 @@ export const QuestionType = pgEnum('QuestionType', [
 ]);
 export const Status = pgEnum('status', ['Draft', 'Live', 'Closed']);
 export const ProcessedStatus = pgEnum('processed_status', ['pending', 'complete', 'declined']);
-
 
 // Model USERS
 export const UsersTable = pgTable('users', {
@@ -30,7 +38,6 @@ export const UsersTable = pgTable('users', {
 		mode: 'date'
 	}).defaultNow()
 });
-
 
 export const sessionsTable = pgTable('user_sessions', {
 	id: text('id').primaryKey(),
@@ -134,7 +141,6 @@ export const passwordReset = pgTable('password_reset', {
 	email: text('email').notNull(),
 	token: text('token').notNull()
 });
-
 
 // Surveys
 export const SurveyTable = pgTable('surveys', {

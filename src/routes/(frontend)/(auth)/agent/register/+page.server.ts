@@ -3,7 +3,7 @@ import { registerRSchema } from './schema';
 import { zod } from 'sveltekit-superforms/adapters';
 import { redirect } from 'sveltekit-flash-message/server';
 import { checkIfEmailExists, insertNewUser, insertRespData } from '$lib/server/db/db_utils';
-import bcrypt from "bcrypt"
+import bcrypt from 'bcrypt';
 import { calculateAge, handleLoginRedirect } from '$lib/custom/functions/helpers';
 import type { Actions, PageServerLoad } from './$types';
 import {
@@ -71,7 +71,7 @@ export const actions: Actions = {
 		}
 		if (form.valid) {
 			return message(form, {
-				alertType: 'success',
+				alertType: 'error',
 				alertText: 'Were sorry but you cant register in pilot mode'
 			});
 		}
@@ -129,9 +129,7 @@ export const actions: Actions = {
 
 			// create a session in the database
 			const session = await auth.createSession(userid);
-			const token = auth.generateSessionToken()
-			setSessionTokenCookie(cookies, token, session.expiresAt)
-
+			setSessionTokenCookie(cookies, '', session.expiresAt);
 		} catch (err) {
 			console.error(err);
 

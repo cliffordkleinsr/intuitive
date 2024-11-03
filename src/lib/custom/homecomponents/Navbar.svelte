@@ -9,10 +9,8 @@
 	import Moon from 'lucide-svelte/icons/moon';
 	import { toggleMode } from 'mode-watcher';
 	import * as Collapsible from '$lib/components/ui/collapsible';
-	import Separator from '$lib/components/ui/separator/separator.svelte';
 	import { cn } from '$lib/utils';
 
-	let dialogOpen = $state(false);
 </script>
 
 <header
@@ -34,12 +32,12 @@
 			<DropdownMenu.Content class="mt-4 text-muted-foreground transition-colors">
 				<DropdownMenu.Group>
 					<DropdownMenu.Item><a href="/industries/hospitality">Hospitality</a></DropdownMenu.Item>
-					<DropdownMenu.Item> <a href="/industries/healthcare">Healthcare</a></DropdownMenu.Item>
-					<DropdownMenu.Item> <a href="/industries/retail_fmcg">Retail</a></DropdownMenu.Item>
+					<DropdownMenu.Item><a href="/industries/healthcare">Healthcare</a></DropdownMenu.Item>
+					<DropdownMenu.Item><a href="/industries/retail_fmcg">Retail</a></DropdownMenu.Item>
 					<DropdownMenu.Item
 						><a href="/industries/financial_services">Financial services</a></DropdownMenu.Item
 					>
-					<DropdownMenu.Item> <a href="/industries/ngo">NGO's</a></DropdownMenu.Item>
+					<DropdownMenu.Item><a href="/industries/ngo">NGO's</a></DropdownMenu.Item>
 				</DropdownMenu.Group>
 			</DropdownMenu.Content>
 		</DropdownMenu.Root>
@@ -49,15 +47,19 @@
 			>
 			<DropdownMenu.Content class="mt-4 text-muted-foreground transition-colors">
 				<DropdownMenu.Group>
-					<DropdownMenu.Item> <a href="/services/corp_rep">Corporate reputation</a></DropdownMenu.Item>
-					<DropdownMenu.Item ><a href="/services/brand_image">Brand image</a></DropdownMenu.Item>
-					<DropdownMenu.Item 
+					<DropdownMenu.Item>
+						<a href="/services/corp_rep">Corporate reputation</a></DropdownMenu.Item
+					>
+					<DropdownMenu.Item><a href="/services/brand_image">Brand image</a></DropdownMenu.Item>
+					<DropdownMenu.Item
 						><a href="/services/customer_experience">Customer experience</a></DropdownMenu.Item
 					>
-					<DropdownMenu.Item 
+					<DropdownMenu.Item
 						><a href="/services/product_assessment">Product assessment</a></DropdownMenu.Item
 					>
-					<DropdownMenu.Item ><a href="/services/market_reaserch">Market research</a></DropdownMenu.Item>
+					<DropdownMenu.Item
+						><a href="/services/market_reaserch">Market research</a></DropdownMenu.Item
+					>
 				</DropdownMenu.Group>
 			</DropdownMenu.Content>
 		</DropdownMenu.Root>
@@ -65,137 +67,113 @@
 			Pricing
 		</a>
 	</nav>
-	<Sheet.Root bind:open={dialogOpen}>
-		<Sheet.Trigger class={cn(buttonVariants({variant: 'outline', size: 'icon'}), "shrink-0 md:hidden")}>
+	<Sheet.Root>
+		<Sheet.Trigger
+			class={cn(buttonVariants({ variant: 'outline', size: 'icon' }), 'shrink-0 md:hidden')}
+		>
 			<Menu class="h-5 w-5" />
 		</Sheet.Trigger>
 		<Sheet.Content side="left">
 			<nav class="grid gap-6 text-lg font-medium">
-				<a
-					href="/"
-					class="flex items-center gap-2 text-lg font-semibold"
-					onclick={() => (dialogOpen = !dialogOpen)}
-				>
+				<a href="/" class="flex items-center gap-2 text-lg font-semibold">
 					<Package2 class="h-6 w-6" />
 				</a>
-				<a
-					href="/"
-					class="text-muted-foreground hover:text-primary"
-					onclick={() => (dialogOpen = !dialogOpen)}
-				>
-					Home
-				</a>
-				<a
-					href="/about"
-					class="text-muted-foreground hover:text-primary"
-					onclick={() => (dialogOpen = !dialogOpen)}
-				>
-					About
-				</a>
-				<Collapsible.Root class="space-y-2">
+				<a href="/" class="text-muted-foreground hover:text-primary"> Home </a>
+				<a href="/about" class="text-muted-foreground hover:text-primary"> About </a>
+				<Collapsible.Root class="group/collapsible space-y-2">
 					<Collapsible.Trigger class="text-muted-foreground transition-colors hover:text-primary"
 						>Industries
 					</Collapsible.Trigger>
-					<Collapsible.Content class="ml-2 flex max-w-48 flex-col gap-2 text-sm">
+					<Collapsible.Content>
 						<a
 							href="/industries/hospitality"
 							class="text-muted-foreground transition-colors hover:text-primary"
-							onclick={() => (dialogOpen = !dialogOpen)}
 						>
 							Hospitality
 						</a>
-						<Separator />
+					</Collapsible.Content>
+					<Collapsible.Content>
 						<a
 							href="/industries/healthcare"
 							class="text-muted-foreground transition-colors hover:text-primary"
-							onclick={() => (dialogOpen = !dialogOpen)}
 						>
 							Healthcare
 						</a>
-						<Separator />
+					</Collapsible.Content>
+					<Collapsible.Content>
 						<a
 							href="/industries/retail_fmcg"
 							class="text-muted-foreground transition-colors hover:text-primary"
-							onclick={() => (dialogOpen = !dialogOpen)}
 						>
 							Retail
 						</a>
-						<Separator />
+					</Collapsible.Content>
+					<Collapsible.Content>
 						<a
 							href="/industries/financial_services"
 							class="text-muted-foreground transition-colors hover:text-primary"
-							onclick={() => (dialogOpen = !dialogOpen)}
 						>
 							Financial services
 						</a>
-						<Separator />
+					</Collapsible.Content>
+					<Collapsible.Content>
 						<a
 							href="/industries/ngo"
 							class="text-muted-foreground transition-colors hover:text-primary"
-							onclick={() => (dialogOpen = !dialogOpen)}
 						>
 							NGO's
 						</a>
 					</Collapsible.Content>
 				</Collapsible.Root>
-				<Collapsible.Root class="space-y-2">
+				<Collapsible.Root class="group/collapsible space-y-3">
 					<Collapsible.Trigger class="text-muted-foreground transition-colors hover:text-primary ">
 						Services
 					</Collapsible.Trigger>
-					<Collapsible.Content class="ml-2 mt-1 flex max-w-48 flex-col gap-2 text-sm">
+					<Collapsible.Content>
 						<a
 							href="/services/corp_rep"
 							class="text-muted-foreground transition-colors hover:text-primary"
-							onclick={() => (dialogOpen = !dialogOpen)}
 						>
 							Corporate reputation
 						</a>
-						<Separator />
+					</Collapsible.Content>
+					<Collapsible.Content>
 						<a
 							href="/services/brand_image"
 							class="text-muted-foreground transition-colors hover:text-primary"
-							onclick={() => (dialogOpen = !dialogOpen)}
 						>
 							Brand image
 						</a>
-						<Separator />
+					</Collapsible.Content>
+					<Collapsible.Content>
 						<a
 							href="/services/customer_experience"
 							class="text-muted-foreground transition-colors hover:text-primary"
-							onclick={() => (dialogOpen = !dialogOpen)}
 						>
 							Customer experience
 						</a>
-						<Separator />
+					</Collapsible.Content>
+					<Collapsible.Content>
 						<a
 							href="/services/product_assessment"
 							class="text-muted-foreground transition-colors hover:text-primary"
-							onclick={() => (dialogOpen = !dialogOpen)}
 						>
 							Product assessment
 						</a>
-						<Separator />
+					</Collapsible.Content>
+					<Collapsible.Content>
 						<a
 							href="/services/market_reaserch"
 							class="text-muted-foreground transition-colors hover:text-primary"
-							onclick={() => (dialogOpen = !dialogOpen)}
 						>
 							Market research
 						</a>
 					</Collapsible.Content>
 				</Collapsible.Root>
-				<a
-					href="/pricing"
-					class="text-muted-foreground transition-colors hover:text-primary"
-					onclick={() => (dialogOpen = !dialogOpen)}
-				>
+				<a href="/pricing" class="text-muted-foreground transition-colors hover:text-primary">
 					Pricing
 				</a>
-				<a
-					href="/agent/signin"
-					class="text-muted-foreground transition-colors hover:text-primary"
-					onclick={() => (dialogOpen = !dialogOpen)}
-				>
+				<a href="/agent/signin" class="text-muted-foreground transition-colors hover:text-primary">
 					Agent Login
 				</a>
 			</nav>

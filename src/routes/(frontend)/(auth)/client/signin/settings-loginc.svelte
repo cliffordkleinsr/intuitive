@@ -25,10 +25,8 @@
 	import { fade } from 'svelte/transition';
 	import Meta from '$lib/custom/seo/meta.svelte';
 
-
 	// KitLoad<MiddleWare>
-	export let data: SuperValidated<Infer<SigninCSchema>>;
-
+	let { data }: { data: SuperValidated<Infer<SigninCSchema>> } = $props();
 	const form = superForm(data, {
 		validators: zodClient(signinCSchema),
 		onUpdated: () => {
@@ -47,23 +45,23 @@
 	const { form: formData, enhance, message, delayed } = form;
 
 	// custom param message
-	let msg: string;
-	let visible = true;
+
+	let visible = $state(true);
 
 	setTimeout(() => {
 		visible = false;
 	}, 2000);
 
-	$: msg = $page.url.searchParams.get('notification') ?? '';
+	let msg: string = $derived($page.url.searchParams.get('notification') ?? '');
 
-	const props = {
+	const Pageprops = {
 		title: 'Client Sign in • Intuitive Insights KE',
 		description: 'Gather insightful feedback, analyze data, and make informed decisions.',
 		type: 'Website'
 	};
 </script>
 
-<Meta {...props} />
+<Meta {...Pageprops} />
 {#if visible && msg}
 	<div transition:fade={{ delay: 200, duration: 300, easing: sineInOut }}>
 		<Pretoast message={msg} type="warning" />

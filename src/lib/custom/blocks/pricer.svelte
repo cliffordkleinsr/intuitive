@@ -257,8 +257,7 @@
 										<Dialog.Description class=" text-md space-y-2">
 											<form action="?/subscribe" method="post" class="grid gap-2">
 												<p class="grid grid-cols-2 gap-2">
-													Total <span class="font-semibold text-black"
-														>${$clientPackage.price}</span
+													Total <span class="font-semibold text-black">${$clientPackage.price}</span
 													>
 												</p>
 												<Separator class="mb-5" />
@@ -329,8 +328,7 @@
 											>
 										</Drawer.Title>
 										<Drawer.Description class=" text-md">
-											Totaling: <span class="font-semibold text-black"
-												>${$clientPackage.price}</span
+											Totaling: <span class="font-semibold text-black">${$clientPackage.price}</span
 											>
 										</Drawer.Description>
 									</Drawer.Header>

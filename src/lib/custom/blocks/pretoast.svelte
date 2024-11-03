@@ -1,6 +1,11 @@
 <script lang="ts">
-	export let message: string;
-	export let type: string;
+	// export let message: string;
+	// export let type: string;
+	interface Toas{
+		type: string;
+		message: string;
+	}
+	let { type, message } = $props()
 </script>
 
 {#if type === 'soft-grey'}

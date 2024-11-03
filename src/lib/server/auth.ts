@@ -4,22 +4,26 @@ import { encodeBase32LowerCaseNoPadding, encodeHexLowerCase } from '@oslojs/enco
 import { db } from '$lib/server/db';
 import * as table from '$lib/server/db/schema';
 
-const DAY_IN_MS = 1000 * 60 * 60 * 24;
+// const DAY_IN_MS = 1000 * 60 * 60 * 24;
+// Changed time constants
+const HOUR_IN_MS = 1000 * 60 * 60; // 1 hour in milliseconds
+const RENEW_THRESHOLD = HOUR_IN_MS / 2; // 30 minutes in milliseconds
 
-export const sessionCookieName = 'auth-session';
+export const sessionCookieName = 'session';
 
-export function generateSessionToken(): string {
+function generateSessionToken(): string {
 	const bytes = crypto.getRandomValues(new Uint8Array(20));
 	const token = encodeBase32LowerCaseNoPadding(bytes);
 	return token;
 }
 
-export async function createSession(userId: string, token:string): Promise<table.Session> {
+export async function createSession(userId: string): Promise<table.Session> {
+	const token = generateSessionToken();
 	const sessionId = encodeHexLowerCase(sha256(new TextEncoder().encode(token)));
 	const session: table.Session = {
 		id: sessionId,
 		userId,
-		expiresAt: new Date(Date.now() + DAY_IN_MS * 30)
+		expiresAt: new Date(Date.now() + HOUR_IN_MS) //DAY_IN_MS * 30)
 	};
 	await db.insert(table.sessionsTable).values(session);
 	return session;
@@ -33,7 +37,7 @@ export async function validateSession(sessionId: string) {
 	const [result] = await db
 		.select({
 			// Adjust user table here to tweak returned data
-			user: { 
+			user: {
 				id: table.UsersTable.id,
 				fullname: table.UsersTable.fullname,
 				email: table.UsersTable.email,
@@ -41,14 +45,13 @@ export async function validateSession(sessionId: string) {
 				isEmailVerified: table.UsersTable.isEmailVerified,
 				gender: table.UsersTable.gender,
 				age: table.UsersTable.age,
-				pfp: table.UsersTable.pfp,
+				pfp: table.UsersTable.pfp
 			},
 			session: table.sessionsTable
 		})
 		.from(table.sessionsTable)
 		.innerJoin(table.UsersTable, eq(table.sessionsTable.userId, table.UsersTable.id))
-		.where(eq(table.UsersTable.id, sessionId));
-
+		.where(eq(table.sessionsTable.id, sessionId));
 	if (!result) {
 		return { session: null, user: null };
 	}
@@ -60,9 +63,9 @@ export async function validateSession(sessionId: string) {
 		return { session: null, user: null };
 	}
 
-	const renewSession = Date.now() >= session.expiresAt.getTime() - DAY_IN_MS * 15;
+	const renewSession = Date.now() >= session.expiresAt.getTime() - RENEW_THRESHOLD; //DAY_IN_MS * 15;
 	if (renewSession) {
-		session.expiresAt = new Date(Date.now() + DAY_IN_MS * 30);
+		session.expiresAt = new Date(Date.now() + HOUR_IN_MS); //* 30);
 		await db
 			.update(table.sessionsTable)
 			.set({ expiresAt: session.expiresAt })
