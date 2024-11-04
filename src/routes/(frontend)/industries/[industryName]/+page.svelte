@@ -4,23 +4,21 @@
 	import type { PageData } from './$types';
 	import type { SEO } from '$lib/types';
 	// import { CldImage } from 'svelte-cloudinary';
-	let {data}:{data: PageData} = $props();
+	let { data }: { data: PageData } = $props();
 	let endpoint = $derived(data);
 
-	
 	let Pageprops = $state<SEO>({
 		title: '',
-		description:'',
+		description: '',
 		type: ''
-	})
+	});
 	$effect(() => {
 		Pageprops = {
 			title: `Industries • Intuitive Insights KE • ${endpoint.industry.title}`,
 			description: 'Gather insightful feedback, analyze data, and make informed decisions.',
 			type: 'Website'
 		};
-	})
-	
+	});
 </script>
 
 <Meta {...Pageprops} />

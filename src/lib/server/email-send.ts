@@ -12,7 +12,7 @@ export default async function sendEmail(
 	transporter = nodemailer.createTransport({
 		host: 'mail.smtp2go.com',
 		port: 2525,
-		secure: true,
+		secure: false,
 		auth: {
 			user: SECRET_SMTP2GO_USERNAME,
 			pass: SECRET_SMTP2GO_PASSWORD

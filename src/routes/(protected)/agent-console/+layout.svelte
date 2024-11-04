@@ -64,11 +64,11 @@
 			<Breadcrumb.Root>
 				<Breadcrumb.List>
 					<Breadcrumb.Item>
-						<Breadcrumb.Link href="/agent-console">History</Breadcrumb.Link>
+						<Breadcrumb.Link>History</Breadcrumb.Link>
 					</Breadcrumb.Item>
 					<Breadcrumb.Separator />
 					<Breadcrumb.Item>
-						<Breadcrumb.Link href="/agent-console">Questions</Breadcrumb.Link>
+						<Breadcrumb.Link>Questions</Breadcrumb.Link>
 					</Breadcrumb.Item>
 					<Breadcrumb.Separator />
 					<Breadcrumb.Item>

@@ -16,7 +16,7 @@ export const load: PageServerLoad = async ({ locals: { user }, url }) => {
 	if (user) {
 		if (user.role === 'CLIENT') {
 			// redirect('/client-dash',  {type: "error", message:"User Already Logged In"}, cookies)
-			redirect(302, handleLoginRedirect('/client-dash', url, 'User Already Logged In'));
+			redirect(302, handleLoginRedirect('/client-console', url, 'User Already Logged In'));
 		}
 	}
 	return {

@@ -10,7 +10,6 @@
 	import { toggleMode } from 'mode-watcher';
 	import * as Collapsible from '$lib/components/ui/collapsible';
 	import { cn } from '$lib/utils';
-
 </script>
 
 <header

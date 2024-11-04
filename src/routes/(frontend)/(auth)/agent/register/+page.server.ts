@@ -20,13 +20,9 @@ import { setSessionTokenCookie } from '$lib/server/session';
 // import { createVerification } from '$lib/server/twilioconfigs/sms-messages';
 
 export const load: PageServerLoad = async ({ locals: { user }, url }) => {
-	// await db.delete(smsVerification).where(eq(smsVerification.userId, 'vsz9hei4m2dnr18'))
-	await db.delete(agentData).where(eq(agentData.agentid, 'gap97uui59cqhm4'));
-	await db.delete(UsersTable).where(eq(UsersTable.id, 'gap97uui59cqhm4'));
 	if (user) {
 		if (user.role === 'AGENT') {
-			// redirect('/respondent-dash',  {type: "error", message:"User Already Logged In"}, cookies)
-			redirect(302, handleLoginRedirect('/agent-dash', url, 'User Already Logged In'));
+			redirect(302, handleLoginRedirect('/agent-console', url, 'User Already Logged In'));
 		}
 	}
 	return {

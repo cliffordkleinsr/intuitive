@@ -62,19 +62,9 @@
 		</div>
 		<div class="flex flex-row items-start justify-center gap-4">
 			<Button href="/client/signin" variant="black" size="lg">Start for Free</Button>
-			<!-- <a
-          class="inline-flex h-10 items-center justify-center rounded-md bg-primary px-8 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
-          href="/agent/signin"
-        >
-          Start for Free
-        </a> -->
-			<Button href="/about#contact" variant="outline" size="lg">Schedule a Demo</Button>
-			<!-- <a
-          class="inline-flex h-10 items-center justify-center rounded-md border border-input bg-background px-8 text-sm font-medium shadow-sm transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
-          href="/about#contact"
-        >
-          Schedule a Demo
-        </a> -->
+			<Button data-sveltekit-reload href="/about#contact" variant="outline" size="lg"
+				>Schedule a Demo</Button
+			>
 		</div>
 	</div>
 </section>

@@ -53,7 +53,7 @@ const handleBots: Handle = createHandler({
 	// block matching pathnames
 	pathnames: [
 		// block unused file extensions
-		/\.(env|git|ssh|php|rss|yml|yaml|asp|cgi|map|aspx|ashx)$/,
+		/\.(env|git|ssh|php|rss|yml|yaml|asp|cgi|map|aspx|ashx|txt)$/,
 
 		// git content
 		/\.git\/\w+$/,

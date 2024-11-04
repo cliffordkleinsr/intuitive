@@ -17,13 +17,15 @@
 	// lucide
 	import ChevronRight from 'lucide-svelte/icons/chevron-right';
 	import ChevronLeft from 'lucide-svelte/icons/chevron-left';
+	import type { Snippet } from 'svelte';
 
 	type DateTableProps<TData, TValue> = {
 		columns: ColumnDef<TData, TValue>[];
 		data: TData[];
+		children: Snippet;
 	};
 
-	let { data, columns }: DateTableProps<TData, TValue> = $props();
+	let { data, columns, children }: DateTableProps<TData, TValue> = $props();
 
 	let pagination = $state<PaginationState>({ pageIndex: 0, pageSize: 7 });
 	let columnFilters = $state<ColumnFiltersState>([]);
@@ -133,3 +135,4 @@
 		</Button>
 	</div>
 </div>
+{@render children?.()}

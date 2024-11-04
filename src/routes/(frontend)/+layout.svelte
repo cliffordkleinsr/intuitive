@@ -6,5 +6,5 @@
 </script>
 
 <Navbar />
-{@render children()}
+{@render children?.()}
 <Footer />

@@ -35,7 +35,7 @@ export const load: PageServerLoad = async ({ params, cookies, locals: { user } }
 			// if there is a persisted index in the database return the uri with the index url
 			current_ix = await getpersistentIx(user?.id!, params.surveyId);
 		}
-		uri = `/agent-dash/surveys/take/${params.surveyId}/${ids[current_ix].id}`;
+		uri = `/agent-console/surveys/take/${params.surveyId}/${ids[current_ix].id}`;
 		const surveyqns = await db
 			.select()
 			.from(surveyqnsTableV2)

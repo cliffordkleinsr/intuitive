@@ -2,7 +2,6 @@
 	import { page } from '$app/stores';
 	import type { SEO } from '$lib/types';
 
-	
 	let { title, description, type }: SEO = $props();
 
 	const base = $derived($page.url.href);
