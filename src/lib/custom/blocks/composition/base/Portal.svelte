@@ -1,27 +1,26 @@
-<script lang="ts">
+<script lang="ts" generics="T">
 	import { MediaQuery } from 'runed';
 	import * as Dialog from '$lib/components/ui/dialog/index.js';
 	import * as Drawer from '$lib/components/ui/drawer/index.js';
 	import { buttonVariants } from '$lib/components/ui/button/index.js';
 	import type { Icon } from 'lucide-svelte';
-	import type { ComponentType, Snippet } from 'svelte';
+	import type { Component, Snippet } from 'svelte';
 
     interface Shower {
-        triggerText: string
-        triggerIcon: ComponentType<Icon>
+		trigger: Snippet,
         title: string
         description?:string
         children?: Snippet
 
     }
     let { 
-        triggerIcon,
-        triggerText,
+		trigger,
         title,
         description,
         children,
     }: Shower = $props()
 
+	let TriggerIcon = $state() as Component<{icon: Icon}>
 	let open = $state(false);
 	const isDesktop = new MediaQuery('(min-width: 768px)');
 </script>
@@ -29,8 +28,7 @@
 {#if isDesktop.matches}
 	<Dialog.Root bind:open>
 		<Dialog.Trigger class={buttonVariants({ variant: 'outline' })}>
-			<triggerIcon></triggerIcon>
-            {triggerText}
+			{@render trigger()}
         </Dialog.Trigger>
 		<Dialog.Content class="sm:max-w-[425px]">
 			<Dialog.Header>
@@ -47,8 +45,7 @@
 {:else}
 	<Drawer.Root bind:open>
 		<Drawer.Trigger class={buttonVariants({ variant: 'outline' })}>
-            <triggerIcon></triggerIcon>
-            {triggerText}
+			{@render trigger()}
         </Drawer.Trigger>
 		<Drawer.Content>
 			<Drawer.Header class="text-left">
