@@ -83,7 +83,7 @@
 		<Card.Root class="lg:max-w-lg">
 			<Card.Header class="mb-2">
 				<Card.Description>Cumulative Surveys</Card.Description>
-				<Card.Title class="text-4xl text-green-500">{complete + pending}</Card.Title>
+				<Card.Title class="text-4xl text-muted-foreground">{complete + pending}</Card.Title>
 				<Card.Description>Eligible Surveys</Card.Description>
 				<Card.Title class="text-4xl text-destructive">{pending}</Card.Title>
 				<Card.Footer class="pt-4">
@@ -102,7 +102,7 @@
 	{/if}
 </div>
 {#if payouts.length > 0}
-	<div class="prose m-4 max-w-[23rem] lg:max-w-full">
-		<h2>Payout Request History</h2>
+	<div class="m-4">
+		<h2 class="text-2xl font-semibold">Payment History</h2>
 	</div>
 {/if}

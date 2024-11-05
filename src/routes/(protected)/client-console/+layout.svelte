@@ -6,6 +6,8 @@
 	import { Button } from '$lib/components/ui/button';
 	import { toggleMode } from 'mode-watcher';
 	import * as Avatar from '$lib/components/ui/avatar';
+	import { Badge } from "$lib/components/ui/badge"
+	
 	// Lucide Svelte
 	import Sun from 'lucide-svelte/icons/sun';
 	import Moon from 'lucide-svelte/icons/moon';
@@ -95,8 +97,13 @@
 					</Breadcrumb.Item>
 				</Breadcrumb.List>
 			</Breadcrumb.Root>
-
+	
 			<div class="ml-auto flex gap-2">
+				{#if !data.payment.status}
+				<div class='h-5 my-2'>
+					<Badge variant='outline'><a href="/client-console">Unlock Pro</a></Badge>
+				</div>
+				{/if}
 				<Button onclick={toggleMode} variant="ghost" size="icon">
 					<Sun
 						class="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0"

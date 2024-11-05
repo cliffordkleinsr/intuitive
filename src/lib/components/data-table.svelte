@@ -22,7 +22,7 @@
 	type DateTableProps<TData, TValue> = {
 		columns: ColumnDef<TData, TValue>[];
 		data: TData[];
-		children: Snippet;
+		children?: Snippet;
 	};
 
 	let { data, columns, children }: DateTableProps<TData, TValue> = $props();
@@ -70,7 +70,7 @@
 <div class="m-4">
 	<div class="flex items-center py-4">
 		<Input
-			placeholder="Filter emails..."
+			placeholder="Filter items..."
 			value={(table.getColumn('title')?.getFilterValue() as string) ?? ''}
 			onchange={(e) => {
 				table.getColumn('title')?.setFilterValue(e.currentTarget.value);

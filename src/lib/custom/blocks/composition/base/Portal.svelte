@@ -3,24 +3,16 @@
 	import * as Dialog from '$lib/components/ui/dialog/index.js';
 	import * as Drawer from '$lib/components/ui/drawer/index.js';
 	import { buttonVariants } from '$lib/components/ui/button/index.js';
-	import type { Icon } from 'lucide-svelte';
-	import type { Component, Snippet } from 'svelte';
+	import type { Snippet } from 'svelte';
 
-    interface Shower {
-		trigger: Snippet,
-        title: string
-        description?:string
-        children?: Snippet
+	interface Shower {
+		trigger: Snippet;
+		title: string;
+		description?: string;
+		children?: Snippet;
+	}
+	let { trigger, title, description, children }: Shower = $props();
 
-    }
-    let { 
-		trigger,
-        title,
-        description,
-        children,
-    }: Shower = $props()
-
-	let TriggerIcon = $state() as Component<{icon: Icon}>
 	let open = $state(false);
 	const isDesktop = new MediaQuery('(min-width: 768px)');
 </script>
@@ -29,12 +21,12 @@
 	<Dialog.Root bind:open>
 		<Dialog.Trigger class={buttonVariants({ variant: 'outline' })}>
 			{@render trigger()}
-        </Dialog.Trigger>
+		</Dialog.Trigger>
 		<Dialog.Content class="sm:max-w-[425px]">
 			<Dialog.Header>
 				<Dialog.Title>
-                    {title}
-                </Dialog.Title>
+					{title}
+				</Dialog.Title>
 				<Dialog.Description>
 					{description}
 				</Dialog.Description>
@@ -46,12 +38,12 @@
 	<Drawer.Root bind:open>
 		<Drawer.Trigger class={buttonVariants({ variant: 'outline' })}>
 			{@render trigger()}
-        </Drawer.Trigger>
+		</Drawer.Trigger>
 		<Drawer.Content>
 			<Drawer.Header class="text-left">
 				<Drawer.Title>
-                    {title}
-                </Drawer.Title>
+					{title}
+				</Drawer.Title>
 				<Drawer.Description>
 					{description}
 				</Drawer.Description>

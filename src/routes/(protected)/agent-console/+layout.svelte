@@ -16,6 +16,7 @@
 	import SquarePen from 'lucide-svelte/icons/square-pen';
 	import FileClock from 'lucide-svelte/icons/file-clock';
 	import HandCoins from 'lucide-svelte/icons/hand-coins';
+
 	let { data, children }: { data: LayoutData; children: Snippet } = $props();
 
 	const AgentlayoutItems = {
@@ -38,20 +39,21 @@
 					},
 					{
 						title: 'Survey History',
-						url: '/agent-console/surveys/questionnaire',
+						url: '/agent-console/surveys/history',
 						icon: FileClock
 					}
 				]
 			},
 			{
 				title: 'Recieve Payments',
-				url: '/agent-console',
+				url: '/agent-console/billing',
 				icon: HandCoins,
 				items: []
 			}
 		],
 		user: data.AuthedUser,
-		action: '/agent/signout'
+		action: '/agent/signout',
+		url: '/agent-console'
 	};
 </script>
 
@@ -64,15 +66,15 @@
 			<Breadcrumb.Root>
 				<Breadcrumb.List>
 					<Breadcrumb.Item>
-						<Breadcrumb.Link>History</Breadcrumb.Link>
+						<Breadcrumb.Link><a href="/agent-console/history">History</a></Breadcrumb.Link>
 					</Breadcrumb.Item>
 					<Breadcrumb.Separator />
 					<Breadcrumb.Item>
-						<Breadcrumb.Link>Questions</Breadcrumb.Link>
+						<Breadcrumb.Link><a href="/agent-console/surveys/take">Questions</a></Breadcrumb.Link>
 					</Breadcrumb.Item>
 					<Breadcrumb.Separator />
 					<Breadcrumb.Item>
-						<Breadcrumb.Page>Dashboard</Breadcrumb.Page>
+						<Breadcrumb.Page><a href="/agent-console">Dashboard</a></Breadcrumb.Page>
 					</Breadcrumb.Item>
 				</Breadcrumb.List>
 			</Breadcrumb.Root>

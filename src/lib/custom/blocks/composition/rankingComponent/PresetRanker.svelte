@@ -3,17 +3,16 @@
 	import { Button } from '$lib/components/ui/button';
 	import Input from '$lib/components/ui/input/input.svelte';
 
-	export let options: string[];
-	export let preselectedRanks: number[] = [];
+	let { options, preselectedRanks = [] }: { options: string[]; preselectedRanks: number[] } =
+		$props();
 
-	let rankings: number[] = options.map(() => 0);
-
-	$: {
+	let rankings = $state(options.map(() => 0)) as number[];
+	$effect(() => {
 		rankings = options.map((opt, index) => {
 			const preselectedRank = preselectedRanks[index];
 			return preselectedRank ? preselectedRank : 0;
 		});
-	}
+	});
 
 	function setRank(index: number, rank: number) {
 		if (rankings[index] === rank) {

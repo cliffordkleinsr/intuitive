@@ -52,6 +52,10 @@ const handleBots: Handle = createHandler({
 	],
 	// block matching pathnames
 	pathnames: [
+		// block feed
+		/\/feed/,
+		// block wp
+		/\/wp-content/,
 		// block unused file extensions
 		/\.(env|git|ssh|php|rss|yml|yaml|asp|cgi|map|aspx|ashx|txt)$/,
 

@@ -19,30 +19,33 @@
 		icon: any;
 		items: any[];
 	}
+
 	interface Composition {
 		user: string;
 		payment_status?: boolean | undefined;
 		data: Barside[];
 		footer?: boolean | undefined;
 		action?: string | undefined;
+		url?: string | undefined;
 	}
 	let {
 		user = 'Username',
 		payment_status,
 		data,
 		footer = true,
-		action = ''
+		action = '',
+		url = '/client-console'
 	}: Composition = $props();
 
 	const footerItems = [
 		{
 			title: 'Account',
-			url: '/client-console',
+			url: `${url}/account`,
 			icon: CircleUserRound
 		},
 		{
 			title: 'Billing',
-			url: '/client-console',
+			url: `${url}/billing`,
 			icon: CreditCard
 		}
 	];
@@ -58,13 +61,14 @@
 	<Sidebar.Header />
 	<Sidebar.Content>
 		<!-- navigation items -->
-		<Collapsible.Root open class="group/collapsible">
-			<Sidebar.Group />
-			<Sidebar.GroupLabel>Application</Sidebar.GroupLabel>
-			<Sidebar.GroupContent>
-				<Sidebar.Menu>
-					{#each data as group (group.title)}
-						{#if shouldRenderGroup(group)}
+
+		<Sidebar.Group />
+		<Sidebar.GroupLabel>Application</Sidebar.GroupLabel>
+		<Sidebar.GroupContent>
+			<Sidebar.Menu>
+				{#each data as group (group.title)}
+					{#if shouldRenderGroup(group)}
+						<Collapsible.Root open class="group/collapsible">
 							<Sidebar.MenuItem>
 								<Sidebar.MenuButton>
 									{#snippet child({ props })}
@@ -93,12 +97,12 @@
 									{/snippet}
 								</Sidebar.MenuButton>
 							</Sidebar.MenuItem>
-						{/if}
-					{/each}
-				</Sidebar.Menu>
-			</Sidebar.GroupContent>
-			<Sidebar.Group />
-		</Collapsible.Root>
+						</Collapsible.Root>
+					{/if}
+				{/each}
+			</Sidebar.Menu>
+		</Sidebar.GroupContent>
+		<Sidebar.Group />
 	</Sidebar.Content>
 	<!-- footer -->
 	<Sidebar.Footer>

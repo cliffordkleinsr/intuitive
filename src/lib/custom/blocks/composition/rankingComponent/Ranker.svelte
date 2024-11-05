@@ -2,8 +2,8 @@
 	import { Label } from '$lib/components/ui/label';
 	import { Button } from '$lib/components/ui/button';
 	import Input from '$lib/components/ui/input/input.svelte';
-	export let options: string[];
-	let rankings: any = [];
+	let { options }: { options: string[] } = $props();
+	let rankings: any = $state([]);
 
 	rankings = options.map(() => 0);
 

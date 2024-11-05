@@ -23,8 +23,9 @@
 		"@tailwindcss/typography": "^0.5.15",
 		"@types/eslint": "^9.6.0",
 		"@types/nodemailer": "^6.4.16",
+		"add": "^2.0.6",
 		"autoprefixer": "^10.4.20",
-		"bits-ui": "^1.0.0-next.36",
+		"bits-ui": "^1.0.0-next.44",
 		"clsx": "^2.1.1",
 		"drizzle-kit": "^0.22.0",
 		"eslint": "^9.7.0",
@@ -37,6 +38,7 @@
 		"prettier-plugin-tailwindcss": "^0.6.5",
 		"svelte": "^5.0.0",
 		"svelte-check": "^4.0.0",
+		"svelte-confetti": "^2.0.0",
 		"sveltekit-superforms": "^2.20.0",
 		"tailwind-merge": "^2.5.4",
 		"tailwind-variants": "^0.2.1",
@@ -49,6 +51,7 @@
 		"zod": "^3.23.8"
 	},
 	"dependencies": {
+		"@arcjet/bun": "^1.0.0-alpha.28",
 		"@arcjet/sveltekit": "^1.0.0-alpha.28",
 		"@neondatabase/serverless": "^0.9.4",
 		"@oslojs/crypto": "^1.0.1",

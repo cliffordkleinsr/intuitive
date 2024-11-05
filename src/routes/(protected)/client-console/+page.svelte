@@ -17,8 +17,8 @@
 	data-title="Welcome {data.AuthedUser}"
 	data-intro="This is your dashboard"
 >
-	<div class="grid gap-4 md:grid-cols-2 md:gap-8 lg:{share > 0 ? 'grid-cols-4' : 'grid-cols-3'}">
-		<Card.Root data-intro="Create new surveys by clicking here" class="space-y-6">
+	<div class="grid gap-2 md:grid-cols-2 md:gap-8 lg:{share > 0 ? 'grid-cols-4' : 'grid-cols-3'}">
+		<Card.Root data-intro="Create new surveys by clicking here" class="space-y-5 sm:col-span-1">
 			<Card.Header>
 				<Card.Title><ChartLine class="size-6 text-primary" /></Card.Title>
 				<Card.Description class="text-balance leading-relaxed">
@@ -48,7 +48,7 @@
 		</Card.Root>
 		<Card.Root
 			data-intro="These are the total people who have taken a survey that you've created"
-			class="lg:max-w-sm"
+			class="max-w-lg"
 			data-x-chunk-name="dashboard-05-chunk-2"
 			data-x-chunk-description="A stats card showing this month's total sales in USD, the percentage difference from last month, and a progress bar."
 		>
