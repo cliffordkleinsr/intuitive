@@ -6,8 +6,8 @@
 	import { Button } from '$lib/components/ui/button';
 	import { toggleMode } from 'mode-watcher';
 	import * as Avatar from '$lib/components/ui/avatar';
-	import { Badge } from "$lib/components/ui/badge"
-	
+	import { Badge } from '$lib/components/ui/badge';
+
 	// Lucide Svelte
 	import Sun from 'lucide-svelte/icons/sun';
 	import Moon from 'lucide-svelte/icons/moon';
@@ -79,7 +79,7 @@
 <Sidebar.Provider>
 	<AppSidebar {...ClientlayoutItems} />
 	<Sidebar.Inset>
-		<header class="sticky top-0 flex h-16 w-full items-center gap-2 border-b px-4">
+		<header class="sticky top-0 flex h-16 w-full items-center gap-2 border-b px-4 backdrop-blur-lg">
 			<Sidebar.Trigger />
 			<Separator orientation="vertical" class="mr-2 h-4" />
 			<Breadcrumb.Root>
@@ -97,12 +97,12 @@
 					</Breadcrumb.Item>
 				</Breadcrumb.List>
 			</Breadcrumb.Root>
-	
+
 			<div class="ml-auto flex gap-2">
 				{#if !data.payment.status}
-				<div class='h-5 my-2'>
-					<Badge variant='outline'><a href="/client-console">Unlock Pro</a></Badge>
-				</div>
+					<div class="my-2 h-5">
+						<Badge variant="outline"><a href="/client-console">Unlock Pro</a></Badge>
+					</div>
 				{/if}
 				<Button onclick={toggleMode} variant="ghost" size="icon">
 					<Sun

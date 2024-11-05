@@ -24,10 +24,10 @@ export const columns: ColumnDef<Survey>[] = [
 		accessorKey: 'created',
 		header: 'Created'
 	},
-    {
-        accessorKey: 'actions',
+	{
+		accessorKey: 'actions',
 		cell: ({ row }) => {
 			return renderComponent(DataTableAdditional, { id: row.original.id });
 		}
-    }
+	}
 ];

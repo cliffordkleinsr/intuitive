@@ -58,8 +58,8 @@ export const actions: Actions = {
 		}
 
 		try {
-			const userid = crypto.randomUUID();
-			const hashPassword = await bcrypt.hashSync(password, 15);
+			const userid = crypto.randomUUID(); // randomUUIDv7();
+			const hashPassword = await bcrypt.hashSync(password, 15); //await Bun.password.hash(password)
 
 			await insertNewUser({
 				id: userid,

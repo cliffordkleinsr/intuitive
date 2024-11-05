@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Pricer from '$lib/custom/blocks/pricer.svelte';
+	import Pricer from '$lib/custom/blocks/monet/pricer.svelte';
 	import Meta from '$lib/custom/seo/meta.svelte';
 	const props = {
 		title: 'Pricing • Intuitive Insights',
