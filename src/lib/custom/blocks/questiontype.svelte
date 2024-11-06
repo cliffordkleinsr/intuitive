@@ -8,7 +8,7 @@
 </script>
 
 <div class="flex items-center gap-4">
-	<div class="flex aspect-square w-12 items-center justify-center rounded-md bg-black">
+	<div class="flex aspect-square w-7 items-center justify-center rounded-md bg-black">
 		<Webcam class="size-6 text-primary-foreground" />
 	</div>
 	<div class="grid gap-1">
@@ -17,7 +17,7 @@
 	</div>
 </div>
 <div class="flex items-center gap-4">
-	<div class="flex aspect-square w-12 items-center justify-center rounded-md bg-secondary">
+	<div class="flex aspect-square w-7 items-center justify-center rounded-md bg-secondary">
 		<CheckCheck class="size-6 text-secondary-foreground" />
 	</div>
 	<div class="grid gap-1">

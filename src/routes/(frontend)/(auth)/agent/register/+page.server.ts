@@ -32,7 +32,7 @@ export const load: PageServerLoad = async ({ locals: { user }, url }) => {
 
 export const actions: Actions = {
 	default: async ({ request, cookies, url }) => {
-		let validate = false;
+		const validate = false;
 		const form = await superValidate(request, zod(registerRSchema));
 		// validate
 		if (!form.valid) {
@@ -75,7 +75,7 @@ export const actions: Actions = {
 		try {
 			const userid = crypto.randomUUID();
 			const hashPassword = await bcrypt.hash(password, 15);
-			let age = calculateAge(dateofbirth);
+			const age = calculateAge(dateofbirth);
 			await insertNewUser({
 				id: userid,
 				fullname: fullname,
@@ -116,7 +116,7 @@ export const actions: Actions = {
 			}
 			if (validate) {
 				// SMSVerification
-				let foramtted = '+254' + phoneno.slice(1);
+				const foramtted = '+254' + phoneno.slice(1);
 				await db.insert(smsVerification).values({
 					userId: userid,
 					phone: foramtted

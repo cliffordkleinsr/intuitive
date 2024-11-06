@@ -6,11 +6,11 @@
 		description: 'Gather insightful feedback, analyze data, and make informed decisions.',
 		type: 'Website'
 	};
-	let pricerprops ={
-		table:true,
+	let pricerprops = {
+		table: true,
 		applyLogic: false
-	} 
+	};
 </script>
 
 <Meta {...props} />
-<Pricer {...pricerprops}/>
+<Pricer {...pricerprops} />

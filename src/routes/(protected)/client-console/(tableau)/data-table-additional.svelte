@@ -6,6 +6,6 @@
 </script>
 
 <a class={buttonVariants({ variant: 'secondary' })} href="/client-console/surveys/edit/{id}">
-	Edit
+	View
 	<ArrowUpRight class="size-4" />
 </a>

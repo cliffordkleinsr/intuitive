@@ -136,7 +136,7 @@ export const actions: Actions = {
 	addCheckAns: async ({ request, cookies, params, locals }) => {
 		const data = await request.formData();
 		// console.log(data)
-		let map: any[] = [];
+		const map: any[] = [];
 		data.forEach((value, name) => {
 			if (name === 'optionId') {
 				map.push({ id: value });
@@ -228,7 +228,7 @@ export const actions: Actions = {
 	addRankAns: async ({ request, params, cookies, locals }) => {
 		const data = await request.formData();
 
-		let map: string | any[] = [];
+		const map: string | any[] = [];
 		data.forEach((value, name) => {
 			// console.log(element)
 			if (name === 'rankId') {

@@ -41,7 +41,7 @@
 					},
 					{
 						title: 'Manage Surveys',
-						url: '/client-console/surveys/questionnaire',
+						url: '/client-console/surveys/edit',
 						icon: SlidersVertical
 					},
 					{
@@ -79,7 +79,7 @@
 <Sidebar.Provider>
 	<AppSidebar {...ClientlayoutItems} />
 	<Sidebar.Inset>
-		<header class="sticky top-0 flex h-16 w-full items-center gap-2 border-b px-4 backdrop-blur-lg">
+		<header class="sticky top-0 flex h-16 w-full items-center gap-2 border-b px-4">
 			<Sidebar.Trigger />
 			<Separator orientation="vertical" class="mr-2 h-4" />
 			<Breadcrumb.Root>
@@ -100,7 +100,7 @@
 
 			<div class="ml-auto flex gap-2">
 				{#if !data.payment.status}
-					<div class="my-2 h-5 md:block hidden">
+					<div class="my-2 hidden h-5 md:block">
 						<Badge variant="outline"><a href="/client-console">Unlock Pro</a></Badge>
 					</div>
 				{/if}

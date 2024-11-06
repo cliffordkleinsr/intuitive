@@ -2,6 +2,9 @@
 	import Ellipsis from 'lucide-svelte/icons/ellipsis';
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
 	import { Button } from '$lib/components/ui/button';
+	import { buttonVariants } from '$lib/components/ui/button';
+	import ArrowUpRight from 'lucide-svelte/icons/arrow-up-right';
+
 	// export let id: string;
 	// export let payment_stat: boolean;
 	// export let status: string;
@@ -39,4 +42,9 @@
 			{/if}
 		</DropdownMenu.Content>
 	</DropdownMenu.Root>
+{:else}
+	<a class={buttonVariants({ variant: 'secondary' })} href="/client-console/analytics/{id}">
+		View
+		<ArrowUpRight class="size-4" />
+	</a>
 {/if}

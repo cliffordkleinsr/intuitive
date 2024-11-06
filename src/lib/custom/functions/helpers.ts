@@ -1,6 +1,5 @@
 import { DateFormatter } from '@internationalized/date';
 import { tick } from 'svelte';
-import type { Cookies } from '@sveltejs/kit';
 // import { PENDING_VERIFICATION_COOKIE, type pendingVerificationType } from "$lib/server/email"
 
 // ALL TYPES FOR THIS FILE
@@ -82,13 +81,13 @@ function capitalizeFirstLetter(str: string) {
 // Calculates your age
 function calculateAge(birthday: string) {
 	// birthday is a date
-	var ageDifMs = Date.now() - new Date(birthday).getTime();
-	var ageDate = new Date(ageDifMs); // miliseconds from epoch
+	const ageDifMs = Date.now() - new Date(birthday).getTime();
+	const ageDate = new Date(ageDifMs); // miliseconds from epoch
 	return Math.abs(ageDate.getUTCFullYear() - 1970);
 }
 
 // Likert Key
-let cntys = new Map();
+const cntys = new Map();
 cntys.set('MOMBASA', 0);
 cntys.set('KWALE', 0);
 cntys.set('KILIFI', 0);
@@ -136,7 +135,7 @@ cntys.set('MIGORI', 0);
 cntys.set('KISII', 0);
 cntys.set('NYAMIRA', 0);
 cntys.set('NAIROBI', 0);
-let likert_options = new Map();
+const likert_options = new Map();
 
 likert_options.set('Agreement', [
 	{ option: 'Strongly agree' },
@@ -239,7 +238,7 @@ likert_options.set('Likelyhood', [
 ]);
 
 // Depreceated
-const checkout = async (clientPack: Object) => {
+const checkout = async (clientPack: object) => {
 	const data = await fetch('/create-payment-intent', {
 		method: 'POST',
 		headers: {
@@ -254,13 +253,13 @@ const checkout = async (clientPack: Object) => {
 
 // Unbiased Shuffling
 // https://bost.ocks.org/mike/shuffle/
-function shuffle(array: Object[]) {
+function shuffle(array: object[]) {
 	let currentIndex = array.length;
 
 	// While there remain elements to shuffle...
 	while (currentIndex != 0) {
 		// Pick a remaining element...
-		let randomIndex = Math.floor(Math.random() * currentIndex);
+		const randomIndex = Math.floor(Math.random() * currentIndex);
 		currentIndex--;
 
 		// And swap it with the current element.

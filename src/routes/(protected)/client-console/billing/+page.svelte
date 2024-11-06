@@ -8,14 +8,14 @@
 	let { data }: { data: PageData } = $props();
 	const { AuthedUser, otp } = data;
 	let value = $state('4826298');
-    const pricerprops = {
-        onetime:otp,
-        Message: 'Select Plan'
-    }
+	const pricerprops = {
+		onetime: otp,
+		Message: 'Select Plan'
+	};
 </script>
 
 <div class="m-5 flex justify-center">
-	<Pricer {...pricerprops}/>
+	<Pricer {...pricerprops} />
 	<!-- <Card.Root class="max-w-sm w-full space-y-2">
     <Card.Header>
       <Card.Title>M-Pesa Paybill Payment</Card.Title>

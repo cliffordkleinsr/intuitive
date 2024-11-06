@@ -27,7 +27,7 @@ export const actions: Actions = {
 	default: async (event) => {
 		// IPUA RATE LTD
 		const status = await limiter.check(event);
-		let per = Math.round(status.retryAfter / 3600);
+		const per = Math.round(status.retryAfter / 3600);
 
 		const { request } = event;
 		const form = await superValidate(request, zod(subjectSchema));

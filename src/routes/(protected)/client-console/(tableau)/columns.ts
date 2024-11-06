@@ -1,6 +1,7 @@
 import DataTableActions from './data-table-actions.svelte';
 import { renderComponent } from '$lib/components/ui/data-table';
 import type { ColumnDef } from '@tanstack/table-core';
+import DataTableAdditional from './data-table-additional.svelte';
 
 export type Survey = {
 	id: string;
@@ -13,7 +14,9 @@ export const columns = (payment: boolean): ColumnDef<Survey>[] => {
 	return [
 		{
 			accessorKey: 'id',
-			header: 'ID'
+			cell: ({ row }) => {
+				return renderComponent(DataTableAdditional, { id: row.original.id });
+			}
 		},
 		{
 			accessorKey: 'title',

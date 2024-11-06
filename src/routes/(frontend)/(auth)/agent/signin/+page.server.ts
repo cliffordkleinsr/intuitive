@@ -33,7 +33,7 @@ export const load: PageServerLoad = async ({ locals: { user }, url }) => {
 };
 export const actions: Actions = {
 	default: async ({ request, cookies, url }) => {
-		let validate = false;
+		const validate = false;
 		const form = await superValidate(request, zod(signinRSchema));
 		// validate
 		if (!form.valid) {

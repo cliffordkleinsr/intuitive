@@ -4,7 +4,7 @@ import { sql } from 'drizzle-orm';
 import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async ({ locals }) => {
-	let usr = locals.session?.userId as string;
+	const usr = locals.session?.userId as string;
 	const available_qns = await db
 		.select({
 			id: sql<string>`${SurveyTable.surveyid}`,

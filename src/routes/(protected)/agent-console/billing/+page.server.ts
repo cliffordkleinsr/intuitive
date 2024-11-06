@@ -51,7 +51,7 @@ export const actions: Actions = {
 
 		try {
 			// create a payment request
-			let usr = user?.id as string;
+			const usr = user?.id as string;
 			// amounts above 1k must be processed by admin
 			if (amount > 1000) {
 				await db.insert(payoutRequests).values({

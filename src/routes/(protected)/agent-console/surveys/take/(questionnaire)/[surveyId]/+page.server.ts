@@ -7,7 +7,7 @@ import { redirect } from '@sveltejs/kit';
 import type { SurveyData } from '$lib/types';
 
 export const load: PageServerLoad = async ({ params, cookies, locals: { user } }) => {
-	let [survey] = await db
+	const [survey] = await db
 		.select({
 			completed: agentSurveysTable.survey_completed
 		})

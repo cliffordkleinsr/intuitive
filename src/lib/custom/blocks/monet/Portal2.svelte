@@ -24,8 +24,7 @@
 		</Dialog.Trigger>
 		<Dialog.Content class="sm:max-w-[425px]">
 			<Dialog.Header>
-				<Dialog.Title>
-				</Dialog.Title>
+				<Dialog.Title></Dialog.Title>
 				<Dialog.Description>
 					{@render children?.()}
 				</Dialog.Description>
@@ -36,13 +35,12 @@
 	<Drawer.Root bind:open>
 		<Drawer.Trigger>
 			{#snippet child({ props })}
-				{@render trigger({props})}
+				{@render trigger({ props })}
 			{/snippet}
 		</Drawer.Trigger>
 		<Drawer.Content>
 			<Drawer.Header class="text-left">
-				<Drawer.Title>
-				</Drawer.Title>
+				<Drawer.Title></Drawer.Title>
 				<Drawer.Description>
 					{@render children?.()}
 				</Drawer.Description>

@@ -21,7 +21,7 @@ import {
 } from '$lib/server/db/db_utils';
 
 export const load: LayoutServerLoad = async ({ locals: { user }, url }) => {
-	let validate = false;
+	const validate = false;
 	if (!user) {
 		// redirect('/client/signin', {type: "error", message:"You Must Be logged In to view this page"}, cookies)
 		redirect(302, handleLoginRedirect('/client/signin', url));
@@ -39,7 +39,7 @@ export const load: LayoutServerLoad = async ({ locals: { user }, url }) => {
 	}
 	// get client feats
 	const features = await getpackageFeatures(user.id);
-	let msg = [];
+	const msg = [];
 	// if they have a plan go a head and check if its expired
 	if (features) {
 		if (features.plan !== null) {

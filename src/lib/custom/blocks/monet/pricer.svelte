@@ -13,17 +13,17 @@
 		href = '/client/register',
 		Message = 'Sign Up',
 		onetime = false,
-		selected_plan= ''
+		selected_plan = ''
 	} = $props();
 
 	let checked = $state(false);
-	let cardlists = $state.raw(cardList)
+	let cardlists = $state.raw(cardList);
 	if (!onetime) {
 		cardlists = [...cardList, otp];
 	}
 </script>
 
-<Prim {table} >
+<Prim {table}>
 	{#snippet switcher()}
 		<Switch id="annual" bind:checked />
 	{/snippet}
@@ -77,40 +77,43 @@
 					{:else if applyLogic}
 						<Portal2>
 							{#snippet trigger({ props })}
-								<Button 
-									{...props}
-								 	variant="outline"
-									class="w-full"
-								>
-										{selected_plan === item.prices ? 'Current Plan' : Message}
+								<Button {...props} variant="outline" class="w-full">
+									{selected_plan === item.prices ? 'Current Plan' : Message}
 								</Button>
 							{/snippet}
-							<div class="w-full max-w-md mx-auto">
-							<h1 class="text-2xl">Order Summary</h1>
-							<p>Review your selected plan before confirming</p>
-							<div class="flex justify-between items-center space-y-4">
-								<h3 class="text-lg font-semibold">{item.subtitles}</h3>
-								<span class="text-2xl font-bold">${checked !== true ? item.prices : String(parseInt(item.offers) * 12)}</span>
-							  </div>
-							  <p class="text-sm text-muted-foreground mb-1">Billed {checked !== true ? 'Monthly': 'Yearly'}</p>
-							  <ul class="space-y-2">
-								{#each item.features.slice(0, 3) as feature}
-									<li class="flex items-center">
-										<Check class="mr-2 h-4 w-4 text-green-500" />
-										<span class="text-sm">{feature}</span>
-								  </li>
-								{/each}
-							  </ul>
+							<div class="mx-auto w-full max-w-md">
+								<h1 class="text-2xl">Order Summary</h1>
+								<p>Review your selected plan before confirming</p>
+								<div class="flex items-center justify-between space-y-4">
+									<h3 class="text-lg font-semibold">{item.subtitles}</h3>
+									<span class="text-2xl font-bold"
+										>${checked !== true ? item.prices : String(parseInt(item.offers) * 12)}</span
+									>
+								</div>
+								<p class="mb-1 text-sm text-muted-foreground">
+									Billed {checked !== true ? 'Monthly' : 'Yearly'}
+								</p>
+								<ul class="space-y-2">
+									{#each item.features.slice(0, 3) as feature}
+										<li class="flex items-center">
+											<Check class="mr-2 h-4 w-4 text-green-500" />
+											<span class="text-sm">{feature}</span>
+										</li>
+									{/each}
+								</ul>
 							</div>
-							<Button 
-								class="max-w-md w-full mt-3"
+							<Button
+								class="mt-3 w-full max-w-md"
 								variant="black"
-								onclick={() => localStorage.setItem('aurium', JSON.stringify({
-										'plan': item.subtitles,
-										'price': checked !== true ? item.prices : String(parseInt(item.offers) * 12)
-									})
-								)}
-								href= '/client-console/billing/summary'
+								onclick={() =>
+									localStorage.setItem(
+										'aurium',
+										JSON.stringify({
+											plan: item.subtitles,
+											price: checked !== true ? item.prices : String(parseInt(item.offers) * 12)
+										})
+									)}
+								href="/client-console/billing/summary"
 							>
 								Confirm Order
 							</Button>

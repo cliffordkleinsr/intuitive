@@ -1,6 +1,4 @@
 <script lang="ts">
-	import { goto, preloadData, pushState } from '$app/navigation';
-	import { page } from '$app/stores';
 	import { buttonVariants } from '$lib/components/ui/button';
 	import ArrowUpRight from 'lucide-svelte/icons/arrow-up-right';
 

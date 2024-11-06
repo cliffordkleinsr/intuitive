@@ -3,8 +3,8 @@ import { clientData } from '$lib/server/db/schema';
 import { eq } from 'drizzle-orm';
 import type { PageServerLoad } from './$types';
 
-export const load = (async ({locals}) => {
-    const [onetime] = await db
+export const load = (async ({ locals }) => {
+	const [onetime] = await db
 		.select({
 			state: clientData.onetime
 		})

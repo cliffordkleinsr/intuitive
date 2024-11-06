@@ -132,7 +132,7 @@ export const retExpiryDate = async (id: string) => {
  * @returns
  */
 export const checkDate = async (id: string, fromdb: Date, userid: string) => {
-	let diff = new Date().getTime() - fromdb.getTime();
+	const diff = new Date().getTime() - fromdb.getTime();
 	if (diff > 0) {
 		await db
 			.update(SurveyTable)
@@ -177,8 +177,8 @@ export const setpackageExpired = async (
 	expiry_date: { expiry: Date; packagetype: string }
 ) => {
 	if (expiry_date) {
-		let doe = new Date(expiry_date.expiry);
-		let diff = new Date().getTime() - doe.getTime();
+		const doe = new Date(expiry_date.expiry);
+		const diff = new Date().getTime() - doe.getTime();
 		if (diff > 0) {
 			await db
 				.update(clientData)

@@ -62,7 +62,6 @@ export const cardList: CartItems = [
 	}
 ];
 
-
 export const otp = {
 	id: 'prod_QjUCV2u3waC96D',
 	subtitles: 'One-time',

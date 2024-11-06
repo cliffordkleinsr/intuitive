@@ -70,6 +70,6 @@ export const actions: Actions = {
 		} catch (err) {
 			console.error(err);
 		}
-		redirect(303, '/client-dash/surveys/questionnaire');
+		redirect(303, '/client-console/surveys/edit');
 	}
 };

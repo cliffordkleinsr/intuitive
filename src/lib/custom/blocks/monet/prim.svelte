@@ -7,17 +7,17 @@
 	import type { Snippet } from 'svelte';
 
 	interface Primitive {
-		class?: string
+		class?: string;
 		table: boolean;
 		cardItems: Snippet;
-		switcher:Snippet;
+		switcher: Snippet;
 	}
-	let { class:classname, table, cardItems, switcher }: Primitive = $props();
+	let { class: classname, table, cardItems, switcher }: Primitive = $props();
 </script>
 
 <div class="py-12 sm:py-14">
 	<h2 class="text-center text-base font-semibold leading-7 text-primary">Pricing</h2>
-	<p class="mt-2 text-4xl font-bold tracking-tight sm:text-5xl text-center">
+	<p class="mt-2 text-center text-4xl font-bold tracking-tight sm:text-5xl">
 		Choose the right plan for your business
 	</p>
 	<!-- End Title -->
@@ -57,12 +57,12 @@
 	</div>
 	<!-- End Switch -->
 	<!-- Grid -->
-	<div class="mt-5 grid gap-4 lg:items-center max-w-md mx-auto">
+	<div class="mx-auto mt-5 grid max-w-md gap-4 lg:items-center">
 		{@render cardItems()}
 	</div>
 	<!-- Comparison table -->
 	{#if table}
-		<div class="mt-20 lg:mt-32 mx-auto max-w-[85rem]">
+		<div class="mx-auto mt-20 max-w-[85rem] lg:mt-32">
 			<div class="mb-10 lg:mb-20 lg:text-center">
 				<h3 class="text-2xl font-semibold dark:text-white">Compare plans</h3>
 			</div>
