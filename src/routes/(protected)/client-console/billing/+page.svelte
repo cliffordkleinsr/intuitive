@@ -6,12 +6,16 @@
 	import Pricer from '$lib/custom/blocks/monet/pricer.svelte';
 
 	let { data }: { data: PageData } = $props();
-	const { AuthedUser } = data;
+	const { AuthedUser, otp } = data;
 	let value = $state('4826298');
+    const pricerprops = {
+        onetime:otp,
+        Message: 'Select Plan'
+    }
 </script>
 
 <div class="m-5 flex justify-center">
-	<Pricer />
+	<Pricer {...pricerprops}/>
 	<!-- <Card.Root class="max-w-sm w-full space-y-2">
     <Card.Header>
       <Card.Title>M-Pesa Paybill Payment</Card.Title>

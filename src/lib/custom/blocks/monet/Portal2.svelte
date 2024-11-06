@@ -7,11 +7,9 @@
 
 	interface Shower {
 		trigger: Snippet<[any]>;
-		title: string;
-		description?: string;
 		children?: Snippet;
 	}
-	let { trigger, title, description, children }: Shower = $props();
+	let { trigger, children }: Shower = $props();
 
 	let open = $state(false);
 	const isDesktop = new MediaQuery('(min-width: 768px)');
@@ -27,32 +25,28 @@
 		<Dialog.Content class="sm:max-w-[425px]">
 			<Dialog.Header>
 				<Dialog.Title>
-					{title}
 				</Dialog.Title>
 				<Dialog.Description>
-					{description}
+					{@render children?.()}
 				</Dialog.Description>
 			</Dialog.Header>
-			{@render children?.()}
 		</Dialog.Content>
 	</Dialog.Root>
 {:else}
 	<Drawer.Root bind:open>
 		<Drawer.Trigger>
 			{#snippet child({ props })}
-				{@render trigger(props)}
+				{@render trigger({props})}
 			{/snippet}
 		</Drawer.Trigger>
 		<Drawer.Content>
 			<Drawer.Header class="text-left">
 				<Drawer.Title>
-					{title}
 				</Drawer.Title>
 				<Drawer.Description>
-					{description}
+					{@render children?.()}
 				</Drawer.Description>
 			</Drawer.Header>
-			{@render children?.()}
 			<Drawer.Footer class="pt-2">
 				<Drawer.Close class={buttonVariants({ variant: 'outline' })}>Cancel</Drawer.Close>
 			</Drawer.Footer>

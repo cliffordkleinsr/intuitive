@@ -62,7 +62,7 @@
 	</div>
 	<!-- Comparison table -->
 	{#if table}
-		<div class="z-10 mt-20 lg:mt-32">
+		<div class="mt-20 lg:mt-32 mx-auto max-w-[85rem]">
 			<div class="mb-10 lg:mb-20 lg:text-center">
 				<h3 class="text-2xl font-semibold dark:text-white">Compare plans</h3>
 			</div>
