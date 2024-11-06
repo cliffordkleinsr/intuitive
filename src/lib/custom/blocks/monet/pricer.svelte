@@ -3,16 +3,17 @@
 	import * as Card from '$lib/components/ui/card';
 	import { Button } from '$lib/components/ui/button';
 	import { clientPackage } from './sub.svelte';
-
+	import { Switch } from '$lib/components/ui/switch';
 	import { cardList } from './items';
 	import Portal2 from './Portal2.svelte';
 
 	let {
 		table = false,
-		applyLogic = false,
+		applyLogic = true,
 		href = '/client/register',
 		Message = 'Sign Up'
 	} = $props();
+
 	let checked = $state(false);
 	let portalporps = {
 		title: 'Order Summary',
@@ -20,7 +21,10 @@
 	};
 </script>
 
-<Prim {table} {checked}>
+<Prim {table} >
+	{#snippet switcher()}
+		<Switch id="annual" bind:checked />
+	{/snippet}
 	{#snippet cardItems()}
 		{#each cardList as item}
 			<Card.Root
@@ -65,8 +69,8 @@
 								</span>
 							</li>
 						{/each}
-					</ul></Card.Content
-				>
+					</ul>
+				</Card.Content>
 				<Card.Footer>
 					{#if item.subtitles === 'Enterprise'}
 						<Button variant="outline" class="w-full " href="/about#contact">Contact Support</Button>

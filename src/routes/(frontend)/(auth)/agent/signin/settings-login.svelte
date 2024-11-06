@@ -110,7 +110,7 @@
 				</div>
 				<div class="mt-4 text-center text-sm">
 					Don't have an account?
-					<!-- <a href="/agent/register" class="underline hover:text-primary"> Register </a> -->
+					<a href="/agent/register" class="underline hover:text-primary"> Register </a>
 				</div>
 				<div class="mt-4 text-center text-sm">
 					<!-- <a href="/client/password/reset" class="underline hover:text-primary">Forgot Password?</a> -->

@@ -1,6 +1,5 @@
 <script lang="ts">
 	import * as Table from '$lib/components/ui/table';
-	import { Switch } from '$lib/components/ui/switch';
 	import { Label } from '$lib/components/ui/label';
 
 	import Check from 'lucide-svelte/icons/check';
@@ -8,16 +7,17 @@
 	import type { Snippet } from 'svelte';
 
 	interface Primitive {
+		class?: string
 		table: boolean;
 		cardItems: Snippet;
-		checked: boolean;
+		switcher:Snippet;
 	}
-	let { table, cardItems, checked }: Primitive = $props();
+	let { class:classname, table, cardItems, switcher }: Primitive = $props();
 </script>
 
 <div class="py-12 sm:py-14">
 	<h2 class="text-center text-base font-semibold leading-7 text-primary">Pricing</h2>
-	<p class="mt-2 text-4xl font-bold tracking-tight sm:text-5xl">
+	<p class="mt-2 text-4xl font-bold tracking-tight sm:text-5xl text-center">
 		Choose the right plan for your business
 	</p>
 	<!-- End Title -->
@@ -26,7 +26,7 @@
 		<Label class="me-3 min-w-14 text-sm text-gray-500 dark:text-neutral-400" for="airplane-mode"
 			>Monthly</Label
 		>
-		<Switch id="annual" bind:checked />
+		{@render switcher()}
 		<Label
 			class="relative ms-3 min-w-14 text-sm text-gray-500 dark:text-neutral-400"
 			for="airplane-mode"
@@ -57,7 +57,7 @@
 	</div>
 	<!-- End Switch -->
 	<!-- Grid -->
-	<div class="mt-12 grid gap-2 lg:items-center">
+	<div class="mt-5 grid gap-4 lg:items-center max-w-md mx-auto">
 		{@render cardItems()}
 	</div>
 	<!-- Comparison table -->
