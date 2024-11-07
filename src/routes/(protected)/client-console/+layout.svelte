@@ -46,14 +46,14 @@
 					},
 					{
 						title: 'Go Live',
-						url: '/client-console',
+						url: '/client-console/surveys/live',
 						icon: RadioTower
 					}
 				]
 			},
 			{
 				title: 'View Plan',
-				url: '/client-console',
+				url: '/client-console/subscription',
 				icon: Coins,
 				items: []
 			},

@@ -4,7 +4,7 @@
 	import Webcam from 'lucide-svelte/icons/webcam';
 	import Star from 'lucide-svelte/icons/star';
 	import SlidersHorizontal from 'lucide-svelte/icons/sliders-horizontal';
-	import BarChart4 from 'lucide-svelte/icons/chart-column-increasing';
+	import ChartColumnIncreasing from 'lucide-svelte/icons/chart-column-increasing';
 </script>
 
 <div class="flex items-center gap-4">
@@ -62,7 +62,7 @@
 </div>
 <div class="flex items-center gap-4">
 	<div class="flex aspect-square w-12 items-center justify-center rounded-md bg-secondary">
-		<BarChart4 class="size-6 text-secondary-foreground" />
+		<ChartColumnIncreasing class="size-6 text-secondary-foreground" />
 	</div>
 	<div class="grid gap-1">
 		<h4 class="font-semibold">Ranking</h4>

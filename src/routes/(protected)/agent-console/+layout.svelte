@@ -66,7 +66,7 @@
 			<Breadcrumb.Root>
 				<Breadcrumb.List>
 					<Breadcrumb.Item>
-						<Breadcrumb.Link><a href="/agent-console/history">History</a></Breadcrumb.Link>
+						<Breadcrumb.Link><a href="/agent-console/surveys/history">History</a></Breadcrumb.Link>
 					</Breadcrumb.Item>
 					<Breadcrumb.Separator />
 					<Breadcrumb.Item>

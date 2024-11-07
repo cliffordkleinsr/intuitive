@@ -20,7 +20,7 @@
 	};
 
 	// Access the correct likert array based on likert_key
-	let likert_data = $derived(likert_categories[likert_key.toLowerCase()]);
+	let likert_data = $derived(likert_categories[likert_key?.toLowerCase()]);
 </script>
 
 {#if likert_data}

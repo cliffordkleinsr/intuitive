@@ -1,4 +1,6 @@
 export { default as RootQuest } from './base/RootQuest.svelte';
+export { default as PreviewComp } from './base/previewComp.svelte';
+export { default as LiveQuest } from './base/LiveQuest.svelte';
 export { default as LikertComponent } from './likertcomponent/LikertComponent.svelte';
 export { default as Ranker } from './rankingComponent/Ranker.svelte';
 export { default as PresetRanker } from './rankingComponent/PresetRanker.svelte';

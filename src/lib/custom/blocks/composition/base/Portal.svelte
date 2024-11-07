@@ -4,14 +4,22 @@
 	import * as Drawer from '$lib/components/ui/drawer/index.js';
 	import { buttonVariants } from '$lib/components/ui/button/index.js';
 	import type { Snippet } from 'svelte';
+	import { cn } from '$lib/utils';
 
 	interface Shower {
+		class: string | null | undefined;
 		trigger: Snippet;
 		title: string;
 		description?: string;
 		children?: Snippet;
 	}
-	let { trigger, title, description, children }: Shower = $props();
+	let {
+		class: classname = 'sm:max-w-[425px]',
+		trigger,
+		title,
+		description,
+		children
+	}: Shower = $props();
 
 	let open = $state(false);
 	const isDesktop = new MediaQuery('(min-width: 768px)');
@@ -22,7 +30,7 @@
 		<Dialog.Trigger class={buttonVariants({ variant: 'outline' })}>
 			{@render trigger()}
 		</Dialog.Trigger>
-		<Dialog.Content class="sm:max-w-[425px]">
+		<Dialog.Content class={cn(classname)}>
 			<Dialog.Header>
 				<Dialog.Title>
 					{title}
@@ -39,7 +47,7 @@
 		<Drawer.Trigger class={buttonVariants({ variant: 'outline' })}>
 			{@render trigger()}
 		</Drawer.Trigger>
-		<Drawer.Content>
+		<Drawer.Content class={cn(classname)}>
 			<Drawer.Header class="text-left">
 				<Drawer.Title>
 					{title}

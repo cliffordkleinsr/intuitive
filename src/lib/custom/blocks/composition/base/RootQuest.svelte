@@ -83,7 +83,7 @@
 </script>
 
 <!-- Single Question -->
-<Portal {...singleprops}>
+<Portal {...singleprops} class="">
 	{#snippet trigger()}
 		<Webcam />
 		Add an open ended question
@@ -115,7 +115,7 @@
 		{#if form?.errors?.single_question}
 			<p class=" text-sm text-destructive">{form?.errors?.single_question}</p>
 		{/if}
-		<Button type="submit" class="max-w-sm" disabled={sing_loading}>
+		<Button type="submit" class="" disabled={sing_loading}>
 			{#if sing_loading}
 				<div class="flex gap-2">
 					<span
@@ -132,7 +132,7 @@
 	</form>
 </Portal>
 <!-- Multi selection -->
-<Portal {...multiprops}>
+<Portal {...multiprops} class="">
 	{#snippet trigger()}
 		<CheckCheck />
 		Add multiple selection question
@@ -195,7 +195,7 @@
 	</form>
 </Portal>
 <!-- optional selection -->
-<Portal {...optiprops}>
+<Portal {...optiprops} class="">
 	{#snippet trigger()}
 		<Target />
 		Add a single selection question
@@ -258,7 +258,7 @@
 	</form>
 </Portal>
 <!-- Rating -->
-<Portal {...ratingprops}>
+<Portal {...ratingprops} class="">
 	{#snippet trigger()}
 		<Star />
 		Add a rating question
@@ -290,7 +290,7 @@
 		{#if form?.errors?.rating_question}
 			<p class=" text-sm text-destructive">{form?.errors?.rating_question}</p>
 		{/if}
-		<Button type="submit" class="max-w-sm" disabled={starloading}>
+		<Button type="submit" class="" disabled={starloading}>
 			{#if starloading}
 				<div class="flex gap-2">
 					<span
@@ -307,7 +307,7 @@
 	</form>
 </Portal>
 <!-- Likert -->
-<Portal {...likertprops}>
+<Portal {...likertprops} class="">
 	{#snippet trigger()}
 		<SlidersHorizontal />
 		Add a likert question
@@ -338,7 +338,7 @@
 			{#if form?.errors?.question}
 				<p class=" text-sm text-destructive">{form?.errors?.question}</p>
 			{/if}
-			<Select.Root type="single" name="question" bind:value>
+			<Select.Root type="single" name="target" bind:value>
 				<Select.Trigger>
 					{triggerContent}
 				</Select.Trigger>
@@ -349,7 +349,7 @@
 				</Select.Content>
 			</Select.Root>
 		</div>
-		<Button type="submit" class="max-w-sm" disabled={likertloading}>
+		<Button type="submit" class="" disabled={likertloading}>
 			{#if likertloading}
 				<div class="flex gap-2">
 					<span
@@ -366,7 +366,7 @@
 	</form>
 </Portal>
 <!-- Rankers -->
-<Portal {...rankprops}>
+<Portal {...rankprops} class="">
 	{#snippet trigger()}
 		<ChartBar />
 		Add a ranking question
@@ -412,7 +412,7 @@
 		<Button variant="secondary" onclick={() => rankers.remove()} disabled={rankers.other}
 			>Remove Option</Button
 		>
-		<Button type="submit" class="max-w-sm" disabled={rank_loading}>
+		<Button type="submit" class="" disabled={rank_loading}>
 			{#if rank_loading}
 				<div class="flex gap-2">
 					<span

@@ -3,12 +3,21 @@
 
 	// shadcn
 	import * as Card from '$lib/components/ui/card';
+	import { Button } from '$lib/components/ui/button';
+	import { Input } from '$lib/components/ui/input';
+	import { Label } from '$lib/components/ui/label';
+	import * as AlertDialog from '$lib/components/ui/alert-dialog';
 	// lucide
 	import { QuestionType } from '$lib/custom/blocks/index';
 	import { capitalizeFirstLetter } from '$lib/custom/functions/helpers';
 	import RootQuest from '$lib/custom/blocks/composition/base/RootQuest.svelte';
 	import Portal from '$lib/custom/blocks/composition/base/Portal.svelte';
 	import ArrowUpRight from 'lucide-svelte/icons/arrow-up-right';
+	import { PreviewComp } from '$lib/custom/blocks/composition';
+	import { Trash2 } from 'lucide-svelte';
+	import { enhance } from '$app/forms';
+	import { invalidateAll } from '$app/navigation';
+	import { toast } from 'svelte-sonner';
 
 	interface Lotto {
 		data: PageData;
@@ -25,6 +34,8 @@
 		surveyqns,
 		features: { maxqns }
 	} = $derived(data);
+
+	let loading = $state(false);
 </script>
 
 <div class="m-3">
@@ -70,11 +81,86 @@
 				<QuestionType />
 			</Card.Content>
 		</Card.Root>
-		<Portal {...portProps}>
+		<Portal {...portProps} class="max-h-[800px] max-w-xl overflow-y-auto">
 			{#snippet trigger()}
 				Preview Questions
 				<ArrowUpRight />
 			{/snippet}
+			{#each surveyqns as qs, index}
+				<PreviewComp {index} {qs}>
+					{#snippet edits()}
+						<form action="?/editSurvQns" method="post">
+							<AlertDialog.Footer>
+								<div class="grid w-full gap-2">
+									<Input type="text" value={qs.question} name="question" />
+									<Input type="text" value={qs.id} class="hidden" name="questionId" />
+									{#if qs.question_type === 'Optional' || qs.question_type === 'Multiple'}
+										<Label>Options</Label>
+										{#each qs.options as option, i}
+											{@const id = qs.optionid[i]}
+											{#if option != null}
+												<div class="flex gap-4">
+													<Input type="text" value={option} name="option" />
+													<Input type="text" value={id} name="optionId" class="hidden" />
+													<!-- svelte-ignore node_invalid_placement_ssr -->
+													<form action="?/deleteOpt" method="post">
+														<Input type="text" value={id} name="optionId" class="hidden" />
+														<Button size="icon" variant="secondary" type="submit">
+															<Trash2 class="size-4 text-destructive" />
+														</Button>
+													</form>
+												</div>
+											{/if}
+										{/each}
+									{/if}
+									<AlertDialog.Cancel>Cancel</AlertDialog.Cancel>
+									<Button type="submit">Save</Button>
+								</div>
+
+								<!--<AlertDialog.Action>Continue</AlertDialog.Action> -->
+							</AlertDialog.Footer>
+						</form>
+					{/snippet}
+					{#snippet deletes()}
+						<form
+							action="?/deleteSurvQns"
+							method="post"
+							use:enhance={() => {
+								loading = true;
+								return async ({ result, update }) => {
+									if (result.type === 'success') {
+										loading = false;
+										await invalidateAll();
+
+										loading = false;
+										toast.success('Deleted Successfully');
+									} else {
+										loading = false;
+										await update();
+									}
+								};
+							}}
+						>
+							<Input type="text" value={qs.id} class="hidden" name="questionId" />
+							<Input type="text" value={qs.question_type} class="hidden" name="questionType" />
+							<Button class="w-full" type="submit" disabled={loading}>
+								{#if loading}
+									<div class="flex gap-2">
+										<span
+											class="inline-block size-4 animate-spin rounded-full border-[3px] border-current border-t-transparent text-white"
+											role="status"
+											aria-label="loading"
+										></span>
+										Loading...
+									</div>
+								{:else}
+									Continue
+								{/if}
+							</Button>
+						</form>
+					{/snippet}
+				</PreviewComp>
+			{/each}
 		</Portal>
 	</div>
 </div>
