@@ -130,7 +130,7 @@ export const actions: Actions = {
 			// set the survey as complete
 			await setsurveyComplete(locals.user?.id!, params.surveyId);
 			//then redirect
-			redirect(303, '/agent-console/surveys/complete');
+			redirect(303, '/agent-console/surveys/take/complete');
 		}
 	},
 	addCheckAns: async ({ request, cookies, params, locals }) => {
@@ -222,7 +222,7 @@ export const actions: Actions = {
 			// set the survey as complete
 			await setsurveyComplete(locals.user?.id!, params.surveyId);
 			//then redirect
-			redirect(303, '/agent-console/surveys/complete');
+			redirect(303, '/agent-console/surveys/take/complete');
 		}
 	},
 	addRankAns: async ({ request, params, cookies, locals }) => {
@@ -310,7 +310,7 @@ export const actions: Actions = {
 			// set the survey as complete
 			await setsurveyComplete(locals.user?.id!, params.surveyId);
 			//then redirect
-			redirect(303, '/agent-console/surveys/complete');
+			redirect(303, '/agent-console/surveys/take/complete');
 		}
 	},
 	addRatAns: async ({ request, params, cookies, locals }) => {

@@ -102,13 +102,13 @@
 			>
 		</Tabs.List>
 		<Tabs.Content value="draft">
-			<DataTable data={draft_surv} columns={columns(payment.status)} />
+			<DataTable data={draft_surv} columns={columns(payment.status, 'Draft')} />
 		</Tabs.Content>
 		<Tabs.Content value="running">
-			<DataTable data={live_surv} columns={columns(payment.status)} />
+			<DataTable data={live_surv} columns={columns(payment.status, 'Live')} />
 		</Tabs.Content>
 		<Tabs.Content value="completed">
-			<DataTable data={closed_surv} columns={columns(payment.status)} />
+			<DataTable data={closed_surv} columns={columns(payment.status, 'Closed')} />
 		</Tabs.Content>
 	</Tabs.Root>
 </div>

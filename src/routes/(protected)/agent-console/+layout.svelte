@@ -60,7 +60,9 @@
 <Sidebar.Provider>
 	<AppSidebar {...AgentlayoutItems} />
 	<Sidebar.Inset>
-		<header class="sticky top-0 flex h-16 w-full items-center gap-2 border-b px-4">
+		<header
+			class="sticky top-0 flex h-16 w-full items-center gap-2 border-b px-4 backdrop-blur-lg lg:backdrop-blur-none"
+		>
 			<Sidebar.Trigger />
 			<Separator orientation="vertical" class="mr-2 h-4" />
 			<Breadcrumb.Root>

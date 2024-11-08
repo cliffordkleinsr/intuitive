@@ -10,12 +10,12 @@ export type Survey = {
 	status: string;
 };
 
-export const columns = (payment: boolean): ColumnDef<Survey>[] => {
+export const columns = (payment: boolean, survey: string): ColumnDef<Survey>[] => {
 	return [
 		{
 			accessorKey: 'id',
 			cell: ({ row }) => {
-				return renderComponent(DataTableAdditional, { id: row.original.id });
+				return renderComponent(DataTableAdditional, { id: row.original.id, survey: survey });
 			}
 		},
 		{

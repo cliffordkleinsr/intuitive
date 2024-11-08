@@ -13,6 +13,7 @@
 	// lucide
 	import CheckCheck from 'lucide-svelte/icons/check-check';
 	import { LikertComponent, Ranker, StarComponent } from '$lib/custom/blocks/composition';
+	import { beforeNavigate } from '$app/navigation';
 
 	let { data, form }: { data: PageData; form: any | Actions | undefined } = $props();
 
