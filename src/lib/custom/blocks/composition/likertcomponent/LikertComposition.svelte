@@ -3,7 +3,11 @@
 	import { Label } from '$lib/components/ui/label';
 	import * as RadioGroup from '$lib/components/ui/radio-group';
 
-	let { likert_key, disabled = true }: { likert_key: string; disabled: boolean } = $props();
+	let {
+		likert_key,
+		disabled = true,
+		...rest
+	}: { likert_key: string; disabled: boolean } = $props();
 	type Likert = { option: string };
 
 	const likert_categories: { [key: string]: Likert[] } = {
@@ -26,7 +30,7 @@
 {#if likert_data}
 	{#each likert_data as opt}
 		<div class="flex items-center space-x-2">
-			<RadioGroup.Item value={opt.option} {disabled} />
+			<RadioGroup.Item value={opt.option} {disabled} {...rest} />
 			<Label for={opt.option} class="text-muted-foreground">{opt.option}</Label>
 		</div>
 	{/each}

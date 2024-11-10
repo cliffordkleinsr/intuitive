@@ -28,6 +28,7 @@ import {
 import type { PgColumn, PgTable } from 'drizzle-orm/pg-core';
 import { clientPackage } from '$lib/store';
 import type { RetryAfterRateLimiter } from 'sveltekit-rate-limiter/server';
+import type { Cookies } from '@sveltejs/kit';
 
 export const deleteCUser = async (userid: string, surveyid: string) => {
 	await db.delete(surveyqnsTableV2).where(eq(surveyqnsTableV2.surveid, surveyid));
@@ -202,7 +203,9 @@ export const setpackageExpired = async (
  */
 export const questionCount = async (surveid: string) => {
 	return await db
-		.select()
+		.select({
+			id: surveyqnsTableV2.questionId
+		})
 		.from(surveyqnsTableV2)
 		.where(eq(surveyqnsTableV2.surveid, surveid))
 		.orderBy(asc(surveyqnsTableV2.updatedAt));
@@ -287,7 +290,7 @@ export const getsurveyQuestions = async (questionId: string) => {
 			id: surveyqnsTableV2.questionId,
 			question: surveyqnsTableV2.question,
 			question_type: surveyqnsTableV2.questionT,
-			likert_key: surveyqnsTableV2.likertKey,
+			likert_key: sql<string>`${surveyqnsTableV2.likertKey}`,
 			optionid: sql<string[]>`ARRAY_AGG(${QuestionOptions.optionId})`,
 			options: sql<string[]>`ARRAY_AGG(${QuestionOptions.option})`
 		})
@@ -579,6 +582,55 @@ export const countTotFltrdAgents = async (gender: string, survid: string) => {
         `);
 	return query.length;
 };
+
+export const indexParser = (index: number, cookies: Cookies): void => {
+	cookies.set('current_ix', String(index), {
+		path: '/',
+		httpOnly: true,
+		sameSite: 'strict',
+		maxAge: 60 * 5 // expires after 5 mins
+	});
+};
+
+export const indexReset = (cookies: Cookies): void => {
+	cookies.set('current_ix', '0', {
+		path: '/',
+		httpOnly: true,
+		sameSite: 'strict',
+		maxAge: 0 // Expire the cookie immediately
+	});
+};
+
+export async function handleSurveyProgress({
+	uid,
+	surveyId,
+	cookies
+}: {
+	uid: string;
+	surveyId: string;
+	cookies: Cookies;
+}) {
+	// Get current progress and total questions
+	const [db_ix, ids] = await Promise.all([getpersistentIx(uid, surveyId), questionCount(surveyId)]);
+
+	// Get current index from cookies or database
+	let current_ix = parseInt(cookies.get('current_ix') ?? '0') || db_ix;
+
+	// Increment if not at the end
+	if (current_ix < ids.length - 1) {
+		current_ix++;
+		indexParser(current_ix, cookies);
+	}
+
+	// Get next question ID
+	const next = ids[current_ix].id;
+
+	// Update progress in database
+	await updateprogressData(uid, surveyId, current_ix);
+
+	// Redirect to next question
+	return next;
+}
 // await db.insert(clientPackages).values({
 //     packageid: 'prod_QTgA9EH6qo3dRu',
 //     packageDesc: 'Premium Business',

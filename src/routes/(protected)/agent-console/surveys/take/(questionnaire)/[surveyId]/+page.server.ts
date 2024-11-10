@@ -21,25 +21,38 @@ export const load: PageServerLoad = async ({ params, cookies, locals: { user } }
 	}
 	async function getSurvey() {
 		let uri: string = '';
-		const ids = await db
-			.select({
-				id: surveyqnsTableV2.questionId
-			})
-			.from(surveyqnsTableV2)
-			.where(eq(surveyqnsTableV2.surveid, params.surveyId))
-			.orderBy(asc(surveyqnsTableV2.updatedAt));
+		const [ids, ixi, surveyqns] = await Promise.all([
+			db
+				.select({
+					id: surveyqnsTableV2.questionId
+				})
+				.from(surveyqnsTableV2)
+				.where(eq(surveyqnsTableV2.surveid, params.surveyId))
+				.orderBy(asc(surveyqnsTableV2.updatedAt)),
+
+			getpersistentIx(user?.id!, params.surveyId),
+
+			db.select().from(surveyqnsTableV2).where(eq(surveyqnsTableV2.surveid, params.surveyId))
+		]);
+		// const ids = await db
+		// 	.select({
+		// 		id: surveyqnsTableV2.questionId
+		// 	})
+		// 	.from(surveyqnsTableV2)
+		// 	.where(eq(surveyqnsTableV2.surveid, params.surveyId))
+		// 	.orderBy(asc(surveyqnsTableV2.updatedAt));
 		let current_ix = parseInt(cookies.get('current_ix') ?? '0');
 		// first check whether we have a cookie for the indexed session
 		if (current_ix === 0) {
 			// if not we check whether we have a persisted index in the database
 			// if there is a persisted index in the database return the uri with the index url
-			current_ix = await getpersistentIx(user?.id!, params.surveyId);
+			current_ix = ixi;
 		}
 		uri = `/agent-console/surveys/take/${params.surveyId}/${ids[current_ix].id}`;
-		const surveyqns = await db
-			.select()
-			.from(surveyqnsTableV2)
-			.where(eq(surveyqnsTableV2.surveid, params.surveyId));
+		// const surveyqns = await db
+		// 	.select()
+		// 	.from(surveyqnsTableV2)
+		// 	.where(eq(surveyqnsTableV2.surveid, params.surveyId));
 
 		const data = {
 			available_surv: {

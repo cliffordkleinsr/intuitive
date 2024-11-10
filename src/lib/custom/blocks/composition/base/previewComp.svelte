@@ -15,7 +15,7 @@
 	import ChartColumnIncreasing from 'lucide-svelte/icons/chart-column-increasing';
 	import Webcam from 'lucide-svelte/icons/webcam';
 	// custom blocks
-	import LikertComponent from '../likertcomponent/LikertComponent.svelte';
+	import LikertComposition from '../likertcomponent/LikertComposition.svelte';
 	import StarComponent from '../rating/StarComponent.svelte';
 	import type { Snippet } from 'svelte';
 
@@ -87,7 +87,7 @@
 		<StarComponent />
 	{:else if qs.question_type === 'Likert'}
 		<RadioGroup.Root value="option-one" class="grid grid-cols-2">
-			<LikertComponent likert_key={qs.likert_key} disabled={true} />
+			<LikertComposition likert_key={qs.likert_key} disabled={true} />
 		</RadioGroup.Root>
 	{:else if qs.question_type === 'Ranking'}
 		<ScrollArea class="h-48  max-w-lg rounded-md border " orientation="both">
