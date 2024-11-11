@@ -15,7 +15,17 @@ const enumBuilder = (options: string[]) => {
 
 	return optionalSchema;
 };
-
+// for checkbox
+const multipleSchema = z.object({
+	items: z
+		.array(
+			z.object({
+				id: z.string().uuid(), // if your IDs are UUIDs
+				label: z.string().min(1) // if labels can't be empty
+			})
+		)
+		.min(1, { message: 'You have to select at least one item.' })
+});
 // for rankers
 const rankBuilder = (aspects: string[]) => {
 	const rankSchema = z.object(
@@ -23,9 +33,15 @@ const rankBuilder = (aspects: string[]) => {
 	);
 	return rankSchema;
 };
-export { openEndedSchema, enumBuilder, rankBuilder };
+// for rating
+const ratingSchema = z.object({
+	answer: z.number().min(1, 'Please select a rating').max(5)
+});
+export { openEndedSchema, multipleSchema, ratingSchema, enumBuilder, rankBuilder };
 
 type OpenEndedSchema = typeof openEndedSchema;
+type MultipleSchema = typeof multipleSchema;
 type OptionalSchema = ReturnType<typeof enumBuilder>;
 type RankSchema = ReturnType<typeof rankBuilder>;
-export type { OpenEndedSchema, OptionalSchema, RankSchema };
+type RateSchema = typeof ratingSchema;
+export type { OpenEndedSchema, MultipleSchema, OptionalSchema, RankSchema, RateSchema };

@@ -1,24 +1,25 @@
 <script lang="ts">
 	import * as Form from '$lib/components/ui/form';
-	import { superForm, type Infer, type SuperValidated } from 'sveltekit-superforms';
+	import SuperDebug, { superForm, type Infer, type SuperValidated } from 'sveltekit-superforms';
 	import { zodClient } from 'sveltekit-superforms/adapters';
-	import { openEndedSchema, type OpenEndedSchema } from '../super_schema';
+	import { ratingSchema, type RateSchema } from '../super_schema';
 	import { toast } from 'svelte-sonner';
-	import { Textarea } from '$lib/components/ui/textarea';
 	import { Button } from '$lib/components/ui/button';
 
 	// lucide
 	import CheckCheck from 'lucide-svelte/icons/check-check';
+	import { StarComponent } from '../../composition';
+	import Input from '$lib/components/ui/input/input.svelte';
 
 	let {
 		data,
 		question,
 		cur_id
-	}: { data: SuperValidated<Infer<OpenEndedSchema>>; question: string; cur_id: string } = $props();
+	}: { data: SuperValidated<Infer<RateSchema>>; question: string; cur_id: string } = $props();
 
 	const form = superForm(data, {
 		id: cur_id,
-		validators: zodClient(openEndedSchema),
+		validators: zodClient(ratingSchema),
 		onUpdated: () => {
 			if (!$message) return;
 
@@ -37,15 +38,15 @@
 	const { form: formData, enhance, message, delayed } = form;
 </script>
 
-<form action="?/singleform" method="POST" class="w-2/3 space-y-6 lg:w-1/4" use:enhance>
+<form action="?/rateform" method="POST" class="w-2/3 space-y-6 lg:w-1/4" use:enhance>
 	<Form.Field {form} name="answer">
 		<Form.Control>
 			{#snippet children({ props })}
 				<Form.Label>{question}</Form.Label>
-				<Textarea {...props} bind:value={$formData.answer} />
+				<StarComponent disabled={false} {...props} bind:value={$formData.answer} />
 			{/snippet}
 		</Form.Control>
-		<Form.Description>Please write your answer in the text box.</Form.Description>
+		<Form.Description>Please select atleast one rating.</Form.Description>
 		<Form.FieldErrors />
 	</Form.Field>
 	{#if $delayed}
@@ -63,4 +64,5 @@
 			Submit
 		</Form.Button>
 	{/if}
+	<!-- <SuperDebug data={$formData} /> -->
 </form>

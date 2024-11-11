@@ -26,7 +26,7 @@
 				</Card.Description>
 			</Card.Header>
 			<Card.Footer>
-				<Button variant="default" href="/client-dash/surveys/create">Create New Survey</Button>
+				<Button variant="default" href="/client-console/surveys/create">Create New Survey</Button>
 			</Card.Footer>
 		</Card.Root>
 		<Card.Root
@@ -78,12 +78,7 @@
 					{share}
 				</Card.Content>
 				<Card.Footer>
-					<Button
-						href="/client-dash/surveys/sharable"
-						size="default"
-						variant="default"
-						class="ml-auto w-full gap-1"
-					>
+					<Button href="##" size="default" variant="default" class="ml-auto w-full gap-1">
 						View sharable surveys
 						<ArrowUpRight class="h-4 w-4" />
 					</Button>

@@ -29,6 +29,7 @@ import type { PgColumn, PgTable } from 'drizzle-orm/pg-core';
 import { clientPackage } from '$lib/store';
 import type { RetryAfterRateLimiter } from 'sveltekit-rate-limiter/server';
 import type { Cookies } from '@sveltejs/kit';
+import { redirect } from 'sveltekit-flash-message/server';
 
 export const deleteCUser = async (userid: string, surveyid: string) => {
 	await db.delete(surveyqnsTableV2).where(eq(surveyqnsTableV2.surveid, surveyid));
@@ -400,7 +401,8 @@ export const updatesurveyPoints = async (user: string, surveyid: string) => {
 	return await db
 		.update(agentData)
 		.set({
-			total_pts_earned: aggregate
+			total_pts_earned: aggregate,
+			total_points_payable: aggregate
 		})
 		.where(eq(agentData.agentid, user));
 };
@@ -601,6 +603,12 @@ export const indexReset = (cookies: Cookies): void => {
 	});
 };
 
+/**
+ *  Redirects with condition
+ * @param uid string
+ * @param surveid string
+ * @param cookies Cookies
+ */
 export async function handleSurveyProgress({
 	uid,
 	surveyId,
@@ -620,16 +628,48 @@ export async function handleSurveyProgress({
 	if (current_ix < ids.length - 1) {
 		current_ix++;
 		indexParser(current_ix, cookies);
+		// Get next question ID
+		const next = ids[current_ix].id;
+
+		// Update progress in database
+		await updateprogressData(uid, surveyId, current_ix);
+
+		// Redirect to next question
+		redirect(
+			303,
+			`/agent-console/surveys/take/${surveyId}/${next}`,
+			{ type: 'success', message: 'Input Successfully Recorded' },
+			cookies
+		);
+	} else {
+		// clear client cookie
+		indexReset(cookies);
+		// clear the persistent index also
+		await deleteProgressData(uid, surveyId);
+		// set the new target since this guy cant do the survey again
+		await setTarget(surveyId);
+		// update points
+		await updatesurveyPoints(uid, surveyId);
+		// set the survey as complete
+		await setsurveyComplete(uid, surveyId);
+		//then redirect
+		redirect(303, '/agent-console/surveys/take/complete');
 	}
+}
 
-	// Get next question ID
-	const next = ids[current_ix].id;
-
-	// Update progress in database
-	await updateprogressData(uid, surveyId, current_ix);
-
-	// Redirect to next question
-	return next;
+export async function validateAnswerNotExists(questionid: string, cookies: Cookies) {
+	const exists = await db
+		.select()
+		.from(AnswersTable)
+		.where(eq(AnswersTable.questionId, questionid));
+	if (exists.length > 0) {
+		redirect(
+			303,
+			'/agent-console/surveys/take',
+			{ type: 'error', message: 'Not Allowed' },
+			cookies
+		);
+	}
 }
 // await db.insert(clientPackages).values({
 //     packageid: 'prod_QTgA9EH6qo3dRu',

@@ -35,12 +35,12 @@ export const actions: Actions = {
 				alertText: 'Please Check your entries, the form contains invalid data'
 			});
 		}
-		if (form.valid) {
-			return message(form, {
-				alertType: 'error',
-				alertText: 'Not Authorised'
-			});
-		}
+		// if (form.valid) {
+		// 	return message(form, {
+		// 		alertType: 'error',
+		// 		alertText: 'Not Authorised'
+		// 	});
+		// }
 		// await db.delete(emailVerificationCodes)
 		// await deleteClientUsers()
 		// destructure form.data for some operations and insertions

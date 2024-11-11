@@ -57,7 +57,9 @@
 							{/each}
 						</div>
 					{:else if qns.question_type === 'Rating'}
-						<StarComponent checked={2} />
+						{#each qns.answer as ans}
+							<StarComponent value={parseInt(ans)} />
+						{/each}
 					{:else if qns.question_type === 'Ranking'}
 						{@const rid = qns.rankIds.map((id) => parseInt(id))}
 						<div class="grid w-full gap-3">

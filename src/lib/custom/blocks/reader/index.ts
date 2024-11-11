@@ -4,3 +4,5 @@ export { default as SingleComponent } from './components/singlecomp.svelte';
 export { default as OptionalComponent } from './components/optionalcomp.svelte';
 export { default as LikertComponent } from './components/likertcomp.svelte';
 export { default as RankComponent } from './components/rankcomp.svelte';
+export { default as MultiComponent } from './components/multiplecomp.svelte';
+export { default as RateComponent } from './components/ratcomp.svelte';

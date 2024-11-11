@@ -66,12 +66,12 @@ export const actions: Actions = {
 		if (exists) {
 			return setError(form, 'email', 'Email already registered');
 		}
-		// if (form.valid) {
-		// 	return message(form, {
-		// 		alertType: 'error',
-		// 		alertText: 'Were sorry but you cant register in pilot mode'
-		// 	});
-		// }
+		if (form.valid) {
+			return message(form, {
+				alertType: 'error',
+				alertText: 'Were sorry but you cant register in pilot mode'
+			});
+		}
 		try {
 			const userid = crypto.randomUUID();
 			const hashPassword = await bcrypt.hash(password, 15);

@@ -52,7 +52,7 @@
 	const { form: formData, enhance, message, delayed } = form;
 </script>
 
-<form method="POST" action="?/singleform" class="w-2/3 space-y-6" use:enhance>
+<form method="POST" action="?/singleform" class="w-2/3 space-y-6 lg:w-1/4" use:enhance>
 	<Form.Fieldset {form} name="answer" class="space-y-3">
 		<Form.Legend>{question}</Form.Legend>
 		<RadioGroup.Root bind:value={$formData.answer} class="flex flex-col space-y-1" name="answer">
@@ -67,7 +67,7 @@
 	{#if $delayed}
 		<Button class="flex w-full gap-2" variant="outline">
 			<span
-				class="inline-block size-4 animate-spin rounded-full border-[3px] border-current border-t-transparent text-white"
+				class="inline-block size-4 animate-spin rounded-full border-[3px] border-current border-t-transparent dark:text-white"
 				role="status"
 				aria-label="loading"
 			></span>

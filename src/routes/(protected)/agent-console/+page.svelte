@@ -73,7 +73,7 @@
 				</Card.Title>
 				<Card.Content></Card.Content>
 				<Card.Footer class="pt-3">
-					<Button class="flex w-full gap-2" variant="secondary" href="/agent-console/surveys/take">
+					<Button class="flex w-full gap-2" variant="secondary" href="/agent-console/billing">
 						Recieve Payments
 						<ArrowUpRight class="size-4" />
 					</Button>

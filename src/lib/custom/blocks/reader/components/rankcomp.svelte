@@ -57,10 +57,8 @@
 		if ($formData[aspect] === rank) {
 			// If the same rank is clicked again, we need to handle the temporary null state
 			tempNulls[aspect] = true;
-			setTimeout(() => {
-				$formData[aspect] = 'null';
-				tempNulls[aspect] = false;
-			}, 0);
+			$formData[aspect] = 'null';
+			tempNulls[aspect] = false;
 		} else {
 			// Set the new rank for the selected aspect
 			tempNulls[aspect] = false;
@@ -111,7 +109,7 @@
 			{#if $delayed}
 				<Button class="flex w-full gap-2" variant="outline">
 					<span
-						class="inline-block size-4 animate-spin rounded-full border-[3px] border-current border-t-transparent text-white"
+						class="inline-block size-4 animate-spin rounded-full border-[3px] border-current border-t-transparent dark:text-white"
 						role="status"
 						aria-label="loading"
 					></span>

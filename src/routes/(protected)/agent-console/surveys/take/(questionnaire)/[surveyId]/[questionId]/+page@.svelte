@@ -2,8 +2,10 @@
 	import { Progress } from '$lib/components/ui/progress';
 	import {
 		LikertComponent,
+		MultiComponent,
 		OptionalComponent,
 		RankComponent,
+		RateComponent,
 		SingleComponent
 	} from '$lib/custom/blocks/reader';
 	import { Button } from '$lib/components/ui/button';
@@ -16,6 +18,8 @@
 		openEndedForm,
 		optionalForm,
 		rankForm,
+		multiForm,
+		rateForm,
 		// relevant data
 		cache: {
 			pool_questions: { question, question_type, likert_key, options, optionid },
@@ -30,7 +34,7 @@
 </script>
 
 <Progress value={progress} />
-<div class="m-5 mx-auto max-w-screen-md place-items-center py-56">
+<div class=" grid place-items-center py-24">
 	{#if question_type === 'Single'}
 		<SingleComponent data={openEndedForm} {question} {cur_id} />
 	{/if}
@@ -46,15 +50,15 @@
 
 	{#if question_type === 'Rating'}
 		<!-- tbd -->
+		<RateComponent data={rateForm} {question} {cur_id} />
 	{/if}
 
 	{#if question_type === 'Ranking'}
-		<!-- tbd -->
 		<RankComponent data={rankForm} {question} {cur_id} {options} />
 	{/if}
 
 	{#if question_type === 'Multiple'}
-		<!-- tbd -->
+		<MultiComponent data={multiForm} {question} {cur_id} {optionid} {options} />
 	{/if}
 </div>
 <div class="absolute bottom-10 right-10">

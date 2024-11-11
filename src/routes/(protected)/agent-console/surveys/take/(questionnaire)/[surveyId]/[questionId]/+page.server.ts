@@ -10,13 +10,19 @@ import {
 	insertprogressData,
 	questionCount,
 	selectProgressData,
-	updateprogressData
+	updateprogressData,
+	validateAnswerNotExists
 } from '$lib/server/db/db_utils';
 import { db } from '$lib/server/db';
 import { AnswersTable } from '$lib/server/db/schema';
 import { redirect } from 'sveltekit-flash-message/server';
 import { eq } from 'drizzle-orm';
-import { enumBuilder, rankBuilder } from '$lib/custom/blocks/reader/super_schema';
+import {
+	enumBuilder,
+	multipleSchema,
+	rankBuilder,
+	ratingSchema
+} from '$lib/custom/blocks/reader/super_schema';
 import { RedoIcon } from 'lucide-svelte';
 import { handleLoginRedirect } from '$lib/custom/functions/helpers';
 export const load: PageServerLoad = async ({ params, cookies, locals: { user }, url }) => {
@@ -37,11 +43,13 @@ export const load: PageServerLoad = async ({ params, cookies, locals: { user }, 
 	// for the optionalschema
 	const optionalSchema = enumBuilder(pool_questions.options);
 	const rankSchema = rankBuilder(pool_questions.options);
-	const [openEndedForm, optionalForm, rankForm] = await Promise.all([
+	const [openEndedForm, optionalForm, rankForm, multiForm, rateForm] = await Promise.all([
 		// schemas
 		superValidate(zod(openEndedSchema)),
 		superValidate(zod(optionalSchema)),
-		superValidate(zod(rankSchema))
+		superValidate(zod(rankSchema)),
+		superValidate(zod(multipleSchema)),
+		superValidate(zod(ratingSchema))
 	]);
 
 	// console.log(surveyqns)
@@ -58,6 +66,8 @@ export const load: PageServerLoad = async ({ params, cookies, locals: { user }, 
 		openEndedForm,
 		optionalForm,
 		rankForm,
+		multiForm,
+		rateForm,
 		cache,
 		cur_id: params.questionId
 	};
@@ -76,18 +86,7 @@ export const actions: Actions = {
 		}
 
 		// validate answer does not exist before proceeding
-		const exists = await db
-			.select()
-			.from(AnswersTable)
-			.where(eq(AnswersTable.questionId, questionId));
-
-		if (exists.length > 0)
-			redirect(
-				303,
-				'/agent-console/surveys/take',
-				{ type: 'error', message: 'Not Allowed' },
-				cookies
-			);
+		await validateAnswerNotExists(questionId, cookies);
 		//  destructure
 		const { answer } = openEndedForm.data;
 
@@ -130,18 +129,7 @@ export const actions: Actions = {
 			});
 		}
 		// validate answer does not exist before proceeding
-		const exists = await db
-			.select()
-			.from(AnswersTable)
-			.where(eq(AnswersTable.questionId, questionId));
-
-		if (exists.length > 0)
-			redirect(
-				303,
-				'/agent-console/surveys/take',
-				{ type: 'error', message: 'Not Allowed' },
-				cookies
-			);
+		await validateAnswerNotExists(questionId, cookies);
 		//  destructure
 		const { type } = optionalForm.data;
 
@@ -161,13 +149,7 @@ export const actions: Actions = {
 			});
 		}
 		// Dynamic routing with incremental counter
-		const next = await handleSurveyProgress({ uid, surveyId, cookies });
-		redirect(
-			303,
-			`/agent-console/surveys/take/${surveyId}/${next}`,
-			{ type: 'success', message: 'Input Successfully Recorded' },
-			cookies
-		);
+		return await handleSurveyProgress({ uid, surveyId, cookies });
 	},
 	rankform: async ({ request, params: { surveyId, questionId }, cookies, locals: { user } }) => {
 		const uid = user?.id as string;
@@ -183,7 +165,108 @@ export const actions: Actions = {
 				alertText: 'Please Check your entries, the form contains invalid data'
 			});
 		}
+		const hasNullValue = Object.values(rankForm.data).some((value) => value === 'null');
 
-		console.log(rankForm);
+		if (hasNullValue) {
+			return message(rankForm, {
+				alertType: 'error',
+				alertText: 'Please Ensure that you select all options'
+			});
+		}
+		// validate answer does not exist before proceeding
+		await validateAnswerNotExists(questionId, cookies);
+		try {
+			for (const [answer, rankId] of Object.entries(rankForm.data)) {
+				await db.insert(AnswersTable).values({
+					questionId: questionId,
+					surveid: surveyId,
+					rankId: rankId,
+					answer: answer,
+					agentId: uid
+				});
+			}
+		} catch (err) {
+			console.error(err);
+
+			return message(rankForm, {
+				alertType: 'error',
+				alertText: 'An Unexpected error occured'
+			});
+		}
+		// Dynamic routing with incremental counter
+		return await handleSurveyProgress({ uid, surveyId, cookies });
+	},
+	checkboxMultiple: async ({
+		request,
+		params: { surveyId, questionId },
+		cookies,
+		locals: { user }
+	}) => {
+		const uid = user?.id as string;
+		const multiForm = await superValidate(request, zod(multipleSchema));
+		// validate
+		if (!multiForm.valid) {
+			return message(multiForm, {
+				alertType: 'error',
+				alertText: 'Please Check your entries, the form contains invalid data'
+			});
+		}
+		// validate answer does not exist before proceeding
+		await validateAnswerNotExists(questionId, cookies);
+		//  destructure
+		const { items } = multiForm.data;
+		try {
+			for (const { id, label } of items) {
+				await db.insert(AnswersTable).values({
+					questionId: questionId,
+					surveid: surveyId,
+					optionId: id,
+					answer: label,
+					agentId: uid
+				});
+			}
+		} catch (err) {
+			console.error(err);
+
+			return message(multiForm, {
+				alertType: 'error',
+				alertText: 'An Unexpected error occured'
+			});
+		}
+		// Dynamic routing with incremental counter
+		return await handleSurveyProgress({ uid, surveyId, cookies });
+	},
+	rateform: async ({ request, params: { surveyId, questionId }, cookies, locals: { user } }) => {
+		const uid = user?.id as string;
+		const rateForm = await superValidate(request, zod(ratingSchema));
+		// validate
+		if (!rateForm.valid) {
+			return message(rateForm, {
+				alertType: 'error',
+				alertText: 'Please Check your entries, the form contains invalid data'
+			});
+		}
+		// validate answer does not exist before proceeding
+		await validateAnswerNotExists(questionId, cookies);
+		//  destructure
+		const { answer } = rateForm.data;
+
+		try {
+			await db.insert(AnswersTable).values({
+				questionId: questionId,
+				surveid: surveyId,
+				answer: answer.toString(),
+				agentId: uid
+			});
+		} catch (err) {
+			console.error(err);
+
+			return message(rateForm, {
+				alertType: 'error',
+				alertText: 'An Unexpected error occured'
+			});
+		}
+		// Dynamic routing with incremental counter
+		return await handleSurveyProgress({ uid, surveyId, cookies });
 	}
 };

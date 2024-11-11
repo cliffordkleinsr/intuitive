@@ -1,27 +1,22 @@
 <script lang="ts">
-	let {
-		disabled = true,
-		checked = 0
-	}: {
-		disabled?: boolean;
-		checked?: number;
-	} = $props();
+	let { value = $bindable(0), disabled = false, name = '', ...rest } = $props();
 </script>
 
-<!-- Rating -->
 <div class="flex flex-row-reverse items-center justify-end gap-2">
-	{#each [5, 4, 3, 2, 1] as cmp}
+	{#each [5, 4, 3, 2, 1] as rating}
 		<input
-			id="hs-ratings-readonly-{cmp}"
+			id="rating-{rating}"
 			type="radio"
 			class="peer -ms-5 size-5 cursor-pointer appearance-none border-0 bg-transparent text-transparent checked:bg-none focus:bg-none focus:ring-0 focus:ring-offset-0"
-			name="answer"
-			value={cmp}
+			{name}
 			{disabled}
-			bind:group={checked}
+			{value}
+			onchange={() => (value = rating)}
+			checked={value === rating}
+			{...rest}
 		/>
 		<label
-			for="hs-ratings-readonly-{cmp}"
+			for="rating-{rating}"
 			class="pointer-events-none text-gray-300 peer-checked:text-yellow-400 dark:text-neutral-600 dark:peer-checked:text-yellow-600"
 		>
 			<svg
@@ -39,4 +34,3 @@
 		</label>
 	{/each}
 </div>
-<!-- End Rating -->
