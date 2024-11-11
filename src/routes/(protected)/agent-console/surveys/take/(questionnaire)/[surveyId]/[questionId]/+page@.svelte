@@ -11,6 +11,9 @@
 	import { Button } from '$lib/components/ui/button';
 
 	import type { PageData } from './$types';
+	import BatteryFull from 'lucide-svelte/icons/battery-full';
+	import BatteryLow from 'lucide-svelte/icons/battery-low';
+	import BatteryMedium from 'lucide-svelte/icons/battery-medium';
 
 	let { data }: { data: PageData } = $props();
 	const {
@@ -63,4 +66,14 @@
 </div>
 <div class="absolute bottom-10 right-10">
 	<Button variant="ghost" href="/agent-console">Tired Take a Break 🥱</Button>
+</div>
+<div class="absolute bottom-12 left-10 flex gap-1 text-xs">
+	{#if progress <= 10}
+		<BatteryLow />
+	{:else if progress <= 50}
+		<BatteryMedium />
+	{:else}
+		<BatteryFull />
+	{/if}
+	<p class="py-1">{progress}%</p>
 </div>

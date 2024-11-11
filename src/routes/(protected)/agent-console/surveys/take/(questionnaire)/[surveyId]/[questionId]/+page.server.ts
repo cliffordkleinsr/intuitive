@@ -107,12 +107,6 @@ export const actions: Actions = {
 		}
 		// Dynamic routing with incremental counter
 		const next = await handleSurveyProgress({ uid, surveyId, cookies });
-		redirect(
-			303,
-			`/agent-console/surveys/take/${surveyId}/${next}`,
-			{ type: 'success', message: 'Input Successfully Recorded' },
-			cookies
-		);
 	},
 	radioGroup: async ({ request, params: { surveyId, questionId }, cookies, locals: { user } }) => {
 		const uid = user?.id as string;

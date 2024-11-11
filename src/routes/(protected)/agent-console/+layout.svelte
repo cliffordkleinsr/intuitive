@@ -61,7 +61,7 @@
 	<AppSidebar {...AgentlayoutItems} />
 	<Sidebar.Inset>
 		<header
-			class="sticky top-0 flex h-16 w-full items-center gap-2 border-b px-4 backdrop-blur-lg lg:backdrop-blur-none"
+			class="sticky top-0 flex h-16 w-full items-center gap-2 rounded-tl-lg border-b px-4 backdrop-blur-lg"
 		>
 			<Sidebar.Trigger />
 			<Separator orientation="vertical" class="mr-2 h-4" />
