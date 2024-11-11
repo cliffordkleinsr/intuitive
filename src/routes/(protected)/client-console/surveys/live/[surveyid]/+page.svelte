@@ -25,7 +25,7 @@
 					src="https://res.cloudinary.com/dmy8yp9el/image/upload/v1725974109/anfir41re6vnhxecg52s.png"
 					alt="live"
 				/>
-				<p class="text-muted-foreground">{desc}</p>
+				<p class="text-muted-foreground truncate max-w-xs">{desc}</p>
 			</div>
 			<div class="grid max-w-xl gap-2">
 				<LiveQuest {target} {user} {form} {...rest} />

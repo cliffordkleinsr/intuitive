@@ -750,3 +750,12 @@ export async function validateAnswerNotExists(questionid: string, cookies: Cooki
 // await db.delete(UsersTable).where(
 //     eq(UsersTable.id, 'vsz9hei4m2dnr18')
 // )
+// let date = new Date(); // Now
+// let next = date.setDate(date.getDate() + 30)
+// await db.update(clientData).set({
+// 	packageid:'prod_QTgA9EH6qo3dRu',
+// 	typeid:'price_1Ps1UARpYHoLk6LSTei2ionx',
+// 	payment_status:true,
+// 	processed_at: new Date(),
+// 	expires_at: new Date(next)
+// }).where(eq(clientData.clientId, 'c1bde176-582a-4028-888e-a70875a11f51'))

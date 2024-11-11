@@ -102,11 +102,11 @@
 						.setLngLat(coordinates)
 						.setHTML(
 							`
-				<strong class="text-xl dark:text-black">${county}</strong>
-				<p class="text-lg dark:text-black">
-				  Population (2019): ${population}
-				</p>
-			  `
+								<strong class="text-xl dark:text-black">${county}</strong>
+								<p class="text-lg dark:text-black">
+								Population (2019): ${population}
+								</p>
+							`
 						)
 						.addTo(map);
 				}
