@@ -657,11 +657,16 @@ export async function handleSurveyProgress({
 	}
 }
 
-export async function validateAnswerNotExists(questionid: string, cookies: Cookies) {
+export async function validateAnswerNotExists(questionid: string, cookies: Cookies, agentId:string) {
 	const exists = await db
 		.select()
 		.from(AnswersTable)
-		.where(eq(AnswersTable.questionId, questionid));
+		.where(
+			sql`
+				${AnswersTable.questionId} = ${questionid}
+				and
+				${AnswersTable.agentId} = ${agentId}
+			`);
 	if (exists.length > 0) {
 		redirect(
 			303,

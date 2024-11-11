@@ -86,7 +86,7 @@ export const actions: Actions = {
 		}
 
 		// validate answer does not exist before proceeding
-		await validateAnswerNotExists(questionId, cookies);
+		await validateAnswerNotExists(questionId, cookies, uid);
 		//  destructure
 		const { answer } = openEndedForm.data;
 
@@ -129,7 +129,7 @@ export const actions: Actions = {
 			});
 		}
 		// validate answer does not exist before proceeding
-		await validateAnswerNotExists(questionId, cookies);
+		await validateAnswerNotExists(questionId, cookies, uid);
 		//  destructure
 		const { type } = optionalForm.data;
 
@@ -174,7 +174,7 @@ export const actions: Actions = {
 			});
 		}
 		// validate answer does not exist before proceeding
-		await validateAnswerNotExists(questionId, cookies);
+		await validateAnswerNotExists(questionId, cookies, uid);
 		try {
 			for (const [answer, rankId] of Object.entries(rankForm.data)) {
 				await db.insert(AnswersTable).values({
@@ -212,7 +212,7 @@ export const actions: Actions = {
 			});
 		}
 		// validate answer does not exist before proceeding
-		await validateAnswerNotExists(questionId, cookies);
+		await validateAnswerNotExists(questionId, cookies, uid);
 		//  destructure
 		const { items } = multiForm.data;
 		try {
@@ -247,7 +247,7 @@ export const actions: Actions = {
 			});
 		}
 		// validate answer does not exist before proceeding
-		await validateAnswerNotExists(questionId, cookies);
+		await validateAnswerNotExists(questionId, cookies, uid);
 		//  destructure
 		const { answer } = rateForm.data;
 
