@@ -48,7 +48,7 @@
 
 <form method="POST" action="?/radioGroup" class="w-2/3 space-y-6 lg:w-1/4" use:enhance>
 	<Form.Fieldset {form} name="type" class="space-y-3">
-		<Form.Legend>{question}</Form.Legend>
+		<Form.Legend class="text-base">{question}</Form.Legend>
 		<RadioGroup.Root bind:value={$formData.type} class="flex flex-col space-y-1" name="type">
 			{#each options as option}
 				<div class="flex items-center space-x-3 space-y-0">
@@ -75,7 +75,7 @@
 	{:else}
 		<Form.Button variant="outline" class="w-full">
 			<CheckCheck />
-			Submit
+			Next
 		</Form.Button>
 	{/if}
 	<!-- <SuperDebug data={$formData} /> -->

@@ -65,7 +65,7 @@
 <form action="?/checkboxMultiple" method="POST" class="w-2/3 space-y-6 lg:w-1/4" use:enhance>
 	<Form.Fieldset {form} name="items" class="space-y-0">
 		<div class="mb-4">
-			<Form.Legend class="text-base">{question}</Form.Legend>
+			<Form.Legend class="py-1 text-base">{question}</Form.Legend>
 			<Form.Description>Select all that are applicable.</Form.Description>
 		</div>
 		<div class="space-y-2">
@@ -108,7 +108,7 @@
 	{:else}
 		<Form.Button variant="outline" class="w-full">
 			<CheckCheck />
-			Submit
+			Next
 		</Form.Button>
 	{/if}
 	<!-- <SuperDebug data={$formData} /> -->

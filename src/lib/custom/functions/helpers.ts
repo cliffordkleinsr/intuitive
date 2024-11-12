@@ -174,7 +174,8 @@ likert_options.set('Satisfaction', [
 	{ option: 'Neutral' },
 	{ option: 'Slightly dissatisfied' },
 	{ option: 'Dissatisfied' },
-	{ option: 'Very dissatisfied' }
+	{ option: 'Very dissatisfied' },
+	{ option: 'Not Applicable' }
 ]);
 
 likert_options.set('Reflective of me', [

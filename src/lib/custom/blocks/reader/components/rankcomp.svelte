@@ -118,7 +118,7 @@
 			{:else}
 				<Form.Button variant="outline" class="w-full">
 					<CheckCheck />
-					Submit
+					Next
 				</Form.Button>
 			{/if}
 		</Card.Footer>

@@ -9,7 +9,7 @@
 		SingleComponent
 	} from '$lib/custom/blocks/reader';
 	import { Button } from '$lib/components/ui/button';
-
+	import { Badge } from '$lib/components/ui/badge';
 	import type { PageData } from './$types';
 	import BatteryFull from 'lucide-svelte/icons/battery-full';
 	import BatteryLow from 'lucide-svelte/icons/battery-low';
@@ -37,7 +37,7 @@
 </script>
 
 <Progress value={progress} />
-<div class=" grid place-items-center py-24">
+<div class=" grid place-items-center py-64">
 	{#if question_type === 'Single'}
 		<SingleComponent data={openEndedForm} {question} {cur_id} />
 	{/if}
@@ -76,4 +76,10 @@
 		<BatteryFull />
 	{/if}
 	<p class="py-1">{progress}%</p>
+</div>
+
+<div class="absolute inset-x-2 top-6">
+	<p class="rounded-xl text-center text-sm font-semibold shadow-sm lg:shadow-none">
+		{current_ix} / {pool_size}
+	</p>
 </div>

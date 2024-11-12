@@ -54,7 +54,7 @@
 
 <form method="POST" action="?/singleform" class="w-2/3 space-y-6 lg:w-1/4" use:enhance>
 	<Form.Fieldset {form} name="answer" class="space-y-3">
-		<Form.Legend>{question}</Form.Legend>
+		<Form.Legend class="text-base">{question}</Form.Legend>
 		<RadioGroup.Root bind:value={$formData.answer} class="flex flex-col space-y-1" name="answer">
 			<Form.Control>
 				{#snippet children({ props })}
@@ -76,7 +76,7 @@
 	{:else}
 		<Form.Button variant="outline" class="w-full">
 			<CheckCheck />
-			Submit
+			Next
 		</Form.Button>
 	{/if}
 	<!-- <SuperDebug data={$formData} /> -->

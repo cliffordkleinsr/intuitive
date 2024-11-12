@@ -41,7 +41,7 @@
 	<Form.Field {form} name="answer">
 		<Form.Control>
 			{#snippet children({ props })}
-				<Form.Label>{question}</Form.Label>
+				<Form.Label class="text-base">{question}</Form.Label>
 				<Textarea {...props} bind:value={$formData.answer} />
 			{/snippet}
 		</Form.Control>
@@ -60,7 +60,7 @@
 	{:else}
 		<Form.Button variant="outline" class="w-full">
 			<CheckCheck />
-			Submit
+			Next
 		</Form.Button>
 	{/if}
 </form>
