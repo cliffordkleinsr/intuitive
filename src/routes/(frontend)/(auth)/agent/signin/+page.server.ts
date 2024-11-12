@@ -66,8 +66,6 @@ export const actions: Actions = {
 				'User of this type is not allowed, please use the appropriate login form'
 			);
 		}
-		const hashPassword = await bcrypt.hash('Emilymwawasi@2024', 15);
-		console.log(hashPassword);
 		// Verify the password
 		const validPassword = await bcrypt.compare(password, existingUser.password);
 

@@ -47,8 +47,10 @@
 			<Card.Root class="lg:max-w-screen-md">
 				<Card.Header>
 					<Card.Title class="text-2xl">Poll Overview</Card.Title>
-					<Card.Description class="text-xl">Total Responses: {total_responses}</Card.Description>
+					<Card.Description class="text-lg">Total Responses: {total_responses}</Card.Description>
 				</Card.Header>
+				<Card.Content>
+				</Card.Content>
 			</Card.Root>
 			<Card.Root class="lg:max-w-screen-md">
 				<Card.Header>
@@ -56,7 +58,7 @@
 					<Card.Description>Responses by County</Card.Description>
 				</Card.Header>
 				<Card.Content>
-					<div class=" h-[400px]">
+					<div class="h-[600px]">
 						<CakeMap />
 					</div>
 					<!-- <MapTile /> -->

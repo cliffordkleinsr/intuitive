@@ -37,7 +37,7 @@
 </script>
 
 <Progress value={progress} />
-<div class=" grid place-items-center py-64">
+<div class=" grid place-items-center py-40 lg:py-64">
 	{#if question_type === 'Single'}
 		<SingleComponent data={openEndedForm} {question} {cur_id} />
 	{/if}
