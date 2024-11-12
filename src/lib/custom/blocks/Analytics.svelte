@@ -79,7 +79,7 @@
 					<Card.Description>Responses by Gender</Card.Description>
 				</Card.Header>
 				<Card.Content>
-					<div class=" h-[250px] w-full rounded border p-4">
+					<div class=" h-[200px] w-full rounded border p-4">
 						<BarChart
 							data={gender}
 							padding={{ left: 32, bottom: 16 }}
@@ -101,7 +101,7 @@
 					<Card.Description>Share of responses by sector</Card.Description>
 				</Card.Header>
 				<Card.Content>
-					<div class="h-[300px] w-full rounded border p-4">
+					<div class="h-[250px] w-full rounded border p-4">
 						<Chart
 							data={sector}
 							x="sector"
@@ -172,8 +172,5 @@
 				</Card.Root>
 			{/each}
 		</Card.Content>
-		<Card.Footer>
-			<p>Card Footer</p>
-		</Card.Footer>
 	</Card.Root>
 </div>

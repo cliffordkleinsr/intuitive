@@ -1,5 +1,5 @@
 import { db } from '$lib/server/db';
-import { sql, count, eq } from 'drizzle-orm';
+import { sql, count, eq, countDistinct } from 'drizzle-orm';
 import type { PageServerLoad } from './$types';
 import {
 	agentData,
@@ -18,21 +18,19 @@ export const load: PageServerLoad = async ({ locals: { user } }) => {
 			answer: AnswersTable.answer,
 			answer_count: count(AnswersTable.answer).as('answer_count'),
 			percentage: sql<number>`
-			  ROUND(
-				COUNT(*)::decimal / 
-				SUM(COUNT(*)) OVER (PARTITION BY ${surveyqnsTableV2.question}) * 100,
-				1
-			  )
+				ROUND(
+					COUNT(*)::decimal / 
+					SUM(COUNT(*)) OVER (PARTITION BY ${surveyqnsTableV2.question}) * 100,
+					1
+				)
 			`.as('percentage')
 		})
-		.from(AnswersTable)
-		.rightJoin(surveyqnsTableV2, sql`${AnswersTable.questionId} = ${surveyqnsTableV2.questionId}`)
-		.leftJoin(agentSurveysTable, sql`${AnswersTable.agentId} = ${agentSurveysTable.agentid}`)
+		.from(surveyqnsTableV2)
+		.rightJoin(AnswersTable, sql`${AnswersTable.questionId} = ${surveyqnsTableV2.questionId}`)
 		.where(
 			sql`
 				${AnswersTable.surveid} = 'wncpwl3rf3h2zes'
-				and 
-				${agentSurveysTable.survey_completed} = TRUE`
+			`
 		)
 		.groupBy(
 			surveyqnsTableV2.questionId,
@@ -85,10 +83,10 @@ export const load: PageServerLoad = async ({ locals: { user } }) => {
 
 			db
 				.select({
-					question: answerCounts.question,
-					question_type: answerCounts.question_type,
+					question: sql<string>`${answerCounts.question}`,
+					question_type: sql<string>`${answerCounts.question_type}`,
 					answer_statistics: sql<{ answer: string; count: number; percentage: number }[]>`
-				array_agg(
+				json_agg(
 				  jsonb_build_object(
 					'answer', ${answerCounts.answer},
 					'count', ${answerCounts.answer_count},

@@ -67,16 +67,6 @@
 <div class="absolute bottom-10 right-10">
 	<Button variant="ghost" href="/agent-console">Tired Take a Break 🥱</Button>
 </div>
-<div class="absolute bottom-12 left-10 flex gap-1 text-xs">
-	{#if progress <= 10}
-		<BatteryLow />
-	{:else if progress <= 50}
-		<BatteryMedium />
-	{:else}
-		<BatteryFull />
-	{/if}
-	<p class="py-1">{progress}%</p>
-</div>
 
 <div class="absolute inset-x-2 top-6">
 	<p class="rounded-xl text-center text-sm font-semibold shadow-sm lg:shadow-none">
