@@ -4,9 +4,12 @@
 
 	let { data }: { data: PageData } = $props();
 	const {
-		cumulative_analytics: { total_responses }
+		cumulative_analytics: { total_responses },
+		gender_analytics,
+		sector_analytics,
+		analytics
 	} = data;
 </script>
 
-<Analytics {total_responses} />
+<Analytics {total_responses} gender={gender_analytics} sector={sector_analytics} {analytics} />
 <!-- <MapTile /> -->

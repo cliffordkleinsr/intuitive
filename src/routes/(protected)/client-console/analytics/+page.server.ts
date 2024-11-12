@@ -1,44 +1,110 @@
 import { db } from '$lib/server/db';
 import { sql, count, eq } from 'drizzle-orm';
 import type { PageServerLoad } from './$types';
-import { agentSurveysTable, AnswersTable, UsersTable } from '$lib/server/db/schema';
+import {
+	agentData,
+	agentSurveysTable,
+	AnswersTable,
+	surveyqnsTableV2,
+	UsersTable
+} from '$lib/server/db/schema';
 
 export const load: PageServerLoad = async ({ locals: { user } }) => {
 	const usr = user?.id as string;
-
-	const [[cumulative_analytics], gender_analytics] = await Promise.all([
-		db
-			.select({
-				total_responses: count()
-			})
-			.from(agentSurveysTable)
-			.where(
-				sql`
+	const answerCounts = db
+		.select({
+			question: surveyqnsTableV2.question,
+			question_type: surveyqnsTableV2.questionT,
+			answer: AnswersTable.answer,
+			answer_count: count(AnswersTable.answer).as('answer_count'),
+			percentage: sql<number>`
+			  ROUND(
+				COUNT(*)::decimal / 
+				SUM(COUNT(*)) OVER (PARTITION BY ${surveyqnsTableV2.question}) * 100,
+				1
+			  )
+			`.as('percentage')
+		})
+		.from(AnswersTable)
+		.rightJoin(surveyqnsTableV2, sql`${AnswersTable.questionId} = ${surveyqnsTableV2.questionId}`)
+		.leftJoin(agentSurveysTable, sql`${AnswersTable.agentId} = ${agentSurveysTable.agentid}`)
+		.where(
+			sql`
+				${AnswersTable.surveid} = 'wncpwl3rf3h2zes'
+				and 
+				${agentSurveysTable.survey_completed} = TRUE`
+		)
+		.groupBy(
+			surveyqnsTableV2.questionId,
+			surveyqnsTableV2.question,
+			surveyqnsTableV2.questionT,
+			AnswersTable.answer
+		)
+		.as('answer_counts');
+	const [[cumulative_analytics], gender_analytics, sector_analytics, analytics] = await Promise.all(
+		[
+			db
+				.select({
+					total_responses: count()
+				})
+				.from(agentSurveysTable)
+				.where(
+					sql`
                 ${agentSurveysTable.survey_completed} = true
                 and
                 ${agentSurveysTable.surveyid} = 'wncpwl3rf3h2zes'
             `
-			),
+				),
 
-		db
-			.select({
-				gender: sql<string>`UPPER(${UsersTable.gender})`,
-				count: count(UsersTable.id)
-			})
-			.from(UsersTable)
-			.leftJoin(agentSurveysTable, sql`${UsersTable.id} = ${agentSurveysTable.agentid}`)
-			.where(
-				sql`
+			db
+				.select({
+					gender: sql<string>`UPPER(${UsersTable.gender})`,
+					count: count(UsersTable.id)
+				})
+				.from(UsersTable)
+				.leftJoin(agentSurveysTable, sql`${UsersTable.id} = ${agentSurveysTable.agentid}`)
+				.where(
+					sql`
                 ${agentSurveysTable.surveyid} = 'wncpwl3rf3h2zes'
                 and
                 ${agentSurveysTable.survey_completed} = TRUE
             `
-			)
-			.groupBy(UsersTable.gender)
-	]);
+				)
+				.groupBy(UsersTable.gender),
+			db
+				.select({
+					sector: sql<string>`SPLIT_PART(${agentData.sector}, '-', 2)`,
+					count: count(agentData.agentid)
+				})
+				.from(agentData)
+				.leftJoin(agentSurveysTable, sql`${agentData.agentid} = ${agentSurveysTable.agentid}`)
+				.where(
+					sql`${agentSurveysTable.surveyid} = 'wncpwl3rf3h2zes' and ${agentSurveysTable.survey_completed} = TRUE`
+				)
+				.groupBy(agentData.sector),
 
-	// console.log(gender_analytics)
+			db
+				.select({
+					question: answerCounts.question,
+					question_type: answerCounts.question_type,
+					answer_statistics: sql<{ answer: string; count: number; percentage: number }[]>`
+				array_agg(
+				  jsonb_build_object(
+					'answer', ${answerCounts.answer},
+					'count', ${answerCounts.answer_count},
+					'percentage', ${answerCounts.percentage}
+				  )
+				)`
+				})
+				.from(answerCounts)
+				.groupBy(answerCounts.question, answerCounts.question_type)
+		]
+	);
+
 	return {
-		cumulative_analytics
+		cumulative_analytics,
+		gender_analytics,
+		sector_analytics,
+		analytics
 	};
 };

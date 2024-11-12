@@ -1,63 +1,44 @@
 <script lang="ts">
-	import { MapTile } from '$lib/custom/blocks';
+	import { CakeMap, MapTile } from '$lib/custom/blocks';
 	import * as Card from '$lib/components/ui/card';
-	import { Axis, BarChart, Bars, Chart, Grid, Svg, Tooltip, Highlight } from 'layerchart';
-	import { scaleBand, scaleOrdinal, scaleTime } from 'd3-scale';
-	import { format, PeriodType } from '@layerstack/utils';
-	let { total_responses } = $props();
+	import { Area, Axis, BarChart, Chart, Points, Spline, Svg } from 'layerchart';
+	import { format } from '@layerstack/utils';
+	import { scaleBand } from 'd3-scale';
+	import { curveLinearClosed, curveCatmullRom } from 'd3-shape';
+	import * as Table from '$lib/components/ui/table';
+	import { Progress } from '$lib/components/ui/progress';
 
-	const bardata = [
-		{
-			date: new Date('2024-11-02T21:00:00.000Z'),
-			value: 73,
-			baseline: 36
-		},
-		{
-			date: new Date('2024-11-03T21:00:00.000Z'),
-			value: 47,
-			baseline: 21
-		},
-		{
-			date: new Date('2024-11-04T21:00:00.000Z'),
-			value: 49,
-			baseline: 87
-		},
-		{
-			date: new Date('2024-11-05T21:00:00.000Z'),
-			value: 48,
-			baseline: 42
-		},
-		{
-			date: new Date('2024-11-06T21:00:00.000Z'),
-			value: 63,
-			baseline: 34
-		},
-		{
-			date: new Date('2024-11-07T21:00:00.000Z'),
-			value: 77,
-			baseline: 46
-		},
-		{
-			date: new Date('2024-11-08T21:00:00.000Z'),
-			value: 37,
-			baseline: 100
-		},
-		{
-			date: new Date('2024-11-09T21:00:00.000Z'),
-			value: 54,
-			baseline: 82
-		},
-		{
-			date: new Date('2024-11-10T21:00:00.000Z'),
-			value: 68,
-			baseline: 54
-		},
-		{
-			date: new Date('2024-11-11T21:00:00.000Z'),
-			value: 51,
-			baseline: 60
-		}
-	];
+	interface GenAnalytics {
+		gender: string;
+		count: number;
+	}
+	interface SecAnalytics {
+		sector: string;
+		count: number;
+	}
+
+	interface AnsStats {
+		count: number;
+		answer: string;
+		percentage: number;
+	}
+	interface Analytics {
+		question: string;
+		question_type: string;
+		answer_statistics: AnsStats[];
+	}
+	let {
+		total_responses,
+		gender,
+		sector,
+		analytics
+	}: {
+		total_responses: number;
+		gender: GenAnalytics[];
+		sector: SecAnalytics[];
+		analytics: Analytics[];
+	} = $props();
+	let curve = curveCatmullRom;
 </script>
 
 <div class="m-4 grid gap-3">
@@ -66,9 +47,8 @@
 			<Card.Root class="lg:max-w-screen-md">
 				<Card.Header>
 					<Card.Title class="text-2xl">Poll Overview</Card.Title>
-					<Card.Description>Total Responses: {total_responses}</Card.Description>
+					<Card.Description class="text-xl">Total Responses: {total_responses}</Card.Description>
 				</Card.Header>
-				<Card.Footer></Card.Footer>
 			</Card.Root>
 			<Card.Root class="lg:max-w-screen-md">
 				<Card.Header>
@@ -76,7 +56,10 @@
 					<Card.Description>Responses by County</Card.Description>
 				</Card.Header>
 				<Card.Content>
-					<MapTile />
+					<div class=" h-[400px]">
+						<CakeMap />
+					</div>
+					<!-- <MapTile /> -->
 				</Card.Content>
 			</Card.Root>
 		</div>
@@ -95,57 +78,53 @@
 					<Card.Title>Gender Distribution</Card.Title>
 					<Card.Description>Responses by Gender</Card.Description>
 				</Card.Header>
-				<Card.Content></Card.Content>
-				<Card.Footer>
-					<div class="z-10 h-[300px] w-full rounded border p-4">
-						<Chart
-							data={bardata}
-							x="value"
-							xDomain={[0, null]}
-							xNice
-							y="date"
-							yScale={scaleBand().padding(0.4)}
-							padding={{ left: 16, bottom: 24 }}
-							tooltip={{ mode: 'band' }}
-						>
-							<Svg>
-								<Axis placement="bottom" grid rule />
-								<Axis
-									placement="left"
-									format={(d) => format(d, PeriodType.Day, { variant: 'short' })}
-									rule
-								/>
-								<Bars
-									strokeWidth={1}
-									class="fill-primary transition-colors group-hover:fill-gray-300"
-								/>
-								<Highlight area bar={{ class: 'fill-primary', strokeWidth: 1, radius: 4 }} />
-							</Svg>
-							<Tooltip.Root let:data>
-								<Tooltip.Header
-									>{format(data.date, PeriodType.Custom, {
-										custom: 'eee, MMMM do'
-									})}</Tooltip.Header
-								>
-								<Tooltip.List>
-									<Tooltip.Item label="value" value={data.value} />
-								</Tooltip.List>
-							</Tooltip.Root>
-						</Chart>
+				<Card.Content>
+					<div class=" h-[250px] w-full rounded border p-4">
+						<BarChart
+							data={gender}
+							padding={{ left: 32, bottom: 16 }}
+							x="count"
+							y="gender"
+							c="count"
+							props={{
+								bars: { class: 'fill-blue-500' },
+								xAxis: { format: (value) => format(Math.abs(value), 'metric') }
+							}}
+							orientation="horizontal"
+						/>
 					</div>
-				</Card.Footer>
+				</Card.Content>
 			</Card.Root>
 			<Card.Root>
 				<Card.Header>
 					<Card.Title>Response Distribution</Card.Title>
-					<Card.Description>Share of responses to non-responses</Card.Description>
+					<Card.Description>Share of responses by sector</Card.Description>
 				</Card.Header>
 				<Card.Content>
-					<p>Card Content</p>
+					<div class="h-[300px] w-full rounded border p-4">
+						<Chart
+							data={sector}
+							x="sector"
+							xScale={scaleBand()}
+							y="count"
+							yPadding={[0, 10]}
+							padding={{ top: 32, bottom: 8 }}
+							radial
+						>
+							<Svg center>
+								<Axis
+									placement="radius"
+									grid={{ class: 'stroke-surface-content/20 fill-blue-300/20' }}
+									ticks={[0, 5, 10]}
+									format={(d) => ''}
+								/>
+								<Axis placement="angle" grid={{ class: 'stroke-surface-content/20' }} />
+								<Spline {curve} class="fill-blue-400/20 stroke-blue-400" />
+								<Points class="fill-blue-400 stroke-surface-200" />
+							</Svg>
+						</Chart>
+					</div>
 				</Card.Content>
-				<Card.Footer>
-					<p>Card Footer</p>
-				</Card.Footer>
 			</Card.Root>
 		</div>
 	</div>
@@ -154,8 +133,44 @@
 			<Card.Title class="text-2xl">Detailed Results</Card.Title>
 			<Card.Description>Breakdown by County</Card.Description>
 		</Card.Header>
-		<Card.Content>
-			<p>Card Content</p>
+		<Card.Content class="grid gap-5">
+			{#each analytics as statistic}
+				<Card.Root>
+					<Card.Header>
+						<Card.Title></Card.Title>
+						<Card.Description class="text-xs">{statistic.question}</Card.Description>
+					</Card.Header>
+					<Card.Content>
+						<Table.Root>
+							<Table.Header>
+								<Table.Row>
+									<Table.Head class="w-[70px]">#</Table.Head>
+									<Table.Head class="lg:w-[800px]">Answers</Table.Head>
+									<Table.Head></Table.Head>
+									<Table.Head class="text-right">Percentage</Table.Head>
+									<Table.Head class="text-right">Count</Table.Head>
+								</Table.Row>
+							</Table.Header>
+							<Table.Body>
+								{#each statistic.answer_statistics as res, ix}
+									<Table.Row class="space-y-2">
+										<Table.Cell class="font-normal">A{ix + 1}</Table.Cell>
+										<Table.Cell class=" line-clamp-3 font-normal">{res.answer}</Table.Cell>
+										<Table.Cell class="font-normal">
+											<Progress value={res.percentage} class="h-2 w-full lg:w-[80%]" />
+										</Table.Cell>
+										<Table.Cell class="text-right font-normal"
+											>{Math.round(res.percentage)}%</Table.Cell
+										>
+										<Table.Cell class="text-right font-normal ">{res.count}</Table.Cell>
+									</Table.Row>
+								{/each}
+							</Table.Body>
+						</Table.Root>
+					</Card.Content>
+					<Card.Footer></Card.Footer>
+				</Card.Root>
+			{/each}
 		</Card.Content>
 		<Card.Footer>
 			<p>Card Footer</p>
