@@ -6,9 +6,10 @@
 	import * as Table from '$lib/components/ui/table';
 	import { Progress } from '$lib/components/ui/progress';
 	import { counties } from '$lib/geojson/counties';
-	import { schemeTableau10 } from 'd3-scale-chromatic';
+	import { interpolateRdBu } from 'd3-scale-chromatic';
 	import { Button } from '$lib/components/ui/button';
 	import Download from 'lucide-svelte/icons/download';
+	import { quantize } from 'd3-interpolate';
 
 	interface GenAnalytics {
 		gender: string;
@@ -62,10 +63,9 @@
 			<Card.Root class="lg:max-w-screen-md">
 				<Card.Header>
 					<Card.Title class="text-2xl">Poll Overview</Card.Title>
-					<Card.Description class="text-lg"
-						>Total Responses: <span class="font-bold text-black/60">{total_responses}</span
-						></Card.Description
-					>
+					<Card.Description class="text-lg">
+						Total Responses: <span class="font-bold text-black/60">{total_responses}</span>
+					</Card.Description>
 				</Card.Header>
 				<Card.Content></Card.Content>
 			</Card.Root>
@@ -120,7 +120,7 @@
 					<Card.Description>Share of responses by sector</Card.Description>
 				</Card.Header>
 				<Card.Content>
-					<div class="h-[300px] w-full rounded border p-4">
+					<div class="h-[400px] w-full rounded border p-4">
 						<PieChart
 							data={fixed_sec}
 							key="sector"
@@ -128,8 +128,12 @@
 							innerRadius={-20}
 							cornerRadius={5}
 							padAngle={0.02}
-							legend={{ placement: 'top-left', orientation: 'vertical' }}
-							cRange={schemeTableau10}
+							legend={{
+								classes: { root: 'text-xs' },
+								placement: 'top-left',
+								orientation: 'vertical'
+							}}
+							cRange={quantize(interpolateRdBu, 20)}
 						/>
 					</div>
 				</Card.Content>

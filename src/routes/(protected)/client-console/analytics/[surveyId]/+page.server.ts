@@ -71,7 +71,7 @@ export const load: PageServerLoad = async ({ locals: { user }, params: { surveyI
 				.groupBy(UsersTable.gender),
 			db
 				.select({
-					sector: sql<string>`SPLIT_PART(${agentData.sector}, '-', 2)`,
+					sector: sql<string>`${agentData.sector}`,
 					count: count(agentData.agentid)
 				})
 				.from(agentData)
