@@ -14,14 +14,6 @@ export const load = (async ({ locals: { user } }) => {
 	const poll = await db
 		.select(select)
 		.from(SurveyTable)
-		.leftJoin(
-			agentSurveysTable,
-			sql`
-                ${SurveyTable.surveyid} = ${agentSurveysTable.surveyid}
-                and 
-                ${agentSurveysTable.survey_completed} = true
-                `
-		)
 		.where(
 			sql`
                 ${SurveyTable.clientid} = ${uid} 

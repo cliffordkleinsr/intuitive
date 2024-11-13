@@ -15,18 +15,15 @@
 		locale_analytics,
 		geoObject
 	}: { locale_analytics: LocAnalytics[]; geoObject: FeatureCollection } = $props();
-	// const localeByid = index(geoObject.features, (d) => d.id)
 
 	const population = locale_analytics.map((d) => {
 		return {
 			id: d.county.toUpperCase(),
-			// state: localeByid.get(d.county.toUpperCase())?.properties?.COUNTY_NAM,
 			respondents: +d.value
 		};
 	});
 
 	const populationByFips = index(population, (d) => d.id);
-	// $inspect(populationByFips.get("MOMBASA"))
 	let enrichedCountiesFeatures = $derived(
 		geoObject.features.map((feature) => {
 			return {
@@ -43,8 +40,6 @@
 			.domain(population.map((d: any) => d.respondents))
 			.range(schemeBlues[7])
 	);
-
-	// $inspect(enrichedCountiesFeatures[0])
 </script>
 
 <Chart
@@ -83,7 +78,7 @@
 	<Legend
 		scale={colorScale}
 		title="Respondents"
-		tickFormat={(d) => format(d, 'metric', { maximumSignificantDigits: 1 })}
+		tickFormat={(d) => format(d, 'metric', { maximumSignificantDigits: 2 })}
 		class="absolute bottom-0 m-1 rounded bg-surface-100/80 px-2 py-1 backdrop-blur-sm"
 	/>
 	<Tooltip.Root let:data>

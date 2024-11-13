@@ -2,7 +2,7 @@
 	import { geoNaturalEarth1 } from 'd3-geo';
 	import { feature } from 'topojson-client';
 	import type { GeometryCollection, Topology } from 'topojson-specification';
-	import { Canvas, Chart, GeoPath, GeoPoint, Svg, Text, Tooltip } from 'layerchart';
+	import { Chart, GeoPath, GeoPoint, Svg, Text } from 'layerchart';
 
 	interface Capitals {
 		label: string;
@@ -47,7 +47,7 @@
 					lat={capital.latitude}
 					long={capital.longitude}
 					r="2"
-					class="stroke-danger fill-white"
+					class="stroke-danger fill-black/50 dark:fill-white"
 				/>
 
 				{#if tooltip.data}

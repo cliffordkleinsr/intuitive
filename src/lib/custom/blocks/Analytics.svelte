@@ -1,13 +1,14 @@
 <script lang="ts">
 	import { CakeMap, MapTile } from '$lib/custom/blocks';
 	import * as Card from '$lib/components/ui/card';
-	import { Axis, BarChart, Chart, Points, Spline, Svg } from 'layerchart';
+	import { BarChart, PieChart } from 'layerchart';
 	import { format } from '@layerstack/utils';
-	import { scaleBand } from 'd3-scale';
-	import { curveCatmullRom } from 'd3-shape';
 	import * as Table from '$lib/components/ui/table';
 	import { Progress } from '$lib/components/ui/progress';
 	import { counties } from '$lib/geojson/counties';
+	import { schemeTableau10 } from 'd3-scale-chromatic';
+	import { Button } from '$lib/components/ui/button';
+	import Download from 'lucide-svelte/icons/download';
 
 	interface GenAnalytics {
 		gender: string;
@@ -47,12 +48,16 @@
 	} = $props();
 
 	const fixed_sec = sector.map((el) => (el.sector === '' ? { ...el, sector: 'Other' } : el));
-	let curve = curveCatmullRom;
-	// $inspect(fixed_sec)
 </script>
 
+<div class=" absolute right-4 top-3 z-10 md:right-24 lg:right-28" id="kutton">
+	<Button variant="secondary" size="icon" onclick={() => window.print()}>
+		<Download />
+	</Button>
+</div>
+
 <div class="m-4 grid gap-3">
-	<div class="grid gap-2 lg:grid-cols-2">
+	<div class="grid gap-2 md:grid-cols-1 lg:grid-cols-2">
 		<div class="grid gap-2">
 			<Card.Root class="lg:max-w-screen-md">
 				<Card.Header>
@@ -115,28 +120,17 @@
 					<Card.Description>Share of responses by sector</Card.Description>
 				</Card.Header>
 				<Card.Content>
-					<div class="h-[350px] w-full rounded border p-4">
-						<Chart
+					<div class="h-[300px] w-full rounded border p-4">
+						<PieChart
 							data={fixed_sec}
-							x="sector"
-							xScale={scaleBand()}
-							y="count"
-							yPadding={[0, 10]}
-							padding={{ top: 32, bottom: 8 }}
-							radial
-						>
-							<Svg center>
-								<Axis
-									placement="radius"
-									grid={{ class: 'stroke-surface-content/20 fill-blue-300/20' }}
-									ticks={[0, 5, 10]}
-									format={(d) => ''}
-								/>
-								<Axis placement="angle" grid={{ class: 'stroke-surface-content/20' }} />
-								<Spline {curve} class="fill-blue-400/20 stroke-blue-400" />
-								<Points class="fill-blue-400 stroke-surface-200" />
-							</Svg>
-						</Chart>
+							key="sector"
+							value="count"
+							innerRadius={-20}
+							cornerRadius={5}
+							padAngle={0.02}
+							legend={{ placement: 'top-left', orientation: 'vertical' }}
+							cRange={schemeTableau10}
+						/>
 					</div>
 				</Card.Content>
 			</Card.Root>
@@ -193,3 +187,15 @@
 		</Card.Content>
 	</Card.Root> -->
 </div>
+
+<style>
+	@media print {
+		@page {
+			size: auto; /* auto is the initial value */
+			margin: 0; /* this affects the margin in the printer settings */
+		}
+		#kutton {
+			visibility: hidden;
+		}
+	}
+</style>

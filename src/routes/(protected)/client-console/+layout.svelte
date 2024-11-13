@@ -59,7 +59,7 @@
 			},
 			{
 				title: 'Audience',
-				url: '/client-console',
+				url: '/client-console/audience',
 				icon: Earth,
 				items: []
 			},
@@ -87,11 +87,11 @@
 			<Breadcrumb.Root>
 				<Breadcrumb.List>
 					<Breadcrumb.Item>
-						<Breadcrumb.Link href="/client-console">Audience</Breadcrumb.Link>
+						<Breadcrumb.Link href="/client-console/audience">Audience</Breadcrumb.Link>
 					</Breadcrumb.Item>
 					<Breadcrumb.Separator />
 					<Breadcrumb.Item>
-						<Breadcrumb.Link href="/client-console">Analytics</Breadcrumb.Link>
+						<Breadcrumb.Link href="/client-console/analytics">Analytics</Breadcrumb.Link>
 					</Breadcrumb.Item>
 					<Breadcrumb.Separator />
 					<Breadcrumb.Item>
