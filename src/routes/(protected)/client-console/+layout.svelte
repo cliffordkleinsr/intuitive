@@ -65,7 +65,7 @@
 			},
 			{
 				title: 'Analytics',
-				url: '/client-console',
+				url: '/client-console/analytics',
 				icon: ChartLine,
 				items: []
 			}

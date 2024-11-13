@@ -35,14 +35,12 @@ export const actions: Actions = {
 				alertText: 'Please Check your entries, the form contains invalid data'
 			});
 		}
-		// if (form.valid) {
-		// 	return message(form, {
-		// 		alertType: 'error',
-		// 		alertText: 'Not Authorised'
-		// 	});
-		// }
-		// await db.delete(emailVerificationCodes)
-		// await deleteClientUsers()
+		if (form.valid) {
+			return message(form, {
+				alertType: 'error',
+				alertText: 'Not Authorised'
+			});
+		}
 		// destructure form.data for some operations and insertions
 		const { fullname, email, company, phoneno, county, sector, password } = form.data;
 
@@ -51,10 +49,6 @@ export const actions: Actions = {
 
 		if (exists) {
 			return setError(form, 'email', 'Email already registered');
-			// return message(form, {
-			//     alertType: 'error',
-			//     alertText: 'Email already registered'
-			// })
 		}
 
 		try {

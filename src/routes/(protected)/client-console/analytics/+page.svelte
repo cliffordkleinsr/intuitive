@@ -1,15 +1,10 @@
 <script lang="ts">
-	import Analytics from '$lib/custom/blocks/Analytics.svelte';
+	import DataTable from '$lib/components/data-table.svelte';
 	import type { PageData } from './$types';
+	import { columns } from './(tableau)/columns';
 
 	let { data }: { data: PageData } = $props();
-	const {
-		cumulative_analytics: { total_responses },
-		gender_analytics,
-		sector_analytics,
-		analytics
-	} = data;
+	const { poll } = data;
 </script>
 
-<Analytics {total_responses} gender={gender_analytics} sector={sector_analytics} {analytics} />
-<!-- <MapTile /> -->
+<DataTable {columns} data={poll} />

@@ -34,7 +34,7 @@
 			<Clockloader size="60" color="#FF3E00" unit="px" duration="5s" />
 		</div>
 		<div class="mx-auto max-w-md px-4">
-			<p class="text-center font-semibold text-lg">Loading...</p>
+			<p class="text-center text-lg font-semibold text-primary">Loading...</p>
 			<!-- <p class="text-center font-semibold italic">{data.quote}</p>
 			<p class="text-center text-xs italic">by {data.author}</p> -->
 		</div>

@@ -47,11 +47,18 @@ export const actions: Actions = {
 				alertText: 'Please Check your entries, the form contains invalid data'
 			});
 		}
+		if (form.valid) {
+			return message(form, {
+				alertType: 'error',
+				alertText:
+					'Thank you for trying to contact us, we are however holding off communications for this phase'
+			});
+		}
 		// destructure
 		const { name, email, subject } = form.data;
 		try {
 			// ksend email
-			await sendQuestionEmail(name, email, subject);
+			// await sendQuestionEmail(name, email, subject);
 		} catch (err) {
 			console.error(err);
 

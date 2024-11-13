@@ -139,7 +139,7 @@
 			</div>
 		</div>
 	</section>
-	<div class="w-full bg-muted py-9 md:py-16 lg:py-24">
+	<div class="hidden w-full bg-muted py-9 md:py-16 lg:py-24">
 		<!-- Title -->
 		<div class="mx-auto mb-6 w-2/3 text-center sm:w-1/2 lg:w-1/3">
 			<h2 class="text-gray-600 dark:text-neutral-400">Powered by</h2>
