@@ -112,13 +112,13 @@
 					</div>
 				</Card.Content>
 			</Card.Root>
-			<Card.Root>
+			<Card.Root class="hidden md:block">
 				<Card.Header>
 					<Card.Title>Response Distribution</Card.Title>
 					<Card.Description>Share of responses by sector</Card.Description>
 				</Card.Header>
 				<Card.Content>
-					<div class="h-[450px] w-full rounded border p-4">
+					<div class="lg:h-[450px] w-full rounded border p-4">
 						<PieChart
 							data={sector}
 							key="sector"
@@ -127,7 +127,7 @@
 							cornerRadius={5}
 							padAngle={0.02}
 							legend={{
-								classes: { root: 'text-xs' },
+								classes: { swatches: 'text-xs md:grid hidden' },
 								placement: 'top-left',
 								orientation: 'vertical'
 							}}
