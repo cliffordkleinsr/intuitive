@@ -47,8 +47,6 @@
 		county: LocAnalytics[];
 		analytics: Analytics[];
 	} = $props();
-
-	const fixed_sec = sector.map((el) => (el.sector === '' ? { ...el, sector: 'Other' } : el));
 </script>
 
 <div class=" absolute right-4 top-3 z-10 md:right-24 lg:right-28" id="kutton">
@@ -120,9 +118,9 @@
 					<Card.Description>Share of responses by sector</Card.Description>
 				</Card.Header>
 				<Card.Content>
-					<div class="h-[400px] w-full rounded border p-4">
+					<div class="h-[450px] w-full rounded border p-4">
 						<PieChart
-							data={fixed_sec}
+							data={sector}
 							key="sector"
 							value="count"
 							innerRadius={-20}
