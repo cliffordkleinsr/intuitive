@@ -55,7 +55,7 @@ export const actions: Actions = {
 				timeText += `${minutes} minute${minutes === 1 ? '' : 's'}`
 			}
 			
-			return setError(form, 'amount', `You are being rate limited, wait ${timeText} and try again`)
+			return setError(form, 'amount', `You are being rate limited, please wait ${timeText} and try again`)
 		}
 		const { amount } = form.data;
 
@@ -118,6 +118,21 @@ export const actions: Actions = {
 						.update(agentData)
 						.set({
 							total_points_payable: remnant
+						})
+					.where(eq(agentData.agentid, userid));
+					// & append the points paid
+					const [totals] = await db
+					.select({
+						paid: agentData.total_pts_paid
+					})
+					.from(agentData)
+					.where(eq(agentData.agentid, userid))
+					const accrued = totals.paid + amount
+					// update the payed amounts
+					await db
+						.update(agentData)
+						.set({
+							total_pts_paid: accrued
 						})
 					.where(eq(agentData.agentid, userid));
 				}

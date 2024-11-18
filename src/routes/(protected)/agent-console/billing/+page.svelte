@@ -68,7 +68,7 @@
 				<Form.FieldErrors />
 			</Form.Field>
 			{#if $delayed}
-				<Button class="flex w-full gap-2 bg-black hover:bg-black/80">
+				<Button class="flex w-full gap-2 bg-black hover:bg-black/80" disabled={$delayed}>
 					<span
 						class="inline-block size-4 animate-spin rounded-full border-[3px] border-current border-t-transparent text-white"
 						role="status"
