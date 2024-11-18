@@ -13,9 +13,8 @@
 	import { toast } from 'svelte-sonner';
 
 	let { data }: { data: PageData } = $props();
-	const { total_payable } = data;
 
-	let payable = $derived(total_payable);
+	const { total_payable } = $derived(data);
 
 	const form = superForm(data.form, {
 		validators: zodClient(amountSchema),
@@ -48,7 +47,7 @@
 			<Card.Description class="text-md text-end text-muted-foreground"
 				>Account Balance.</Card.Description
 			>
-			<Card.Title class=" text-end text-4xl text-muted-foreground">KES {payable}</Card.Title>
+			<Card.Title class=" text-end text-4xl text-muted-foreground">KES {total_payable}</Card.Title>
 		</Card.Header>
 		<Card.Content class="w-full space-y-2">
 			<Form.Field {form} name="amount">
