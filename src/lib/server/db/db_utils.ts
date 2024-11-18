@@ -68,6 +68,14 @@ export const checkIfEmailExists = async (email: string) => {
 
 	return queryResult.length > 0;
 };
+export const checkIfPhoneExists = async (phone: string) => {
+	const queryResult = await db
+		.select()
+		.from(agentData)
+		.where(eq(agentData.phone, phone));
+
+	return queryResult.length > 0;
+};
 
 export const checkUserRole = async (email: string) => {
 	const [queryResult] = await db

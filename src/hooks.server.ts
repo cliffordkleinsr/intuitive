@@ -1,8 +1,9 @@
-import type { Handle } from '@sveltejs/kit';
+import { error, type Handle } from '@sveltejs/kit';
 import { sequence } from '@sveltejs/kit/hooks';
 import { dev } from '$app/environment';
 import * as auth from '$lib/server/auth.js';
 import { createHandler } from 'svelte-kit-bot-block';
+import { aj } from '$lib/server/arcjet';
 
 const handleAuth: Handle = async ({ event, resolve }) => {
 	const sessionId = event.cookies.get(auth.sessionCookieName);
@@ -72,4 +73,11 @@ const handleBots: Handle = createHandler({
 	]
 });
 
-export const handle: Handle = sequence(handleBots, handleAuth);
+const handleSpam: Handle = async ({ event, resolve }) => {
+	const decision = await aj.protect(event)
+	if (decision.isDenied()) {
+		return error(403, "Forbidden");
+	}
+	return resolve(event);
+}
+export const handle: Handle = sequence(handleSpam, handleBots, handleAuth);
