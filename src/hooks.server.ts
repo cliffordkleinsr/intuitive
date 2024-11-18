@@ -55,6 +55,9 @@ const handleBots: Handle = createHandler({
 	pathnames: [
 		// block feed
 		/\/feed/,
+		// block mpesa defaults
+		/\/api\/confirmation/,
+		/\/api\/validation/,
 		// block wp
 		/\/wp-content/,
 		// block unused file extensions
@@ -78,6 +81,17 @@ const handleSpam: Handle = async ({ event, resolve }) => {
 	if (decision.isDenied()) {
 		return error(403, "Forbidden");
 	}
+	if (decision.isErrored()) {
+		if (decision.reason.message.includes("missing User-Agent header")) {
+		  // You could return a 400 Bad request error here
+		  return error(403, "Forbidden")
+		  // Next.js example:
+		  // return NextResponse.json({ error: "Bad request" }, { status: 400 });
+		} else {
+		  // Just log the error and continue
+			console.error(decision.reason.message)
+		}
+	  }
 	return resolve(event);
 }
 export const handle: Handle = sequence(handleSpam, handleBots, handleAuth);
