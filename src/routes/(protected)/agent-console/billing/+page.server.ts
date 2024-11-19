@@ -11,8 +11,6 @@ import { initiateB2C } from '$lib/server/mpesa';
 import { deductAmount } from '$lib/custom/functions/helpers';
 import { ratelimit } from '$lib/server/redis';
 
-
-
 export const load: PageServerLoad = async ({ locals: { user } }) => {
 	const [balance] = await db
 		.select({
@@ -28,7 +26,7 @@ export const load: PageServerLoad = async ({ locals: { user } }) => {
 
 export const actions: Actions = {
 	default: async ({ request, cookies, locals: { user } }) => {
-		let userid = user?.id as string
+		let userid = user?.id as string;
 
 		const form = await superValidate(request, zod(amountSchema));
 
@@ -39,23 +37,26 @@ export const actions: Actions = {
 			});
 		}
 
-
-		const { success, reset } = await ratelimit.create.limit(userid)
+		const { success, reset } = await ratelimit.create.limit(userid);
 		if (!success) {
-			const totalMinutes = Math.ceil((reset - Date.now()) / (1000 * 60))
-			const hours = Math.floor(totalMinutes / 60)
-			const minutes = totalMinutes % 60
-			
-			let timeText = ''
+			const totalMinutes = Math.ceil((reset - Date.now()) / (1000 * 60));
+			const hours = Math.floor(totalMinutes / 60);
+			const minutes = totalMinutes % 60;
+
+			let timeText = '';
 			if (hours > 0) {
-				timeText += `${hours} hour${hours === 1 ? '' : 's'}`
-				if (minutes > 0) timeText += ` and `
+				timeText += `${hours} hour${hours === 1 ? '' : 's'}`;
+				if (minutes > 0) timeText += ` and `;
 			}
 			if (minutes > 0) {
-				timeText += `${minutes} minute${minutes === 1 ? '' : 's'}`
+				timeText += `${minutes} minute${minutes === 1 ? '' : 's'}`;
 			}
-			
-			return setError(form, 'amount', `You are being rate limited, please wait ${timeText} and try again`)
+
+			return setError(
+				form,
+				'amount',
+				`You are being rate limited, please wait ${timeText} and try again`
+			);
 		}
 		const { amount } = form.data;
 
@@ -87,7 +88,7 @@ export const actions: Actions = {
 				const new_amt = deductAmount(amount);
 				const body = { amount: new_amt, phoneNumber: phone };
 				// console.log(body)
-				const result = await initiateB2C(body)
+				const result = await initiateB2C(body);
 
 				if (result.errorCode) {
 					return message(form, {
@@ -95,15 +96,14 @@ export const actions: Actions = {
 						alertText: `Error ${result.errorCode} , Please contact support`
 					});
 					// error(404, result.errorCode )
-				}
-				else {
+				} else {
 					// append the transaction code
 					await db.insert(agentTransactions).values({
 						agentid: userid,
 						originatorCID: result.OriginatorConversationID,
 						mpesaCID: result.ConversationID,
-						amount: amount,
-					})
+						amount: amount
+					});
 					// update the payout request
 					await db.insert(payoutRequests).values({
 						agentid: userid,
@@ -111,7 +111,7 @@ export const actions: Actions = {
 						status: 'complete',
 						processedby: userid,
 						processedAt: new Date()
-					})
+					});
 					// once complete subtract on the points payable
 					let remnant = agentinfo.pts - amount;
 					await db
@@ -119,22 +119,22 @@ export const actions: Actions = {
 						.set({
 							total_points_payable: remnant
 						})
-					.where(eq(agentData.agentid, userid));
+						.where(eq(agentData.agentid, userid));
 					// & append the points paid
 					const [totals] = await db
-					.select({
-						paid: agentData.total_pts_paid
-					})
-					.from(agentData)
-					.where(eq(agentData.agentid, userid))
-					const accrued = totals.paid + amount
+						.select({
+							paid: agentData.total_pts_paid
+						})
+						.from(agentData)
+						.where(eq(agentData.agentid, userid));
+					const accrued = totals.paid + amount;
 					// update the payed amounts
 					await db
 						.update(agentData)
 						.set({
 							total_pts_paid: accrued
 						})
-					.where(eq(agentData.agentid, userid));
+						.where(eq(agentData.agentid, userid));
 				}
 			}
 		} catch (err) {

@@ -51,5 +51,32 @@ interface C2BURLs {
 	validationURL: string;
 	confirmationURL: string;
 }
+interface MpesaB2CResult {
+	Result: {
+		ResultType: number;
+		ResultCode: number;
+		ResultDesc: string;
+		OriginatorConversationID: string;
+		ConversationID: string;
+		TransactionID: string;
+		ResultParameters: {
+			ResultParameter: Array<{
+				Key: string;
+				Value: string | number;
+			}>;
+		};
+	};
+}
 
-export type { SurveyData, Agent, Client, Params, SEO, C2BURLs };
+// Interface for timeout callback
+interface MpesaTimeoutResult {
+	Result: {
+		ResultType: number;
+		ResultCode: number;
+		ResultDesc: string;
+		OriginatorConversationID: string;
+		ConversationID: string;
+	};
+}
+
+export type { SurveyData, Agent, Client, Params, SEO, C2BURLs, MpesaB2CResult, MpesaTimeoutResult };

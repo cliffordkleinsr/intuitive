@@ -118,7 +118,7 @@
 					<Card.Description>Share of responses by sector</Card.Description>
 				</Card.Header>
 				<Card.Content>
-					<div class="lg:h-[450px] md:h-[300px] w-full rounded border p-4">
+					<div class="w-full rounded border p-4 md:h-[300px] lg:h-[450px]">
 						<PieChart
 							data={sector}
 							key="sector"

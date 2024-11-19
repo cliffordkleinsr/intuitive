@@ -2,7 +2,12 @@ import { message, setError, superValidate } from 'sveltekit-superforms';
 import { registerRSchema } from './schema';
 import { zod } from 'sveltekit-superforms/adapters';
 import { redirect } from 'sveltekit-flash-message/server';
-import { checkIfEmailExists, checkIfPhoneExists, insertNewUser, insertRespData } from '$lib/server/db/db_utils';
+import {
+	checkIfEmailExists,
+	checkIfPhoneExists,
+	insertNewUser,
+	insertRespData
+} from '$lib/server/db/db_utils';
 import bcrypt from 'bcrypt';
 import { calculateAge, handleLoginRedirect } from '$lib/custom/functions/helpers';
 import type { Actions, PageServerLoad } from './$types';
@@ -62,7 +67,7 @@ export const actions: Actions = {
 
 		// check if the email is already registered
 		const exists = await checkIfEmailExists(email);
-		const phone_exists = await checkIfPhoneExists(phoneno)
+		const phone_exists = await checkIfPhoneExists(phoneno);
 
 		if (exists) {
 			return setError(form, 'email', 'Email already registered');
@@ -70,7 +75,7 @@ export const actions: Actions = {
 		if (phone_exists) {
 			return setError(form, 'phoneno', 'Number already registered');
 		}
-		
+
 		if (form.valid) {
 			return message(form, {
 				alertType: 'error',

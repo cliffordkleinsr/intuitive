@@ -14,7 +14,7 @@ const getAccessToken = async () => {
 	const res = await fetch(url, {
 		method: 'GET',
 		headers: {
-			'Authorization': `Basic ${token}`,
+			Authorization: `Basic ${token}`,
 			'Content-Type': 'application/json'
 		}
 	});
@@ -45,8 +45,8 @@ const initiateB2C = async (body: Params) => {
 		PartyA: SHORTCODE,
 		PartyB: formattedPhone,
 		Remarks: 'Here is your payment',
-		QueueTimeOutURL: 'https://int-insights.com/babana/mota',
-		ResultURL: 'https://int-insights.com/babana/lemmings',
+		QueueTimeOutURL: 'https://int-insights.com/babana/timeout',
+		ResultURL: 'https://int-insights.com/babana/callback',
 		Occasion: 'Christmas'
 	};
 
@@ -54,7 +54,7 @@ const initiateB2C = async (body: Params) => {
 	const res = await fetch(url, {
 		method: 'POST',
 		headers: {
-			'Authorization': `Bearer ${token}`,
+			Authorization: `Bearer ${token}`,
 			'Content-Type': 'application/json'
 		},
 		body: JSON.stringify(payload)
@@ -85,7 +85,7 @@ const registerURLs = async (body: C2BURLs) => {
 	const res = await fetch(url, {
 		method: 'POST',
 		headers: {
-			'Authorization': `Bearer ${token}`,
+			Authorization: `Bearer ${token}`,
 			'Content-Type': 'application/json'
 		},
 		body: JSON.stringify(payload)
