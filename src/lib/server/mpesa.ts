@@ -45,8 +45,8 @@ const initiateB2C = async (body: Params) => {
 		PartyA: SHORTCODE,
 		PartyB: formattedPhone,
 		Remarks: 'Here is your payment',
-		QueueTimeOutURL: 'https://mydomain.com/b2c/queue',
-		ResultURL: 'https://mydomain.com/b2c/result',
+		QueueTimeOutURL: 'https://int-insights.com/babana/lemmings',
+		ResultURL: 'https://int-insights.com/babana/lemmings',
 		Occasion: 'Christmas'
 	};
 

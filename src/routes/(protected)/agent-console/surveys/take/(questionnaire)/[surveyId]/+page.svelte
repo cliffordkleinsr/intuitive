@@ -33,7 +33,7 @@
 				</h1>
 				<p class="font-mono text-xs tracking-tight text-neutral-600 dark:text-slate-400">
 					By accepting to take this survey, a specific set of user's device data will be collected
-					and potentially combined with answers to the questionnaires, in order for Acme to better
+					and potentially combined with answers to the questionnaires, in order for Intuitive Insights to better
 					understand the user and improve targeting of future surveys.
 				</p>
 			</div>
