@@ -172,16 +172,10 @@
 				<a href="/pricing" class="text-muted-foreground transition-colors hover:text-primary">
 					Pricing
 				</a>
-				<a href="/agent/signin" class="text-muted-foreground transition-colors hover:text-primary">
-					Agent Login
-				</a>
 			</nav>
 		</Sheet.Content>
 	</Sheet.Root>
 	<div class="flex flex-auto justify-end gap-2">
-		<Button size="default" variant="black" class="hidden md:flex" href="/agent/signin"
-			>Agent Login</Button
-		>
 		<Button onclick={toggleMode} variant="ghost" size="icon">
 			<Sun
 				class="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0"

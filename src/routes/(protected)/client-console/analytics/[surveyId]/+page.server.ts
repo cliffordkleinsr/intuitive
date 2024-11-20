@@ -1,5 +1,5 @@
 import { db } from '$lib/server/db';
-import { sql, count, eq, countDistinct } from 'drizzle-orm';
+import { sql, count, asc } from 'drizzle-orm';
 import type { PageServerLoad } from './$types';
 import {
 	agentData,
@@ -16,6 +16,7 @@ export const load: PageServerLoad = async ({ locals: { user }, params: { surveyI
 			question: surveyqnsTableV2.question,
 			question_type: surveyqnsTableV2.questionT,
 			answer: AnswersTable.answer,
+			updated: sql<Date>`${surveyqnsTableV2.updatedAt}`.as('updated_at'),
 			answer_count: count(AnswersTable.answer).as('answer_count'),
 			percentage: sql<number>`
 				ROUND(
@@ -38,6 +39,7 @@ export const load: PageServerLoad = async ({ locals: { user }, params: { surveyI
 			surveyqnsTableV2.questionT,
 			AnswersTable.answer
 		)
+		.orderBy(asc(count(AnswersTable.answer)))
 		.as('answer_counts');
 	const [[cumulative_analytics], gender_analytics, sector_analytics, analytics, county_analytics] =
 		await Promise.all([
@@ -97,7 +99,8 @@ export const load: PageServerLoad = async ({ locals: { user }, params: { surveyI
 				)`
 				})
 				.from(answerCounts)
-				.groupBy(answerCounts.question, answerCounts.question_type),
+				.groupBy(answerCounts.question, answerCounts.question_type, answerCounts.updated)
+				.orderBy(asc(answerCounts.updated)),
 			db
 				.select({
 					county: sql<string>`${agentData.county}`,

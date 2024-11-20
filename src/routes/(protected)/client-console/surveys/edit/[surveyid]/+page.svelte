@@ -19,11 +19,11 @@
 	import { invalidateAll } from '$app/navigation';
 	import { toast } from 'svelte-sonner';
 
-	interface Lotto {
+	interface PageProps {
 		data: PageData;
 		form: any;
 	}
-	let { form, data }: Lotto = $props();
+	let { form, data }: PageProps = $props();
 
 	let portProps = {
 		title: 'Question List',

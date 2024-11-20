@@ -9,12 +9,8 @@
 	<div class="relative z-10">
 		<div class="mx-auto max-w-[85rem] px-4 py-10 sm:px-6 lg:px-8 lg:py-16">
 			<div class="mx-auto max-w-screen-xl text-start lg:py-40">
-				<!-- <p class="text-sm font-medium bg-clip-text bg-gradient-to-l from-orange-300 to-red-500 text-transparent dark:from-pink-500 dark:to-violet-500">
-            The shape of tomorrow 
-          </p> -->
 				<!-- Title -->
 				<div class="mt-5 max-w-3xl space-y-1">
-					<!-- <span class="text-primary"></span> -->
 					<h1
 						class="block text-4xl font-semibold text-primary drop-shadow-xl dark:text-neutral-200 sm:text-6xl"
 					>
@@ -39,7 +35,7 @@
 					</div>
 				</div>
 				<div class="flex justify-center gap-5 pt-10 lg:justify-start">
-					<Button href="/about#more" size="lg" variant="secondary">About Us</Button>
+					<Button href="/agent/signin" size="lg" variant="secondary">Agent Login</Button>
 					<Button variant="black" href="/client/signin" size="lg">Client Login</Button>
 				</div>
 			</div>

@@ -62,7 +62,9 @@
 				<Card.Header>
 					<Card.Title class="text-2xl">Poll Overview</Card.Title>
 					<Card.Description class="text-lg">
-						Total Responses: <span class="font-bold text-black/60">{total_responses}</span>
+						Total Responses: <span class="font-bold text-black/60 dark:text-white/60"
+							>{total_responses}</span
+						>
 					</Card.Description>
 				</Card.Header>
 				<Card.Content></Card.Content>
@@ -112,13 +114,13 @@
 					</div>
 				</Card.Content>
 			</Card.Root>
-			<Card.Root class="hidden md:block">
+			<Card.Root class="hidden lg:block">
 				<Card.Header>
 					<Card.Title>Response Distribution</Card.Title>
 					<Card.Description>Share of responses by sector</Card.Description>
 				</Card.Header>
 				<Card.Content>
-					<div class="w-full rounded border p-4 md:h-[300px] lg:h-[450px]">
+					<div class="w-full rounded border p-4 lg:h-[350px]">
 						<PieChart
 							data={sector}
 							key="sector"
@@ -127,7 +129,7 @@
 							cornerRadius={5}
 							padAngle={0.02}
 							legend={{
-								classes: { swatches: 'text-xs md:grid hidden' },
+								classes: { label: 'text-xs block', swatches: 'block' },
 								placement: 'top-left',
 								orientation: 'vertical'
 							}}
@@ -142,7 +144,9 @@
 		<Card.Root>
 			<Card.Header>
 				<Card.Title class="text-2xl">{ix === 0 ? 'Detailed Results' : ''}</Card.Title>
-				<Card.Description class=" font-semibold">{statistic.question}</Card.Description>
+				<Card.Description class=" font-semibold">
+					<span>{ix + 1}.</span> {statistic.question}</Card.Description
+				>
 			</Card.Header>
 			<Card.Content class="overflow-x-auto">
 				<!-- Add horizontal scroll only if needed -->
