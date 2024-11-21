@@ -17,7 +17,6 @@ function convertMpesaTimestamp(timestamp: any) {
 }
 export const POST: RequestHandler = async ({ request }) => {
 	const data = await request.text();
-	// console.log(JSON.parse(data))
 	const {
 		TransID,
 		TransAmount,
@@ -28,10 +27,9 @@ export const POST: RequestHandler = async ({ request }) => {
 		LastName,
 		TransTime
 	}: Confirmation = JSON.parse(data);
-
 	await db.insert(clientTransactions).values({
 		TransactionCode: TransID,
-		TransAmount,
+		TransAmount: parseInt(TransAmount),
 		OrgAccountBalance,
 		MSISDN,
 		FirstName,

@@ -83,8 +83,8 @@ interface Confirmation {
 	TransactionType: string;
 	TransID: string;
 	TransTime: string;
-	TransAmount: number;
-	BusinessShortCode: number;
+	TransAmount: string;
+	BusinessShortCode: string;
 	BillRefNumber: string;
 	InvoiceNumber: string;
 	OrgAccountBalance: string;
