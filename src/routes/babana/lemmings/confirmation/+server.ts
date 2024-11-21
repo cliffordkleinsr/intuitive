@@ -3,9 +3,21 @@ import { clientTransactions } from '$lib/server/db/schema';
 import type { Confirmation } from '$lib/types';
 import type { RequestHandler } from './$types';
 
-export const GET: RequestHandler = async ({ request }) => {
+function convertMpesaTimestamp(timestamp:any) {
+	// Break down the timestamp
+	const year = timestamp.slice(0, 4);
+	const month = timestamp.slice(4, 6) - 1; // Months are 0-indexed in JS
+	const day = timestamp.slice(6, 8);
+	const hours = timestamp.slice(8, 10);
+	const minutes = timestamp.slice(10, 12);
+	const seconds = timestamp.slice(12, 14);
+  
+	// Create a new Date object
+	return new Date(year, month, day, hours, minutes, seconds);
+  }
+export const POST: RequestHandler = async ({ request }) => {
 	const data: Confirmation = await request.json();
-
+	// console.log(data)
 	const {
 		TransID,
 		TransAmount,
@@ -16,15 +28,16 @@ export const GET: RequestHandler = async ({ request }) => {
 		LastName,
 		TransTime
 	} = data;
+
 	await db.insert(clientTransactions).values({
-		TransID,
+		TransactionCode: TransID,
 		TransAmount,
 		OrgAccountBalance,
 		MSISDN,
 		FirstName,
 		MiddleName,
 		LastName,
-		TransTime
+		TransTime: convertMpesaTimestamp(TransTime)
 	});
 
 	return new Response(JSON.stringify(data));

@@ -82,14 +82,14 @@ interface MpesaTimeoutResult {
 interface Confirmation {
 	TransactionType: string;
 	TransID: string;
-	TransTime: Date;
+	TransTime: string;
 	TransAmount: number;
 	BusinessShortCode: number;
 	BillRefNumber: string;
 	InvoiceNumber: string;
-	OrgAccountBalance: number;
+	OrgAccountBalance: string;
 	ThirdPartyTransID: string;
-	MSISDN: number;
+	MSISDN: string;
 	FirstName: string;
 	MiddleName: string;
 	LastName: string;

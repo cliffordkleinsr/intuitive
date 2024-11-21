@@ -51,7 +51,6 @@ export const agentData = pgTable('agent_data', {
 	agentid: text('agent_id')
 		.references(() => UsersTable.id)
 		.primaryKey()
-		.unique()
 		.notNull(),
 	email: text('agent_email')
 		.references(() => UsersTable.email)
@@ -241,7 +240,7 @@ export const AnswersTable = pgTable('answers', {
 });
 
 export const payoutRequests = pgTable('payout_requests', {
-	payoutid: uuid('payout_id').defaultRandom().primaryKey().unique(),
+	payoutid: uuid('payout_id').defaultRandom().primaryKey(),
 	agentid: text('agent_id')
 		.references(() => UsersTable.id)
 		.notNull(),
@@ -276,10 +275,11 @@ export const agentTransactions = pgTable('agent_transactions', {
 });
 
 export const clientTransactions = pgTable('client_transactions', {
-	TransID: text().notNull(),
+	id: serial().notNull().primaryKey(),
+	TransactionCode: text().notNull(),
 	TransAmount: integer().notNull(),
-	OrgAccountBalance: integer().notNull(),
-	MSISDN: integer().notNull(),
+	OrgAccountBalance: text().notNull(),
+	MSISDN: text().notNull(),
 	FirstName: text().notNull(),
 	MiddleName: text().notNull(),
 	LastName: text().notNull(),

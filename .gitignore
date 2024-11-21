@@ -23,3 +23,5 @@ drizzle/meta/0000_snapshot.json
 drizzle/meta/_journal.json
 drizzle/relations.ts
 drizzle/schema.ts
+drizzle/meta/0003_snapshot.json
+drizzle/0003_groovy_ironclad.sql
