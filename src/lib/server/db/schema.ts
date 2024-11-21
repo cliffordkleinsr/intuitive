@@ -274,6 +274,20 @@ export const agentTransactions = pgTable('agent_transactions', {
 		.defaultNow()
 		.notNull()
 });
+
+export const clientTransactions = pgTable('client_transactions', {
+	TransID: text().notNull(),
+	TransAmount: integer().notNull(),
+	OrgAccountBalance: integer().notNull(),
+	MSISDN: integer().notNull(),
+	FirstName: text().notNull(),
+	MiddleName: text().notNull(),
+	LastName: text().notNull(),
+	TransTime: timestamp({
+		withTimezone: true,
+		mode: 'date'
+	}).notNull()
+});
 export type userInsertSchema = typeof UsersTable.$inferInsert;
 export type ClientDataInsertSchema = typeof clientData.$inferInsert;
 export type RespondentInsertSchema = typeof agentData.$inferInsert;

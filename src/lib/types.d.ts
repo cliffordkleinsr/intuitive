@@ -78,5 +78,31 @@ interface MpesaTimeoutResult {
 		ConversationID: string;
 	};
 }
+// interdace for transaction
+interface Confirmation {
+	TransactionType: string;
+	TransID: string;
+	TransTime: Date;
+	TransAmount: number;
+	BusinessShortCode: number;
+	BillRefNumber: string;
+	InvoiceNumber: string;
+	OrgAccountBalance: number;
+	ThirdPartyTransID: string;
+	MSISDN: number;
+	FirstName: string;
+	MiddleName: string;
+	LastName: string;
+}
 
-export type { SurveyData, Agent, Client, Params, SEO, C2BURLs, MpesaB2CResult, MpesaTimeoutResult };
+export type {
+	SurveyData,
+	Agent,
+	Client,
+	Params,
+	SEO,
+	C2BURLs,
+	MpesaB2CResult,
+	MpesaTimeoutResult,
+	Confirmation
+};

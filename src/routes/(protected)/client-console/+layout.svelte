@@ -103,7 +103,7 @@
 			<div class="ml-auto flex gap-2">
 				{#if !data.payment.status}
 					<div class="my-2 hidden h-5 md:block">
-						<Badge variant="outline"><a href="/client-console">Unlock Pro</a></Badge>
+						<Badge variant="outline"><a href="/client-console/billing">Unlock Pro</a></Badge>
 					</div>
 				{/if}
 				<Button onclick={toggleMode} variant="ghost" size="icon">

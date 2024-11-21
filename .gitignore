@@ -19,3 +19,7 @@ Thumbs.db
 # Vite
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
+drizzle/meta/0000_snapshot.json
+drizzle/meta/_journal.json
+drizzle/relations.ts
+drizzle/schema.ts
