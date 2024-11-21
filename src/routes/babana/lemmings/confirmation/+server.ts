@@ -15,8 +15,8 @@ function convertMpesaTimestamp(timestamp:any) {
 	// Create a new Date object
 	return new Date(year, month, day, hours, minutes, seconds);
   }
-export const POST: RequestHandler = async ({ request }) => {
-	const data: Confirmation = await request.json();
+export const GET: RequestHandler = async ({ request }) => {
+	const data = await request.json();
 	// console.log(data)
 	const {
 		TransID,
@@ -27,7 +27,7 @@ export const POST: RequestHandler = async ({ request }) => {
 		MiddleName,
 		LastName,
 		TransTime
-	} = data;
+	}:Confirmation = data;
 
 	await db.insert(clientTransactions).values({
 		TransactionCode: TransID,

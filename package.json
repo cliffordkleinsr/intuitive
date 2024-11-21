@@ -60,8 +60,6 @@
 		"zod": "^3.23.8"
 	},
 	"dependencies": {
-		"@arcjet/bun": "^1.0.0-alpha.29",
-		"@arcjet/sveltekit": "^1.0.0-alpha.29",
 		"@neondatabase/serverless": "^0.9.5",
 		"@oslojs/crypto": "^1.0.1",
 		"@oslojs/encoding": "^1.1.0",
