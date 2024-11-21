@@ -16,11 +16,8 @@ import { redirect } from 'sveltekit-flash-message/server';
 import { handleLoginRedirect } from '$lib/custom/functions/helpers';
 import { setSessionTokenCookie } from '$lib/server/session';
 import bcrypt from 'bcrypt';
-import { initiateB2C } from '$lib/server/mpesa';
 
 export const load: PageServerLoad = async ({ locals: { user }, url }) => {
-	// const body = {amount: 30, phoneNumber: '0799725093' }
-	// await initiateB2C(body)
 	if (user) {
 		if (user.role === 'CLIENT') {
 			// redirect('/client-dash',  {type: "error", message:"User Already Logged In"}, cookies)

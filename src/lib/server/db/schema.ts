@@ -280,9 +280,9 @@ export const clientTransactions = pgTable('client_transactions', {
 	TransAmount: integer().notNull(),
 	OrgAccountBalance: text().notNull(),
 	MSISDN: text().notNull(),
-	FirstName: text().notNull(),
-	MiddleName: text().notNull(),
-	LastName: text().notNull(),
+	FirstName: text(),
+	MiddleName: text(),
+	LastName: text(),
 	TransTime: timestamp({
 		withTimezone: true,
 		mode: 'date'
