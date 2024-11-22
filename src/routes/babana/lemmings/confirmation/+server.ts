@@ -20,6 +20,7 @@ export const POST: RequestHandler = async ({ request }) => {
 	const {
 		TransID,
 		TransAmount,
+		BillRefNumber,
 		OrgAccountBalance,
 		MSISDN,
 		FirstName,
@@ -30,6 +31,7 @@ export const POST: RequestHandler = async ({ request }) => {
 	await db.insert(clientTransactions).values({
 		TransactionCode: TransID,
 		TransAmount: parseInt(TransAmount),
+		BillRefNumber,
 		OrgAccountBalance,
 		MSISDN,
 		FirstName,

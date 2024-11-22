@@ -278,6 +278,7 @@ export const clientTransactions = pgTable('client_transactions', {
 	id: serial().notNull().primaryKey(),
 	TransactionCode: text().notNull(),
 	TransAmount: integer().notNull(),
+	BillRefNumber: text().notNull(),
 	OrgAccountBalance: text().notNull(),
 	MSISDN: text().notNull(),
 	FirstName: text(),
