@@ -76,7 +76,7 @@
 	const { form: formData, enhance, message, delayed } = form;
 
 	// Ozers
-	let value: DateValue | undefined = $state();
+	let value = $state<DateValue | undefined>();
 	// let valuestring = $derived($formData.dateofbirth ? parseDate($formData.dateofbirth) : undefined);
 	// $formData.dateofbirth ? parseDate($formData.dateofbirth) : undefined
 
@@ -561,7 +561,7 @@
 						</Form.Field>
 					</div>
 					{#if $delayed}
-						<Button class="flex gap-2">
+						<Button class="flex gap-2" disabled={$delayed}>
 							<span
 								class="inline-block size-4 animate-spin rounded-full border-[3px] border-current border-t-transparent text-white"
 								role="status"
@@ -578,7 +578,7 @@
 					<a href="/agent/signin" class="underline hover:text-primary"> Sign in </a>
 				</div>
 			</Card.Content>
-			<!-- <SuperDebug data={$formData}/> -->
+			<SuperDebug data={$formData} />
 		</Card.Root>
 	</form>
 </div>
