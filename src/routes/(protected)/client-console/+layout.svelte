@@ -19,6 +19,7 @@
 	import Coins from 'lucide-svelte/icons/coins';
 	import ChartCandlestick from 'lucide-svelte/icons/chart-candlestick';
 	import SlidersVertical from 'lucide-svelte/icons/sliders-vertical';
+	import { Settings } from '$lib/custom/shardedlayouts';
 
 	let { children, data } = $props();
 	const ClientlayoutItems = {
@@ -115,11 +116,7 @@
 					/>
 					<span class="sr-only">Toggle theme</span>
 				</Button>
-				<Avatar.Root>
-					<Avatar.Image src="" alt="@shadcn" />
-					<Avatar.Fallback>CN</Avatar.Fallback>
-				</Avatar.Root>
-				<span class="sr-only">Toggle user menu</span>
+				<Settings name={data.AuthedUser} action={ClientlayoutItems.action} />
 			</div>
 		</header>
 		<main>

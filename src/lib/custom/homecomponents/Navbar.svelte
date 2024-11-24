@@ -10,6 +10,7 @@
 	import { toggleMode } from 'mode-watcher';
 	import * as Collapsible from '$lib/components/ui/collapsible';
 	import { cn } from '$lib/utils';
+	import { page } from '$app/stores';
 </script>
 
 <header
@@ -21,11 +22,28 @@
 	<nav
 		class="hidden font-medium md:flex md:basis-11/12 md:flex-row md:justify-center md:gap-5 lg:gap-9"
 	>
-		<a href="/" class="text-foreground transition-colors hover:text-primary"> Home </a>
+		<a
+			href="/"
+			class="{$page.url.pathname === '/'
+				? 'text-foreground'
+				: 'text-muted-foreground'} transition-colors hover:text-primary"
+		>
+			Home
+		</a>
 
-		<a href="/about" class="text-muted-foreground transition-colors hover:text-primary"> About </a>
+		<a
+			href="/about"
+			class="{$page.url.pathname === '/about'
+				? 'text-foreground'
+				: 'text-muted-foreground'} transition-colors hover:text-primary"
+		>
+			About
+		</a>
 		<DropdownMenu.Root>
-			<DropdownMenu.Trigger class="text-muted-foreground transition-colors hover:text-primary"
+			<DropdownMenu.Trigger
+				class="{$page.url.pathname.startsWith('/industries')
+					? 'text-foreground'
+					: 'text-muted-foreground'} transition-colors hover:text-primary"
 				>Industries</DropdownMenu.Trigger
 			>
 			<DropdownMenu.Content class="mt-4 text-muted-foreground transition-colors">
@@ -41,7 +59,10 @@
 			</DropdownMenu.Content>
 		</DropdownMenu.Root>
 		<DropdownMenu.Root>
-			<DropdownMenu.Trigger class="text-muted-foreground transition-colors hover:text-primary"
+			<DropdownMenu.Trigger
+				class="{$page.url.pathname.startsWith('/services')
+					? 'text-foreground'
+					: 'text-muted-foreground'} transition-colors hover:text-primary"
 				>Services</DropdownMenu.Trigger
 			>
 			<DropdownMenu.Content class="mt-4 text-muted-foreground transition-colors">
@@ -62,7 +83,12 @@
 				</DropdownMenu.Group>
 			</DropdownMenu.Content>
 		</DropdownMenu.Root>
-		<a href="/pricing" class="text-muted-foreground transition-colors hover:text-primary">
+		<a
+			href="/pricing"
+			class="{$page.url.pathname === '/pricing'
+				? 'text-foreground'
+				: 'text-muted-foreground'} transition-colors hover:text-primary"
+		>
 			Pricing
 		</a>
 	</nav>

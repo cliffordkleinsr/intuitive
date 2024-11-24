@@ -1,16 +1,16 @@
 import type { Actions, PageServerLoad } from './$types';
-import { CURRENCY_EXCHANGE_API } from '$env/static/private';
+// import { CURRENCY_EXCHANGE_API } from '$env/static/private';
 import { db } from '$lib/server/db';
 import { clientData, clientPackages, clientTransactions } from '$lib/server/db/schema';
 import { eq, sql } from 'drizzle-orm';
 import { redirect } from 'sveltekit-flash-message/server';
+import { message, superValidate } from 'sveltekit-superforms';
+import { billingSchema } from './billing';
+import { zod } from 'sveltekit-superforms/adapters';
 
 export const load: PageServerLoad = async ({ locals: { user } }) => {
 	const userid = user?.id as string;
-	// const res = await fetch(`https://v6.exchangerate-api.com/v6/${CURRENCY_EXCHANGE_API}/latest/USD`);
 
-	// const data = await res.json();
-	// const exchangerate = data.conversion_rates.KES;
 	const [details] = await db
 		.select({
 			phone: clientData.phone
@@ -18,7 +18,7 @@ export const load: PageServerLoad = async ({ locals: { user } }) => {
 		.from(clientData)
 		.where(eq(clientData.clientId, userid));
 	return {
-		// exchangerate,
+		form: await superValidate(zod(billingSchema)),
 		phoneno: details.phone
 	};
 };
@@ -26,12 +26,21 @@ export const load: PageServerLoad = async ({ locals: { user } }) => {
 export const actions: Actions = {
 	default: async ({ request, locals: { user }, cookies }) => {
 		const userid = user?.id as string;
-		const data = Object.fromEntries(await request.formData()) as {
+		const form = await superValidate(request, zod(billingSchema));
+		// validate
+		if (!form.valid) {
+			return message(form, {
+				alertType: 'error',
+				alertText: 'Please Check your entries, the form contains invalid data'
+			});
+		}
+		interface BillingItems {
 			phone: string;
 			price: string;
 			plan: string;
-		};
-		const { phone, price, plan } = data;
+		}
+		const { phone, price, plan } = form.data as BillingItems;
+
 		// check if there is any payment in the database
 		const details = await db
 			.select()
@@ -82,6 +91,11 @@ export const actions: Actions = {
 						onetime: plan === 'One-time' ? true : false
 					})
 					.where(eq(clientData.clientId, userid));
+			} else {
+				return message(form, {
+					alertType: 'info',
+					alertText: 'No payment has been recieved. Please try again later'
+				});
 			}
 		} catch (err) {
 			console.error(err);

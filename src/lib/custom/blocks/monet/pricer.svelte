@@ -77,7 +77,12 @@
 					{:else if applyLogic}
 						<Portal2>
 							{#snippet trigger({ props })}
-								<Button {...props} variant="outline" class="w-full">
+								<Button
+									{...props}
+									variant="outline"
+									class="w-full"
+									disabled={selected_plan === item.prices}
+								>
 									{selected_plan === item.prices ? 'Current Plan' : Message}
 								</Button>
 							{/snippet}

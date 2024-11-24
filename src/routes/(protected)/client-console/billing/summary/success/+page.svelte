@@ -22,7 +22,7 @@
 		fallDistance="200vh"
 	/>
 </div>
-<div class="bg-gradient-to-b from-blue-50 to-white">
+<div class="dark:to-gray bg-gradient-to-b from-blue-50 to-white dark:from-gray-900">
 	<main class="container mx-auto px-4 py-16">
 		<section class="mb-16 text-center">
 			<h1 class="mb-4 text-4xl font-bold">Welcome to Our Platform!</h1>

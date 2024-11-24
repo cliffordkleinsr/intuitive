@@ -1,13 +1,42 @@
 <script lang="ts">
+	import type { PageData } from './$types';
+	// base shad
 	import * as Card from '$lib/components/ui/card';
 	import * as InputOTP from '$lib/components/ui/input-otp';
 	import { Input } from '$lib/components/ui/input';
 	import { Button } from '$lib/components/ui/button';
+	import * as Form from '$lib/components/ui/form';
 
-	import type { PageData } from './$types';
-	import { enhance } from '$app/forms';
+	// superforms
+	import { superForm } from 'sveltekit-superforms';
+	import { zodClient } from 'sveltekit-superforms/adapters';
+	// schema
+	import { billingSchema } from './billing';
+	// sonner
+	import { toast } from 'svelte-sonner';
 
 	let { data }: { data: PageData } = $props();
+
+	const form = superForm(data.form, {
+		validators: zodClient(billingSchema),
+		onUpdated: () => {
+			if (!$message) return;
+
+			const { alertType, alertText } = $message;
+			if (alertType === 'success') {
+				toast.error(alertText);
+			}
+			if (alertType === 'error') {
+				toast.error(alertText);
+			}
+			if (alertType === 'info') {
+				toast.info(alertText);
+			}
+		}
+	});
+
+	const { form: formData, enhance, message, delayed } = form;
+
 	const { phoneno } = $derived(data);
 	let payment_plan: any | { plan: string; price: string } = $state();
 	let value = $state('4826298');
@@ -44,35 +73,67 @@
 				{/snippet}
 			</InputOTP.Root>
 		</Card.Content>
-		<form
-			action=""
-			method="post"
-			use:enhance={() => {
-				return async ({ update }) => {
-					update({ reset: false });
-				};
-			}}
-		>
-			<Card.Footer class="grid max-w-sm gap-1">
-				<p class="text-sm text-muted-foreground">Enter account number</p>
-				<Input class="font-extrabold" value={phoneno} disabled />
-				<input type="text" value={phoneno} name="phone" hidden />
-			</Card.Footer>
-			<Card.Footer class="grid max-w-sm gap-1">
-				<p class="text-sm text-muted-foreground">Enter amount in KES</p>
-				<Input
-					class="font-extrabold"
-					type="number"
-					value={Math.round(payment_plan?.price * 100)}
-					disabled
-				/>
-				<input type="number" name="price" value={Math.round(payment_plan?.price * 100)} hidden />
-				<input type="text" name="plan" value={payment_plan?.plan} hidden />
-			</Card.Footer>
-			<Card.Footer class="grid max-w-sm gap-1">
-				<p class="text-center text-sm text-muted-foreground">Rate is KES 100</p>
-				<Button variant="black" type="submit">Verify Payment</Button>
-			</Card.Footer>
-		</form>
+		<Card.Footer class="grid max-w-sm gap-1">
+			<p class="text-sm text-muted-foreground">Enter account number</p>
+			<Input class="font-extrabold" value={phoneno} disabled />
+		</Card.Footer>
+		<Card.Footer class="grid max-w-sm gap-1">
+			<p class="text-sm text-muted-foreground">Enter amount in KES</p>
+			<Input
+				class="font-extrabold"
+				type="number"
+				value={Math.round(payment_plan?.price * 100)}
+				disabled
+			/>
+		</Card.Footer>
+		<Card.Footer class="grid max-w-sm gap-1">
+			<p class="text-center text-sm text-muted-foreground">Rate is KES 100</p>
+			<form action="" method="post" use:enhance>
+				<Form.Field {form} name="phone">
+					<Form.Control>
+						{#snippet children({ props })}
+							<Input {...props} value={phoneno} class="hidden" />
+						{/snippet}
+					</Form.Control>
+					<Form.FieldErrors />
+				</Form.Field>
+				<Form.Field {form} name="price">
+					<Form.Control>
+						{#snippet children({ props })}
+							<Input {...props} value={phoneno} class="hidden" />
+						{/snippet}
+					</Form.Control>
+					<Form.FieldErrors />
+				</Form.Field>
+				<Form.Field {form} name="phone">
+					<Form.Control>
+						{#snippet children({ props })}
+							<Input {...props} value={Math.round(payment_plan?.price * 100)} class="hidden" />
+						{/snippet}
+					</Form.Control>
+					<Form.FieldErrors />
+				</Form.Field>
+				<Form.Field {form} name="plan">
+					<Form.Control>
+						{#snippet children({ props })}
+							<Input {...props} value={payment_plan?.plan} class="hidden" />
+						{/snippet}
+					</Form.Control>
+					<Form.FieldErrors />
+				</Form.Field>
+				{#if $delayed}
+					<Button class="flex w-full gap-2" disabled={$delayed} variant="black">
+						<span
+							class="inline-block size-4 animate-spin rounded-full border-[3px] border-current border-t-transparent text-white dark:text-black"
+							role="status"
+							aria-label="loading"
+						></span>
+						Loading...
+					</Button>
+				{:else}
+					<Form.Button variant="black" class="w-full">Verify Payment</Form.Button>
+				{/if}
+			</form>
+		</Card.Footer>
 	</Card.Root>
 </div>

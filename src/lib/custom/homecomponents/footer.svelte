@@ -11,6 +11,6 @@
 	<p class="text-xs text-muted-foreground">© {year} Intuitive Insights. All rights reserved.</p>
 	<nav class="flex gap-4 sm:ml-auto sm:gap-6">
 		<a class="text-xs underline-offset-4 hover:underline" href="##"> Terms of Service </a>
-		<a class="text-xs underline-offset-4 hover:underline" href="##"> Privacy Policy </a>
+		<a class="text-xs underline-offset-4 hover:underline" href="/privacy"> Privacy Policy </a>
 	</nav>
 </footer>

@@ -92,6 +92,12 @@ export const load: LayoutServerLoad = async ({ locals: { user }, url }) => {
         ${SurveyTable.clientid} = ${user.id}
         `
 		);
+	const [onetime] = await db
+		.select({
+			state: clientData.onetime
+		})
+		.from(clientData)
+		.where(eq(clientData.clientId, user.id as string));
 	return {
 		payment,
 		features,
@@ -102,6 +108,7 @@ export const load: LayoutServerLoad = async ({ locals: { user }, url }) => {
 		url: url.pathname,
 		notif: msg,
 		share: sharable.length,
-		sharable
+		sharable,
+		otp: onetime.state
 	};
 };

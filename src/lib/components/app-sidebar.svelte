@@ -49,6 +49,12 @@
 			icon: CreditCard
 		}
 	];
+	const shouldRenderFooteritems = (item: any) => {
+		if (item.title === 'Billing' && payment_status) {
+			return false;
+		}
+		return true;
+	};
 	const shouldRenderGroup = (group: any) => {
 		if (group.title === 'Audience' || group.title === 'Analytics') {
 			return payment_status;
@@ -123,23 +129,27 @@
 						</DropdownMenu.Trigger>
 						<DropdownMenu.Content side="top" class="w-[--bits-dropdown-menu-anchor-width]">
 							{#each footerItems as item (item.title)}
-								<DropdownMenu.Item>
+								{#if shouldRenderFooteritems(item)}
+									<DropdownMenu.Item>
+										{#snippet child({ props })}
+											<a href={item.url} {...props}>
+												<item.icon />
+												<span>{item.title}</span>
+											</a>
+										{/snippet}
+									</DropdownMenu.Item>
+								{/if}
+							{/each}
+							<form {action} method="post" use:enhance>
+								<DropdownMenu.Item class="w-full justify-start">
 									{#snippet child({ props })}
-										<a href={item.url} {...props}>
-											<item.icon />
-											<span>{item.title}</span>
-										</a>
+										<Form.Button variant="ghost" size="sm" {...props}>
+											<LogOut />
+											<span class="font-normal">Sign out</span>
+										</Form.Button>
 									{/snippet}
 								</DropdownMenu.Item>
-							{/each}
-							<DropdownMenu.Item>
-								<LogOut />
-								<form {action} method="post" use:enhance>
-									<Form.Button variant="ghost" size="sm" class="-ml-3 w-full">
-										<span class=" font-normal">Sign out</span>
-									</Form.Button>
-								</form>
-							</DropdownMenu.Item>
+							</form>
 						</DropdownMenu.Content>
 					</DropdownMenu.Root>
 				</Sidebar.MenuItem>
