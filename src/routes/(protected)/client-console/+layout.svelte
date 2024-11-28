@@ -5,7 +5,6 @@
 	import { Separator } from '$lib/components/ui/separator';
 	import { Button } from '$lib/components/ui/button';
 	import { toggleMode } from 'mode-watcher';
-	import * as Avatar from '$lib/components/ui/avatar';
 	import { Badge } from '$lib/components/ui/badge';
 
 	// Lucide Svelte
@@ -20,8 +19,21 @@
 	import ChartCandlestick from 'lucide-svelte/icons/chart-candlestick';
 	import SlidersVertical from 'lucide-svelte/icons/sliders-vertical';
 	import { Settings } from '$lib/custom/shardedlayouts';
+	import type { LayoutData } from './$types';
+	import type { Snippet } from 'svelte';
 
-	let { children, data } = $props();
+	let { children, data }: { data: LayoutData; children: Snippet } = $props();
+
+	const dropProps = [
+		{
+			label: 'Profile',
+			href: '##'
+		},
+		{
+			label: 'Subscription',
+			href: '/client-console/account/plan'
+		}
+	];
 	const ClientlayoutItems = {
 		data: [
 			{
@@ -116,7 +128,7 @@
 					/>
 					<span class="sr-only">Toggle theme</span>
 				</Button>
-				<Settings name={data.AuthedUser} action={ClientlayoutItems.action} />
+				<Settings name={data.AuthedUser} action={ClientlayoutItems.action} items={dropProps} />
 			</div>
 		</header>
 		<main>

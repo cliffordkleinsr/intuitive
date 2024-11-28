@@ -20,11 +20,19 @@ import type { Actions, PageServerLoad } from './$types';
 import bcrypt from 'bcrypt';
 import { setSessionTokenCookie } from '$lib/server/session';
 
-export const load: PageServerLoad = async ({ locals: { user }, url }) => {
+export const load: PageServerLoad = async ({ locals: { user }, url, cookies }) => {
 	if (user) {
 		if (user.role === 'AGENT') {
 			// redirect('/respondent-dash',  {type: "error", message:"User Already Logged In"}, cookies)
-			redirect(302, handleLoginRedirect('/agent-console', url, 'User Already Logged In'));
+			redirect(
+				302,
+				handleLoginRedirect('/agent-console', url),
+				{
+					type: 'info',
+					message: 'User Already Logged In'
+				},
+				cookies
+			);
 		}
 	}
 	return {

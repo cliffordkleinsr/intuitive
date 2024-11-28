@@ -60,12 +60,12 @@ function closeAndFocusTrigger(triggerId: string) {
 // Reroute params with message
 function handleLoginRedirect(
 	where: string,
-	url: URL,
-	notification: string = 'You Must Be logged In to view this page'
+	url: URL
+	// notification: string = 'You Must Be logged In to view this page'
 ) {
 	const redirectTo = url.pathname + url.search;
 
-	return `${where}?redirectTo=${redirectTo}&notification=${notification}`;
+	return `${where}?redirectTo=${redirectTo}`;
 }
 
 function handleExternal(where: string, url: URL) {

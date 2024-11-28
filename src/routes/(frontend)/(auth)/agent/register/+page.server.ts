@@ -24,10 +24,18 @@ import * as auth from '$lib/server/auth.js';
 import { setSessionTokenCookie } from '$lib/server/session';
 // import { createVerification } from '$lib/server/twilioconfigs/sms-messages';
 
-export const load: PageServerLoad = async ({ locals: { user }, url }) => {
+export const load: PageServerLoad = async ({ locals: { user }, url, cookies }) => {
 	if (user) {
 		if (user.role === 'AGENT') {
-			redirect(302, handleLoginRedirect('/agent-console', url, 'User Already Logged In'));
+			redirect(
+				302,
+				handleLoginRedirect('/agent-console', url),
+				{
+					type: 'info',
+					message: 'User Already Logged In'
+				},
+				cookies
+			);
 		}
 	}
 	return {
@@ -62,8 +70,8 @@ export const actions: Actions = {
 			gender
 		} = form.data;
 
-		income = income ?? '0 - 10000';
-		sector = sector ?? ' Others';
+		income = income ?? '00000 - 10000';
+		sector = sector ?? 'Others';
 
 		// check if the email is already registered
 		const exists = await checkIfEmailExists(email);

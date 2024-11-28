@@ -18,6 +18,7 @@
 >
 	<div class="hidden lg:block">
 		<Package2 class="h-6 w-6" />
+		<!-- <img src="https://res.cloudinary.com/dmy8yp9el/image/upload/v1732781696/bdo6gntiz5pdxptwq5fe.png" class="w-7" alt="logo"> -->
 	</div>
 	<nav
 		class="hidden font-medium md:flex md:basis-11/12 md:flex-row md:justify-center md:gap-5 lg:gap-9"
@@ -101,7 +102,12 @@
 		<Sheet.Content side="left">
 			<nav class="grid gap-6 text-lg font-medium">
 				<a href="/" class="flex items-center gap-2 text-lg font-semibold">
-					<Package2 class="h-6 w-6" />
+					<!-- <Package2 class="h-6 w-6" /> -->
+					<img
+						src="https://res.cloudinary.com/dmy8yp9el/image/upload/v1732781696/bdo6gntiz5pdxptwq5fe.png"
+						class="w-5"
+						alt="logo"
+					/>
 				</a>
 				<a href="/" class="text-muted-foreground hover:text-primary"> Home </a>
 				<a href="/about" class="text-muted-foreground hover:text-primary"> About </a>

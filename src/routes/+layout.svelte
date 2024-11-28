@@ -19,6 +19,8 @@
 				case 'error':
 					toast.error($flash.message);
 					break;
+				case 'info':
+					toast.info($flash.message);
 			}
 			$flash = undefined;
 		}

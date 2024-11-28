@@ -3,7 +3,6 @@ import { db } from './index';
 
 import {
 	AnswersTable,
-	// SurveyQnsTable,
 	SurveyTable,
 	UsersTable,
 	clientData,
@@ -13,21 +12,16 @@ import {
 	surveyqnsTableV2,
 	type ClientDataInsertSchema,
 	type RespondentInsertSchema,
-	type resData,
-	type surveyGenerateSchema,
-	// type surveyQnsSchema,
 	type surveyQnsSchemaV2,
-	type surveySelectSchema,
 	type userInsertSchema,
 	QuestionOptions,
 	type progresType,
 	progressTable,
 	agentSurveysTable,
-	payoutRequests
+	payoutRequests,
+	type surveyGenerateSchema
 } from './schema';
 import type { PgColumn, PgTable } from 'drizzle-orm/pg-core';
-import { clientPackage } from '$lib/store';
-import type { RetryAfterRateLimiter } from 'sveltekit-rate-limiter/server';
 import type { Cookies } from '@sveltejs/kit';
 import { redirect } from 'sveltekit-flash-message/server';
 

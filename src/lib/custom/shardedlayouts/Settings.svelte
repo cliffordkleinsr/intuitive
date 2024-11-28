@@ -5,7 +5,20 @@
 	import { enhance } from '$app/forms';
 	// forms
 	import * as Form from '$lib/components/ui/form';
-	let { name, action } = $props();
+
+	interface dropdownItems {
+		label: string;
+		href?: string;
+	}
+	let {
+		name,
+		action,
+		items
+	}: {
+		name: string;
+		action: string;
+		items: dropdownItems[];
+	} = $props();
 </script>
 
 <DropdownMenu.Root>
@@ -20,10 +33,11 @@
 		<DropdownMenu.Group>
 			<DropdownMenu.Label>My Account</DropdownMenu.Label>
 			<DropdownMenu.Separator />
-			<DropdownMenu.Item>Profile</DropdownMenu.Item>
-			<DropdownMenu.Item>Billing</DropdownMenu.Item>
-			<DropdownMenu.Item>Team</DropdownMenu.Item>
-			<DropdownMenu.Item>Subscription</DropdownMenu.Item>
+			{#each items as { label, href }}
+				<DropdownMenu.Item>
+					<a {href}>{label}</a>
+				</DropdownMenu.Item>
+			{/each}
 			<DropdownMenu.Separator />
 			<form {action} method="post" use:enhance>
 				<DropdownMenu.Item class="w-full justify-start">

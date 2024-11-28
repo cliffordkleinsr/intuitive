@@ -1,4 +1,3 @@
-import { redirect } from '@sveltejs/kit';
 import { handleExternal, handleLoginRedirect } from '$lib/custom/functions/helpers';
 import type { LayoutServerLoad } from './$types';
 import { db } from '$lib/server/db';
@@ -12,6 +11,7 @@ import {
 } from '$lib/server/db/schema';
 import { eq, sql } from 'drizzle-orm';
 import { deleteCUser } from '$lib/server/db/db_utils';
+import { redirect } from 'sveltekit-flash-message/server';
 
 export const load: LayoutServerLoad = async ({ locals: { user }, cookies, url }) => {
 	const validation = false;
@@ -21,7 +21,15 @@ export const load: LayoutServerLoad = async ({ locals: { user }, cookies, url })
 		if (extrenal) {
 			redirect(302, handleExternal('/agent/register', url));
 		} else {
-			redirect(302, handleLoginRedirect('/agent/signin', url));
+			redirect(
+				302,
+				handleLoginRedirect('/agent/signin', url),
+				{
+					type: 'error',
+					message: 'Not Authorised'
+				},
+				cookies
+			);
 		}
 		// redirect('/respondent/signin', {type: "error", message:"You Must Be logged In to view this page"}, cookies)
 	}
@@ -38,7 +46,15 @@ export const load: LayoutServerLoad = async ({ locals: { user }, cookies, url })
 		}
 	}
 	if (user.role === 'CLIENT') {
-		redirect(302, handleLoginRedirect('/', url, 'Not Authorised'));
+		redirect(
+			302,
+			handleLoginRedirect('/', url),
+			{
+				type: 'error',
+				message: 'Not Allowed'
+			},
+			cookies
+		);
 	}
 
 	return {

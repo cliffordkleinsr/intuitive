@@ -8,10 +8,18 @@ export const actions: Actions = {
 	default: async ({ locals: { session }, cookies, url }) => {
 		if (!session) {
 			// return fail(401, { message: 'You do not have a valid sesion' });
-			redirect(302, handleLoginRedirect('/client/signin', url, 'Not Authorised'));
+			redirect(
+				302,
+				handleLoginRedirect('/client/signin', url),
+				{
+					type: 'info',
+					message: 'Not Authorised'
+				},
+				cookies
+			);
 		}
 		await auth.invalidateSession(session.id);
 		deleteSessionTokenCookie(cookies);
-		redirect(302, '/client/signin', { type: 'success', message: 'Logged Out' }, cookies);
+		redirect(302, '/client/signin', { type: 'info', message: 'Logged Out' }, cookies);
 	}
 };

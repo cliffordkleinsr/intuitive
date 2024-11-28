@@ -1,10 +1,15 @@
 import { db } from '$lib/server/db';
-import { agentSurveysTable, progressTable, surveyqnsTableV2 } from '$lib/server/db/schema';
+import {
+	agentSurveysTable,
+	progressTable,
+	surveyqnsTableV2,
+	SurveyTable
+} from '$lib/server/db/schema';
 import { asc, eq, sql } from 'drizzle-orm';
 import type { PageServerLoad } from './$types';
 import { getpersistentIx } from '$lib/server/db/db_utils';
-import { redirect } from '@sveltejs/kit';
 import type { SurveyData } from '$lib/types';
+import { redirect } from 'sveltekit-flash-message/server';
 
 export const load: PageServerLoad = async ({ params, cookies, locals: { user } }) => {
 	const [survey] = await db
@@ -13,11 +18,28 @@ export const load: PageServerLoad = async ({ params, cookies, locals: { user } }
 		})
 		.from(agentSurveysTable)
 		.where(
-			sql`${agentSurveysTable.agentid} = ${user?.id} and ${agentSurveysTable.surveyid} = ${params.surveyId}`
+			sql`
+				${agentSurveysTable.agentid} = ${user?.id}
+				and 
+				${agentSurveysTable.surveyid} = ${params.surveyId}
+				`
+		);
+	const queryResult = await db
+		.select()
+		.from(SurveyTable)
+		.where(
+			sql`
+			${SurveyTable.surveyid} = ${params.surveyId}
+			and
+			${SurveyTable.status} = 'Live'
+		`
 		);
 
 	if (survey.completed === true) {
-		redirect(303, '/agent-dash');
+		redirect(303, '/agent-console', { type: 'info', message: 'Survey Is Not Available' }, cookies);
+	}
+	if (queryResult.length === 0) {
+		redirect(303, '/agent-console', { type: 'info', message: 'Survey Has been Closed' }, cookies);
 	}
 	async function getSurvey() {
 		let uri: string = '';
@@ -34,13 +56,7 @@ export const load: PageServerLoad = async ({ params, cookies, locals: { user } }
 
 			db.select().from(surveyqnsTableV2).where(eq(surveyqnsTableV2.surveid, params.surveyId))
 		]);
-		// const ids = await db
-		// 	.select({
-		// 		id: surveyqnsTableV2.questionId
-		// 	})
-		// 	.from(surveyqnsTableV2)
-		// 	.where(eq(surveyqnsTableV2.surveid, params.surveyId))
-		// 	.orderBy(asc(surveyqnsTableV2.updatedAt));
+
 		let current_ix = parseInt(cookies.get('current_ix') ?? '0');
 		// first check whether we have a cookie for the indexed session
 		if (current_ix === 0) {
@@ -49,10 +65,6 @@ export const load: PageServerLoad = async ({ params, cookies, locals: { user } }
 			current_ix = ixi;
 		}
 		uri = `/agent-console/surveys/take/${params.surveyId}/${ids[current_ix].id}`;
-		// const surveyqns = await db
-		// 	.select()
-		// 	.from(surveyqnsTableV2)
-		// 	.where(eq(surveyqnsTableV2.surveid, params.surveyId));
 
 		const data = {
 			available_surv: {

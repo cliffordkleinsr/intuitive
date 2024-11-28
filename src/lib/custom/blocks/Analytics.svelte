@@ -6,7 +6,7 @@
 	import * as Table from '$lib/components/ui/table';
 	import { Progress } from '$lib/components/ui/progress';
 	import { counties } from '$lib/geojson/counties';
-	import { interpolateRdBu } from 'd3-scale-chromatic';
+	import { interpolateOranges, interpolateRdBu } from 'd3-scale-chromatic';
 	import { Button } from '$lib/components/ui/button';
 	import Download from 'lucide-svelte/icons/download';
 	import { quantize } from 'd3-interpolate';
@@ -49,13 +49,7 @@
 	} = $props();
 </script>
 
-<div class=" absolute right-4 top-3 z-10 md:right-24 lg:right-28" id="kutton">
-	<Button variant="secondary" size="icon" onclick={() => window.print()}>
-		<Download />
-	</Button>
-</div>
-
-<div class="m-4 grid gap-3">
+<div class="mx-auto grid gap-3 px-2 py-7">
 	<div class="grid gap-2 md:grid-cols-1 lg:grid-cols-2">
 		<div class="grid gap-2">
 			<Card.Root class="lg:max-w-screen-md">
@@ -67,7 +61,13 @@
 						>
 					</Card.Description>
 				</Card.Header>
-				<Card.Content></Card.Content>
+				<Card.Content>
+					<div id="kutton">
+						<Button variant="secondary" size="default" onclick={() => window.print()}>
+							Export <Download />
+						</Button>
+					</div>
+				</Card.Content>
 			</Card.Root>
 			<Card.Root class="lg:max-w-screen-md">
 				<Card.Header>
@@ -98,7 +98,7 @@
 					<Card.Description>Responses by Gender</Card.Description>
 				</Card.Header>
 				<Card.Content>
-					<div class=" h-[200px] w-full rounded border p-4">
+					<div class="relative h-52 w-full rounded border p-4">
 						<BarChart
 							data={gender}
 							padding={{ left: 32, bottom: 16 }}
@@ -106,7 +106,7 @@
 							y="gender"
 							c="count"
 							props={{
-								bars: { class: 'fill-blue-400' },
+								bars: { class: 'fill-orange-400' },
 								xAxis: { format: (value) => format(Math.abs(value), 'metric') }
 							}}
 							orientation="horizontal"
@@ -133,7 +133,7 @@
 								placement: 'top-left',
 								orientation: 'vertical'
 							}}
-							cRange={quantize(interpolateRdBu, 20)}
+							cRange={quantize(interpolateOranges, 20)}
 						/>
 					</div>
 				</Card.Content>
@@ -184,14 +184,6 @@
 			<Card.Footer></Card.Footer>
 		</Card.Root>
 	{/each}
-	<!-- <Card.Root>
-		<Card.Header>
-		
-		</Card.Header>
-		<Card.Content class="grid gap-5">
-			{
-		</Card.Content>
-	</Card.Root> -->
 </div>
 
 <style>

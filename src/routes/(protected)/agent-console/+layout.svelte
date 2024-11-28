@@ -7,7 +7,6 @@
 	import { Separator } from '$lib/components/ui/separator';
 	import { Button } from '$lib/components/ui/button';
 	import { toggleMode } from 'mode-watcher';
-	import * as Avatar from '$lib/components/ui/avatar';
 	// Lucide Svelte
 	import Sun from 'lucide-svelte/icons/sun';
 	import Moon from 'lucide-svelte/icons/moon';
@@ -16,8 +15,16 @@
 	import SquarePen from 'lucide-svelte/icons/square-pen';
 	import FileClock from 'lucide-svelte/icons/file-clock';
 	import HandCoins from 'lucide-svelte/icons/hand-coins';
+	import { Settings } from '$lib/custom/shardedlayouts';
 
 	let { data, children }: { data: LayoutData; children: Snippet } = $props();
+
+	const dropProps = [
+		{
+			label: 'Profile',
+			href: '##'
+		}
+	];
 
 	const AgentlayoutItems = {
 		data: [
@@ -91,11 +98,7 @@
 					/>
 					<span class="sr-only">Toggle theme</span>
 				</Button>
-				<Avatar.Root>
-					<Avatar.Image src="" alt="@shadcn" />
-					<Avatar.Fallback>CN</Avatar.Fallback>
-				</Avatar.Root>
-				<span class="sr-only">Toggle user menu</span>
+				<Settings name={data.AuthedUser} action={AgentlayoutItems.action} items={dropProps} />
 			</div>
 		</header>
 		<main>

@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { scaleQuantile } from 'd3-scale';
-	import { schemeBlues } from 'd3-scale-chromatic';
+	import { schemeBlues, schemeOranges } from 'd3-scale-chromatic';
 	import { geoMercator } from 'd3-geo';
 	import { Chart, GeoPath, Legend, Svg, Tooltip } from 'layerchart';
 	import { index } from 'd3-array';
@@ -38,7 +38,7 @@
 	let colorScale = $derived(
 		scaleQuantile<string, string>()
 			.domain(population.map((d: any) => d.respondents))
-			.range(schemeBlues[7])
+			.range(schemeOranges[7])
 	);
 </script>
 

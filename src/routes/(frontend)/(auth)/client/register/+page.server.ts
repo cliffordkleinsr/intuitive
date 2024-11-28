@@ -12,11 +12,19 @@ import { sendVerificationEmail } from '$lib/server/emailconfigs/email-messages';
 import { setSessionTokenCookie } from '$lib/server/session';
 import bcrypt from 'bcrypt';
 
-export const load: PageServerLoad = async ({ locals: { user }, url }) => {
+export const load: PageServerLoad = async ({ locals: { user }, url, cookies }) => {
 	if (user) {
 		if (user.role === 'CLIENT') {
 			// redirect('/client-dash',  {type: "error", message:"User Already Logged In"}, cookies)
-			redirect(302, handleLoginRedirect('/client-console', url, 'User Already Logged In'));
+			redirect(
+				302,
+				handleLoginRedirect('/client-console', url),
+				{
+					type: 'info',
+					message: 'User Already Logged In'
+				},
+				cookies
+			);
 		}
 	}
 	return {

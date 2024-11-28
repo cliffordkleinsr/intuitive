@@ -1,7 +1,6 @@
 // import type { Actions } from '@sveltejs/kit';
 import type { LayoutServerLoad } from './$types';
 import { handleLoginRedirect } from '$lib/custom/functions/helpers';
-import { redirect } from '@sveltejs/kit';
 import { db } from '$lib/server/db';
 import {
 	clientData,
@@ -19,22 +18,37 @@ import {
 	retExpiryDate,
 	setpackageExpired
 } from '$lib/server/db/db_utils';
+import { redirect } from 'sveltekit-flash-message/server';
 
-export const load: LayoutServerLoad = async ({ locals: { user }, url }) => {
+export const load: LayoutServerLoad = async ({ locals: { user }, url, cookies }) => {
 	const validate = false;
 	if (!user) {
-		// redirect('/client/signin', {type: "error", message:"You Must Be logged In to view this page"}, cookies)
 		redirect(302, handleLoginRedirect('/client/signin', url));
-		// console.log(fromUrl)
 	}
 	if (user.role === 'AGENT') {
-		redirect(302, handleLoginRedirect('/', url, 'Not Authorised'));
+		redirect(
+			302,
+			handleLoginRedirect('/', url),
+			{
+				type: 'error',
+				message: 'Not Allowed'
+			},
+			cookies
+		);
 	}
 
 	if (validate) {
 		const [res] = await db.select().from(UsersTable).where(eq(UsersTable.id, user.id));
 		if (!res.isEmailVerified) {
-			redirect(302, handleLoginRedirect('/verify/email', url, 'Email not verified'));
+			redirect(
+				302,
+				handleLoginRedirect('/verify/email', url),
+				{
+					type: 'info',
+					message: 'Email not verified'
+				},
+				cookies
+			);
 		}
 	}
 	// get client feats
