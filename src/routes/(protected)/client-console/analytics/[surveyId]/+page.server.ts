@@ -1,5 +1,5 @@
 import { db } from '$lib/server/db';
-import { sql, count, asc } from 'drizzle-orm';
+import { sql, count, asc, desc, countDistinct } from 'drizzle-orm';
 import type { PageServerLoad } from './$types';
 import {
 	agentData,
@@ -11,6 +11,7 @@ import {
 
 export const load: PageServerLoad = async ({ locals: { user }, params: { surveyId } }) => {
 	const usr = user?.id as string;
+
 	const answerCounts = db
 		.select({
 			question: surveyqnsTableV2.question,
@@ -39,9 +40,9 @@ export const load: PageServerLoad = async ({ locals: { user }, params: { surveyI
 			surveyqnsTableV2.questionT,
 			AnswersTable.answer
 		)
-		.orderBy(asc(count(AnswersTable.answer)))
+		.orderBy(desc(count(AnswersTable.answer)))
 		.as('answer_counts');
-	const [[cumulative_analytics], gender_analytics, sector_analytics, analytics, county_analytics] =
+	const [[cumulative_analytics], gender_analytics, sector_analytics, analytics, county_analytics, rank_analytics] =
 		await Promise.all([
 			db
 				.select({
@@ -115,9 +116,56 @@ export const load: PageServerLoad = async ({ locals: { user }, params: { surveyI
 						${agentSurveysTable.survey_completed} = TRUE
 						`
 				)
-				.groupBy(agentData.county)
+				.groupBy(agentData.county),
+			db.select({
+				answer: AnswersTable.answer,
+				rank: AnswersTable.rankId,
+				count: count()
+			})
+			.from(surveyqnsTableV2)
+			.rightJoin(AnswersTable, sql`${AnswersTable.questionId} = ${surveyqnsTableV2.questionId}`)
+			.where(
+				sql`
+					${surveyqnsTableV2.surveid} = ${surveyId}
+					and
+					${surveyqnsTableV2.questionT} = 'Ranking'
+				`
+			)
+			.groupBy(AnswersTable.answer, AnswersTable.rankId)
 		]);
+	
+	
 
+	
+	// console.log(rank_analytics)
+	// const groupedData: Map<string, Map<string, number>> = new Map();
+
+	// rank_analytics.forEach(item => {
+	// if (!groupedData.has(item.answer)) {
+	// 	groupedData.set(item.answer, new Map());
+	// }
+	// const rankMap = groupedData.get(item.answer)!;
+	// rankMap.set(item.rank!, (rankMap.get(item.rank!) || 0) + 1);
+	// });
+
+	// // Step 2: Convert the grouped data to an array of objects with counts
+	// const result: { answer: string; rank: string; count: number }[] = [];
+
+	// groupedData.forEach((rankMap, answer) => {
+	// rankMap.forEach((count, rank) => {
+	// 	result.push({ answer, rank, count });
+	// });
+	// });
+
+	// // Step 3: Sort the results by `answer` and `rank`
+	// result.sort((a, b) => {
+	// 	if (a.answer < b.answer) return -1;
+	// 	if (a.answer > b.answer) return 1;
+	// 	if (a.rank < b.rank) return -1;
+	// 	if (a.rank > b.rank) return 1;
+	// 	return 0;
+	// });
+	// console.log(result);
 	return {
 		cumulative_analytics,
 		gender_analytics,

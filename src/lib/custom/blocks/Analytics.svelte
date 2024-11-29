@@ -182,7 +182,7 @@
 				</Table.Root>
 			</Card.Content>
 			<Card.Footer></Card.Footer>
-		</Card.Root>
+		</Card.Root>	
 	{/each}
 </div>
 
