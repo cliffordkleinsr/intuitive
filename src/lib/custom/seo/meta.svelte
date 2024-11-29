@@ -25,6 +25,7 @@
                 "url": "${base}",
                 "name": "${title} • int-insights.com",
                 "description": "${description}"
+				"logo": "https://res.cloudinary.com/dmy8yp9el/image/upload/v1732869472/k8qqcbxy67bnxb4klfno.png"
             }
         </script>
     `}

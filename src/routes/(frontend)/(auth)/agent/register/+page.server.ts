@@ -84,12 +84,12 @@ export const actions: Actions = {
 			return setError(form, 'phoneno', 'Number already registered');
 		}
 
-		if (form.valid) {
-			return message(form, {
-				alertType: 'error',
-				alertText: 'Were sorry but you cant register in pilot mode'
-			});
-		}
+		// if (form.valid) {
+		// 	return message(form, {
+		// 		alertType: 'error',
+		// 		alertText: 'Were sorry but you cant register in pilot mode'
+		// 	});
+		// }
 		try {
 			const userid = crypto.randomUUID();
 			const hashPassword = await bcrypt.hash(password, 15);
