@@ -16,6 +16,7 @@
 	/>
 	<meta name="author" content="Intuitive insights" />
 	<meta name="robots" content="index, follow" />
+	<link rel="icon" href="https://res.cloudinary.com/dmy8yp9el/image/upload/v1732875705/jikwt8fpsaznpcoxdywn.ico">
 	<link rel="canonical" href={base} />
 	{@html `
         <script type="application/ld+json">
@@ -25,7 +26,7 @@
                 "url": "${base}",
                 "name": "${title} • int-insights.com",
                 "description": "${description}"
-				"logo": "https://res.cloudinary.com/dmy8yp9el/image/upload/v1732869472/k8qqcbxy67bnxb4klfno.png"
+				"logo": "https://res.cloudinary.com/dmy8yp9el/image/upload/v1732875705/jikwt8fpsaznpcoxdywn.ico"
             }
         </script>
     `}
