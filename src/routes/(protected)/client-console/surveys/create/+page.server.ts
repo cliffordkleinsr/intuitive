@@ -11,10 +11,12 @@ export const load: PageServerLoad = async ({ locals: { user } }) => {
 			id: SurveyTable.surveyid
 		})
 		.from(SurveyTable)
-		.leftJoin(clientData, eq(SurveyTable.clientid, clientData.clientId)).where(sql`
-        ${SurveyTable.createdAt} BETWEEN ${clientData.processed_at} - INTERVAL '1 week' AND ${clientData.expires_at} 
-        AND 
-        ${SurveyTable.clientid} = ${user?.id}
+		.leftJoin(clientData, eq(SurveyTable.clientid, clientData.clientId))
+		.where(
+			sql`
+			${SurveyTable.createdAt} BETWEEN ${clientData.processed_at} - INTERVAL '1 week' AND ${clientData.expires_at} 
+			AND 
+			${SurveyTable.clientid} = ${user?.id}
         `);
 	return {
 		surveys

@@ -8,7 +8,8 @@
 		gender_analytics,
 		sector_analytics,
 		county_analytics,
-		analytics
+		analytics,
+		raw
 	} = data;
 </script>
 
@@ -18,5 +19,6 @@
 	sector={sector_analytics}
 	{analytics}
 	county={county_analytics}
+	{raw}
 />
 <!-- <MapTile /> -->

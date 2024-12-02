@@ -9,6 +9,7 @@ import {
 	UsersTable
 } from '$lib/server/db/schema';
 import { unionAll } from 'drizzle-orm/pg-core';
+import { csvFormat } from 'd3-dsv';
 
 export const load: PageServerLoad = async ({ locals: { user }, params: { surveyId } }) => {
 	const usr = user?.id as string;
@@ -138,67 +139,100 @@ export const load: PageServerLoad = async ({ locals: { user }, params: { surveyI
 		.from(rank_stats)
 		.groupBy(rank_stats.question, rank_stats.question_type, rank_stats.updated)
 		.orderBy(asc(rank_stats.updated));
-	const [[cumulative_analytics], gender_analytics, sector_analytics, county_analytics] =
-		await Promise.all([
-			db
-				.select({
-					total_responses: count()
-				})
-				.from(agentSurveysTable)
-				.where(
-					sql`
+	const [
+		[cumulative_analytics],
+		gender_analytics,
+		sector_analytics,
+		county_analytics,
+		raw_analytics
+	] = await Promise.all([
+		db
+			.select({
+				total_responses: count()
+			})
+			.from(agentSurveysTable)
+			.where(
+				sql`
 						${agentSurveysTable.survey_completed} = true
 						and
 						${agentSurveysTable.surveyid} = ${surveyId}
 					`
-				),
+			),
 
-			db
-				.select({
-					gender: sql<string>`UPPER(${UsersTable.gender})`,
-					count: count(UsersTable.id)
-				})
-				.from(UsersTable)
-				.leftJoin(agentSurveysTable, sql`${UsersTable.id} = ${agentSurveysTable.agentid}`)
-				.where(
-					sql`
+		db
+			.select({
+				gender: sql<string>`UPPER(${UsersTable.gender})`,
+				count: count(UsersTable.id)
+			})
+			.from(UsersTable)
+			.leftJoin(agentSurveysTable, sql`${UsersTable.id} = ${agentSurveysTable.agentid}`)
+			.where(
+				sql`
                 ${agentSurveysTable.surveyid} = ${surveyId}
                 and
                 ${agentSurveysTable.survey_completed} = TRUE
             `
-				)
-				.groupBy(UsersTable.gender),
-			db
-				.select({
-					sector: sql<string>`${agentData.sector}`,
-					count: count(agentData.agentid)
-				})
-				.from(agentData)
-				.leftJoin(agentSurveysTable, sql`${agentData.agentid} = ${agentSurveysTable.agentid}`)
-				.where(
-					sql`${agentSurveysTable.surveyid} = ${surveyId}
+			)
+			.groupBy(UsersTable.gender),
+		db
+			.select({
+				sector: sql<string>`${agentData.sector}`,
+				count: count(agentData.agentid)
+			})
+			.from(agentData)
+			.leftJoin(agentSurveysTable, sql`${agentData.agentid} = ${agentSurveysTable.agentid}`)
+			.where(
+				sql`${agentSurveysTable.surveyid} = ${surveyId}
 					and 
 					${agentSurveysTable.survey_completed} = TRUE`
-				)
-				.groupBy(agentData.sector),
+			)
+			.groupBy(agentData.sector),
 
-			//.orderBy(asc(answerCounts.updated)),
-			db
-				.select({
-					county: sql<string>`${agentData.county}`,
-					value: count(agentData.agentid)
-				})
-				.from(agentData)
-				.leftJoin(agentSurveysTable, sql`${agentData.agentid} = ${agentSurveysTable.agentid}`)
-				.where(
-					sql`
+		//.orderBy(asc(answerCounts.updated)),
+		db
+			.select({
+				county: sql<string>`${agentData.county}`,
+				value: count(agentData.agentid)
+			})
+			.from(agentData)
+			.leftJoin(agentSurveysTable, sql`${agentData.agentid} = ${agentSurveysTable.agentid}`)
+			.where(
+				sql`
 						${agentSurveysTable.surveyid} = ${surveyId} 
 						and 
 						${agentSurveysTable.survey_completed} = TRUE
 						`
-				)
-				.groupBy(agentData.county)
-		]);
+			)
+			.groupBy(agentData.county),
+
+		db
+			.select({
+				id: sql<number>`
+						row_number() 
+						over
+						(order by ${surveyqnsTableV2.updatedAt})
+					`,
+				question_type: surveyqnsTableV2.questionT,
+				question: surveyqnsTableV2.question,
+				rank: sql<number>`${AnswersTable.rankId}::integer`,
+				answer: AnswersTable.answer
+			})
+			.from(surveyqnsTableV2)
+			.rightJoin(AnswersTable, sql`${AnswersTable.questionId} = ${surveyqnsTableV2.questionId}`)
+			.where(
+				sql`
+						${AnswersTable.surveid} = ${surveyId}
+						`
+			)
+			.groupBy(
+				surveyqnsTableV2.questionId,
+				surveyqnsTableV2.question,
+				surveyqnsTableV2.questionT,
+				AnswersTable.answer,
+				AnswersTable.rankId
+			)
+			.orderBy(asc(surveyqnsTableV2.updatedAt))
+	]);
 	const analytics = await unionAll(rest, rank_analytics).orderBy(
 		asc(answerCounts.updated),
 		asc(rank_stats.updated)
@@ -209,6 +243,7 @@ export const load: PageServerLoad = async ({ locals: { user }, params: { surveyI
 		gender_analytics,
 		sector_analytics,
 		county_analytics,
-		analytics
+		analytics,
+		raw: csvFormat(raw_analytics)
 	};
 };

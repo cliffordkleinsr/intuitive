@@ -646,7 +646,7 @@ export async function handleSurveyProgress({
 		// clear the persistent index also
 		await deleteProgressData(uid, surveyId);
 		// set the new target since this guy cant do the survey again
-		await setTarget(surveyId);
+		// await setTarget(surveyId);
 		// update points
 		await updatesurveyPoints(uid, surveyId);
 		// set the survey as complete

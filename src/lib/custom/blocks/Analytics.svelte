@@ -11,8 +11,8 @@
 	import Download from 'lucide-svelte/icons/download';
 	import { quantize } from 'd3-interpolate';
 	import * as Collapsible from '$lib/components/ui/collapsible';
-
 	import UnfoldVertical from 'lucide-svelte/icons/unfold-vertical';
+	import FileText from 'lucide-svelte/icons/file-text';
 
 	interface GenAnalytics {
 		gender: string;
@@ -43,20 +43,36 @@
 		gender,
 		sector,
 		county,
-		analytics
+		analytics,
+		raw
 	}: {
 		total_responses: number;
 		gender: GenAnalytics[];
 		sector: SecAnalytics[];
 		county: LocAnalytics[];
 		analytics: Analytics[];
+		raw: string;
 	} = $props();
+
+	let open = $state<boolean>(false);
+	function exportRaw(text: string) {
+		let fname = 'report.csv';
+		const File = new Blob([text], { type: 'text/csv' });
+		window.URL = window.URL || window.webkitURL;
+		const dlBtn = document.createElement('a');
+		dlBtn.setAttribute('href', window.URL.createObjectURL(File));
+		dlBtn.setAttribute('download', fname);
+		dlBtn.click();
+
+		// Clean up and remove the link
+		document.body.removeChild(dlBtn);
+	}
 </script>
 
 <div class="mx-auto grid gap-3 px-2 py-7">
 	<div class="grid gap-2 md:grid-cols-1 lg:grid-cols-2">
 		<div class="grid gap-2">
-			<Card.Root class="lg:max-w-screen-md">
+			<Card.Root>
 				<Card.Header>
 					<Card.Title class="text-2xl">Poll Overview</Card.Title>
 					<Card.Description class="text-lg">
@@ -66,14 +82,32 @@
 					</Card.Description>
 				</Card.Header>
 				<Card.Content>
-					<div id="kutton">
-						<Button variant="secondary" size="default" onclick={() => window.print()}>
-							Export <Download />
+					<div id="kutton" class="flex gap-2">
+						<Button
+							variant="secondary"
+							onclick={() => {
+								open = !open;
+								setTimeout(() => {
+									window.print();
+								}, 50);
+							}}
+							size="sm"
+						>
+							Export PDF <FileText />
+						</Button>
+						<Button
+							variant="secondary"
+							size="sm"
+							onclick={() => {
+								exportRaw(raw);
+							}}
+						>
+							Export Raw <Download />
 						</Button>
 					</div>
 				</Card.Content>
 			</Card.Root>
-			<Card.Root class="lg:max-w-screen-md">
+			<Card.Root>
 				<Card.Header>
 					<Card.Title class="text-2xl">Geographical Distribution</Card.Title>
 					<Card.Description>Responses by County</Card.Description>
@@ -93,7 +127,7 @@
 					<Card.Description></Card.Description>
 				</Card.Header>
 				<Card.Footer class="text-xl font-semibold">
-					<p>4m30s</p>
+					<p>TBA</p>
 				</Card.Footer>
 			</Card.Root>
 			<Card.Root>
@@ -155,11 +189,13 @@
 			<Card.Content class="overflow-x-auto">
 				<!-- Add horizontal scroll only if needed -->
 				{#if statistic.question_type === 'Single' || statistic.question_type === 'Ranking'}
-					<Collapsible.Root class="space-y-2">
-						<Collapsible.Trigger class={buttonVariants({ variant: 'secondary', size: 'sm' })}>
-							<UnfoldVertical />
-							Expand
-						</Collapsible.Trigger>
+					<Collapsible.Root class="space-y-2" bind:open>
+						<div id="kutton">
+							<Collapsible.Trigger class={buttonVariants({ variant: 'secondary', size: 'sm' })}>
+								<UnfoldVertical />
+								Expand
+							</Collapsible.Trigger>
+						</div>
 						<Collapsible.Content>
 							<Table.Root class="w-full min-w-[300px]">
 								<!-- Set minimum width -->
@@ -199,6 +235,18 @@
 												{res.count}
 											</Table.Cell>
 										</Table.Row>
+										{#if res.rank === '5'}
+											<Table.Row class="bg-primary/5">
+												<Table.Cell></Table.Cell>
+												<Table.Cell></Table.Cell>
+												<Table.Cell></Table.Cell>
+												<Table.Cell></Table.Cell>
+												<Table.Cell class="text-right text-sm font-normal">100%</Table.Cell>
+												<Table.Cell class="text-right text-sm font-normal">
+													{total_responses}
+												</Table.Cell>
+											</Table.Row>
+										{/if}
 									{/each}
 								</Table.Body>
 							</Table.Root>
