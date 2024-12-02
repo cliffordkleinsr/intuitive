@@ -28,7 +28,7 @@
                 "@type": "${type}",
                 "url": "${base}",
                 "name": "${title} • int-insights.com",
-                "description": "${description}"
+                "description": "${description}",
 				"logo": "https://res.cloudinary.com/dmy8yp9el/image/upload/v1732875705/jikwt8fpsaznpcoxdywn.ico"
             }
         </script>
