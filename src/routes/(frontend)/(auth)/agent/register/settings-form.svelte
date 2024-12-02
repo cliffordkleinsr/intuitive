@@ -159,7 +159,7 @@
 </div>
 <div class="mb-16 mt-5 h-full w-full">
 	<form method="post" class="m-2" use:enhance>
-		<Card.Root class="mx-auto max-w-md lg:mx-auto lg:max-w-xl">
+		<Card.Root class="mx-auto max-w-xl">
 			<Card.Header>
 				<Card.Title class="text-xl text-primary">Sign Up</Card.Title>
 				<Card.Description>Create a Agent account to start earning</Card.Description>
@@ -172,10 +172,13 @@
 								<Form.Control>
 									{#snippet children({ props })}
 										<Form.Label>Full Name</Form.Label>
-										<Input {...props} bind:value={$formData.fullname} />
+										<Input
+											{...props}
+											bind:value={$formData.fullname}
+											placeholder="Specify your full name"
+										/>
 									{/snippet}
 								</Form.Control>
-								<Form.Description>This is your full name.</Form.Description>
 								<Form.FieldErrors />
 							</Form.Field>
 						</div>
@@ -184,10 +187,14 @@
 								<Form.Control>
 									{#snippet children({ props })}
 										<Form.Label>Email</Form.Label>
-										<Input {...props} type="email" bind:value={$formData.email} />
+										<Input
+											{...props}
+											type="email"
+											bind:value={$formData.email}
+											placeholder="Enter your email address"
+										/>
 									{/snippet}
 								</Form.Control>
-								<Form.Description>This is your email address.</Form.Description>
 								<Form.FieldErrors />
 							</Form.Field>
 						</div>
@@ -200,10 +207,13 @@
 									<Form.Control>
 										{#snippet children({ props })}
 											<Form.Label>Phone Number</Form.Label>
-											<Input {...props} bind:value={$formData.phoneno} />
+											<Input
+												{...props}
+												bind:value={$formData.phoneno}
+												placeholder="Enter your phone number"
+											/>
 										{/snippet}
 									</Form.Control>
-									<Form.Description>This is your phone no.</Form.Description>
 									<Form.FieldErrors />
 								</Form.Field>
 							</div>
@@ -214,7 +224,7 @@
 											<Form.Label>Gender</Form.Label>
 											<Select.Root type="single" bind:value={$formData.gender} name={props.name}>
 												<Select.Trigger {...props}>
-													{$formData.gender ?? 'Select your Gender'}
+													{$formData.gender ? $formData.gender : 'Select your gender'}
 												</Select.Trigger>
 												<Select.Content>
 													{#each gender as gen}
@@ -224,7 +234,6 @@
 											</Select.Root>
 										{/snippet}
 									</Form.Control>
-									<Form.Description>This is your gender assigned at birth.</Form.Description>
 									<Form.FieldErrors />
 								</Form.Field>
 							</div>
@@ -339,7 +348,6 @@
 											<input hidden value={$formData.dateofbirth} name={props.name} />
 										{/snippet}
 									</Form.Control>
-									<Form.Description>This is your date of birth.</Form.Description>
 									<Form.FieldErrors />
 								</Form.Field>
 							</div>
@@ -350,7 +358,9 @@
 											<Form.Label>Education</Form.Label>
 											<Select.Root type="single" bind:value={$formData.education} name={props.name}>
 												<Select.Trigger {...props}>
-													{$formData.education ?? 'Select an Education bracket'}
+													{$formData.education
+														? $formData.education
+														: 'Select an education bracket'}
 												</Select.Trigger>
 												<Select.Content>
 													{#each educations as education}
@@ -361,7 +371,6 @@
 											</Select.Root>
 										{/snippet}
 									</Form.Control>
-									<Form.Description>This is your educational level.</Form.Description>
 									<Form.FieldErrors />
 								</Form.Field>
 							</div>
@@ -431,7 +440,7 @@
 											<Form.Label>Sub-County</Form.Label>
 											<Select.Root type="single" bind:value={$formData.subctys} name={props.name}>
 												<Select.Trigger {...props}>
-													{$formData.subctys ?? 'Select your area sub-county'}
+													{$formData.subctys ? $formData.subctys : 'Select your area sub-county'}
 												</Select.Trigger>
 												<Select.Content>
 													{#if countyMap.has($formData.county)}
@@ -444,7 +453,6 @@
 											</Select.Root>
 										{/snippet}
 									</Form.Control>
-									<Form.Description>This is your area sub-county.</Form.Description>
 									<Form.FieldErrors />
 								</Form.Field>
 							</div>
@@ -464,7 +472,9 @@
 												name={props.name}
 											>
 												<Select.Trigger {...props}>
-													{$formData.employment ?? 'Select an Employment bracket'}
+													{$formData.employment
+														? $formData.employment
+														: 'Select an employment bracket'}
 												</Select.Trigger>
 												<Select.Content>
 													{#each employments as employment}
@@ -475,9 +485,6 @@
 											</Select.Root>
 										{/snippet}
 									</Form.Control>
-									<Form.Description
-										>This is your current or previous employment status.</Form.Description
-									>
 									<Form.FieldErrors />
 								</Form.Field>
 							</div>
@@ -492,7 +499,7 @@
 												<Form.Label>Income</Form.Label>
 												<Select.Root type="single" bind:value={$formData.income} name={props.name}>
 													<Select.Trigger {...props}>
-														{$formData.income ?? 'Select an income bracket'}
+														{$formData.income ? $formData.income : 'Select an income bracket'}
 													</Select.Trigger>
 													<Select.Content>
 														{#each incomes as income}
@@ -502,7 +509,6 @@
 												</Select.Root>
 											{/snippet}
 										</Form.Control>
-										<Form.Description>This is your income bracket.</Form.Description>
 										<Form.FieldErrors />
 									</Form.Field>
 								</div>
@@ -520,7 +526,7 @@
 										<Form.Label>Sectors</Form.Label>
 										<Select.Root type="single" bind:value={$formData.sector} name={props.name}>
 											<Select.Trigger {...props}>
-												{$formData.sector ?? 'Select a Sector'}
+												{$formData.sector ? $formData.sector : 'Select a sector'}
 											</Select.Trigger>
 											<Select.Content side="bottom">
 												<ScrollArea class="h-[200px] lg:h-96">
@@ -532,7 +538,6 @@
 										</Select.Root>
 									{/snippet}
 								</Form.Control>
-								<Form.Description>This is your sector of expertise.</Form.Description>
 								<Form.FieldErrors />
 							</Form.Field>
 						</div>
@@ -543,7 +548,12 @@
 							<Form.Control>
 								{#snippet children({ props })}
 									<Form.Label>Password</Form.Label>
-									<Input {...props} type="password" bind:value={$formData.password} />
+									<Input
+										{...props}
+										type="password"
+										bind:value={$formData.password}
+										placeholder="Enter password"
+									/>
 								{/snippet}
 							</Form.Control>
 							<Form.FieldErrors />
@@ -554,7 +564,12 @@
 							<Form.Control>
 								{#snippet children({ props })}
 									<Form.Label>Confirm Password</Form.Label>
-									<Input {...props} type="password" bind:value={$formData.passwordConfirm} />
+									<Input
+										{...props}
+										type="password"
+										bind:value={$formData.passwordConfirm}
+										placeholder="Confirm password"
+									/>
 								{/snippet}
 							</Form.Control>
 							<Form.FieldErrors />
@@ -578,7 +593,7 @@
 					<a href="/agent/signin" class="underline hover:text-primary"> Sign in </a>
 				</div>
 			</Card.Content>
-			<SuperDebug data={$formData} />
+			<!-- <SuperDebug data={$formData} /> -->
 		</Card.Root>
 	</form>
 </div>

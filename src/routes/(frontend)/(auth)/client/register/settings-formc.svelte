@@ -100,7 +100,11 @@
 							<Form.Control>
 								{#snippet children({ props })}
 									<Form.Label>Full Name</Form.Label>
-									<Input {...props} bind:value={$formData.fullname} />
+									<Input
+										{...props}
+										bind:value={$formData.fullname}
+										placeholder="Input your fullname"
+									/>
 								{/snippet}
 							</Form.Control>
 							<Form.FieldErrors />
@@ -111,7 +115,12 @@
 							<Form.Control>
 								{#snippet children({ props })}
 									<Form.Label>Email</Form.Label>
-									<Input {...props} type="email" bind:value={$formData.email} />
+									<Input
+										{...props}
+										type="email"
+										bind:value={$formData.email}
+										placeholder="Input your email"
+									/>
 								{/snippet}
 							</Form.Control>
 							<Form.FieldErrors />
@@ -125,7 +134,11 @@
 								<Form.Control>
 									{#snippet children({ props })}
 										<Form.Label>Company Name</Form.Label>
-										<Input {...props} bind:value={$formData.company} />
+										<Input
+											{...props}
+											bind:value={$formData.company}
+											placeholder="Input company name"
+										/>
 									{/snippet}
 								</Form.Control>
 								<Form.FieldErrors />
@@ -136,7 +149,11 @@
 								<Form.Control>
 									{#snippet children({ props })}
 										<Form.Label>Phone Number</Form.Label>
-										<Input {...props} bind:value={$formData.phoneno} />
+										<Input
+											{...props}
+											bind:value={$formData.phoneno}
+											placeholder="Input phone number"
+										/>
 									{/snippet}
 								</Form.Control>
 								<Form.FieldErrors />
@@ -208,8 +225,7 @@
 										<Form.Label>Sub-County</Form.Label>
 										<Select.Root type="single" bind:value={$formData.subctys} name={props.name}>
 											<Select.Trigger {...props}>
-												{$formData.subctys ?? 'Select your area sub-county'}
-												<!-- <Select.Value placeholder="Select your area sub-county" /> -->
+												{$formData.subctys ? $formData.subctys : 'Select your area sub-county'}
 											</Select.Trigger>
 											<Select.Content>
 												{#if countyMap.has($formData.county)}
@@ -220,10 +236,8 @@
 												{/if}
 											</Select.Content>
 										</Select.Root>
-										<!-- <input hidden bind:value={$formData.subctys} name={props.name} /> -->
 									{/snippet}
 								</Form.Control>
-								<Form.Description>Select your area sub-county.</Form.Description>
 								<Form.FieldErrors />
 							</Form.Field>
 						</div>
@@ -236,8 +250,7 @@
 								<Form.Label>Sectors</Form.Label>
 								<Select.Root type="single" bind:value={$formData.sector} name={props.name}>
 									<Select.Trigger {...props}>
-										{$formData.sector ?? 'Select your a sector'}
-										<!-- <Select.Value placeholder="Select a Sector" /> -->
+										{$formData.sector ? $formData.sector : 'Select your a sector'}
 									</Select.Trigger>
 									<Select.Content side="bottom">
 										<ScrollArea class="h-[200px] lg:h-96">
@@ -247,10 +260,8 @@
 										</ScrollArea>
 									</Select.Content>
 								</Select.Root>
-								<!-- <input hidden bind:value={$formData.sector} name={props.name} /> -->
 							{/snippet}
 						</Form.Control>
-						<Form.Description>This is your sector of expertise.</Form.Description>
 						<Form.FieldErrors />
 					</Form.Field>
 				</div>
@@ -259,7 +270,12 @@
 						<Form.Control>
 							{#snippet children({ props })}
 								<Form.Label>Password</Form.Label>
-								<Input {...props} type="password" bind:value={$formData.password} />
+								<Input
+									{...props}
+									type="password"
+									bind:value={$formData.password}
+									placeholder="Input password"
+								/>
 							{/snippet}
 						</Form.Control>
 						<Form.FieldErrors />
@@ -270,7 +286,12 @@
 						<Form.Control>
 							{#snippet children({ props })}
 								<Form.Label>Confirm Password</Form.Label>
-								<Input {...props} type="password" bind:value={$formData.passwordConfirm} />
+								<Input
+									{...props}
+									type="password"
+									bind:value={$formData.passwordConfirm}
+									placeholder="Confirm password"
+								/>
 							{/snippet}
 						</Form.Control>
 						<Form.FieldErrors />
