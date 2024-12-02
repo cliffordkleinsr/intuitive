@@ -17,7 +17,10 @@ export const load: PageServerLoad = async ({ locals: { user } }) => {
 			${SurveyTable.createdAt} BETWEEN ${clientData.processed_at} - INTERVAL '1 week' AND ${clientData.expires_at} 
 			AND 
 			${SurveyTable.clientid} = ${user?.id}
+			AND
+			${clientData.createdAt}::date + INTERVAL '1 month' = ${clientData.expires_at}::date 
         `);
+
 	return {
 		surveys
 	};
