@@ -8,10 +8,12 @@ import {
 	surveyqnsTableV2,
 	UsersTable
 } from '$lib/server/db/schema';
+import { unionAll } from 'drizzle-orm/pg-core';
 
 export const load: PageServerLoad = async ({ locals: { user }, params: { surveyId } }) => {
 	const usr = user?.id as string;
 
+	// subqueries
 	const answerCounts = db
 		.select({
 			question: surveyqnsTableV2.question,
@@ -32,6 +34,8 @@ export const load: PageServerLoad = async ({ locals: { user }, params: { surveyI
 		.where(
 			sql`
 				${AnswersTable.surveid} = ${surveyId}
+				and
+				${surveyqnsTableV2.questionT} != 'Ranking'
 				`
 		)
 		.groupBy(
@@ -42,7 +46,99 @@ export const load: PageServerLoad = async ({ locals: { user }, params: { surveyI
 		)
 		.orderBy(desc(count(AnswersTable.answer)))
 		.as('answer_counts');
-	const [[cumulative_analytics], gender_analytics, sector_analytics, analytics, county_analytics, rank_analytics] =
+
+	// CTE to calculate total distinct agents per question
+	const totalAgentsCTE = db
+		.select({
+			questionId: surveyqnsTableV2.questionId,
+			totalAgents: countDistinct(AnswersTable.agentId).as('totalAgents')
+		})
+		.from(surveyqnsTableV2)
+		.rightJoin(AnswersTable, sql`${AnswersTable.questionId} = ${surveyqnsTableV2.questionId}`)
+		.where(
+			sql`
+			${surveyqnsTableV2.surveid} = ${surveyId}
+			and
+			${surveyqnsTableV2.questionT} = 'Ranking'
+		`
+		)
+		.groupBy(surveyqnsTableV2.questionId)
+		.as('totalAgentsCTE');
+
+	// Main query using the CTE
+	const rank_stats = db
+		.select({
+			question: surveyqnsTableV2.question,
+			question_type: surveyqnsTableV2.questionT,
+			answer: AnswersTable.answer,
+			updated: sql<Date>`${surveyqnsTableV2.updatedAt}`.as('updated_at'),
+			rank: AnswersTable.rankId,
+			count: count(AnswersTable.agentId).as('count'),
+			percentage: sql<number>`
+				ROUND(
+					COUNT(DISTINCT ${AnswersTable.agentId})::decimal /
+					${totalAgentsCTE.totalAgents} * 100,
+					1
+				)
+			`.as('percentage')
+		})
+		.from(surveyqnsTableV2)
+		.rightJoin(AnswersTable, sql`${AnswersTable.questionId} = ${surveyqnsTableV2.questionId}`)
+		.leftJoin(totalAgentsCTE, sql`${totalAgentsCTE.questionId} = ${surveyqnsTableV2.questionId}`)
+		.where(
+			sql`
+				${surveyqnsTableV2.surveid} = ${surveyId}
+				and
+				${surveyqnsTableV2.questionT} = 'Ranking'
+			`
+		)
+		.groupBy(
+			AnswersTable.answer,
+			AnswersTable.rankId,
+			surveyqnsTableV2.updatedAt,
+			surveyqnsTableV2.question,
+			surveyqnsTableV2.questionT,
+			totalAgentsCTE.totalAgents
+		)
+		.as('rank_stats');
+	// end
+	// builders
+	const rest = db
+		.select({
+			question: sql<string>`${answerCounts.question}`,
+			question_type: sql<string>`${answerCounts.question_type}`,
+			answer_statistics: sql<{ answer: string; count: number; percentage: number }[]>`
+			json_agg(
+			jsonb_build_object(
+				'answer', ${answerCounts.answer},
+				'count', ${answerCounts.answer_count},
+				'percentage', ${answerCounts.percentage}
+			)
+			)`,
+			updated: answerCounts.updated
+		})
+		.from(answerCounts)
+		.groupBy(answerCounts.question, answerCounts.question_type, answerCounts.updated)
+		.orderBy(asc(answerCounts.updated));
+	const rank_analytics = db
+		.select({
+			question: sql<string>`${rank_stats.question}`,
+			question_type: sql<string>`${rank_stats.question_type}`,
+			answer_statistics: sql<{ answer: string; rank: string; count: number; percentage: number }[]>`
+				json_agg(
+					json_build_object(
+						'answer', ${rank_stats.answer},
+						'rank', ${rank_stats.rank},
+						'count', ${rank_stats.count},
+						'percentage', ${rank_stats.percentage}
+					)
+				)`,
+			updated: rank_stats.updated
+		})
+		.from(rank_stats)
+		.groupBy(rank_stats.question, rank_stats.question_type, rank_stats.updated)
+		.orderBy(asc(rank_stats.updated));
+	const [[cumulative_analytics], gender_analytics, sector_analytics, county_analytics] =
 		await Promise.all([
 			db
 				.select({
@@ -86,22 +182,7 @@ export const load: PageServerLoad = async ({ locals: { user }, params: { surveyI
 				)
 				.groupBy(agentData.sector),
 
-			db
-				.select({
-					question: sql<string>`${answerCounts.question}`,
-					question_type: sql<string>`${answerCounts.question_type}`,
-					answer_statistics: sql<{ answer: string; count: number; percentage: number }[]>`
-				json_agg(
-				  jsonb_build_object(
-					'answer', ${answerCounts.answer},
-					'count', ${answerCounts.answer_count},
-					'percentage', ${answerCounts.percentage}
-				  )
-				)`
-				})
-				.from(answerCounts)
-				.groupBy(answerCounts.question, answerCounts.question_type, answerCounts.updated)
-				.orderBy(asc(answerCounts.updated)),
+			//.orderBy(asc(answerCounts.updated)),
 			db
 				.select({
 					county: sql<string>`${agentData.county}`,
@@ -116,56 +197,13 @@ export const load: PageServerLoad = async ({ locals: { user }, params: { surveyI
 						${agentSurveysTable.survey_completed} = TRUE
 						`
 				)
-				.groupBy(agentData.county),
-			db.select({
-				answer: AnswersTable.answer,
-				rank: AnswersTable.rankId,
-				count: count()
-			})
-			.from(surveyqnsTableV2)
-			.rightJoin(AnswersTable, sql`${AnswersTable.questionId} = ${surveyqnsTableV2.questionId}`)
-			.where(
-				sql`
-					${surveyqnsTableV2.surveid} = ${surveyId}
-					and
-					${surveyqnsTableV2.questionT} = 'Ranking'
-				`
-			)
-			.groupBy(AnswersTable.answer, AnswersTable.rankId)
+				.groupBy(agentData.county)
 		]);
-	
-	
+	const analytics = await unionAll(rest, rank_analytics).orderBy(
+		asc(answerCounts.updated),
+		asc(rank_stats.updated)
+	);
 
-	
-	// console.log(rank_analytics)
-	// const groupedData: Map<string, Map<string, number>> = new Map();
-
-	// rank_analytics.forEach(item => {
-	// if (!groupedData.has(item.answer)) {
-	// 	groupedData.set(item.answer, new Map());
-	// }
-	// const rankMap = groupedData.get(item.answer)!;
-	// rankMap.set(item.rank!, (rankMap.get(item.rank!) || 0) + 1);
-	// });
-
-	// // Step 2: Convert the grouped data to an array of objects with counts
-	// const result: { answer: string; rank: string; count: number }[] = [];
-
-	// groupedData.forEach((rankMap, answer) => {
-	// rankMap.forEach((count, rank) => {
-	// 	result.push({ answer, rank, count });
-	// });
-	// });
-
-	// // Step 3: Sort the results by `answer` and `rank`
-	// result.sort((a, b) => {
-	// 	if (a.answer < b.answer) return -1;
-	// 	if (a.answer > b.answer) return 1;
-	// 	if (a.rank < b.rank) return -1;
-	// 	if (a.rank > b.rank) return 1;
-	// 	return 0;
-	// });
-	// console.log(result);
 	return {
 		cumulative_analytics,
 		gender_analytics,

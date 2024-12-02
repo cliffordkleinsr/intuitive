@@ -7,10 +7,13 @@
 	import { Progress } from '$lib/components/ui/progress';
 	import { counties } from '$lib/geojson/counties';
 	import { interpolateOranges, interpolateRdBu } from 'd3-scale-chromatic';
-	import { Button } from '$lib/components/ui/button';
+	import { Button, buttonVariants } from '$lib/components/ui/button';
 	import Download from 'lucide-svelte/icons/download';
 	import { quantize } from 'd3-interpolate';
+	import * as Collapsible from "$lib/components/ui/collapsible"
 
+	import UnfoldVertical from 'lucide-svelte/icons/unfold-vertical';
+	
 	interface GenAnalytics {
 		gender: string;
 		count: number;
@@ -27,6 +30,7 @@
 	interface AnsStats {
 		count: number;
 		answer: string;
+		rank?: string;
 		percentage: number;
 	}
 	interface Analytics {
@@ -47,6 +51,7 @@
 		county: LocAnalytics[];
 		analytics: Analytics[];
 	} = $props();
+
 </script>
 
 <div class="mx-auto grid gap-3 px-2 py-7">
@@ -150,12 +155,61 @@
 			</Card.Header>
 			<Card.Content class="overflow-x-auto">
 				<!-- Add horizontal scroll only if needed -->
+				{#if statistic.question_type === 'Single' || statistic.question_type === 'Ranking'}
+					<Collapsible.Root class="space-y-2">
+					<Collapsible.Trigger class={buttonVariants({ variant: 'secondary', size: 'sm'})}>
+						<UnfoldVertical />
+						Expand
+					</Collapsible.Trigger>
+					<Collapsible.Content>
+						<Table.Root class="w-full min-w-[300px]">
+							<!-- Set minimum width -->
+							<Table.Header>
+								<Table.Row>
+									<Table.Head class="w-[40px]"><!-- Reduced width --></Table.Head>
+									<Table.Head class="w-full {statistic.question_type === 'Ranking'?'md:w-[20%]': 'md:w-[40%]'}">{statistic.question_type === 'Ranking'? 'Option': 'Answer'}</Table.Head>
+									{#if statistic.question_type === 'Ranking'}
+										<Table.Head class="w-full md:w-[20%]">Rank</Table.Head>
+									{/if}
+									<Table.Head class="w-[60px] md:w-[25%]"></Table.Head>
+									<Table.Head class="w-[80px] text-right">%</Table.Head>
+									<Table.Head class="w-[60px] text-right">#</Table.Head>
+								</Table.Row>
+							</Table.Header>
+							<Table.Body>
+								{#each statistic.answer_statistics as res, ix}
+									<Table.Row class="space-y-1">
+										<!-- Reduced spacing -->
+										<Table.Cell class="text-sm font-normal">A{ix + 1}</Table.Cell>
+										<Table.Cell class="line-clamp-3 text-sm font-normal">{res.answer}</Table.Cell>
+										{#if statistic.question_type === 'Ranking'}
+											<Table.Cell class="text-sm font-normal">{res.rank}</Table.Cell>
+										{/if}
+										<Table.Cell class="font-normal">
+											<Progress value={res.percentage} class="h-2 w-full" />
+										</Table.Cell>
+										<Table.Cell class="text-right text-sm font-normal">
+											{Math.round(res.percentage)}%
+										</Table.Cell>
+										<Table.Cell class="text-right text-sm font-normal">
+											{res.count}
+										</Table.Cell>
+									</Table.Row>
+								{/each}
+							</Table.Body>
+						</Table.Root>
+					</Collapsible.Content>
+					</Collapsible.Root>
+				{:else}
 				<Table.Root class="w-full min-w-[300px]">
 					<!-- Set minimum width -->
 					<Table.Header>
 						<Table.Row>
 							<Table.Head class="w-[40px]"><!-- Reduced width --></Table.Head>
-							<Table.Head class="w-full md:w-[40%]">Answers</Table.Head>
+							<Table.Head class="w-full {statistic.question_type === 'Ranking'?'md:w-[20%]': 'md:w-[40%]'}">{statistic.question_type === 'Ranking'? 'Option': 'Answer'}</Table.Head>
+							{#if statistic.question_type === 'Ranking'}
+								<Table.Head class="w-full md:w-[20%]">Rank</Table.Head>
+							{/if}
 							<Table.Head class="w-[60px] md:w-[25%]"></Table.Head>
 							<Table.Head class="w-[80px] text-right">%</Table.Head>
 							<Table.Head class="w-[60px] text-right">#</Table.Head>
@@ -167,6 +221,9 @@
 								<!-- Reduced spacing -->
 								<Table.Cell class="text-sm font-normal">A{ix + 1}</Table.Cell>
 								<Table.Cell class="line-clamp-3 text-sm font-normal">{res.answer}</Table.Cell>
+								{#if statistic.question_type === 'Ranking'}
+									<Table.Cell class="text-sm font-normal">{res.rank}</Table.Cell>
+								{/if}
 								<Table.Cell class="font-normal">
 									<Progress value={res.percentage} class="h-2 w-full" />
 								</Table.Cell>
@@ -180,6 +237,7 @@
 						{/each}
 					</Table.Body>
 				</Table.Root>
+				{/if}
 			</Card.Content>
 			<Card.Footer></Card.Footer>
 		</Card.Root>	

@@ -16,7 +16,10 @@
 	/>
 	<meta name="author" content="Intuitive insights" />
 	<meta name="robots" content="index, follow" />
-	<link rel="icon" href="https://res.cloudinary.com/dmy8yp9el/image/upload/v1732875705/jikwt8fpsaznpcoxdywn.ico">
+	<link
+		rel="icon"
+		href="https://res.cloudinary.com/dmy8yp9el/image/upload/v1732875705/jikwt8fpsaznpcoxdywn.ico"
+	/>
 	<link rel="canonical" href={base} />
 	{@html `
         <script type="application/ld+json">
