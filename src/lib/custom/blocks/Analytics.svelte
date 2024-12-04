@@ -57,6 +57,7 @@
 	// let open = $state<boolean>(false);
 
 	let variable = $state() as boolean[];
+	let printstate = $state(false) as boolean
 	variable = analytics.map((x) => x.question_type !== 'Ranking' && x.question_type !== 'Single');
 
 	function exportRaw(text: string) {
@@ -96,15 +97,22 @@
 		}
 	}
 
-	const keys = Object.keys(processedData[0]).filter((k) => k !== 'rank');
-	let series = processedData.map((_, index) => ({
-		key: keys[index],
-		color: keyColors[index]
-	}));
+	let keys: any = $state({})
+	let series: any[] = $state([])
+	if (processedData.length > 0) {
+		keys = Object.keys(processedData[0]).filter((k) => k !== 'rank');
+		series = processedData.map((_, index) => ({
+			key: keys[index],
+			color: keyColors[index]
+		}));
+	}
+	
+	
 
 	$effect(() => {
 		window.onafterprint = function () {
 			variable = variable.map((x) => (x = !x));
+			printstate = !printstate
 		};
 
 		return () => {
@@ -133,6 +141,7 @@
 							variant="secondary"
 							onclick={() => {
 								variable = variable.map((x) => (x = !x));
+								printstate = !printstate
 								setTimeout(() => {
 									window.print();
 								}, 50);
@@ -235,7 +244,7 @@
 			</Card.Header>
 			<Card.Content class="overflow-x-auto">
 				{#if statistic.question_type === 'Ranking'}
-					<div class="h-96 p-4 {variable[ix] ? 'max-w-[800px]' : ''} mb-3 rounded border">
+					<div class="h-96 p-4 {variable[ix] && printstate ? 'max-w-[800px]' : ''} mb-3 rounded border">
 						<BarChart
 							data={processedData}
 							orientation="horizontal"
