@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { CakeMap, MapTile } from '$lib/custom/blocks';
 	import * as Card from '$lib/components/ui/card';
-	import { BarChart, PieChart } from 'layerchart';
+	import { Axis, BarChart, Bars, Chart, PieChart, Svg, Tooltip, Highlight } from 'layerchart';
 	import { format } from '@layerstack/utils';
 	import * as Table from '$lib/components/ui/table';
 	import { Progress } from '$lib/components/ui/progress';
@@ -54,7 +54,11 @@
 		raw: string;
 	} = $props();
 
-	let open = $state<boolean>(false);
+	// let open = $state<boolean>(false);
+
+	let variable = $state() as boolean[];
+	variable = analytics.map((x) => x.question_type !== 'Ranking' && x.question_type !== 'Single');
+
 	function exportRaw(text: string) {
 		let fname = 'report.csv';
 		const File = new Blob([text], { type: 'text/csv' });
@@ -67,6 +71,48 @@
 		// Clean up and remove the link
 		document.body.removeChild(dlBtn);
 	}
+
+	const keyColors = [
+		'hsl(var(--color-orange))',
+		'hsl(var(--color-violet))',
+		'hsl(var(--color-cyan))',
+		'hsl(var(--color-blue))',
+		'hsl(var(--color-stone))'
+	];
+
+	// Transform data for stacked chart
+	// svelte-ignore non_reactive_update
+	let processedData: any[] = [];
+	let rankData: any[] = [];
+	for (const { question_type, answer_statistics } of analytics) {
+		if (question_type === 'Ranking') {
+			processedData = ['1', '2', '3', '4', '5'].map((rank) => {
+				rankData = answer_statistics.filter((d) => d.rank === rank);
+				return {
+					rank,
+					...Object.fromEntries(rankData.map((d) => [d.answer, d.percentage]))
+				};
+			});
+		}
+	}
+
+	const keys = Object.keys(processedData[0]).filter((k) => k !== 'rank');
+	let series = processedData.map((_, index) => ({
+		key: keys[index],
+		color: keyColors[index]
+	}));
+
+	$effect(() => {
+		window.onafterprint = function () {
+			variable = variable.map((x) => (x = !x));
+		};
+
+		return () => {
+			processedData = [];
+			rankData = [];
+			variable = [];
+		};
+	});
 </script>
 
 <div class="mx-auto grid gap-3 px-2 py-7">
@@ -86,7 +132,7 @@
 						<Button
 							variant="secondary"
 							onclick={() => {
-								open = !open;
+								variable = variable.map((x) => (x = !x));
 								setTimeout(() => {
 									window.print();
 								}, 50);
@@ -166,6 +212,7 @@
 							innerRadius={-20}
 							cornerRadius={5}
 							padAngle={0.02}
+							placement="right"
 							legend={{
 								classes: { label: 'text-xs block', swatches: 'block' },
 								placement: 'top-left',
@@ -187,9 +234,25 @@
 				>
 			</Card.Header>
 			<Card.Content class="overflow-x-auto">
+				{#if statistic.question_type === 'Ranking'}
+					<div class="h-96 p-4 {variable[ix] ? 'max-w-[800px]' : ''} mb-3 rounded border">
+						<BarChart
+							data={processedData}
+							orientation="horizontal"
+							y="rank"
+							{series}
+							seriesLayout="stack"
+							props={{
+								xAxis: { format: 'metric' },
+								yAxis: { format: 'none' }
+							}}
+							legend
+						/>
+					</div>
+				{/if}
 				<!-- Add horizontal scroll only if needed -->
 				{#if statistic.question_type === 'Single' || statistic.question_type === 'Ranking'}
-					<Collapsible.Root class="space-y-2" bind:open>
+					<Collapsible.Root class="space-y-2" bind:open={variable[ix]}>
 						<div id="kutton">
 							<Collapsible.Trigger class={buttonVariants({ variant: 'secondary', size: 'sm' })}>
 								<UnfoldVertical />
@@ -310,5 +373,12 @@
 		#kutton {
 			visibility: hidden;
 		}
+	}
+	:root {
+		--color-orange: 27, 96%, 61%;
+		--color-violet: 255, 92%, 76%;
+		--color-blue: 213, 94%, 68%;
+		--color-cyan: 188, 86%, 53%;
+		--color-stone: 24, 5%, 64%;
 	}
 </style>

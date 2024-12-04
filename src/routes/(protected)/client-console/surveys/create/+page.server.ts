@@ -19,7 +19,8 @@ export const load: PageServerLoad = async ({ locals: { user } }) => {
 			${SurveyTable.clientid} = ${user?.id}
 			AND
 			${clientData.createdAt}::date + INTERVAL '1 month' = ${clientData.expires_at}::date 
-        `);
+        `
+		);
 
 	return {
 		surveys

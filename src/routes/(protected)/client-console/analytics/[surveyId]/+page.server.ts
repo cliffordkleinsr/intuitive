@@ -108,7 +108,7 @@ export const load: PageServerLoad = async ({ locals: { user }, params: { surveyI
 		.select({
 			question: sql<string>`${answerCounts.question}`,
 			question_type: sql<string>`${answerCounts.question_type}`,
-			answer_statistics: sql<{ answer: string; count: number; percentage: number }[]>`
+			answer_statistics: sql<{ answer: string; rank: string; count: number; percentage: number }[]>`
 			json_agg(
 			jsonb_build_object(
 				'answer', ${answerCounts.answer},
