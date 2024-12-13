@@ -1,24 +1,23 @@
 import nodemailer, { type Transporter } from 'nodemailer';
 import { SECRET_SMTP2GO_PASSWORD, SECRET_SMTP2GO_USERNAME } from '$env/static/private';
 
+let transporter: Transporter;
+// create Nodemailer SMTP transporter
+transporter = nodemailer.createTransport({
+	host: 'mail.smtp2go.com',
+	port: 2525,
+	secure: false,
+	auth: {
+		user: SECRET_SMTP2GO_USERNAME,
+		pass: SECRET_SMTP2GO_PASSWORD
+	}
+});
 export default async function sendEmail(
 	email: string,
 	subject: string,
 	bodyHtml?: string,
 	bodyText?: string
 ) {
-	let transporter: Transporter;
-	// create Nodemailer SMTP transporter
-	transporter = nodemailer.createTransport({
-		host: 'mail.smtp2go.com',
-		port: 2525,
-		secure: false,
-		auth: {
-			user: SECRET_SMTP2GO_USERNAME,
-			pass: SECRET_SMTP2GO_PASSWORD
-		}
-	});
-
 	try {
 		switch (false) {
 			case !bodyText:
@@ -78,3 +77,25 @@ export default async function sendEmail(
 		new Error(`Error sending email: ${JSON.stringify(error)}`);
 	}
 }
+
+// timeouts
+export const sendBulkEmail = async (
+	email: string,
+	subject: string,
+	bodyHtml: string,
+	timeoutMs: number = 5000 // Timeout used for spreading out load
+) =>
+	new Promise((resolve, reject) => {
+		const msg = {
+			from: SECRET_SMTP2GO_USERNAME,
+			to: email,
+			subject: subject,
+			html: bodyHtml
+		};
+		transporter.sendMail(msg, (err) => {
+			if (err) {
+				return reject(err);
+			}
+			setTimeout(resolve, timeoutMs);
+		});
+	});

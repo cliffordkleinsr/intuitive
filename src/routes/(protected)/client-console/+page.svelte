@@ -78,7 +78,12 @@
 					{share}
 				</Card.Content>
 				<Card.Footer>
-					<Button href="##" size="default" variant="default" class="ml-auto w-full gap-1">
+					<Button
+						href="/client-console/shared"
+						size="default"
+						variant="default"
+						class="ml-auto w-full gap-1"
+					>
 						View sharable surveys
 						<ArrowUpRight class="h-4 w-4" />
 					</Button>

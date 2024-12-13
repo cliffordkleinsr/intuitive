@@ -13,6 +13,7 @@
 	import * as Collapsible from '$lib/components/ui/collapsible';
 	import UnfoldVertical from 'lucide-svelte/icons/unfold-vertical';
 	import FileText from 'lucide-svelte/icons/file-text';
+	import { toast } from 'svelte-sonner';
 
 	interface GenAnalytics {
 		gender: string;
@@ -57,20 +58,24 @@
 	// let open = $state<boolean>(false);
 
 	let variable = $state() as boolean[];
-	let printstate = $state(false) as boolean
+	let printstate = $state(false) as boolean;
 	variable = analytics.map((x) => x.question_type !== 'Ranking' && x.question_type !== 'Single');
 
 	function exportRaw(text: string) {
-		let fname = 'report.csv';
-		const File = new Blob([text], { type: 'text/csv' });
-		window.URL = window.URL || window.webkitURL;
-		const dlBtn = document.createElement('a');
-		dlBtn.setAttribute('href', window.URL.createObjectURL(File));
-		dlBtn.setAttribute('download', fname);
-		dlBtn.click();
+		if (text.length === 0) {
+			toast.info('There is no data to export');
+		} else {
+			let fname = 'report.csv';
+			const File = new Blob([text], { type: 'text/csv' });
+			window.URL = window.URL || window.webkitURL;
+			const dlBtn = document.createElement('a');
+			dlBtn.setAttribute('href', window.URL.createObjectURL(File));
+			dlBtn.setAttribute('download', fname);
+			dlBtn.click();
 
-		// Clean up and remove the link
-		document.body.removeChild(dlBtn);
+			// Clean up and remove the link
+			document.body.removeChild(dlBtn);
+		}
 	}
 
 	const keyColors = [
@@ -97,8 +102,8 @@
 		}
 	}
 
-	let keys: any = $state({})
-	let series: any[] = $state([])
+	let keys: any = $state({});
+	let series: any[] = $state([]);
 	if (processedData.length > 0) {
 		keys = Object.keys(processedData[0]).filter((k) => k !== 'rank');
 		series = processedData.map((_, index) => ({
@@ -106,13 +111,11 @@
 			color: keyColors[index]
 		}));
 	}
-	
-	
 
 	$effect(() => {
 		window.onafterprint = function () {
 			variable = variable.map((x) => (x = !x));
-			printstate = !printstate
+			printstate = !printstate;
 		};
 
 		return () => {
@@ -141,9 +144,9 @@
 							variant="secondary"
 							onclick={() => {
 								variable = variable.map((x) => (x = !x));
-								printstate = !printstate
+								printstate = !printstate;
 								setTimeout(() => {
-									window.print();
+									total_responses > 0 ? window.print() : toast.info('There is no data to print');
 								}, 50);
 							}}
 							size="sm"
@@ -244,7 +247,9 @@
 			</Card.Header>
 			<Card.Content class="overflow-x-auto">
 				{#if statistic.question_type === 'Ranking'}
-					<div class="h-96 p-4 {variable[ix] && printstate ? 'max-w-[800px]' : ''} mb-3 rounded border">
+					<div
+						class="h-96 p-4 {variable[ix] && printstate ? 'max-w-[800px]' : ''} mb-3 rounded border"
+					>
 						<BarChart
 							data={processedData}
 							orientation="horizontal"

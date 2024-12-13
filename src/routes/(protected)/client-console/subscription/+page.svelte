@@ -25,7 +25,6 @@
 		new Date(client_pack.expiry!).toLocaleTimeString()
 	];
 	const price = client_pack.plan!;
-	const vat = Math.round(parseInt(price) * 0.16);
 </script>
 
 {#if client_pack.payment_status}
@@ -79,11 +78,11 @@
 							<span class="text-muted-foreground">
 								package type: {client_pack.desc}
 							</span>
-							<span>${Math.round(parseInt(price) - vat)}</span>
+							<span>${parseInt(price)}</span>
 						</li>
 						<li class="flex items-center justify-between">
 							<span class="text-muted-foreground"> VAT </span>
-							<span>${vat}</span>
+							<span>Inclusive</span>
 						</li>
 					</ul>
 					<Separator class="my-2" />
@@ -109,7 +108,7 @@
 						<address class="grid gap-0.5 not-italic text-muted-foreground">
 							<span>{AuthedUser}</span>
 							<span>{client_pack.count}.</span>
-							<span>{client_pack.count}, {getInitials(client_pack.count)} 12345</span>
+							<span>{client_pack.count}, {getInitials(client_pack.count)}</span>
 						</address>
 					</div>
 					<div class="grid auto-rows-max gap-3">
@@ -134,7 +133,7 @@
 						<div class="flex items-center justify-between">
 							<dt class="text-muted-foreground">Phone</dt>
 							<dd>
-								<a href="tel:">{client_pack.Phone}</a>
+								<a href="tel:">{atob(client_pack.Phone)}</a>
 							</dd>
 						</div>
 					</dl>

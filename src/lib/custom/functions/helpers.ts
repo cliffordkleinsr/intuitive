@@ -304,12 +304,20 @@ function deductAmount(amount: number) {
 	return deduction;
 }
 
-type FlyAndScaleParams = {
-	y?: number;
-	x?: number;
-	start?: number;
-	duration?: number;
-};
+function addDays(date: string, days: number) {
+	let result = new Date(date);
+	result.setDate(result.getDate() + days);
+	return result;
+}
+
+function addMonths(date: Date, months: number) {
+	let d = date.getDate();
+	date.setMonth(date.getMonth() + +months);
+	if (date.getDate() != d) {
+		date.setDate(0);
+	}
+	return date;
+}
 
 export {
 	items,
@@ -326,5 +334,7 @@ export {
 	handleExternal,
 	capitalizeFirstLetter,
 	calculateAge,
-	deductAmount
+	deductAmount,
+	addDays,
+	addMonths
 };

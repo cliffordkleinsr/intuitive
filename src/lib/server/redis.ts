@@ -15,10 +15,10 @@ export const ratelimit = {
 		limiter: Ratelimit.slidingWindow(1, '4h')
 	}),
 
-	delete: new Ratelimit({
+	span: new Ratelimit({
 		redis,
 		analytics: true,
 		prefix: 'ratelimit:delete',
-		limiter: Ratelimit.slidingWindow(1, '15s')
+		limiter: Ratelimit.slidingWindow(1, '24h')
 	})
 };

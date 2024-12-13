@@ -72,6 +72,7 @@ export const agentData = pgTable('agent_data', {
 export const clientData = pgTable('client_data', {
 	clientId: text('client_id')
 		.references(() => UsersTable.id)
+		.primaryKey()
 		.notNull(),
 	email: text('client_email')
 		.references(() => UsersTable.email)
@@ -231,6 +232,24 @@ export const AnswersTable = pgTable('answers', {
 	agentId: text('agent_id')
 		.references(() => UsersTable.id)
 		.notNull(),
+	updatedAt: timestamp('updated_at', {
+		withTimezone: true,
+		mode: 'date'
+	})
+		.defaultNow()
+		.notNull()
+});
+
+export const ext_answersTable = pgTable('ext_answers', {
+	questionId: uuid('questionid')
+		.references(() => surveyqnsTableV2.questionId)
+		.notNull(),
+	surveid: text('surveyid')
+		.references(() => SurveyTable.surveyid)
+		.notNull(),
+	optionId: uuid('option_id').references(() => QuestionOptions.optionId),
+	rankId: text('rankid'),
+	answer: text('answer').notNull(),
 	updatedAt: timestamp('updated_at', {
 		withTimezone: true,
 		mode: 'date'

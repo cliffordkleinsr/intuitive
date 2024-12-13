@@ -94,17 +94,17 @@ export const load: LayoutServerLoad = async ({ locals: { user }, url, cookies })
 		.select({
 			id: SurveyTable.surveyid,
 			title: SurveyTable.surveyTitle,
-			desc: SurveyTable.surveyDescription
+			createdAt: sql<Date>`${SurveyTable.createdAt}::date`
 		})
 		.from(SurveyTable)
 		.where(
 			sql`
-        ${SurveyTable.external} = true
-        and 
-        ${SurveyTable.status} = 'Live'
-        and
-        ${SurveyTable.clientid} = ${user.id}
-        `
+				${SurveyTable.external} = true
+				and 
+				${SurveyTable.status} = 'Live'
+				and
+				${SurveyTable.clientid} = ${user.id}
+			`
 		);
 	const [onetime] = await db
 		.select({

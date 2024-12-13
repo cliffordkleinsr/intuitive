@@ -81,7 +81,7 @@
 				<QuestionType />
 			</Card.Content>
 		</Card.Root>
-		<Portal {...portProps} class="max-h-[800px] max-w-xl overflow-y-auto">
+		<Portal {...portProps} class="max-w-xl overflow-y-auto lg:h-screen">
 			{#snippet trigger()}
 				Preview Questions
 				<ArrowUpRight />

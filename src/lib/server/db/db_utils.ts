@@ -656,6 +656,49 @@ export async function handleSurveyProgress({
 	}
 }
 
+/**
+ *  Redirects with condition
+ * @param uid string
+ * @param surveid string
+ * @param cookies Cookies
+ */
+export async function handleSurveyProgressExt({
+	surveyId,
+	cookies
+}: {
+	surveyId: string;
+	cookies: Cookies;
+}) {
+	// Get current progress and total questions
+	const ids = await questionCount(surveyId);
+
+	// Get current index from cookies or database
+	let current_ix = parseInt(cookies.get('current_ix') ?? '0');
+
+	// Increment if not at the end
+	if (current_ix < ids.length - 1) {
+		current_ix++;
+		indexParser(current_ix, cookies);
+		// Get next question ID
+		const next = ids[current_ix].id;
+
+		// Update progress in database
+
+		// Redirect to next question
+		redirect(
+			303,
+			`/anonymous/${surveyId}/${next}`,
+			{ type: 'success', message: 'Input Successfully Recorded' },
+			cookies
+		);
+	} else {
+		// clear client cookie
+		indexReset(cookies);
+		//then redirect
+		redirect(303, '/anonymous/complete');
+	}
+}
+
 export async function validateAnswerNotExists(
 	questionid: string,
 	cookies: Cookies,

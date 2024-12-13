@@ -73,7 +73,7 @@
 		{ label: 'Priority', value: 'priority' },
 		{ label: 'Quality', value: 'quality' },
 		{ label: 'Importance', value: 'importance' },
-		{ label: 'Likelyhood', value: 'likelyhood' }
+		{ label: 'Likelihood', value: 'likelyhood' }
 	];
 
 	let value = $state('');

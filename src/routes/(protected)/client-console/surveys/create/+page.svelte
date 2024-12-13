@@ -7,15 +7,39 @@
 	import Clock from '$lib/custom/blocks/clock.svelte';
 	import type { PageData, ActionData } from './$types.js';
 	import { goto } from '$app/navigation';
+	import { addMonths } from '$lib/custom/functions/helpers.js';
 
-	interface Lotto {
+	let {
+		form,
+		data
+	}: {
 		data: PageData;
 		form: ActionData;
-	}
-	let { form, data }: Lotto = $props();
+	} = $props();
 
 	let loading = $state(false);
-	const { surveys, features } = data;
+	const { survey_metrics, features } = data;
+
+	$inspect(survey_metrics.expires_at);
+	function isWithinCurrentMonth(dateString: string | number | Date) {
+		const date = new Date(dateString);
+		const now = new Date();
+		return date.getFullYear() === now.getFullYear() && date.getMonth() === now.getMonth();
+	}
+
+	function canCreateSurvey() {
+		if (features === undefined) return false;
+		if (
+			survey_metrics.packagetype === 'Yearly' &&
+			new Date(survey_metrics.expires_at).getFullYear() !== new Date().getFullYear()
+		) {
+			const surveysThisMonth = survey_metrics.surveys.filter((survey) =>
+				isWithinCurrentMonth(survey.created)
+			);
+			return surveysThisMonth.length < 2;
+		}
+		return survey_metrics.surveys.length < features.maxsurv;
+	}
 </script>
 
 <div class="m-4 flex max-w-screen-lg flex-col gap-5 lg:m-16">
@@ -76,13 +100,13 @@
 							<span id="hs-solid-color-danger-label" class="font-bold">Error!</span> You are not subscribed
 							to any plan!
 						</div>
-					{:else if surveys.length === features?.maxsurv}
+					{:else if !canCreateSurvey()}
 						<div
 							class="rounded-lg border border-yellow-200 bg-yellow-100 p-4 text-sm text-yellow-800 dark:border-yellow-900 dark:bg-yellow-800/10 dark:text-yellow-500"
 							role="alert"
 						>
-							<span class="font-bold">Warning</span> alert! You have exceeded the maximum available surveys
-							for your plan
+							<span class="font-bold">Warning</span> alert! You have exceeded the maximum available
+							surveys for your plan {survey_metrics.packagetype === 'Yearly' ? 'this Month' : ''}
 						</div>
 					{:else}
 						<Form.Button class="max-w-sm" disabled={loading}>
