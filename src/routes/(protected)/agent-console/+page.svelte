@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 	import Pretoast from '$lib/custom/blocks/pretoast.svelte';
 	import { Button } from '$lib/components/ui/button';
 	import { sineInOut } from 'svelte/easing';
@@ -21,7 +21,7 @@
 		return 'Week of\n' + new Date(val).toLocaleDateString();
 	}
 
-	let message = $derived($page.url.searchParams.get('notification') ?? '');
+	let message = $derived(page.url.searchParams.get('notification') ?? '');
 
 	let taken = $state<any[]>([]);
 	let count = $state<any[]>([]);

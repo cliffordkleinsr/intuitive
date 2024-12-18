@@ -10,7 +10,7 @@
 	import { toggleMode } from 'mode-watcher';
 	import * as Collapsible from '$lib/components/ui/collapsible';
 	import { cn } from '$lib/utils';
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 </script>
 
 <header
@@ -25,7 +25,7 @@
 	>
 		<a
 			href="/"
-			class="{$page.url.pathname === '/'
+			class="{page.url.pathname === '/'
 				? 'text-foreground'
 				: 'text-muted-foreground'} transition-colors hover:text-primary"
 		>
@@ -34,7 +34,7 @@
 
 		<a
 			href="/about"
-			class="{$page.url.pathname === '/about'
+			class="{page.url.pathname === '/about'
 				? 'text-foreground'
 				: 'text-muted-foreground'} transition-colors hover:text-primary"
 		>
@@ -42,7 +42,7 @@
 		</a>
 		<DropdownMenu.Root>
 			<DropdownMenu.Trigger
-				class="{$page.url.pathname.startsWith('/industries')
+				class="{page.url.pathname.startsWith('/industries')
 					? 'text-foreground'
 					: 'text-muted-foreground'} transition-colors hover:text-primary"
 				>Industries</DropdownMenu.Trigger
@@ -61,7 +61,7 @@
 		</DropdownMenu.Root>
 		<DropdownMenu.Root>
 			<DropdownMenu.Trigger
-				class="{$page.url.pathname.startsWith('/services')
+				class="{page.url.pathname.startsWith('/services')
 					? 'text-foreground'
 					: 'text-muted-foreground'} transition-colors hover:text-primary"
 				>Services</DropdownMenu.Trigger
@@ -86,7 +86,7 @@
 		</DropdownMenu.Root>
 		<a
 			href="/pricing"
-			class="{$page.url.pathname === '/pricing'
+			class="{page.url.pathname === '/pricing'
 				? 'text-foreground'
 				: 'text-muted-foreground'} transition-colors hover:text-primary"
 		>

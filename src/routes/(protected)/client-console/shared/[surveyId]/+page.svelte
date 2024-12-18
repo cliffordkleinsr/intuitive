@@ -4,7 +4,7 @@
 	import { Button, buttonVariants } from '$lib/components/ui/button';
 	import Copy from 'lucide-svelte/icons/copy';
 	import CopyCheck from 'lucide-svelte/icons/copy-check';
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 	import Mail from 'lucide-svelte/icons/mail';
 	import SettingsUpload from './settingsUpload.svelte';
 	import * as Table from '$lib/components/ui/table';
@@ -16,7 +16,7 @@
 	} = data;
 
 	let clicked = $state(false);
-	let text = `${$page.url.origin}/anonymous/${$page.params.surveyId}`;
+	let text = `${page.url.origin}/anonymous/${page.params.surveyId}`;
 </script>
 
 <div class="mx-auto flex max-w-xl flex-col gap-2 px-2 py-16">

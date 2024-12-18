@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { PageData } from './$types';
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 	// shadcn
 	import * as Card from '$lib/components/ui/card';
 	import { Button } from '$lib/components/ui/button';
@@ -20,7 +20,7 @@
 <div class="m-4 flex flex-col gap-10">
 	<h1 class="font-semi-bold ml-2 gap-1 text-start text-3xl">
 		History <br />
-		<span class="text-sm">Survey Id : <span class="text-xs">{$page.params.surveyId}</span></span>
+		<span class="text-sm">Survey Id : <span class="text-xs">{page.params.surveyId}</span></span>
 		<Button class=" float-end" variant="destructive" href="/agent-console/surveys/history">
 			<Undo2 class="size-4" /> Back</Button
 		>

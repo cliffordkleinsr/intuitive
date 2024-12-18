@@ -17,7 +17,7 @@
 	// sonner
 	import { toast } from 'svelte-sonner';
 	// app stores
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 	// custom toaster
 	import Pretoast from '$lib/custom/blocks/pretoast.svelte';
 
@@ -52,7 +52,7 @@
 		visible = false;
 	}, 2000);
 
-	let msg: string = $derived($page.url.searchParams.get('notification') ?? '');
+	let msg: string = $derived(page.url.searchParams.get('notification') ?? '');
 
 	const Pageprops = {
 		title: 'Client Sign in • Intuitive Insights KE',

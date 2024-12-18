@@ -1,10 +1,10 @@
 <script lang="ts">
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 	import type { SEO } from '$lib/types';
 
 	let { title, description, type }: SEO = $props();
 
-	const base = $derived($page.url.href);
+	const base = $derived(page.url.href);
 </script>
 
 <svelte:head>

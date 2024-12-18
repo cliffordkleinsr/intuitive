@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { goto, preloadData, pushState } from '$app/navigation';
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 	import { buttonVariants } from '$lib/components/ui/button';
 	import ArrowUpRight from 'lucide-svelte/icons/arrow-up-right';
 
@@ -25,7 +25,7 @@
 
 	let open = $state(false);
 	$effect(() => {
-		if ($page.state.available_survs) {
+		if (page.state.available_survs) {
 			open = true;
 		} else {
 			open = false;

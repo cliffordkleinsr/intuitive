@@ -41,7 +41,7 @@
 				alt="Woman"
 			/> -->
 			<img
-				src="https://res.cloudinary.com/dmy8yp9el/image/upload/v1725873748/dwlfv0ng4vfr5p1sduvk.jpg"
+				src="https://res.cloudinary.com/dmy8yp9el/image/upload/v1734511512/slizkolnzojpzpckzdp8.jpg"
 				alt="Woman"
 				class="mx-auto aspect-video overflow-hidden rounded-xl object-cover sm:w-full lg:order-last lg:aspect-auto"
 			/>
