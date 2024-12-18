@@ -108,45 +108,6 @@
 	},
 	{
 		"id": 4,
-		"serviceName": "product_assessment",
-		"title": "Product assessment",
-		"sub": "Intuitive insights product assessment offers a comprehensive service designed to evaluate the market viability, user experience, and overall performance of products through targeted polling and data analysis.",
-		"services": [
-			{
-				"id": 1,
-				"Name": "Product testing",
-				"content": "Our priority is to help you in conducting thorough testing of products to evaluate their performance, reliability, safety, and compliance with regulations and standards."
-			},
-			{
-				"id": 2,
-				"Name": "Quality assurance and quality control",
-				"content": "We have favorable Implementing processes to ensure that products meet predefined quality standards throughout the manufacturing or development process."
-			},
-			{
-				"id": 3,
-				"Name": "Competitive analysis",
-				"content": "We help you in assessing how a product compares to competitors' offerings in terms of features, pricing, quality, and market positioning."
-			},
-			{
-				"id": 4,
-				"Name": "Product benchmarking",
-				"content": "We provide assistance in identifying and comparing a product's performance, features, and quality against industry benchmarks or best practices to identify areas for improvement."
-			},
-			{
-				"id": 5,
-				"Name": "User feedback collection",
-				"content": "We help solicit feedback from users through surveys, interviews, and user testing sessions to understand their opinions, experiences, and suggestions for product improvement."
-			},
-			{
-				"id": 6,
-				"Name": "Performance analysis",
-				"content": "Our team of experts help in analyzing data related to product performance, such as sales figures, customer feedback, and return rates, to assess its success and identify areas for enhancement."
-			}
-		],
-		"img": "https://res.cloudinary.com/dmy8yp9el/image/upload/v1725878671/product_assessment.avif"
-	},
-	{
-		"id": 4,
 		"serviceName": "market_reaserch",
 		"title": "Market research",
 		"sub": "Intuitive insights market research provides a robust service aimed at uncovering key market trends, consumer behaviors, and competitive landscapes through comprehensive data collection and analysis. ",
@@ -185,3 +146,4 @@
 		"img": "https://res.cloudinary.com/dmy8yp9el/image/upload/v1725879151/market_reaserch.avif"
 	}
 ]
+

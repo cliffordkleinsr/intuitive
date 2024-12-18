@@ -75,9 +75,9 @@
 					<DropdownMenu.Item
 						><a href="/services/customer_experience">Customer experience</a></DropdownMenu.Item
 					>
-					<DropdownMenu.Item
+					<!-- <DropdownMenu.Item
 						><a href="/services/product_assessment">Product assessment</a></DropdownMenu.Item
-					>
+					> -->
 					<DropdownMenu.Item
 						><a href="/services/market_reaserch">Market research</a></DropdownMenu.Item
 					>
@@ -184,14 +184,14 @@
 							Customer experience
 						</a>
 					</Collapsible.Content>
-					<Collapsible.Content>
+					<!-- <Collapsible.Content>
 						<a
 							href="/services/product_assessment"
 							class="text-muted-foreground transition-colors hover:text-primary"
 						>
 							Product assessment
 						</a>
-					</Collapsible.Content>
+					</Collapsible.Content> -->
 					<Collapsible.Content>
 						<a
 							href="/services/market_reaserch"
