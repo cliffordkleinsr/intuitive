@@ -1,4 +1,4 @@
-import { handleExternal, handleLoginRedirect } from '$lib/custom/functions/helpers';
+import { handleLoginRedirect } from '$lib/custom/functions/helpers';
 import type { LayoutServerLoad } from './$types';
 import { db } from '$lib/server/db';
 import {
@@ -16,11 +16,6 @@ import { redirect } from 'sveltekit-flash-message/server';
 export const load: LayoutServerLoad = async ({ locals: { user }, cookies, url }) => {
 	const validation = false;
 	if (!user) {
-		// check external user
-		const extrenal = url.searchParams.get('external');
-		if (extrenal) {
-			redirect(302, handleExternal('/agent/register', url));
-		} else {
 			redirect(
 				302,
 				handleLoginRedirect('/agent/signin', url),
@@ -30,7 +25,6 @@ export const load: LayoutServerLoad = async ({ locals: { user }, cookies, url })
 				},
 				cookies
 			);
-		}
 		// redirect('/respondent/signin', {type: "error", message:"You Must Be logged In to view this page"}, cookies)
 	}
 	if (validation) {
