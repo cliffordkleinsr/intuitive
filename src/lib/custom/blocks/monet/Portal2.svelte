@@ -1,9 +1,9 @@
 <script lang="ts" generics="T">
-	import { MediaQuery } from 'runed';
 	import * as Dialog from '$lib/components/ui/dialog/index.js';
 	import * as Drawer from '$lib/components/ui/drawer/index.js';
 	import { buttonVariants } from '$lib/components/ui/button/index.js';
 	import type { Snippet } from 'svelte';
+	import { MediaQuery } from 'svelte/reactivity';
 
 	interface Shower {
 		trigger: Snippet<[any]>;
@@ -12,10 +12,10 @@
 	let { trigger, children }: Shower = $props();
 
 	let open = $state(false);
-	const isDesktop = new MediaQuery('(min-width: 768px)');
+	const isDesktop = new MediaQuery('min-width: 768px');
 </script>
 
-{#if isDesktop.matches}
+{#if isDesktop.current}
 	<Dialog.Root bind:open>
 		<Dialog.Trigger>
 			{#snippet child({ props })}

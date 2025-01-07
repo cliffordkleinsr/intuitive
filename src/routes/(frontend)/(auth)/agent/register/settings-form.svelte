@@ -128,7 +128,7 @@
 	);
 
 	let open: boolean = $state(false);
-	let lender = $state(false);
+	// let lender = $state(false);
 	const Pageprops = {
 		title: 'Agent Sign Up • Intuitive Insights KE',
 		description: 'Gather insightful feedback, analyze data, and make informed decisions.',

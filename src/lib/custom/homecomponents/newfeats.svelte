@@ -16,7 +16,8 @@
 					class="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed"
 				>
 					We offer a wide range of features to help you gather insightful feedback, analyze data,
-					and make informed decisions.
+					and make informed decisions. Whether you’re in Kenya or abroad, our platform ensures you
+					stay ahead of the competition.
 				</p>
 			</div>
 		</div>

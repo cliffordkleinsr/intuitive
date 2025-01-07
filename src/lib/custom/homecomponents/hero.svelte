@@ -27,10 +27,12 @@
 
 				<div class="flex flex-col gap-1">
 					<div class="mt-5 flex max-w-2xl gap-2">
-						<p class="text-5xl font-extralight text-white">|</p>
+						<p class="text-6xl font-extralight text-white">|</p>
 						<p class="text-md text-neutral-50 drop-shadow-md dark:text-neutral-400">
-							We provide strategies and insights to enhance corporate reputation and brand image,
-							elevate brand visibility and give customers the best experience.
+							We provide strategies and insights to enhance corporate reputation and brand image in
+							Kenya, elevate brand visibility, and deliver the best customer experience. Our
+							data-driven solutions help businesses across various industries, including retail,
+							NGOs, hospitality, healthcare, and financial services in Kenya.
 						</p>
 					</div>
 				</div>

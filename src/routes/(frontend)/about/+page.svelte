@@ -3,6 +3,11 @@
 	import type { PageData } from './$types';
 	import SettingsQuestion from './settings-question.svelte';
 	// import { CldImage } from 'svelte-cloudinary';
+
+	// lucide
+	import Mail from 'lucide-svelte/icons/mail';
+	import Phone from 'lucide-svelte/icons/phone';
+	import MapPin from 'lucide-svelte/icons/map-pin';
 	let { data }: { data: PageData } = $props();
 
 	const pageprops = {
@@ -59,9 +64,10 @@
 					<p
 						class="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed"
 					>
-						At Intuitive Insights, our mission is to provide businesses with a powerful and
-						user-friendly platform to gather valuable insights that drive informed decision-making.
-						We believe that data-driven strategies are the key to sustainable growth and success.
+						At Intuitive Insights, our mission is to provide businesses with a powerful and user-
+						friendly platform to gather valuable insights that drive informed decision-making. We
+						believe that data-driven strategies are the key to sustainable growth and success in
+						industries like retail, NGOs, healthcare, financial services, and hospitality in Kenya.
 					</p>
 				</div>
 			</div>
@@ -82,55 +88,121 @@
 				>
 					At the core of Intuitive Insights are our values: innovation, customer-centricity,
 					integrity, and continuous improvement. These principles shape our approach and drive us to
-					deliver exceptional experiences for our clients.
+					deliver exceptional experiences for our clients in Kenya and beyond.
 				</p>
 			</div>
 			<div class="grid gap-6">
 				<div class="grid gap-1">
 					<h3 class="text-lg font-bold">Innovation</h3>
 					<p class="text-sm text-muted-foreground">
-						We constantly explore new technologies and methodologies to enhance the Insight
-						gathering and provide cutting-edge solutions.
+						We constantly explore new technologies and methodologies to enhance feedback gathering
+						and provide cutting-edge solutions that are tailored to the unique needs of Kenyan
+						businesses.
 					</p>
 				</div>
 				<div class="grid gap-1">
 					<h3 class="text-lg font-bold">Customer-Centricity</h3>
 					<p class="text-sm text-muted-foreground">
-						Our clients' success is our top priority. We work closely with them to understand their
-						unique needs and deliver tailored solutions.
+						Our clients&#39; success is our top priority. We work closely with them to understand
+						their unique needs and deliver tailored solutions for market research, customer
+						satisfaction surveys, and more.
 					</p>
 				</div>
 				<div class="grid gap-1">
 					<h3 class="text-lg font-bold">Integrity</h3>
 					<p class="text-sm text-muted-foreground">
 						We are committed to maintaining the highest standards of ethics and transparency in all
-						our dealings, ensuring the reliability of our platform and services.
+						our dealings, ensuring the reliability of our platform and services for businesses in
+						Kenya.
 					</p>
 				</div>
 				<div class="grid gap-1">
 					<h3 class="text-lg font-bold">Continuous Improvement</h3>
 					<p class="text-sm text-muted-foreground">
 						We constantly seek feedback and explore new ways to enhance our platform, ensuring that
-						our clients always have access to the latest and most effective tools.
+						our clients always have access to the latest and most effective tools for data
+						collection and customer feedback.
 					</p>
 				</div>
 			</div>
 		</div>
 	</section>
 
-	<section class="w-full py-12 md:py-24 lg:py-32" id="contact">
+	<section class="w-full py-9 md:py-16 lg:py-24" id="address">
+		<div class="container space-y-3 px-4 md:px-6">
+			<div class="flex flex-col items-center justify-center space-y-4 text-center">
+				<div class="space-y-2">
+					<div class="inline-block rounded-lg bg-muted px-3 py-1 text-sm">Address Details</div>
+				</div>
+				<h2 class="text-3xl font-bold tracking-tighter sm:text-5xl">
+					Have a question or need assistance?
+				</h2>
+				<p
+					class="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed"
+				>
+					Contact us with the details below
+				</p>
+			</div>
+			<div class="mb-8 overflow-hidden rounded-lg shadow-lg">
+				<iframe
+					title="Intuitive Insights"
+					src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3988.7994116755094!2d36.7898792!3d-1.2949051!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x182f11ddf10f0a1b%3A0xd8f7f55cd40764b1!2sIntuitive%20Insights!5e0!3m2!1sen!2ske!4v1736236028078!5m2!1sen!2ske"
+					width="100%"
+					height="450"
+					style={'border:0;'}
+					allowfullscreen={true}
+					loading="lazy"
+					referrerpolicy="no-referrer-when-downgrade"
+				></iframe>
+			</div>
+			<div class="grid gap-8 md:grid-cols-2">
+				<div class="rounded-lg bg-white p-6 shadow-md">
+					<h2 class="mb-4 text-2xl font-semibold">Our Address</h2>
+					<div class="mb-4 flex items-start">
+						<MapPin class="mr-2 mt-1 flex-shrink-0 text-gray-500" />
+						<p>
+							Chania Avenue, CMS Africa<br />
+							Nairobi, NA 0100<br />
+							Kenya
+						</p>
+					</div>
+					<div class="mb-4 flex items-center">
+						<Phone class="mr-2 flex-shrink-0 text-gray-500" />
+						<p>+(254) 795-057553</p>
+					</div>
+					<div class="flex items-center">
+						<Mail class="mr-2 flex-shrink-0 text-gray-500" />
+						<p>info@int-insights.com</p>
+					</div>
+				</div>
+
+				<div class="rounded-lg bg-white p-6 shadow-md">
+					<h2 class="mb-4 text-2xl font-semibold">Business Hours</h2>
+					<ul class="space-y-2">
+						<li><span class="font-semibold">Monday - Friday:</span> 9:00 AM - 4:00 PM</li>
+						<li><span class="font-semibold">Saturday:</span> 9:00 AM - 12:00 PM</li>
+						<li><span class="font-semibold">Sunday:</span> Closed</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<section class="w-full bg-muted py-12 md:py-24 lg:py-32" id="contact">
 		<div class="container px-4 md:px-6">
 			<div class="flex flex-col items-center justify-center space-y-4 text-center">
 				<div class="space-y-2">
-					<div class="inline-block rounded-lg bg-muted px-3 py-1 text-sm">Contact Us</div>
+					<div class="inline-block rounded-lg bg-primary px-3 py-1 text-sm text-white">
+						Contact Us
+					</div>
 					<h2 class="text-3xl font-bold tracking-tighter sm:text-5xl">
-						Get in Touch with Intuitive Insights
+						Get in touch to schedule a demo with us
 					</h2>
 					<p
 						class="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed"
 					>
-						Have a question or need assistance? Our team is here to help. Fill out the form below
-						and we'll get back to you as soon as possible.
+						Our team is here to help. Fill out the form below and we'll get back to you as soon as
+						possible.
 					</p>
 				</div>
 			</div>
@@ -139,6 +211,7 @@
 			</div>
 		</div>
 	</section>
+
 	<div class="hidden w-full bg-muted py-9 md:py-16 lg:py-24">
 		<!-- Title -->
 		<div class="mx-auto mb-6 w-2/3 text-center sm:w-1/2 lg:w-1/3">

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { CakeMap, MapTile } from '$lib/custom/blocks';
+	import { CakeMap } from '$lib/custom/blocks';
 	import * as Card from '$lib/components/ui/card';
 	import { Axis, BarChart, Bars, Chart, PieChart, Svg, Tooltip, Highlight } from 'layerchart';
 	import { format } from '@layerstack/utils';

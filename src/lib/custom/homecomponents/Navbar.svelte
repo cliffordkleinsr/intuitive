@@ -208,6 +208,16 @@
 		</Sheet.Content>
 	</Sheet.Root>
 	<div class="flex flex-auto justify-end gap-2">
+		<a
+			data-sveltekit-reload
+			href="/about#address"
+			class={[
+				'text-muted-foreground transition-colors hover:text-primary',
+				buttonVariants({ variant: 'secondary', size: 'sm' })
+			]}
+		>
+			Contact
+		</a>
 		<Button onclick={toggleMode} variant="ghost" size="icon">
 			<Sun
 				class="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0"

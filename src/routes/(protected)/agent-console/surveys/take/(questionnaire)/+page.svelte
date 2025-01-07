@@ -6,10 +6,10 @@
 	import * as Drawer from '$lib/components/ui/drawer';
 	import AvailableSurvs from './[surveyId]/+page.svelte';
 	import { page } from '$app/stores';
-	import { MediaQuery } from 'runed';
+	import { MediaQuery } from 'svelte/reactivity';
 
 	let { data }: { data: PageData } = $props();
-	const isDesktop = new MediaQuery('(min-width: 768px)');
+	const isDesktop = new MediaQuery('min-width: 768px');
 
 	const { available_qns } = data;
 	let open = $state(false);
@@ -21,13 +21,13 @@
 			open = false;
 		}
 	});
+	// 			controlledOpen={true}
 </script>
 
 <DataTable data={available_qns} {columns}>
-	{#if isDesktop.matches}
+	{#if isDesktop.current}
 		<Dialog.Root
 			bind:open
-			controlledOpen={true}
 			onOpenChange={(open) => {
 				if (!open) {
 					history.back();

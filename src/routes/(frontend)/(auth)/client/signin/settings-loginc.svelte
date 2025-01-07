@@ -16,13 +16,6 @@
 
 	// sonner
 	import { toast } from 'svelte-sonner';
-	// app stores
-	import { page } from '$app/state';
-	// custom toaster
-	import Pretoast from '$lib/custom/blocks/pretoast.svelte';
-
-	import { sineInOut } from 'svelte/easing';
-	import { fade } from 'svelte/transition';
 	import Meta from '$lib/custom/seo/meta.svelte';
 
 	// KitLoad<MiddleWare>
@@ -43,17 +36,6 @@
 	});
 
 	const { form: formData, enhance, message, delayed } = form;
-
-	// custom param message
-
-	let visible = $state(true);
-
-	setTimeout(() => {
-		visible = false;
-	}, 2000);
-
-	let msg: string = $derived(page.url.searchParams.get('notification') ?? '');
-
 	const Pageprops = {
 		title: 'Client Sign in • Intuitive Insights KE',
 		description: 'Gather insightful feedback, analyze data, and make informed decisions.',
@@ -62,11 +44,6 @@
 </script>
 
 <Meta {...Pageprops} />
-{#if visible && msg}
-	<div transition:fade={{ delay: 200, duration: 300, easing: sineInOut }}>
-		<Pretoast message={msg} type="warning" />
-	</div>
-{/if}
 <div class="mb-10 mt-10 flex flex-1 justify-center">
 	<Breadcrumb.Root>
 		<Breadcrumb.List>

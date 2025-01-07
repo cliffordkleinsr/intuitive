@@ -68,11 +68,6 @@ function handleLoginRedirect(
 	return `${where}?redirectTo=${redirectTo}`;
 }
 
-function handleExternal(where: string, url: URL) {
-	const id = url.searchParams.get('external');
-	const redirectTo = url.pathname + url.search.split('?')[0];
-	return `${where}?external=${id}&redirectTo=${redirectTo}`;
-}
 // calpitalizes first leter of a word
 function capitalizeFirstLetter(str: string) {
 	return str.charAt(0).toUpperCase() + str.slice(1);
@@ -331,7 +326,6 @@ export {
 	getInitials,
 	closeAndFocusTrigger,
 	handleLoginRedirect,
-	handleExternal,
 	capitalizeFirstLetter,
 	calculateAge,
 	deductAmount,

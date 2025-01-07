@@ -8,10 +8,6 @@
 	import { zodClient } from 'sveltekit-superforms/adapters';
 	import { signinRSchema, type SigninRSchema } from './schema';
 	import * as Breadcrumb from '$lib/components/ui/breadcrumb/index.js';
-	import { page } from '$app/stores';
-	import Pretoast from '$lib/custom/blocks/pretoast.svelte';
-	import { sineInOut } from 'svelte/easing';
-	import { fade } from 'svelte/transition';
 	import Meta from '$lib/custom/seo/meta.svelte';
 
 	// KitLoad<MiddleWare>
@@ -22,16 +18,6 @@
 	});
 
 	const { form: formData, enhance, delayed } = form;
-
-	// custom param message
-	let msg: string;
-	let visible = true;
-
-	setTimeout(() => {
-		visible = false;
-	}, 2000);
-
-	$: msg = $page.url.searchParams.get('notification') ?? '';
 	const props = {
 		title: 'Agent Sign In • Intuitive Insights KE',
 		description: 'Gather insightful feedback, analyze data, and make informed decisions.',
@@ -40,12 +26,6 @@
 </script>
 
 <Meta {...props} />
-
-{#if visible && msg}
-	<div transition:fade={{ delay: 200, duration: 300, easing: sineInOut }}>
-		<Pretoast message={msg} type="warning" />
-	</div>
-{/if}
 <div class="mb-10 mt-10 flex flex-1 justify-center">
 	<Breadcrumb.Root>
 		<Breadcrumb.List>

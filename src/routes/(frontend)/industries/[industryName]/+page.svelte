@@ -25,20 +25,20 @@
 
 <div class="container mx-auto place-content-evenly px-4 py-10 sm:px-6 lg:px-8">
 	<div class="gap-32 lg:flex">
-		<div class="flex flex-col gap-2 space-y-5 lg:max-w-5xl">
+		<div class="flex flex-col gap-2 space-y-4 lg:max-w-5xl">
 			<h2 class="mb-1 text-2xl font-bold text-primary dark:text-white md:text-4xl">
 				{endpoint.industry.title}
 			</h2>
-			<p class="text-md text-gray-800 dark:text-neutral-200">
+			<p class="text-gray-800 dark:text-neutral-200">
 				<span class="font-bold">The challenge:</span>
 				{endpoint.industry.challenge}
 			</p>
-			<p class="text-md text-gray-800 dark:text-neutral-200 lg:max-w-5xl">
+			<p class="text-gray-800 dark:text-neutral-200 lg:max-w-5xl">
 				<span class="font-bold">The solution:</span>
 				{endpoint.industry.solution}
 			</p>
 			{#each endpoint.industry.checks as check}
-				<ul class="mt-3 max-w-4xl space-y-4 sm:space-y-4">
+				<ul class="mt-3 max-w-4xl space-y-1">
 					<li class="flex space-x-3">
 						<span
 							class="mt-0.5 flex size-5 items-center justify-center rounded-full bg-orange-50 text-primary dark:bg-orange-800/30 dark:text-primary"
@@ -56,7 +56,7 @@
 								stroke-linejoin="round"><polyline points="20 6 9 17 4 12" /></svg
 							>
 						</span>
-						<span class="text-sm sm:text-base">
+						<span>
 							{check.content}
 						</span>
 					</li>
@@ -78,9 +78,7 @@
 	</div>
 	<Separator class="mt-10" />
 	<h1 class="mt-5 text-lg font-bold antialiased">Example:</h1>
-	<p
-		class="text-md mt-3 w-full overflow-hidden truncate text-wrap text-gray-800 dark:text-neutral-200"
-	>
+	<p class="mt-3 w-full overflow-hidden truncate text-wrap text-gray-800 dark:text-neutral-200">
 		{endpoint.industry.examples}
 	</p>
 </div>
