@@ -31,7 +31,7 @@
 		county: LocAnalytics[];
 		analytics: Analytics[];
 		raw: string;
-		subtype?: string;
+		subtype: string | null;
 	} = $props();
 
 	// let open = $state<boolean>(false);
@@ -122,7 +122,7 @@
 						<Button
 							variant="secondary"
 							onclick={() => {
-								if (subtype === undefined) {
+								if (subtype === null) {
 									toast.warning('Subscribe to a plan to complete this action');
 								} else {
 									variable = variable.map((x) => (x = !x));
@@ -168,7 +168,7 @@
 					>
 						<CakeMap geoObject={counties} locale_analytics={county} />
 					</div>
-					{#if subtype === 'One-time' || subtype === 'Basic' || subtype === undefined}
+					{#if subtype === 'One-time' || subtype === 'Basic' || subtype === null}
 						<div class="absolute top-1/2 lg:right-[250px]">
 							<h1 class="text-lg font-semibold dark:text-stone-800">
 								Subscribe to a business plan or higher
@@ -219,7 +219,7 @@
 				<Card.Content class="relative">
 					<div
 						class={[
-							subtype === undefined ? 'pointer-events-none blur-md' : '',
+							subtype === null ? 'pointer-events-none blur-md' : '',
 							'w-full rounded border p-4 lg:h-[350px]'
 						]}
 					>
@@ -239,7 +239,7 @@
 							cRange={quantize(interpolateOranges, 20)}
 						/>
 					</div>
-					{#if subtype === undefined}
+					{#if subtype === null}
 						<div class="absolute top-1/2 lg:right-[250px]">
 							<h1 class="text-lg font-semibold dark:text-foreground">
 								Subscribe to a plan to view
@@ -263,7 +263,7 @@
 					<div
 						class={[
 							variable[ix] && printstate ? 'max-w-[800px]' : '',
-							subtype === undefined ? 'pointer-events-none blur-md' : '',
+							subtype === null ? 'pointer-events-none blur-md' : '',
 							'mb-3 h-96 rounded border p-4'
 						]}
 					>
@@ -280,7 +280,7 @@
 							legend
 						/>
 					</div>
-					{#if subtype === undefined}
+					{#if subtype === null}
 						<div class="absolute left-24 top-1/3 lg:left-[600px]">
 							<h1 class="text-lg font-semibold dark:text-foreground">
 								Subscribe to a plan to view

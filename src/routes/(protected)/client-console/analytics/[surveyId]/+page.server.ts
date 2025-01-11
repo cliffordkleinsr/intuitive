@@ -1,10 +1,12 @@
 import { db } from '$lib/server/db';
-import { sql, count, asc, desc, countDistinct } from 'drizzle-orm';
+import { sql, count, asc, desc, countDistinct, eq } from 'drizzle-orm';
 import type { PageServerLoad } from './$types';
 import {
 	agentData,
 	agentSurveysTable,
 	AnswersTable,
+	clientData,
+	clientPackages,
 	surveyqnsTableV2,
 	UsersTable
 } from '$lib/server/db/schema';
@@ -144,7 +146,8 @@ export const load: PageServerLoad = async ({ locals: { user }, params: { surveyI
 		gender_analytics,
 		sector_analytics,
 		county_analytics,
-		raw_analytics
+		raw_analytics,
+		[subscription]
 	] = await Promise.all([
 		db
 			.select({
@@ -231,19 +234,26 @@ export const load: PageServerLoad = async ({ locals: { user }, params: { surveyI
 				AnswersTable.answer,
 				AnswersTable.rankId
 			)
-			.orderBy(asc(surveyqnsTableV2.updatedAt))
+			.orderBy(asc(surveyqnsTableV2.updatedAt)),
+		db
+			.select({
+				subtype: clientPackages.packageDesc
+			})
+			.from(clientData)
+			.leftJoin(clientPackages, eq(clientData.packageid, clientPackages.packageid))
+			.where(eq(clientData.clientId, usr))
 	]);
 	const analytics = await unionAll(rest, rank_analytics).orderBy(
 		asc(answerCounts.updated),
 		asc(rank_stats.updated)
 	);
-
 	return {
 		cumulative_analytics,
 		gender_analytics,
 		sector_analytics,
 		county_analytics,
 		analytics,
-		raw: csvFormat(raw_analytics)
+		raw: csvFormat(raw_analytics),
+		subscription
 	};
 };

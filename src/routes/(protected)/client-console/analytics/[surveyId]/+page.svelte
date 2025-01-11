@@ -9,7 +9,8 @@
 		sector_analytics,
 		county_analytics,
 		analytics,
-		raw
+		raw,
+		subscription: { subtype }
 	} = data;
 </script>
 
@@ -20,5 +21,6 @@
 	{analytics}
 	county={county_analytics}
 	{raw}
+	{subtype}
 />
 <!-- <MapTile /> -->
