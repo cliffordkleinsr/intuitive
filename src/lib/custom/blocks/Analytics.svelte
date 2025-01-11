@@ -14,38 +14,16 @@
 	import UnfoldVertical from 'lucide-svelte/icons/unfold-vertical';
 	import FileText from 'lucide-svelte/icons/file-text';
 	import { toast } from 'svelte-sonner';
+	import type { GenAnalytics, SecAnalytics, LocAnalytics, Analytics } from '$lib/types';
 
-	interface GenAnalytics {
-		gender: string;
-		count: number;
-	}
-	interface SecAnalytics {
-		sector: string;
-		count: number;
-	}
-	interface LocAnalytics {
-		county: string;
-		value: number;
-	}
-
-	interface AnsStats {
-		count: number;
-		answer: string;
-		rank?: string;
-		percentage: number;
-	}
-	interface Analytics {
-		question: string;
-		question_type: string;
-		answer_statistics: AnsStats[];
-	}
 	let {
 		total_responses,
 		gender,
 		sector,
 		county,
 		analytics,
-		raw
+		raw,
+		subtype
 	}: {
 		total_responses: number;
 		gender: GenAnalytics[];
@@ -53,6 +31,7 @@
 		county: LocAnalytics[];
 		analytics: Analytics[];
 		raw: string;
+		subtype?: string;
 	} = $props();
 
 	// let open = $state<boolean>(false);
@@ -143,11 +122,15 @@
 						<Button
 							variant="secondary"
 							onclick={() => {
-								variable = variable.map((x) => (x = !x));
-								printstate = !printstate;
-								setTimeout(() => {
-									total_responses > 0 ? window.print() : toast.info('There is no data to print');
-								}, 50);
+								if (subtype === undefined) {
+									toast.warning('Subscribe to a plan to complete this action');
+								} else {
+									variable = variable.map((x) => (x = !x));
+									printstate = !printstate;
+									setTimeout(() => {
+										total_responses > 0 ? window.print() : toast.info('There is no data to print');
+									}, 50);
+								}
 							}}
 							size="sm"
 						>
@@ -157,7 +140,11 @@
 							variant="secondary"
 							size="sm"
 							onclick={() => {
-								exportRaw(raw);
+								if (subtype === 'Premium Business') {
+									exportRaw(raw);
+								} else {
+									toast.warning('Subscribe to a Premium Business plan to complete this action');
+								}
 							}}
 						>
 							Export Raw <Download />
@@ -170,10 +157,24 @@
 					<Card.Title class="text-2xl">Geographical Distribution</Card.Title>
 					<Card.Description>Responses by County</Card.Description>
 				</Card.Header>
-				<Card.Content>
-					<div class="h-[600px]">
+				<Card.Content class="relative">
+					<div
+						class={[
+							subtype === 'Standard Business' || subtype === 'Premium Business'
+								? ''
+								: 'pointer-events-none blur-md',
+							'h-[600px]'
+						]}
+					>
 						<CakeMap geoObject={counties} locale_analytics={county} />
 					</div>
+					{#if subtype === 'One-time' || subtype === 'Basic' || subtype === undefined}
+						<div class="absolute top-1/2 lg:right-[250px]">
+							<h1 class="text-lg font-semibold dark:text-stone-800">
+								Subscribe to a business plan or higher
+							</h1>
+						</div>
+					{/if}
 					<!-- <MapTile /> -->
 				</Card.Content>
 			</Card.Root>
@@ -215,8 +216,13 @@
 					<Card.Title>Response Distribution</Card.Title>
 					<Card.Description>Share of responses by sector</Card.Description>
 				</Card.Header>
-				<Card.Content>
-					<div class="w-full rounded border p-4 lg:h-[350px]">
+				<Card.Content class="relative">
+					<div
+						class={[
+							subtype === undefined ? 'pointer-events-none blur-md' : '',
+							'w-full rounded border p-4 lg:h-[350px]'
+						]}
+					>
 						<PieChart
 							data={sector}
 							key="sector"
@@ -233,6 +239,13 @@
 							cRange={quantize(interpolateOranges, 20)}
 						/>
 					</div>
+					{#if subtype === undefined}
+						<div class="absolute top-1/2 lg:right-[250px]">
+							<h1 class="text-lg font-semibold dark:text-foreground">
+								Subscribe to a plan to view
+							</h1>
+						</div>
+					{/if}
 				</Card.Content>
 			</Card.Root>
 		</div>
@@ -245,10 +258,14 @@
 					<span>{ix + 1}.</span> {statistic.question}</Card.Description
 				>
 			</Card.Header>
-			<Card.Content class="overflow-x-auto">
+			<Card.Content class="relative overflow-x-auto">
 				{#if statistic.question_type === 'Ranking'}
 					<div
-						class="h-96 p-4 {variable[ix] && printstate ? 'max-w-[800px]' : ''} mb-3 rounded border"
+						class={[
+							variable[ix] && printstate ? 'max-w-[800px]' : '',
+							subtype === undefined ? 'pointer-events-none blur-md' : '',
+							'mb-3 h-96 rounded border p-4'
+						]}
 					>
 						<BarChart
 							data={processedData}
@@ -263,6 +280,13 @@
 							legend
 						/>
 					</div>
+					{#if subtype === undefined}
+						<div class="absolute left-24 top-1/3 lg:left-[600px]">
+							<h1 class="text-lg font-semibold dark:text-foreground">
+								Subscribe to a plan to view
+							</h1>
+						</div>
+					{/if}
 				{/if}
 				<!-- Add horizontal scroll only if needed -->
 				{#if statistic.question_type === 'Single' || statistic.question_type === 'Ranking'}

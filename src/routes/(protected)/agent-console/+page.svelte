@@ -1,27 +1,17 @@
 <script lang="ts">
 	import { page } from '$app/state';
-	import Pretoast from '$lib/custom/blocks/pretoast.svelte';
 	import { Button } from '$lib/components/ui/button';
 	import { sineInOut } from 'svelte/easing';
 	import { fade } from 'svelte/transition';
 	import * as Card from '$lib/components/ui/card';
 	import ArrowUpRight from 'lucide-svelte/icons/arrow-up-right';
-	// custom param message
-	let msg = $state<string>();
-	let visible = $state(true);
+
 	let { data } = $props();
 
 	const { history, total_points, total_paid, total_payable, complete, pending, payouts } = data;
-
-	setTimeout(() => {
-		visible = false;
-	}, 2000);
-
 	function formatter(val: Date) {
 		return 'Week of\n' + new Date(val).toLocaleDateString();
 	}
-
-	let message = $derived(page.url.searchParams.get('notification') ?? '');
 
 	let taken = $state<any[]>([]);
 	let count = $state<any[]>([]);
@@ -31,11 +21,6 @@
 	}
 </script>
 
-{#if visible && msg}
-	<div transition:fade={{ delay: 200, duration: 300, easing: sineInOut }}>
-		<Pretoast {message} type="warning" />
-	</div>
-{/if}
 <div class="m-4 mt-2 grid gap-10">
 	<div class="mx-auto grid w-full gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-3">
 		<Card.Root class="space-y-5 sm:col-span-1">

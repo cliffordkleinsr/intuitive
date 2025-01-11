@@ -78,7 +78,7 @@ interface MpesaTimeoutResult {
 		ConversationID: string;
 	};
 }
-// interdace for transaction
+// interface for transaction
 interface Confirmation {
 	TransactionType: string;
 	TransID: string;
@@ -95,6 +95,31 @@ interface Confirmation {
 	LastName: string;
 }
 
+interface GenAnalytics {
+	gender: string;
+	count: number;
+}
+interface SecAnalytics {
+	sector: string;
+	count: number;
+}
+interface LocAnalytics {
+	county: string;
+	value: number;
+}
+
+interface AnsStats {
+	count: number;
+	answer: string;
+	rank?: string;
+	percentage: number;
+}
+interface Analytics {
+	question: string;
+	question_type: string;
+	answer_statistics: AnsStats[];
+}
+
 export type {
 	SurveyData,
 	Agent,
@@ -104,5 +129,10 @@ export type {
 	C2BURLs,
 	MpesaB2CResult,
 	MpesaTimeoutResult,
-	Confirmation
+	Confirmation,
+	GenAnalytics,
+	SecAnalytics,
+	LocAnalytics,
+	AnsStats,
+	Analytics
 };
