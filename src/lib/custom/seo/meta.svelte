@@ -18,7 +18,7 @@
 	<meta name="robots" content="index, follow" />
 	<link
 		rel="icon"
-		href="https://res.cloudinary.com/dmy8yp9el/image/upload/v1732875705/jikwt8fpsaznpcoxdywn.ico"
+		href="https://res.cloudinary.com/dmy8yp9el/image/upload/v1736759654/faviconb_zewoz3.ico"
 	/>
 	<link rel="canonical" href={base} />
 	{@html `
@@ -29,7 +29,7 @@
                 "url": "${base}",
                 "name": "${title} • int-insights.com",
                 "description": "${description}",
-				"logo": "https://res.cloudinary.com/dmy8yp9el/image/upload/v1732875705/jikwt8fpsaznpcoxdywn.ico"
+				"logo": "https://res.cloudinary.com/dmy8yp9el/image/upload/v1736759654/faviconb_zewoz3.ico"
             }
         </script>
     `}

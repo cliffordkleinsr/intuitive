@@ -212,7 +212,7 @@
 			data-sveltekit-reload
 			href="/about#address"
 			class={[
-				'text-muted-foreground transition-colors hover:text-primary py-5',
+				'py-5 text-muted-foreground transition-colors hover:text-primary',
 				buttonVariants({ variant: 'secondary', size: 'sm' })
 			]}
 		>

@@ -7,7 +7,7 @@ declare global {
 			session: import('$lib/server/auth').SessionValidationResult['session'];
 		}
 		interface PageData {
-			flash?: { type: 'success' | 'error' | 'info'; message: string };
+			flash?: { type: 'success' | 'error' | 'info' | 'warning'; message: string };
 		}
 		interface PageState {
 			profile: Agent;

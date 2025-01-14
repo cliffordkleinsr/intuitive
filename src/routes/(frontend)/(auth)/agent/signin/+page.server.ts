@@ -80,11 +80,26 @@ export const actions: Actions = {
 		if (!validPassword) {
 			return setError(form, 'password', 'Incorrect Password');
 		}
+		// external check
+		const [external] = await db
+			.select({
+				state: agentData.reset
+			})
+			.from(agentData)
+			.where(eq(agentData.email, email));
 
 		// create a session in the database
 		const session = await auth.createSession(existingUser.id);
 		setSessionTokenCookie(cookies, session.id, session.expiresAt);
 
+		if (external.state) {
+			redirect(
+				303,
+				'/agent/reset',
+				{ type: 'warning', message: 'Reset your password before proceeding' },
+				cookies
+			);
+		}
 		const redirectTo = url.searchParams.get('redirectTo');
 		if (redirectTo) {
 			redirect(

@@ -4,8 +4,8 @@
 	import { toast } from 'svelte-sonner';
 	import { Toaster } from '$lib/components/ui/sonner';
 	import { getFlash } from 'sveltekit-flash-message';
-	import { page } from '$app/stores';
-	import { navigating } from '$app/stores';
+	import { page } from '$app/state';
+	import { navigating } from '$app/state';
 	import Clockloader from '$lib/custom/blocks/spinner/Clockloader.svelte';
 
 	const flash = getFlash(page);
@@ -21,6 +21,8 @@
 					break;
 				case 'info':
 					toast.info($flash.message);
+				case 'warning':
+					toast.warning($flash.message);
 			}
 			$flash = undefined;
 		}
@@ -30,7 +32,7 @@
 
 <ModeWatcher />
 <Toaster position="top-right" richColors />
-{#if $navigating}
+{#if navigating.to}
 	<div class="flex min-h-screen flex-col items-center justify-center">
 		<div class="mb-8">
 			<Clockloader size="60" color="#FF3E00" unit="px" duration="5s" />

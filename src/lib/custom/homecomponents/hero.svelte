@@ -8,7 +8,7 @@
 >
 	<div class="relative z-10">
 		<div class="mx-auto max-w-[85rem] px-4 py-10 sm:px-6 lg:px-8 lg:py-16">
-			<div class="mx-auto max-w-screen-xl text-start lg:py-40">
+			<div class="mx-auto max-w-screen-xl text-start lg:py-36">
 				<!-- Title -->
 				<div class="mt-5 max-w-3xl space-y-1">
 					<h1

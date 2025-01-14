@@ -56,17 +56,19 @@ export const agentData = pgTable('agent_data', {
 		.references(() => UsersTable.email)
 		.notNull(),
 	phone: text('phone').notNull(),
-	dateofbirth: text('dob').notNull(),
-	county: text('county').notNull(),
-	subcounty: text('subcounty').notNull().default('Starehe'),
-	income: text('income').notNull(),
-	employment: text('employment').notNull(),
-	education: text('education').notNull(),
-	sector: text('sector').notNull(),
+	dateofbirth: text('dob'), //.notNull(),
+	county: text('county'), //.notNull(),
+	subcounty: text('subcounty'), //.notNull().default('Starehe'),
+	income: text('income'), //.notNull(),
+	employment: text('employment'), //.notNull(),
+	education: text('education'), //.notNull(),
+	sector: text('sector'), //.notNull(),
 	// additional
 	total_pts_earned: integer('total_pts_earned').notNull().default(0),
 	total_pts_paid: integer('total_pts_paid').notNull().default(0),
-	total_points_payable: integer('total_points_payable').notNull().default(0)
+	total_points_payable: integer('total_points_payable').notNull().default(0),
+	external: boolean().default(false).notNull(),
+	reset: boolean().default(false).notNull()
 });
 
 export const clientData = pgTable('client_data', {
@@ -187,11 +189,12 @@ export const progressTable = pgTable('agent_progress_table', {
 });
 
 export const agentSurveysTable = pgTable('agent_surv_table', {
-	agentid: text('agent_id').references(() => UsersTable.id),
-	surveyid: text('surveyid').references(() => SurveyTable.surveyid),
+	agentid: text('agent_id').notNull(),
+	surveyid: text('surveyid')
+		.references(() => SurveyTable.surveyid)
+		.notNull(),
 	survey_completed: boolean('survey_completed').notNull().default(false),
-	points: integer('points_earned').notNull(),
-	extagent: boolean('ext_agent').default(false)
+	points: integer('points_earned').notNull()
 });
 
 // One and the same

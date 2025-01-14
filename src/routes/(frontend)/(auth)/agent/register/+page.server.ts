@@ -118,20 +118,20 @@ export const actions: Actions = {
 				sector: sector as string
 			});
 
-			const extagent = url.searchParams.get('external');
+			// const extagent = url.searchParams.get('external');
 
-			if (extagent) {
-				const total_qns = await db
-					.select()
-					.from(surveyqnsTableV2)
-					.where(eq(surveyqnsTableV2.surveid, extagent));
-				await db.insert(agentSurveysTable).values({
-					agentid: userid,
-					surveyid: extagent,
-					points: total_qns.length,
-					extagent: true
-				});
-			}
+			// if (extagent) {
+			// 	const total_qns = await db
+			// 		.select()
+			// 		.from(surveyqnsTableV2)
+			// 		.where(eq(surveyqnsTableV2.surveid, extagent));
+			// 	await db.insert(agentSurveysTable).values({
+			// 		agentid: userid,
+			// 		surveyid: extagent,
+			// 		points: total_qns.length,
+			// 		extagent: true
+			// 	});
+			// }
 			if (validate) {
 				// SMSVerification
 				const foramtted = '+254' + phoneno.slice(1);

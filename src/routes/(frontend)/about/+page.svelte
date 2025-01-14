@@ -156,7 +156,7 @@
 				></iframe>
 			</div>
 			<div class="grid gap-8 md:grid-cols-2">
-				<div class="rounded-lg bg-white p-6 shadow-md">
+				<div class="rounded-lg p-6 shadow-md">
 					<h2 class="mb-4 text-2xl font-semibold">Our Address</h2>
 					<div class="mb-4 flex items-start">
 						<MapPin class="mr-2 mt-1 flex-shrink-0 text-gray-500" />
@@ -176,7 +176,7 @@
 					</div>
 				</div>
 
-				<div class="rounded-lg bg-white p-6 shadow-md">
+				<div class="rounded-lg p-6 shadow-md">
 					<h2 class="mb-4 text-2xl font-semibold">Business Hours</h2>
 					<ul class="space-y-2">
 						<li><span class="font-semibold">Monday - Friday:</span> 9:00 AM - 4:00 PM</li>
