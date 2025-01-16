@@ -16,7 +16,7 @@
 	} from '../super_schema';
 	// sonner
 	import { toast } from 'svelte-sonner';
-	import { LikertComposition } from '../../composition';
+	import { LikertComposition } from '../../question_composition';
 
 	let {
 		data,

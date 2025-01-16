@@ -11,7 +11,7 @@
 	// lucide
 	import Undo2 from 'lucide-svelte/icons/undo-2';
 	import { capitalizeFirstLetter } from '$lib/custom/functions/helpers';
-	import { PresetRanker, StarComponent } from '$lib/custom/blocks/composition';
+	import { PresetRanker, StarComponent } from '$lib/custom/blocks/question_composition';
 
 	let { data }: { data: PageData } = $props();
 	const { questions } = data;

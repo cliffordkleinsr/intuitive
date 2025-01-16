@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { LiveQuest } from '$lib/custom/blocks/composition';
+	import { LiveQuest } from '$lib/custom/blocks/question_composition';
 	import type { PageData } from './$types';
 
 	let { data, form }: { data: PageData; form: any | undefined } = $props();

@@ -1,4 +1,4 @@
-export * as composition from './composition';
+export * as composition from './question_composition';
 export * as spinner from './spinner';
 export { default as Clock } from './clock.svelte';
 export { default as QuestionType } from './questiontype.svelte';

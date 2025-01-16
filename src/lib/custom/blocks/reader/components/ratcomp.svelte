@@ -8,7 +8,7 @@
 
 	// lucide
 	import CheckCheck from 'lucide-svelte/icons/check-check';
-	import { StarComponent } from '../../composition';
+	import { StarComponent } from '../../question_composition';
 	import Input from '$lib/components/ui/input/input.svelte';
 
 	let {

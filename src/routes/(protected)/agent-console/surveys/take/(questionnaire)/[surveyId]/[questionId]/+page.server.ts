@@ -1,7 +1,7 @@
 import { message, superValidate } from 'sveltekit-superforms';
 import type { Actions, PageServerLoad } from './$types';
 import { zod } from 'sveltekit-superforms/adapters';
-import { openEndedSchema } from '$lib/custom/blocks/reader';
+import { openEndedSchema } from '$lib/custom/blocks/client/reader';
 import {
 	getpersistentIx,
 	getsurveyQuestions,
@@ -22,7 +22,7 @@ import {
 	multipleSchema,
 	rankBuilder,
 	ratingSchema
-} from '$lib/custom/blocks/reader/super_schema';
+} from '$lib/custom/blocks/client/reader/super_schema';
 import { RedoIcon } from 'lucide-svelte';
 import { handleLoginRedirect } from '$lib/custom/functions/helpers';
 export const load: PageServerLoad = async ({ params, cookies, locals: { user }, url }) => {

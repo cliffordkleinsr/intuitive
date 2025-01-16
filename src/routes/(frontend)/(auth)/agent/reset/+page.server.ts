@@ -27,7 +27,7 @@ export const actions: Actions = {
 
 		let { password, county, subctys, income, employment, education, sector, dateofbirth } =
 			form.data;
-
+		// console.log(form)
 		try {
 			const hashPassword = await bcrypt.hash(password, 15);
 			const age = calculateAge(dateofbirth);

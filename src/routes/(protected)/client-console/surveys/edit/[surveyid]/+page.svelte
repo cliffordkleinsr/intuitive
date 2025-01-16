@@ -10,10 +10,10 @@
 	// lucide
 	import { QuestionType } from '$lib/custom/blocks/index';
 	import { capitalizeFirstLetter } from '$lib/custom/functions/helpers';
-	import RootQuest from '$lib/custom/blocks/composition/base/RootQuest.svelte';
-	import Portal from '$lib/custom/blocks/composition/base/Portal.svelte';
+	import RootQuest from '$lib/custom/blocks/question_composition/base/RootQuest.svelte';
+	import Portal from '$lib/custom/blocks/question_composition/base/Portal.svelte';
 	import ArrowUpRight from 'lucide-svelte/icons/arrow-up-right';
-	import { PreviewComp } from '$lib/custom/blocks/composition';
+	import { PreviewComp } from '$lib/custom/blocks/question_composition';
 	import { Trash2 } from 'lucide-svelte';
 	import { enhance } from '$app/forms';
 	import { invalidateAll } from '$app/navigation';

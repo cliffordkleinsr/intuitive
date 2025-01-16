@@ -4,7 +4,7 @@ import {
 	openEndedSchema,
 	rankBuilder,
 	ratingSchema
-} from '$lib/custom/blocks/reader/super_schema';
+} from '$lib/custom/blocks/client/reader/super_schema';
 import {
 	getsurveyQuestions,
 	handleSurveyProgressExt,

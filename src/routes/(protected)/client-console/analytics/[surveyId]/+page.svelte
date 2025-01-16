@@ -9,9 +9,10 @@
 		sector_analytics,
 		county_analytics,
 		analytics,
-		raw,
-		subscription: { subtype }
+		raw
+		// subscription: { subtype }
 	} = data;
+	let subtype = 'Premium Business';
 </script>
 
 <Analytics
