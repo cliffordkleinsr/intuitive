@@ -16,11 +16,11 @@ export const load: PageServerLoad = async ({ locals: { user } }) => {
 			processed: sql<Date>`${clientData.processed_at}::date`.as('processed'),
 			expires: sql<Date>`${clientData.expires_at}::date`.as('expires')
 		})
-		.from(SurveyTable)
-		.leftJoin(clientData, eq(SurveyTable.clientid, clientData.clientId))
+		.from(clientData)
+		.leftJoin(SurveyTable, eq(SurveyTable.clientid, clientData.clientId))
 		.where(
 			sql`
-				${SurveyTable.clientid} = ${user?.id}
+				${clientData.clientId} = ${user?.id}
 			`
 		)
 		.as('sq');
@@ -28,13 +28,20 @@ export const load: PageServerLoad = async ({ locals: { user } }) => {
 		.select({
 			id: sq.clientid,
 			surveys: sql<{ id: string; created: Date }[]>`
-			json_agg(
-				json_build_object(
-					'id', ${sq.id},
-					'created', ${sq.createdat}::date
+				COALESCE(
+					json_agg(
+						CASE 
+							WHEN ${sq.id} IS NOT NULL THEN
+								json_build_object(
+									'id', ${sq.id},
+									'created', ${sq.createdat}::date
+								)
+							ELSE NULL 
+						END
+					) FILTER (WHERE ${sq.id} IS NOT NULL),
+					'[]'
 				)
-			)
-		`,
+			`,
 			packagetype: sql<string>`
 		CASE
 				WHEN ${sq.typeid} = ${clientPackages.priceIdMn} THEN 'Monthly'

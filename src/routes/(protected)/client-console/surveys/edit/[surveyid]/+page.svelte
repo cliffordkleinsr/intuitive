@@ -81,7 +81,7 @@
 				<QuestionType />
 			</Card.Content>
 		</Card.Root>
-		<Portal {...portProps} class="max-w-xl overflow-y-auto lg:h-screen">
+		<Portal {...portProps} class="max-h-full max-w-xl overflow-y-auto">
 			{#snippet trigger()}
 				Preview Questions
 				<ArrowUpRight />
@@ -143,7 +143,7 @@
 						>
 							<Input type="text" value={qs.id} class="hidden" name="questionId" />
 							<Input type="text" value={qs.question_type} class="hidden" name="questionType" />
-							<Button class="w-full" type="submit" disabled={loading}>
+							<Button class="w-full" type="submit" disabled={loading} variant="destructive">
 								{#if loading}
 									<div class="flex gap-2">
 										<span

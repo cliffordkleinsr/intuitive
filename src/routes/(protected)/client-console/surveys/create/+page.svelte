@@ -20,7 +20,7 @@
 	let loading = $state(false);
 	const { survey_metrics, features } = data;
 
-	$inspect(survey_metrics.expires_at);
+	// $inspect(survey_metrics);
 	function isWithinCurrentMonth(dateString: string | number | Date) {
 		const date = new Date(dateString);
 		const now = new Date();

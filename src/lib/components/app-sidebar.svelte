@@ -40,7 +40,7 @@
 	const footerItems = [
 		{
 			title: 'Account',
-			url: `${url}/account`,
+			url: `${url}/subscription`,
 			icon: CircleUserRound
 		},
 		{

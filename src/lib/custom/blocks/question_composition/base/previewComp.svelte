@@ -14,9 +14,12 @@
 	import SlidersHorizontal from 'lucide-svelte/icons/sliders-horizontal';
 	import ChartColumnIncreasing from 'lucide-svelte/icons/chart-column-increasing';
 	import Webcam from 'lucide-svelte/icons/webcam';
+	import Split from 'lucide-svelte/icons/split';
 	// custom blocks
 	import LikertComposition from '../likertcomponent/LikertComposition.svelte';
 	import StarComponent from '../rating/StarComponent.svelte';
+	import * as Dialog from '$lib/components/ui/dialog/index.js';
+
 	import type { Snippet } from 'svelte';
 
 	interface Quest {
@@ -35,7 +38,7 @@
 	}: { index: number; qs: Quest; edits: Snippet; deletes: Snippet } = $props();
 </script>
 
-<div class="m-2 grid gap-2">
+<div class="mx-auto grid w-full max-w-xs gap-2">
 	<div class="flex gap-2">
 		<p class=" font-semibold">{index + 1}.</p>
 		<div class="py-1">
@@ -117,7 +120,29 @@
 	{:else}
 		<Input class="max-w-md" disabled />
 	{/if}
-	<div class="float-end gap-10">
+	<div class="float-end flex gap-2">
+		{#if qs.question_type === 'Optional' && qs.optionid.length === 2}
+			<AlertDialog.Root>
+				<AlertDialog.Trigger>
+					{#snippet child({ props })}
+						<Button {...props} variant="outline"><Split /></Button>
+					{/snippet}
+				</AlertDialog.Trigger>
+				<AlertDialog.Content>
+					<AlertDialog.Header>
+						<AlertDialog.Title>Are you absolutely sure?</AlertDialog.Title>
+						<AlertDialog.Description>
+							This action cannot be undone. This will permanently delete your account and remove
+							your data from our servers.
+						</AlertDialog.Description>
+					</AlertDialog.Header>
+					<AlertDialog.Footer>
+						<AlertDialog.Cancel>Cancel</AlertDialog.Cancel>
+						<AlertDialog.Action>Continue</AlertDialog.Action>
+					</AlertDialog.Footer>
+				</AlertDialog.Content>
+			</AlertDialog.Root>
+		{/if}
 		<AlertDialog.Root>
 			<AlertDialog.Trigger>
 				{#snippet child({ props })}

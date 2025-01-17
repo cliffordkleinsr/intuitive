@@ -31,7 +31,7 @@
 		},
 		{
 			label: 'Subscription',
-			href: '/client-console/account/plan'
+			href: '/client-console/subscription'
 		}
 	];
 	const ClientlayoutItems = {
