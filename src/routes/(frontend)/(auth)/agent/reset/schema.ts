@@ -20,6 +20,15 @@ export const resetSchema = z
 					message: 'You must be above the age of 18 to register'
 				}
 			),
+		phoneno: z
+			.string()
+			.min(10, { message: 'Phone number must be more equal to ten digits' })
+			.regex(
+				/^(?:(?:\+254)|0)?(?:(?:11[01])|(?:7(?:0[0-9]|1[0-9]|2[0-9]|4[0-3]|4[5-6]|48|5[7-9]|6[8-9]|9[0-9])))[0-9]{6}$/gm,
+				{
+					message: 'Must be a valid Safaricom phone number'
+				}
+			),
 		county: z.enum(counties.map((f) => f.name) as [Counties, ...Counties[]], {
 			errorMap: () => ({ message: 'Please select a valid County.' })
 		}),
@@ -42,6 +51,7 @@ export const resetSchema = z
 			})
 			.min(2, { message: 'Must be a Education Bracket.' }),
 		sector: z.string().optional(),
+		referal: z.string().optional(),
 		// .default("Select a Sector"),
 		password: z
 			.string({ required_error: 'Password is required' })

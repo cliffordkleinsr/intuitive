@@ -132,7 +132,9 @@
 				<AlertDialog.Content>
 					<!-- <form action="" method="post"> -->
 					<AlertDialog.Header>
-						<AlertDialog.Title>All the rules on the questions are evaluated in order from top to bottom</AlertDialog.Title>
+						<AlertDialog.Title
+							>All the rules on the questions are evaluated in order from top to bottom</AlertDialog.Title
+						>
 						<AlertDialog.Description>
 							{@render branching?.()}
 						</AlertDialog.Description>
@@ -145,7 +147,7 @@
 							{/snippet}
 						</AlertDialog.Action>
 					</AlertDialog.Footer>
-				<!-- </form> -->
+					<!-- </form> -->
 				</AlertDialog.Content>
 			</AlertDialog.Root>
 		{/if}

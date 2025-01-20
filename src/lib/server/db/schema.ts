@@ -68,7 +68,8 @@ export const agentData = pgTable('agent_data', {
 	total_pts_paid: integer('total_pts_paid').notNull().default(0),
 	total_points_payable: integer('total_points_payable').notNull().default(0),
 	external: boolean().default(false).notNull(),
-	reset: boolean().default(false).notNull()
+	reset: boolean().default(false).notNull(),
+	referall_by: text()
 });
 
 export const clientData = pgTable('client_data', {

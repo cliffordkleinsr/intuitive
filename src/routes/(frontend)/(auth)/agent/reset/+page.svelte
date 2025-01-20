@@ -56,15 +56,31 @@
 			</Card.Header>
 			<Card.Content>
 				<div class="grid gap-2">
-					<Form.Field {form} name="dateofbirth">
-						<Form.Control>
-							{#snippet children({ props })}
-								<Form.Label>Date of Birth</Form.Label>
-								<Input {...props} type="date" bind:value={$formData.dateofbirth} />
-							{/snippet}
-						</Form.Control>
-						<Form.FieldErrors />
-					</Form.Field>
+					<div class="grid gap-2 md:grid-cols-2">
+						<Form.Field {form} name="dateofbirth">
+							<Form.Control>
+								{#snippet children({ props })}
+									<Form.Label>Date of Birth</Form.Label>
+									<Input {...props} type="date" bind:value={$formData.dateofbirth} />
+								{/snippet}
+							</Form.Control>
+							<Form.FieldErrors />
+						</Form.Field>
+						<Form.Field {form} name="phoneno">
+							<Form.Control>
+								{#snippet children({ props })}
+									<Form.Label>Phone number</Form.Label>
+									<Input
+										{...props}
+										bind:value={$formData.phoneno}
+										placeholder="Add a safaricom number"
+									/>
+								{/snippet}
+							</Form.Control>
+							<Form.FieldErrors />
+						</Form.Field>
+					</div>
+
 					<div class="grid gap-4 md:grid-cols-2">
 						<Form.Field {form} name="county" class="grid gap-2">
 							<Popover.Root bind:open>
@@ -157,7 +173,6 @@
 							</Form.Control>
 							<Form.FieldErrors />
 						</Form.Field>
-
 						<Form.Field {form} name="employment">
 							<Form.Control>
 								{#snippet children({ props })}
@@ -178,6 +193,19 @@
 							<Form.FieldErrors />
 						</Form.Field>
 					</div>
+					<Form.Field {form} name="referal">
+						<Form.Control>
+							{#snippet children({ props })}
+								<Form.Label>Referral</Form.Label>
+								<Input
+									{...props}
+									bind:value={$formData.referal}
+									placeholder="Specify who referred you"
+								/>
+							{/snippet}
+						</Form.Control>
+						<Form.FieldErrors />
+					</Form.Field>
 					<Form.Field {form} name="education" class="w-76">
 						<Form.Control>
 							{#snippet children({ props })}

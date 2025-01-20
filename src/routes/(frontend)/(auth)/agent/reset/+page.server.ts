@@ -26,41 +26,43 @@ export const actions: Actions = {
 			});
 		}
 
-		let { password, county, subctys, income, employment, education, sector, dateofbirth } =
+		let { password, county, subctys, income, employment, education, referal, sector, dateofbirth } =
 			form.data;
 		// console.log(form)
 		try {
 			const hashPassword = await bcrypt.hash(password, 15);
 			const age = calculateAge(dateofbirth);
-
 			await Promise.all([
-				db.update(UsersTable).set({
-					age,
-					password: hashPassword
-				}).from(UsersTable)
-				.where(eq(UsersTable.id, user?.id as string)),
-				db.update(agentData).set({
-					dateofbirth,
-					county,
-					subcounty: subctys,
-					sector,
-					income,
-					employment,
-					education,
-					reset: false
-				})
-				.from(agentData)
-				.where(eq(agentData.agentid, user?.id as string))
+				db
+					.update(UsersTable)
+					.set({
+						age,
+						password: hashPassword
+					})
+					.where(eq(UsersTable.id, user?.id as string)),
+				db
+					.update(agentData)
+					.set({
+						dateofbirth,
+						county,
+						subcounty: subctys,
+						sector,
+						income,
+						employment,
+						education,
+						referall_by: referal,
+						reset: false
+					})
+					.where(eq(agentData.agentid, user?.id as string))
 			]);
-
-			redirect(
-				303,
-				'/agent-console',
-				{ type: 'success', message: 'Details recorded succesfully' },
-				cookies
-			);
 		} catch (err) {
 			console.error(err);
 		}
+		redirect(
+			303,
+			'/agent-console',
+			{ type: 'success', message: 'Details recorded succesfully' },
+			cookies
+		);
 	}
 };
