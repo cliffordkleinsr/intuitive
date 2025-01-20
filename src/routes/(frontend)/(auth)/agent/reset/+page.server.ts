@@ -7,6 +7,7 @@ import { agentData, UsersTable } from '$lib/server/db/schema';
 import { calculateAge } from '$lib/custom/functions/helpers';
 import bcrypt from 'bcrypt';
 import { redirect } from 'sveltekit-flash-message/server';
+import { eq } from 'drizzle-orm';
 export const load = (async () => {
 	return {
 		form: await superValidate(zod(resetSchema))
@@ -36,7 +37,8 @@ export const actions: Actions = {
 				db.update(UsersTable).set({
 					age,
 					password: hashPassword
-				}),
+				}).from(UsersTable)
+				.where(eq(UsersTable.id, user?.id as string)),
 				db.update(agentData).set({
 					dateofbirth,
 					county,
@@ -47,6 +49,8 @@ export const actions: Actions = {
 					education,
 					reset: false
 				})
+				.from(agentData)
+				.where(eq(agentData.agentid, user?.id as string))
 			]);
 
 			redirect(

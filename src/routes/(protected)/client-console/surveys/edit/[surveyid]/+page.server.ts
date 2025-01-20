@@ -39,7 +39,7 @@ export const load: PageServerLoad = async ({ params, locals: { user } }) => {
 		.where(eq(surveyqnsTableV2.surveid, params.surveyid))
 		.groupBy(surveyqnsTableV2.questionId, surveyqnsTableV2.question)
 		.orderBy(asc(surveyqnsTableV2.updatedAt));
-
+		// console.log(questions)
 	return {
 		surveydata: data,
 		surveyqns: questions

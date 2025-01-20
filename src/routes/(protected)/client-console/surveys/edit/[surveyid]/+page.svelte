@@ -18,7 +18,8 @@
 	import { enhance } from '$app/forms';
 	import { invalidateAll } from '$app/navigation';
 	import { toast } from 'svelte-sonner';
-
+	import * as Select from "$lib/components/ui/select"
+	
 	interface PageProps {
 		data: PageData;
 		form: any;
@@ -36,6 +37,15 @@
 	} = $derived(data);
 
 	let loading = $state(false);
+	let value = $state("");
+	const triggerContent = (id: string) => {
+			return data.surveyqns
+				.filter((e) => e.id === id)
+				.map((items) => items.options.map((option) => ({
+					label: option,
+					value: option
+				})))[0].find((f) => f.value === value)?.label ?? "Select an option";
+	}
 </script>
 
 <div class="m-3">
@@ -88,6 +98,27 @@
 			{/snippet}
 			{#each surveyqns as qs, index}
 				<PreviewComp {index} {qs}>
+					{#snippet branching()}
+					<div class="grid gap-2">
+						<div class="flex gap-1 max-w-sm">
+							<p>If answer at Q{index+1} </p>
+							<span> = </span>
+							<Select.Root type="single" bind:value>
+							  <Select.Trigger>
+								{triggerContent(qs.id)}
+							  </Select.Trigger>
+							  <Select.Content>
+								{#each qs.options as option}
+									<Select.Item value={option}>{option}</Select.Item>
+								{/each}
+							  </Select.Content>
+							</Select.Root>
+						</div>
+						<div class="flex gap-1 max-w-sm">
+							<p>If answer at Q{index+1} </p>
+						</div>
+					</div>
+					{/snippet}
 					{#snippet edits()}
 						<form action="?/editSurvQns" method="post">
 							<AlertDialog.Footer>

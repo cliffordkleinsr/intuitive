@@ -34,8 +34,9 @@
 		index,
 		qs,
 		edits,
-		deletes
-	}: { index: number; qs: Quest; edits: Snippet; deletes: Snippet } = $props();
+		deletes,
+		branching
+	}: { index: number; qs: Quest; edits: Snippet; deletes: Snippet; branching?: Snippet } = $props();
 </script>
 
 <div class="mx-auto grid w-full max-w-xs gap-2">
@@ -121,7 +122,7 @@
 		<Input class="max-w-md" disabled />
 	{/if}
 	<div class="float-end flex gap-2">
-		{#if qs.question_type === 'Optional' && qs.optionid.length === 2}
+		{#if qs.question_type === 'Optional'}
 			<AlertDialog.Root>
 				<AlertDialog.Trigger>
 					{#snippet child({ props })}
@@ -129,17 +130,22 @@
 					{/snippet}
 				</AlertDialog.Trigger>
 				<AlertDialog.Content>
+					<!-- <form action="" method="post"> -->
 					<AlertDialog.Header>
-						<AlertDialog.Title>Are you absolutely sure?</AlertDialog.Title>
+						<AlertDialog.Title>All the rules on the questions are evaluated in order from top to bottom</AlertDialog.Title>
 						<AlertDialog.Description>
-							This action cannot be undone. This will permanently delete your account and remove
-							your data from our servers.
+							{@render branching?.()}
 						</AlertDialog.Description>
 					</AlertDialog.Header>
 					<AlertDialog.Footer>
 						<AlertDialog.Cancel>Cancel</AlertDialog.Cancel>
-						<AlertDialog.Action>Continue</AlertDialog.Action>
+						<AlertDialog.Action>
+							{#snippet child({ props })}
+								<Button variant="secondary" {...props}>Save</Button>
+							{/snippet}
+						</AlertDialog.Action>
 					</AlertDialog.Footer>
+				<!-- </form> -->
 				</AlertDialog.Content>
 			</AlertDialog.Root>
 		{/if}
