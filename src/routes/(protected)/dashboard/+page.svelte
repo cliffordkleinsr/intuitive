@@ -1,0 +1,106 @@
+<script lang="ts">
+	import type { PageData } from './$types';
+	import * as Card from '$lib/components/ui/card';
+	import * as Table from '$lib/components/ui/table';
+	import { BarChart } from 'layerchart';
+
+	let { data }: { data: PageData } = $props();
+	const { survey_time, surveys, count } = data;
+
+	const responses = surveys.map((e) => e.responses);
+	const survey_count = surveys.map((e) => e.title).length;
+	const agents = surveys.map((e) => e.total);
+
+	const sumArray = (array: any[]) => array.reduce((a, b) => a + b, 0);
+</script>
+
+<div class="flex-1 space-y-4 p-8 pt-6">
+	<div class="flex items-center justify-between space-y-2">
+		<h2 class="text-3xl font-bold tracking-tight">Dashboard</h2>
+	</div>
+	<div class="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+		<Card.Root>
+			<Card.Header class="flex flex-row items-center justify-between space-y-0 pb-2">
+				<Card.Title class="text-sm font-medium">Total Surveys</Card.Title>
+			</Card.Header>
+			<Card.Content>
+				<div class="text-2xl font-bold">
+					{survey_count}
+				</div>
+			</Card.Content>
+		</Card.Root>
+		<!-- End -->
+		<Card.Root>
+			<Card.Header class="flex flex-row items-center justify-between space-y-0 pb-2">
+				<Card.Title class="text-sm font-medium">Total Responses</Card.Title>
+			</Card.Header>
+			<Card.Content>
+				<div class="text-2xl font-bold">{sumArray(responses)}</div>
+			</Card.Content>
+		</Card.Root>
+		<!-- End -->
+		<Card.Root>
+			<Card.Header class="flex flex-row items-center justify-between space-y-0 pb-2">
+				<Card.Title class="text-sm font-medium">Total Agents</Card.Title>
+			</Card.Header>
+			<Card.Content>
+				<div class="text-2xl font-bold">{sumArray(agents)}</div>
+			</Card.Content>
+		</Card.Root>
+		<!--  End -->
+		<Card.Root>
+			<Card.Header class="flex flex-row items-center justify-between space-y-0 pb-2">
+				<Card.Title class="text-sm font-medium">Active Surveys</Card.Title>
+			</Card.Header>
+			<Card.Content>
+				<div class="text-2xl font-bold">{count}</div>
+			</Card.Content>
+		</Card.Root>
+	</div>
+	<div class="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
+		<Card.Root class="col-span-4">
+			<Card.Header>
+				<Card.Title>Recent Surveys</Card.Title>
+				<Card.Description></Card.Description>
+			</Card.Header>
+			<Card.Content>
+				<Table.Root>
+					<Table.Header>
+						<Table.Row>
+							<Table.Head>Survey</Table.Head>
+							<Table.Head>Responses</Table.Head>
+							<Table.Head>Total Agents</Table.Head>
+						</Table.Row>
+					</Table.Header>
+					<Table.Body>
+						{#each surveys as survey}
+							<Table.Row>
+								<Table.Cell class="font-medium">{survey.title}</Table.Cell>
+								<Table.Cell>{survey.responses}</Table.Cell>
+								<Table.Cell>{survey.total}</Table.Cell>
+							</Table.Row>
+						{/each}
+					</Table.Body>
+				</Table.Root>
+			</Card.Content>
+		</Card.Root>
+		<Card.Root class="col-span-3">
+			<Card.Header>
+				<Card.Title>Surveys across time</Card.Title>
+			</Card.Header>
+			<Card.Content class="pl-2">
+				<div class="h-[300px] rounded border p-4">
+					<BarChart
+						data={survey_time}
+						padding={{ left: 60, bottom: 16 }}
+						x="time"
+						y="count"
+						props={{
+							bars: { class: 'fill-sky-400' }
+						}}
+					/>
+				</div>
+			</Card.Content>
+		</Card.Root>
+	</div>
+</div>
