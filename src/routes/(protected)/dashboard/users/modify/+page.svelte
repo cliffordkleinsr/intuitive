@@ -28,6 +28,9 @@
 			if (alertType === 'info') {
 				toast.info(alertText);
 			}
+			if (alertType === 'warning') {
+				toast.warning(alertText);
+			}
 		}
 	});
 

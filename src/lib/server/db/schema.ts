@@ -302,3 +302,4 @@ export type progresType = typeof progressTable.$inferInsert;
 
 export type Session = typeof sessionsTable.$inferSelect;
 export type User = typeof UsersTable.$inferSelect;
+export type Agent = typeof agentData.$inferSelect;
