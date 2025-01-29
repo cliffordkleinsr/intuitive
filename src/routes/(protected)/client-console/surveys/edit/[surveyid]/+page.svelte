@@ -19,6 +19,7 @@
 	import { invalidateAll } from '$app/navigation';
 	import { toast } from 'svelte-sonner';
 	import * as Select from '$lib/components/ui/select';
+	import Tree from '$lib/custom/blocks/d3tree/Tree.svelte';
 
 	interface PageProps {
 		data: PageData;
@@ -38,6 +39,7 @@
 
 	let loading = $state(false);
 	let value = $state('');
+	let visible = $state(false);
 	const triggerContent = (id: string) => {
 		return (
 			data.surveyqns
@@ -51,10 +53,11 @@
 				.find((f) => f.value === value)?.label ?? 'Select an option'
 		);
 	};
+	// $inspect(visible)
 </script>
 
 <div class="m-3">
-	<div class="mx-auto grid max-w-screen-md gap-4">
+	<div class="mx-auto grid max-w-screen-xl gap-4">
 		<!-- Survey Title -->
 		<h1 class="text-lg font-semibold">
 			Title: {capitalizeFirstLetter(surveydata.title.toLocaleLowerCase())}
@@ -63,39 +66,41 @@
 			<p><span class="font-semibold">Description:</span> {surveydata.desc}</p>
 		{/if}
 		<!-- Survey Questionnaire -->
-		<Card.Root class="space-y-3">
-			<Card.Header>
-				<Card.Title>Survey questions</Card.Title>
-				<Card.Description>
-					Add questions and select the type of answer to be given.
-				</Card.Description>
-			</Card.Header>
-			<Card.Content class="grid gap-3 lg:grid-cols-2">
-				{#if surveyqns.length === maxqns}
-					<div
-						class="rounded-lg border border-yellow-200 bg-yellow-100 p-4 text-sm text-yellow-800 dark:border-yellow-900 dark:bg-yellow-800/10 dark:text-yellow-500"
-						role="alert"
+		<div class="grid gap-2 md:grid-cols-2">
+			<Card.Root class="space-y-3">
+				<Card.Header>
+					<Card.Title>Survey questions</Card.Title>
+					<Card.Description>
+						Add questions and select the type of answer to be given.
+					</Card.Description>
+				</Card.Header>
+				<Card.Content class="grid gap-3 lg:grid-cols-2">
+					{#if surveyqns.length === maxqns}
+						<div
+							class="rounded-lg border border-yellow-200 bg-yellow-100 p-4 text-sm text-yellow-800 dark:border-yellow-900 dark:bg-yellow-800/10 dark:text-yellow-500"
+							role="alert"
+						>
+							<span class="font-bold">Warning</span> alert! You have exceeded the maximum available questions
+							for your plan
+						</div>
+					{:else}
+						<RootQuest {form} />
+					{/if}
+				</Card.Content>
+			</Card.Root>
+			<!-- Types of Questions  -->
+			<Card.Root>
+				<Card.Header>
+					<Card.Title>Types of questions</Card.Title>
+					<Card.Description
+						>Description on the types of questions that can be generated</Card.Description
 					>
-						<span class="font-bold">Warning</span> alert! You have exceeded the maximum available questions
-						for your plan
-					</div>
-				{:else}
-					<RootQuest {form} />
-				{/if}
-			</Card.Content>
-		</Card.Root>
-		<!-- Types of Questions  -->
-		<Card.Root>
-			<Card.Header>
-				<Card.Title>Types of questions</Card.Title>
-				<Card.Description
-					>Description on the types of questions that can be generated</Card.Description
-				>
-			</Card.Header>
-			<Card.Content class="grid gap-4 sm:grid-cols-2 lg:grid-cols-1 2xl:grid-cols-2">
-				<QuestionType />
-			</Card.Content>
-		</Card.Root>
+				</Card.Header>
+				<Card.Content class="grid gap-4 sm:grid-cols-2 lg:grid-cols-1 2xl:grid-cols-2">
+					<QuestionType />
+				</Card.Content>
+			</Card.Root>
+		</div>
 		<Portal {...portProps} class="max-h-full max-w-xl overflow-y-auto">
 			{#snippet trigger()}
 				Preview Questions
@@ -120,7 +125,7 @@
 								</Select.Root>
 							</div>
 							<div class="flex max-w-sm gap-1">
-								<p>If answer at Q{index + 1}</p>
+								<p>Then go to</p>
 							</div>
 						</div>
 					{/snippet}
@@ -197,6 +202,13 @@
 					{/snippet}
 				</PreviewComp>
 			{/each}
+		</Portal>
+		<Portal title="Logic Path" description="" class=" max-w-[90rem]">
+			{#snippet trigger()}
+				Preview logic path
+				<ArrowUpRight />
+			{/snippet}
+			<Tree />
 		</Portal>
 	</div>
 </div>

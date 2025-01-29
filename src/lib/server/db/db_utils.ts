@@ -1,4 +1,4 @@
-import { asc, eq, sql } from 'drizzle-orm';
+import { and, asc, eq, gt, sql } from 'drizzle-orm';
 import { db } from './index';
 
 import {
@@ -19,11 +19,13 @@ import {
 	progressTable,
 	agentSurveysTable,
 	payoutRequests,
-	type surveyGenerateSchema
+	type surveyGenerateSchema,
+	branchingRules
 } from './schema';
 import type { PgColumn, PgTable } from 'drizzle-orm/pg-core';
 import type { Cookies } from '@sveltejs/kit';
 import { redirect } from 'sveltekit-flash-message/server';
+import type { Question } from '$lib/types';
 
 export const deleteCUser = async (userid: string, surveyid: string) => {
 	await db.delete(surveyqnsTableV2).where(eq(surveyqnsTableV2.surveid, surveyid));
@@ -601,6 +603,53 @@ export const indexReset = (cookies: Cookies): void => {
 		maxAge: 0 // Expire the cookie immediately
 	});
 };
+
+// Function to get next question based on current answer
+export async function getNextQuestion(
+	currentQuestionId: string,
+	selectedOptionId: string | null,
+	surveyid: string,
+	currentat: Date
+): Promise<any | null> {
+	// If no option selected, get next question by updated_at
+	if (!selectedOptionId) {
+		const [next] = await db
+			.select()
+			.from(surveyqnsTableV2)
+			.where(
+				and(eq(surveyqnsTableV2.surveid, surveyid), gt(surveyqnsTableV2.updatedAt, currentat))
+			);
+		return next;
+	}
+
+	// Check if there's a branching rule for this option
+	const [branchingRule] = await db
+		.select()
+		.from(branchingRules)
+		.where(
+			and(
+				eq(branchingRules.questionId, currentQuestionId),
+				eq(branchingRules.selectedOptionId, selectedOptionId)
+			)
+		);
+
+	if (branchingRule) {
+		const [braqn] = await db
+			.select()
+			.from(surveyqnsTableV2)
+			.where(eq(surveyqnsTableV2.questionId, branchingRule.nextQuestionId));
+		return braqn;
+	}
+
+	// If no branching rule, fall back to next question by updated_at
+	const [neqns] = await db
+		.select()
+		.from(surveyqnsTableV2)
+		.where(
+			and(eq(surveyqnsTableV2.questionId, surveyid), gt(surveyqnsTableV2.updatedAt, currentat))
+		);
+	return neqns;
+}
 
 /**
  *  Redirects with condition

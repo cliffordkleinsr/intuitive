@@ -7,8 +7,8 @@
 	import { MediaQuery } from 'svelte/reactivity';
 
 	interface Shower {
-		class: string | null | undefined;
-		trigger: Snippet;
+		class?: string | null | undefined;
+		trigger?: Snippet;
 		title: string;
 		description?: string;
 		children?: Snippet;
@@ -28,9 +28,9 @@
 {#if isDesktop.current}
 	<Dialog.Root bind:open>
 		<Dialog.Trigger class={buttonVariants({ variant: 'outline' })}>
-			{@render trigger()}
+			{@render trigger?.()}
 		</Dialog.Trigger>
-		<Dialog.Content class={cn(classname)}>
+		<Dialog.Content class={classname}>
 			<Dialog.Header>
 				<Dialog.Title>
 					{title}
@@ -45,7 +45,7 @@
 {:else}
 	<Drawer.Root bind:open>
 		<Drawer.Trigger class={buttonVariants({ variant: 'outline' })}>
-			{@render trigger()}
+			{@render trigger?.()}
 		</Drawer.Trigger>
 		<Drawer.Content class={cn(classname)}>
 			<Drawer.Header class="text-left">

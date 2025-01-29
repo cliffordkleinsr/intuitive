@@ -120,6 +120,14 @@ interface Analytics {
 	answer_statistics: AnsStats[];
 }
 
+interface Question {
+	questionid: string;
+	surveyid: string;
+	question_type: 'Optional' | 'Single';
+	question: string;
+	likert_key?: string;
+	updated_at: string;
+}
 export type {
 	SurveyData,
 	Agent,
@@ -134,5 +142,6 @@ export type {
 	SecAnalytics,
 	LocAnalytics,
 	AnsStats,
-	Analytics
+	Analytics,
+	Question
 };

@@ -222,6 +222,25 @@ export const QuestionOptions = pgTable('question_options', {
 	option: text('option').notNull()
 });
 // ==============================================================
+// Create a table for branching rules
+export const branchingRules = pgTable('branching_rules', {
+	ruleId: uuid().primaryKey().defaultRandom().primaryKey().notNull(),
+	questionId: uuid()
+		.references(() => surveyqnsTableV2.questionId)
+		.notNull(),
+	selectedOptionId: uuid()
+		.references(() => QuestionOptions.optionId)
+		.notNull(),
+	nextQuestionId: uuid()
+		.references(() => surveyqnsTableV2.questionId)
+		.notNull(),
+	created_at: timestamp({
+		withTimezone: true,
+		mode: 'date'
+	})
+		.defaultNow()
+		.notNull()
+});
 
 export const AnswersTable = pgTable('answers', {
 	questionId: uuid('questionid')
