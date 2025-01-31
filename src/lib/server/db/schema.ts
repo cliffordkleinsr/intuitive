@@ -206,6 +206,12 @@ export const surveyqnsTableV2 = pgTable('survey_qns_optimum', {
 	questionT: text('question_type').default('Single').notNull(),
 	question: text('question').notNull(),
 	likertKey: text('likert_key'),
+	createdAt: timestamp('created_at', {
+		withTimezone: true,
+		mode: 'date'
+	})
+		.defaultNow()
+		.notNull(),
 	updatedAt: timestamp('updated_at', {
 		withTimezone: true,
 		mode: 'date'

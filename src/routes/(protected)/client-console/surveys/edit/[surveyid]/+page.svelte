@@ -38,22 +38,50 @@
 	} = $derived(data);
 
 	let loading = $state(false);
-	let value = $state('');
-	let visible = $state(false);
-	const triggerContent = (id: string) => {
+	// let value = $state('');
+	let question_context = {
+		get surveyqns() {
+			return surveyqns;
+		}
+	};
+	let optionValues = $state(
+		question_context.surveyqns.map((question) =>
+			question.options ? question.options.map(() => '') : []
+		)
+	);
+	// let visible = $state(false);
+	const triggerContent = (questionIndex: number, optionIndex: number) => {
 		return (
-			data.surveyqns
-				.filter((e) => e.id === id)
-				.map((items) =>
-					items.options.map((option) => ({
-						label: option,
-						value: option
-					}))
-				)[0]
-				.find((f) => f.value === value)?.label ?? 'Select an option'
+			surveyqns
+				.map((items) => ({
+					label: items.question,
+					value: items.question
+				}))
+				.find((f) => f.value === optionValues[questionIndex][optionIndex])?.label ??
+			'Select an option'
 		);
 	};
-	// $inspect(visible)
+
+	// let triggerContent = $derived(
+	// 	fruits.find((f) => f.value === value)?.label ?? "Select a fruit"
+	// )
+	// const triggerContent = (id?: string) => {
+	// 	return (
+	// 		data.surveyqns
+	// 			// .filter((e) => e.id === id)
+	// 			.map((items) => ({
+	// 				label: items.question,
+	// 				value: items.question
+	// 			})
+	// 				// items.options.map((option) => ({
+	// 				// 	label: option,
+	// 				// 	value: option
+	// 				// }))
+	// 			)//[0]
+	// 			.find((f) => f.value === value)?.label ?? 'Select an option'
+	// 	);
+	// };
+	// $inspect(optionValues)
 </script>
 
 <div class="m-3">
@@ -101,15 +129,40 @@
 				</Card.Content>
 			</Card.Root>
 		</div>
-		<Portal {...portProps} class="max-h-full max-w-xl overflow-y-auto">
+		<Portal {...portProps} class="max-h-full max-w-xl">
 			{#snippet trigger()}
 				Preview Questions
 				<ArrowUpRight />
 			{/snippet}
-			{#each surveyqns as qs, index}
-				<PreviewComp {index} {qs}>
-					{#snippet branching()}
-						<div class="grid gap-2">
+			<div class="overflow-auto">
+				{#each surveyqns as qs, index}
+					<PreviewComp {index} {qs}>
+						{#snippet branching()}
+							<div class="grid gap-2">
+								{#each qs.options as option, optionIndex}
+									<div class="flex max-w-sm gap-1">
+										<p>If answer at Q{index + 1}</p>
+										<span> = </span>
+										<p>{option}</p>
+									</div>
+									<div class="flex max-w-sm gap-1">
+										<p>Then go to</p>
+										<Select.Root type="single" bind:value={optionValues[index][optionIndex]}>
+											<Select.Trigger>
+												{triggerContent(index, optionIndex)}
+											</Select.Trigger>
+											<Select.Content>
+												{#each surveyqns as qns}
+													{#if new Date(qns.created_at) > new Date(qs.created_at)}
+														<Select.Item value={qns.question}>{qns.question}</Select.Item>
+													{/if}
+												{/each}
+											</Select.Content>
+										</Select.Root>
+									</div>
+								{/each}
+							</div>
+							<!-- <div class="grid gap-2">
 							<div class="flex max-w-sm gap-1">
 								<p>If answer at Q{index + 1}</p>
 								<span> = </span>
@@ -127,81 +180,82 @@
 							<div class="flex max-w-sm gap-1">
 								<p>Then go to</p>
 							</div>
-						</div>
-					{/snippet}
-					{#snippet edits()}
-						<form action="?/editSurvQns" method="post">
-							<AlertDialog.Footer>
-								<div class="grid w-full gap-2">
-									<Input type="text" value={qs.question} name="question" />
-									<Input type="text" value={qs.id} class="hidden" name="questionId" />
-									{#if qs.question_type === 'Optional' || qs.question_type === 'Multiple'}
-										<Label>Options</Label>
-										{#each qs.options as option, i}
-											{@const id = qs.optionid[i]}
-											{#if option != null}
-												<div class="flex gap-4">
-													<Input type="text" value={option} name="option" />
-													<Input type="text" value={id} name="optionId" class="hidden" />
-													<!-- svelte-ignore node_invalid_placement_ssr -->
-													<form action="?/deleteOpt" method="post">
+						</div> -->
+						{/snippet}
+						{#snippet edits()}
+							<form action="?/editSurvQns" method="post" use:enhance>
+								<AlertDialog.Footer>
+									<div class="grid w-full gap-2">
+										<Input type="text" value={qs.question} name="question" />
+										<Input type="text" value={qs.id} class="hidden" name="questionId" />
+										{#if qs.question_type === 'Optional' || qs.question_type === 'Multiple'}
+											<Label>Options</Label>
+											{#each qs.options as option, i}
+												{@const id = qs.optionid[i]}
+												{#if option != null}
+													<div class="flex gap-4">
+														<Input type="text" value={option} name="option" />
 														<Input type="text" value={id} name="optionId" class="hidden" />
-														<Button size="icon" variant="secondary" type="submit">
-															<Trash2 class="size-4 text-destructive" />
-														</Button>
-													</form>
-												</div>
-											{/if}
-										{/each}
-									{/if}
-									<AlertDialog.Cancel>Cancel</AlertDialog.Cancel>
-									<Button type="submit">Save</Button>
-								</div>
-
-								<!--<AlertDialog.Action>Continue</AlertDialog.Action> -->
-							</AlertDialog.Footer>
-						</form>
-					{/snippet}
-					{#snippet deletes()}
-						<form
-							action="?/deleteSurvQns"
-							method="post"
-							use:enhance={() => {
-								loading = true;
-								return async ({ result, update }) => {
-									if (result.type === 'success') {
-										loading = false;
-										await invalidateAll();
-
-										loading = false;
-										toast.success('Deleted Successfully');
-									} else {
-										loading = false;
-										await update();
-									}
-								};
-							}}
-						>
-							<Input type="text" value={qs.id} class="hidden" name="questionId" />
-							<Input type="text" value={qs.question_type} class="hidden" name="questionType" />
-							<Button class="w-full" type="submit" disabled={loading} variant="destructive">
-								{#if loading}
-									<div class="flex gap-2">
-										<span
-											class="inline-block size-4 animate-spin rounded-full border-[3px] border-current border-t-transparent text-white"
-											role="status"
-											aria-label="loading"
-										></span>
-										Loading...
+														<!-- svelte-ignore node_invalid_placement_ssr -->
+														<form action="?/deleteOpt" method="post">
+															<Input type="text" value={id} name="optionId" class="hidden" />
+															<Button size="icon" variant="secondary" type="submit">
+																<Trash2 class="size-4 text-destructive" />
+															</Button>
+														</form>
+													</div>
+												{/if}
+											{/each}
+										{/if}
+										<AlertDialog.Cancel>Cancel</AlertDialog.Cancel>
+										<Button type="submit">Save</Button>
 									</div>
-								{:else}
-									Continue
-								{/if}
-							</Button>
-						</form>
-					{/snippet}
-				</PreviewComp>
-			{/each}
+
+									<!--<AlertDialog.Action>Continue</AlertDialog.Action> -->
+								</AlertDialog.Footer>
+							</form>
+						{/snippet}
+						{#snippet deletes()}
+							<form
+								action="?/deleteSurvQns"
+								method="post"
+								use:enhance={() => {
+									loading = true;
+									return async ({ result, update }) => {
+										if (result.type === 'success') {
+											loading = false;
+											await invalidateAll();
+
+											loading = false;
+											toast.success('Deleted Successfully');
+										} else {
+											loading = false;
+											await update();
+										}
+									};
+								}}
+							>
+								<Input type="text" value={qs.id} class="hidden" name="questionId" />
+								<Input type="text" value={qs.question_type} class="hidden" name="questionType" />
+								<Button class="w-full" type="submit" disabled={loading} variant="destructive">
+									{#if loading}
+										<div class="flex gap-2">
+											<span
+												class="inline-block size-4 animate-spin rounded-full border-[3px] border-current border-t-transparent text-white"
+												role="status"
+												aria-label="loading"
+											></span>
+											Loading...
+										</div>
+									{:else}
+										Continue
+									{/if}
+								</Button>
+							</form>
+						{/snippet}
+					</PreviewComp>
+				{/each}
+			</div>
 		</Portal>
 		<Portal title="Logic Path" description="" class=" max-w-[90rem]">
 			{#snippet trigger()}

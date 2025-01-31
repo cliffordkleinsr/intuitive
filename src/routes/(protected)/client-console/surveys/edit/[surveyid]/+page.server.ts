@@ -32,13 +32,14 @@ export const load: PageServerLoad = async ({ params, locals: { user } }) => {
 			question_type: surveyqnsTableV2.questionT,
 			likert_key: sql<string>`${surveyqnsTableV2.likertKey}`,
 			optionid: sql<string[]>`ARRAY_AGG(${QuestionOptions.optionId}) AS optionid`,
-			options: sql<string[]>`ARRAY_AGG(${QuestionOptions.option}) AS options`
+			options: sql<string[]>`ARRAY_AGG(${QuestionOptions.option}) AS options`,
+			created_at: surveyqnsTableV2.createdAt
 		})
 		.from(surveyqnsTableV2)
 		.leftJoin(QuestionOptions, eq(surveyqnsTableV2.questionId, QuestionOptions.questionId))
 		.where(eq(surveyqnsTableV2.surveid, params.surveyid))
 		.groupBy(surveyqnsTableV2.questionId, surveyqnsTableV2.question)
-		.orderBy(asc(surveyqnsTableV2.updatedAt));
+		.orderBy(asc(surveyqnsTableV2.createdAt));
 	// console.log(questions)
 	return {
 		surveydata: data,
