@@ -1,78 +1,54 @@
 // import type { CartItems } from '$lib/custom/functions/helpers';
 
-export const cardList = [
+export const packageList = [
 	{
-		id: 'prod_QjUMG44vCFNGXO',
-		subtitles: 'Basic',
-		prices: '50',
+		id: '',
+		title: 'Basic',
+		one_pack: '50',
 		six_pack: '165',
 		ten_pack: '261',
 		comments: 'Ideal for individuals, small teams, or one-off feedback needs',
 		features: [
-			'Up to 2 surveys per month',
+			'4 question types',
 			'50 questions per survey',
 			'Up to 100 responses per survey',
-			'Email support.'
+			'Basic Analytics',
+			'Email support',
+			'Survey expires in 30 days'
 		]
 	},
 	{
-		id: 'prod_QTg6aK5zM7RlUw',
-		subtitles: 'Standard Business',
-		prices: '200',
-		offers: '180',
-		priceMn: 'price_1PcikKRpYHoLk6LSwn6RloI0',
-		priceYr: 'price_1PcikKRpYHoLk6LSiWl3cO16',
-		comments: 'Everything you need for a growing business',
+		id: '',
+		title: 'Premium',
+		one_pack: '99',
+		six_pack: '564',
+		ten_pack: '891',
+		comments: 'Ideal for Businesses, researchers, or marketers with the need for deeper insights.',
 		features: [
-			'Up to 4 surveys per month.',
-			'Up to 15 questions per survey.',
-			'Access to an expanded respondent pool (250 respondents per survey)',
-			'Advanced demographic segmentation (income, education level).',
-			'Analytics and reporting.',
-			'Email support.'
+			'6 question types',
+			'Unlimited no. of questions per survey',
+			'Unlimited responses per survey',
+			'Analytics with advanced demographic segmentation (income, education level)',
+			'Chat & Email support',
+			'Survey expires in 30 days'
 		]
 	},
 	{
-		id: 'prod_QTgA9EH6qo3dRu',
-		subtitles: 'Premium Business',
-		prices: '1200',
-		offers: '1080',
-		priceMn: 'price_1Ps1UARpYHoLk6LSTei2ionx',
-		priceYr: 'price_1Ps1UARpYHoLk6LSOaIVGyUe',
-		comments: 'Advanced features for scaling your business',
+		id: '',
+		title: 'Enterprise',
+		one_pack: '299',
+		six_pack: '299',
+		ten_pack: '3229',
+		comments: 'Ideal for large organizations, enterprises, or compliance-heavy industries.',
 		features: [
-			'Up to 6 surveys per month.',
-			'Up to 30 questions per survey.',
-			'Access to a large  respondent pool (500 respondents per survey)',
-			'Advanced demographic segmentation (income, education level).',
-			'Analytics and reporting.',
-			'On demand technical support.'
+			'6 question types',
+			'Unlimited no. of questions per survey',
+			'Unlimited responses per survey',
+			'Analytics with advanced demographic segmentation (income, education level, location, age).',
+			'API access + webhooks.',
+			'Branding/Logo options',
+			'On demand technical support.',
+			'survey expires in 90 days.'
 		]
-	},
-	{
-		id: 'N/A',
-		subtitles: 'Enterprise',
-		prices: 'Custom',
-		offers: 'Custom',
-		priceMn: 'N/A',
-		priceYr: 'N/A',
-		comments: 'Enterprise level needs',
-		features: ['Unlimited users', 'Unlimited Plan features', 'Unlimited Product support']
 	}
 ];
-
-export const otp = {
-	id: 'prod_QjUCV2u3waC96D',
-	subtitles: 'One-time',
-	prices: '30',
-	offers: '30',
-	priceMn: 'price_1Ps1ELRpYHoLk6LSjizQbL8q',
-	priceYr: 'price_1Ps1ELRpYHoLk6LSjizQbL8q',
-	comments: 'One time trial for platform features',
-	features: [
-		'One time survey',
-		'Up to 5 questions for the one time survey.',
-		'Access to a limited respondent pool (100 respondents per survey)',
-		'Email support.'
-	]
-};

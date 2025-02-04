@@ -5,7 +5,7 @@
 	import { Input } from '$lib/components/ui/input';
 	import * as Select from '$lib/components/ui/select';
 	// root
-	import Portal from './Portal.svelte';
+	import Portal from '../../Portals/Portal.svelte';
 	// lucide
 	import Webcam from 'lucide-svelte/icons/webcam';
 	import CheckCheck from 'lucide-svelte/icons/check-check';

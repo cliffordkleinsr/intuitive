@@ -4,7 +4,7 @@
 	import { Button } from '$lib/components/ui/button';
 	import { Switch } from '$lib/components/ui/switch';
 	import { cardList, otp } from './items';
-	import Portal2 from './Portal2.svelte';
+	import Portal2 from '../Portals/Portal2.svelte';
 	import Check from 'lucide-svelte/icons/check';
 
 	let {

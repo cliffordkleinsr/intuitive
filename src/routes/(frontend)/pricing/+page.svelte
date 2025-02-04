@@ -1,4 +1,5 @@
 <script lang="ts">
+	import Pricecomponent from '$lib/custom/blocks/newproduct/Pricecomponent.svelte';
 	import Pricer from '$lib/custom/blocks/product/pricer.svelte';
 	import Meta from '$lib/custom/seo/meta.svelte';
 	const props = {
@@ -13,4 +14,5 @@
 </script>
 
 <Meta {...props} />
-<Pricer {...pricerprops} />
+<!-- <Pricer {...pricerprops} /> -->
+<Pricecomponent />
