@@ -13,10 +13,12 @@
 		const { href } = e.currentTarget;
 		const result = await preloadData(href);
 		if (result.type === 'loaded' && result.status === 200) {
+			// specify all elements within pagestate
 			pushState(href, {
 				available_survs: result.data,
 				profile: undefined,
-				clients: undefined
+				clients: undefined,
+				available_qns: undefined
 			});
 		} else {
 			goto(href);

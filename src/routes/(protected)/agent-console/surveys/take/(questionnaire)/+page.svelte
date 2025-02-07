@@ -5,7 +5,7 @@
 	import * as Dialog from '$lib/components/ui/dialog';
 	import * as Drawer from '$lib/components/ui/drawer';
 	import AvailableSurvs from './[surveyId]/+page.svelte';
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 	import { MediaQuery } from 'svelte/reactivity';
 
 	let { data }: { data: PageData } = $props();
@@ -15,7 +15,7 @@
 	let open = $state(false);
 
 	$effect(() => {
-		if ($page.state.available_survs) {
+		if (page.state.available_survs) {
 			open = true;
 		} else {
 			open = false;
@@ -35,7 +35,7 @@
 			}}
 		>
 			<Dialog.Content class="max-w-md lg:max-w-2xl">
-				<AvailableSurvs data={$page.state.available_survs} />
+				<AvailableSurvs data={page.state.available_survs} />
 			</Dialog.Content>
 		</Dialog.Root>
 	{:else}
@@ -49,7 +49,7 @@
 			}}
 		>
 			<Drawer.Content>
-				<AvailableSurvs data={$page.state.available_survs} />
+				<AvailableSurvs data={page.state.available_survs} />
 			</Drawer.Content>
 		</Drawer.Root>
 	{/if}

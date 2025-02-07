@@ -14,7 +14,7 @@
 	import SlidersHorizontal from 'lucide-svelte/icons/sliders-horizontal';
 	import ChartColumnIncreasing from 'lucide-svelte/icons/chart-column-increasing';
 	import Webcam from 'lucide-svelte/icons/webcam';
-	import Split from 'lucide-svelte/icons/split';
+
 	// custom blocks
 	import LikertComposition from '../likertcomponent/LikertComposition.svelte';
 	import StarComponent from '../rating/StarComponent.svelte';
@@ -35,8 +35,14 @@
 		qs,
 		edits,
 		deletes,
-		branching
-	}: { index: number; qs: Quest; edits: Snippet; deletes: Snippet; branching?: Snippet } = $props();
+		children
+	}: {
+		index: number;
+		qs: Quest;
+		edits: Snippet;
+		deletes: Snippet;
+		children?: Snippet;
+	} = $props();
 </script>
 
 <div class="mx-auto grid w-full max-w-xs gap-2">
@@ -122,35 +128,7 @@
 		<Input class="max-w-md" disabled />
 	{/if}
 	<div class="float-end flex gap-2">
-		{#if qs.question_type === 'Optional'}
-			<AlertDialog.Root>
-				<AlertDialog.Trigger>
-					{#snippet child({ props })}
-						<Button {...props} variant="outline"><Split /></Button>
-					{/snippet}
-				</AlertDialog.Trigger>
-				<AlertDialog.Content>
-					<!-- <form action="" method="post"> -->
-					<AlertDialog.Header>
-						<AlertDialog.Title
-							>All the rules on the questions are evaluated in order from top to bottom</AlertDialog.Title
-						>
-						<AlertDialog.Description>
-							{@render branching?.()}
-						</AlertDialog.Description>
-					</AlertDialog.Header>
-					<AlertDialog.Footer>
-						<AlertDialog.Cancel>Cancel</AlertDialog.Cancel>
-						<AlertDialog.Action>
-							{#snippet child({ props })}
-								<Button variant="secondary" {...props}>Save</Button>
-							{/snippet}
-						</AlertDialog.Action>
-					</AlertDialog.Footer>
-					<!-- </form> -->
-				</AlertDialog.Content>
-			</AlertDialog.Root>
-		{/if}
+		{@render children?.()}
 		<AlertDialog.Root>
 			<AlertDialog.Trigger>
 				{#snippet child({ props })}

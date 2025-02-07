@@ -5,6 +5,7 @@
 	import { curveBumpX, curveBumpY, curveStep, curveStepBefore, curveStepAfter } from 'd3-shape';
 	import { Chart, Group, Link, Rect, Svg, Text, Tree } from 'layerchart';
 	import type { ComponentProps } from 'svelte';
+	import { cn } from '$lib/utils';
 
 	let expandedNodeNames = $state(['flare']);
 
@@ -73,12 +74,11 @@
 						<Rect
 							width={nodeWidth}
 							height={nodeHeight}
-							class={[
-								'fill-surface-100',
-								node.data.children
-									? 'stroke-primary hover:stroke-2'
-									: 'stroke-secondary [stroke-dasharray:1]'
-							]}
+							class={cn('fill-surface-100',
+							node.data.children
+								? 'stroke-primary hover:stroke-2'
+								: 'stroke-secondary [stroke-dasharray:1]')
+							}
 							rx={10}
 						/>
 						<Text
@@ -88,10 +88,10 @@
 							dy={-2}
 							textAnchor="middle"
 							verticalAnchor="middle"
-							class={[
+							class={cn(
 								'pointer-events-none text-xs',
-								node.data.children ? 'fill-primary' : 'fill-secondary'
-							]}
+								node.data.children ? 'fill-primary' : 'fill-secondary')
+							}
 						/>
 					</Group>
 				{/each}

@@ -11,9 +11,11 @@ import {
 	rateZodSchema,
 	singleZodSchema
 } from './editSchems';
-import { addSurveyQuestionsv2 } from '$lib/server/db/db_utils';
+import { addSurveyQuestionsv2, getsurveyQuestions } from '$lib/server/db/db_utils';
 import { ZodError } from 'zod';
 import { fail, redirect } from '@sveltejs/kit';
+import { superValidate } from 'sveltekit-superforms';
+import { zod } from 'sveltekit-superforms/adapters';
 export const load: PageServerLoad = async ({ params, locals: { user } }) => {
 	const [data] = await db
 		.select({
@@ -41,6 +43,9 @@ export const load: PageServerLoad = async ({ params, locals: { user } }) => {
 		.groupBy(surveyqnsTableV2.questionId, surveyqnsTableV2.question)
 		.orderBy(asc(surveyqnsTableV2.createdAt));
 	// console.log(questions)
+	// console.log(questions)
+	// for the optionalschema
+	// const optionalSchema = enumBuilder(pool_questions.options);
 	return {
 		surveydata: data,
 		surveyqns: questions
@@ -75,7 +80,7 @@ export const actions: Actions = {
 
 	addMultiQns: async ({ request, params }) => {
 		const data = await request.formData();
-		let uuid = crypto.randomUUID();
+		const uuid = crypto.randomUUID();
 		const construct = {
 			question: data.get('question'),
 			option: data.getAll('option')
@@ -246,7 +251,7 @@ export const actions: Actions = {
 		};
 		const data = Object.fromEntries(await request.formData()) as EntryId;
 
-		const { questionId, questionType } = data;
+		const { questionId } = data;
 
 		try {
 			await db.delete(QuestionOptions).where(eq(QuestionOptions.questionId, questionId));
@@ -260,7 +265,8 @@ export const actions: Actions = {
 		const data = await request.formData();
 		const qns = data.get('question') as string;
 		const qid = data.get('questionId') as string;
-		let map: string | any[] = [];
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		let map: string[] | any[] = [];
 		data.forEach((value, name) => {
 			if (name === 'option') {
 				map = [...map, { option: value } as { option: string }];
@@ -306,5 +312,11 @@ export const actions: Actions = {
 		} catch (err) {
 			console.error(err);
 		}
+	},
+
+	branchOpt: async ({ request }) => {
+		// const surveyqns = await getsurveyQuestions(questionId);
+		// const form = await superValidate(request, zod(subjectSchema));
+		console.log(await request.formData());
 	}
 };

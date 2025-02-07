@@ -3,7 +3,7 @@
 
 	// shadcn
 	import * as Card from '$lib/components/ui/card';
-	import { Button } from '$lib/components/ui/button';
+	import { Button, buttonVariants } from '$lib/components/ui/button';
 	import { Input } from '$lib/components/ui/input';
 	import { Label } from '$lib/components/ui/label';
 	import * as AlertDialog from '$lib/components/ui/alert-dialog';
@@ -16,10 +16,18 @@
 	import { PreviewComp } from '$lib/custom/blocks/question_composition';
 	import { Trash2 } from 'lucide-svelte';
 	import { enhance } from '$app/forms';
-	import { invalidateAll } from '$app/navigation';
+	import { goto, invalidateAll, preloadData, pushState } from '$app/navigation';
 	import { toast } from 'svelte-sonner';
 	import * as Select from '$lib/components/ui/select';
 	import Tree from '$lib/custom/blocks/d3tree/Tree.svelte';
+	import SettingsBranch from './[questionid]/settingsBranch.svelte';
+	import * as Dialog from '$lib/components/ui/dialog';
+	import * as Drawer from '$lib/components/ui/drawer';
+	import AvailableQns from './[questionid]/+page.svelte';
+	import Split from 'lucide-svelte/icons/split';
+
+	import { MediaQuery } from 'svelte/reactivity';
+	import { page } from '$app/state';
 
 	interface PageProps {
 		data: PageData;
@@ -38,50 +46,35 @@
 	} = $derived(data);
 
 	let loading = $state(false);
-	// let value = $state('');
-	let question_context = {
-		get surveyqns() {
-			return surveyqns;
-		}
-	};
-	let optionValues = $state(
-		question_context.surveyqns.map((question) =>
-			question.options ? question.options.map(() => '') : []
-		)
-	);
-	// let visible = $state(false);
-	const triggerContent = (questionIndex: number, optionIndex: number) => {
-		return (
-			surveyqns
-				.map((items) => ({
-					label: items.question,
-					value: items.question
-				}))
-				.find((f) => f.value === optionValues[questionIndex][optionIndex])?.label ??
-			'Select an option'
-		);
-	};
+	let open = $state(false);
 
-	// let triggerContent = $derived(
-	// 	fruits.find((f) => f.value === value)?.label ?? "Select a fruit"
-	// )
-	// const triggerContent = (id?: string) => {
-	// 	return (
-	// 		data.surveyqns
-	// 			// .filter((e) => e.id === id)
-	// 			.map((items) => ({
-	// 				label: items.question,
-	// 				value: items.question
-	// 			})
-	// 				// items.options.map((option) => ({
-	// 				// 	label: option,
-	// 				// 	value: option
-	// 				// }))
-	// 			)//[0]
-	// 			.find((f) => f.value === value)?.label ?? 'Select an option'
-	// 	);
-	// };
-	// $inspect(optionValues)
+	async function onLinkClick(e: MouseEvent & { currentTarget: HTMLAnchorElement }) {
+		if (e.metaKey || e.ctrlKey) return;
+		e.preventDefault();
+
+		const { href } = e.currentTarget;
+		const result = await preloadData(href);
+		if (result.type === 'loaded' && result.status === 200) {
+			pushState(href, {
+				available_qns: result.data,
+				profile: undefined,
+				clients: undefined,
+				available_survs: undefined
+			});
+		} else {
+			goto(href);
+		}
+	}
+
+	$effect(() => {
+		if (page.state.available_qns) {
+			open = true;
+		} else {
+			open = false;
+		}
+	});
+
+	const isDesktop = new MediaQuery('min-width: 768px');
 </script>
 
 <div class="m-3">
@@ -137,51 +130,45 @@
 			<div class="overflow-auto">
 				{#each surveyqns as qs, index}
 					<PreviewComp {index} {qs}>
-						{#snippet branching()}
-							<div class="grid gap-2">
-								{#each qs.options as option, optionIndex}
-									<div class="flex max-w-sm gap-1">
-										<p>If answer at Q{index + 1}</p>
-										<span> = </span>
-										<p>{option}</p>
-									</div>
-									<div class="flex max-w-sm gap-1">
-										<p>Then go to</p>
-										<Select.Root type="single" bind:value={optionValues[index][optionIndex]}>
-											<Select.Trigger>
-												{triggerContent(index, optionIndex)}
-											</Select.Trigger>
-											<Select.Content>
-												{#each surveyqns as qns}
-													{#if new Date(qns.created_at) > new Date(qs.created_at)}
-														<Select.Item value={qns.question}>{qns.question}</Select.Item>
-													{/if}
-												{/each}
-											</Select.Content>
-										</Select.Root>
-									</div>
-								{/each}
-							</div>
-							<!-- <div class="grid gap-2">
-							<div class="flex max-w-sm gap-1">
-								<p>If answer at Q{index + 1}</p>
-								<span> = </span>
-								<Select.Root type="single" bind:value>
-									<Select.Trigger>
-										{triggerContent(qs.id)}
-									</Select.Trigger>
-									<Select.Content>
-										{#each qs.options as option}
-											<Select.Item value={option}>{option}</Select.Item>
-										{/each}
-									</Select.Content>
-								</Select.Root>
-							</div>
-							<div class="flex max-w-sm gap-1">
-								<p>Then go to</p>
-							</div>
-						</div> -->
-						{/snippet}
+						{#if qs.question_type === 'Optional'}
+							<a
+								class={[buttonVariants({ variant: 'outline' })]}
+								onclick={onLinkClick}
+								href="/client-console/surveys/edit/{page.params.surveyid}/{qs.id}"
+							>
+								Branch
+								<Split />
+							</a>
+							{#if isDesktop.current}
+								<Dialog.Root
+									bind:open
+									onOpenChange={(open) => {
+										if (!open) {
+											history.back();
+										}
+									}}
+								>
+									<Dialog.Content class="max-w-md lg:max-w-2xl">
+										<AvailableQns data={page.state.available_qns} />
+									</Dialog.Content>
+								</Dialog.Root>
+							{:else}
+								<Drawer.Root
+									bind:open
+									controlledOpen={true}
+									onOpenChange={(open) => {
+										if (!open) {
+											history.back();
+										}
+									}}
+								>
+									<Drawer.Content>
+										<AvailableQns data={page.state.available_qns} />
+									</Drawer.Content>
+								</Drawer.Root>
+							{/if}
+						{/if}
+
 						{#snippet edits()}
 							<form action="?/editSurvQns" method="post" use:enhance>
 								<AlertDialog.Footer>

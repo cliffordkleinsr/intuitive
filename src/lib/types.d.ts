@@ -1,14 +1,3 @@
-interface SurveyData {
-	url: string;
-	AuthedUser: string;
-	profile: string;
-	available_surv: {
-		uri: string;
-		current_ix: number;
-		question_cnt: number;
-		survId: string;
-	};
-}
 interface Agent {
 	agent: {
 		id: string;
@@ -128,6 +117,55 @@ interface Question {
 	likert_key?: string;
 	updated_at: string;
 }
+interface Sharable {
+	id: string;
+	title: string;
+	createdAt: Date;
+}
+interface SurveyData {
+	url: string;
+	AuthedUser: string;
+	profile: string;
+	available_surv: {
+		uri: string;
+		current_ix: number;
+		question_cnt: number;
+		survId: string;
+	};
+}
+interface clientData {
+	payment: {
+		status: boolean;
+	};
+	features: {
+		gender_active: boolean;
+		ages: boolean;
+		maxqns: number;
+		maxagents: number;
+		maxsurv: number;
+		plan: string;
+	};
+	AuthedUser: string;
+	profile: string | null;
+	Role: 'ADMIN' | 'CLIENT';
+	email: string;
+	url: string;
+	notif: string;
+	share: number;
+	sharable: Sharable[];
+	available_qns: {
+		id: string;
+		question: string;
+		question_type: string;
+		likert_key: string;
+		optionid: string[];
+		options: string[];
+		created_at: Date;
+	};
+	questions: clientData['available_qns'][];
+	otp: boolean;
+}
+
 export type {
 	SurveyData,
 	Agent,
@@ -143,5 +181,6 @@ export type {
 	LocAnalytics,
 	AnsStats,
 	Analytics,
-	Question
+	Question,
+	clientData
 };

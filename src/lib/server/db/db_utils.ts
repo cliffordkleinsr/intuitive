@@ -294,7 +294,8 @@ export const getsurveyQuestions = async (questionId: string) => {
 			question_type: surveyqnsTableV2.questionT,
 			likert_key: sql<string>`${surveyqnsTableV2.likertKey}`,
 			optionid: sql<string[]>`ARRAY_AGG(${QuestionOptions.optionId})`,
-			options: sql<string[]>`ARRAY_AGG(${QuestionOptions.option})`
+			options: sql<string[]>`ARRAY_AGG(${QuestionOptions.option})`,
+			created_at: surveyqnsTableV2.createdAt
 		})
 		.from(surveyqnsTableV2)
 		.leftJoin(QuestionOptions, eq(surveyqnsTableV2.questionId, QuestionOptions.questionId))

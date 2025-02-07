@@ -11,6 +11,7 @@
 		table: true,
 		applyLogic: false
 	};
+	// let signup =
 </script>
 
 <Meta {...props} />

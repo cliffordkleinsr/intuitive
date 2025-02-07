@@ -4,7 +4,7 @@ export const packageList = [
 	{
 		id: '',
 		title: 'Basic',
-		one_pack: '50',
+		one_pack: '29',
 		six_pack: '165',
 		ten_pack: '261',
 		comments: 'Ideal for individuals, small teams, or one-off feedback needs',
