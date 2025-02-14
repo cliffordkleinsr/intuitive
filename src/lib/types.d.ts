@@ -145,14 +145,7 @@ interface clientData {
 		maxsurv: number;
 		plan: string;
 	};
-	AuthedUser: string;
-	profile: string | null;
-	Role: 'ADMIN' | 'CLIENT';
-	email: string;
-	url: string;
-	notif: string;
-	share: number;
-	sharable: Sharable[];
+	user: App.Locals['user'];
 	available_qns: {
 		id: string;
 		question: string;
@@ -164,6 +157,18 @@ interface clientData {
 	};
 	questions: clientData['available_qns'][];
 	otp: boolean;
+}
+interface GoogleIdTokenPayload {
+	iss: string;
+	sub: string;
+	aud: string;
+	iat: number;
+	exp: number;
+	email?: string;
+	email_verified?: boolean;
+	name?: string;
+	picture?: string;
+	// Add other claims as needed
 }
 
 export type {
@@ -182,5 +187,6 @@ export type {
 	AnsStats,
 	Analytics,
 	Question,
-	clientData
+	clientData,
+	GoogleIdTokenPayload
 };

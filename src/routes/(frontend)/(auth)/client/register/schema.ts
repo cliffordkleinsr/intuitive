@@ -29,9 +29,11 @@ export const registerCSchema = z
 					message: 'Must be a valid Safaricom phone number'
 				}
 			),
-		county: z.enum(counties.map((f) => f.name) as [Counties, ...Counties[]], {
-			errorMap: () => ({ message: 'Please select a valid County.' })
-		}),
+		county: z
+			.enum(counties.map((f) => f.name) as [Counties, ...Counties[]], {
+				errorMap: () => ({ message: 'Please select a valid County.' })
+			})
+			.optional(),
 		subctys: z
 			.string({
 				required_error: 'Must be valid Sub County.'

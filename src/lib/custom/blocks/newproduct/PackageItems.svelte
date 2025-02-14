@@ -8,12 +8,36 @@
 	import { slide } from 'svelte/transition';
 	import { sineInOut } from 'svelte/easing';
 	import { getContext } from 'svelte';
+	import { MediaQuery } from 'svelte/reactivity';
 
 	let { cluster } = $props();
 	// $inspect(getContext('logic'))
 	let logic = getContext('logic');
+	const isDesktop = new MediaQuery('min-width: 768px');
 </script>
 
+{#if !isDesktop.current}
+	{#if cluster === 'advantage'}
+		<div
+			class="grid w-full gap-2 py-2 text-center text-sm font-semibold text-muted-foreground"
+			transition:slide={{ duration: 500, easing: sineInOut, delay: 300, axis: 'y' }}
+		>
+			<p>
+				* This price represents a sum total of 6 packages for each specified package (except
+				premium).
+			</p>
+			<p>Each package in this cluster applies a 5% discount</p>
+		</div>
+	{:else if cluster === 'advanced'}
+		<div
+			class="grid w-full gap-2 py-2 text-center text-sm font-semibold text-muted-foreground"
+			transition:slide={{ duration: 400, easing: sineInOut, delay: 400 }}
+		>
+			<p>* This price represents a sum total of 10 packages for each specified package.</p>
+			<p>Each package in this cluster applies a 10% discount</p>
+		</div>
+	{/if}
+{/if}
 <div class="grid gap-1 md:grid-cols-3">
 	{#each packageList as pkg}
 		<Card.Root class="relative overflow-hidden">
@@ -68,30 +92,33 @@
 			</Card.Content>
 			<Card.Footer>
 				{#if logic.signup}
-					<Button variant="secondary" class=" w-full" href="/client/register">Sign Up</Button>
+					<Button variant="secondary" class=" w-full" href="/client/signin">Sign Up</Button>
 				{:else}
-					<Button variant="secondary" class=" w-full" href="/client/register">Subscribe</Button>
+					<Button variant="secondary" class=" w-full">Subscribe</Button>
 				{/if}
 			</Card.Footer>
 		</Card.Root>
 	{/each}
 </div>
-{#if cluster === 'advantage'}
-	<div
-		class="mt-10 grid w-full gap-2 text-center text-sm font-semibold text-muted-foreground"
-		transition:slide={{ duration: 500, easing: sineInOut, delay: 300, axis: 'y' }}
-	>
-		<p>
-			* This price represents a sum total of 6 packages for each specified package (except premium).
-		</p>
-		<p>Each package in this cluster applies a 5% discount</p>
-	</div>
-{:else if cluster === 'advanced'}
-	<div
-		class="mt-10 grid w-full gap-2 text-center text-sm font-semibold text-muted-foreground"
-		transition:slide={{ duration: 400, easing: sineInOut, delay: 400 }}
-	>
-		<p>* This price represents a sum total of 10 packages for each specified package.</p>
-		<p>Each package in this cluster applies a 10% discount</p>
-	</div>
+{#if isDesktop.current}
+	{#if cluster === 'advantage'}
+		<div
+			class="grid w-full gap-2 py-2 text-center text-sm font-semibold text-muted-foreground"
+			transition:slide={{ duration: 500, easing: sineInOut, delay: 300, axis: 'y' }}
+		>
+			<p>
+				* This price represents a sum total of 6 packages for each specified package (except
+				premium).
+			</p>
+			<p>Each package in this cluster applies a 5% discount</p>
+		</div>
+	{:else if cluster === 'advanced'}
+		<div
+			class="grid w-full gap-2 py-2 text-center text-sm font-semibold text-muted-foreground"
+			transition:slide={{ duration: 400, easing: sineInOut, delay: 400 }}
+		>
+			<p>* This price represents a sum total of 10 packages for each specified package.</p>
+			<p>Each package in this cluster applies a 10% discount</p>
+		</div>
+	{/if}
 {/if}

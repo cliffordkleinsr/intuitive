@@ -3,8 +3,8 @@
 	import SettingsBranch from './settingsBranch.svelte';
 
 	let { data }: { data: PageData } = $props();
-	const { questions, available_qns } = data;
+	const { questions, available_qns, selectForm } = data;
 </script>
 
 <p>{available_qns.question}</p>
-<!-- <SettingsBranch /> -->
+<SettingsBranch data={selectForm} surveyqns={questions} qs={available_qns} />

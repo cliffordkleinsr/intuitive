@@ -21,8 +21,10 @@
 					break;
 				case 'info':
 					toast.info($flash.message);
+					break;
 				case 'warning':
 					toast.warning($flash.message);
+					break;
 			}
 			$flash = undefined;
 		}

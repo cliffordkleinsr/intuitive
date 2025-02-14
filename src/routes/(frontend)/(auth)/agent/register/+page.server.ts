@@ -21,7 +21,6 @@ import {
 import { db } from '$lib/server/db';
 import { eq } from 'drizzle-orm';
 import * as auth from '$lib/server/auth.js';
-import { setSessionTokenCookie } from '$lib/server/session';
 // import { createVerification } from '$lib/server/twilioconfigs/sms-messages';
 
 export const load: PageServerLoad = async ({ locals: { user }, url, cookies }) => {
@@ -144,8 +143,9 @@ export const actions: Actions = {
 			}
 
 			// create a session in the database
-			const session = await auth.createSession(userid);
-			setSessionTokenCookie(cookies, '', session.expiresAt);
+			const token = auth.generateSessionToken();
+			const session = await auth.createSession(token, userid);
+			auth.setSessionTokenCookie(cookies, '', session.expiresAt);
 		} catch (err) {
 			console.error(err);
 

@@ -43,7 +43,7 @@ export const actions: Actions = {
 				.from(UsersTable)
 				.where(eq(UsersTable.email, user.email));
 
-			const validPassword = await bcrypt.compare(password, existingUser.password);
+			const validPassword = await bcrypt.compare(password, existingUser.password as string);
 			if (validPassword) {
 				return setError(form, 'password', 'New password cannot be your old password');
 			}

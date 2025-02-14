@@ -5,26 +5,19 @@ import * as auth from '$lib/server/auth.js';
 import { createHandler } from 'svelte-kit-bot-block';
 
 const handleAuth: Handle = async ({ event, resolve }) => {
-	const sessionId = event.cookies.get(auth.sessionCookieName);
-	// console.log(sessionId)
-	if (!sessionId) {
+	const sessionToken = event.cookies.get(auth.sessionCookieName);
+
+	if (!sessionToken) {
 		event.locals.user = null;
 		event.locals.session = null;
 		return resolve(event);
 	}
 
-	const { session, user } = await auth.validateSession(sessionId);
-	// console.log(session)
+	const { session, user } = await auth.validateSession(sessionToken);
 	if (session) {
-		event.cookies.set(auth.sessionCookieName, session.id, {
-			path: '/',
-			sameSite: 'lax',
-			httpOnly: true,
-			expires: session.expiresAt,
-			secure: !dev
-		});
+		auth.setSessionTokenCookie(event.cookies, sessionToken, session.expiresAt);
 	} else {
-		event.cookies.delete(auth.sessionCookieName, { path: '/' });
+		auth.deleteSessionTokenCookie(event.cookies);
 	}
 
 	event.locals.user = user;

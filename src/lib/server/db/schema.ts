@@ -24,10 +24,11 @@ export const ProcessedStatus = pgEnum('processed_status', ['pending', 'complete'
 // Model USERS
 export const UsersTable = pgTable('users', {
 	id: text('id').primaryKey(),
+	googleId: text(),
 	fullname: text('fullname').notNull(),
-	email: text('email').notNull().unique(),
+	email: text('email').unique(),
 	isEmailVerified: boolean('is_email_verified').notNull().default(false),
-	password: text('password').notNull(),
+	password: text('password'), //.notNull(),
 	role: UserRole('userole').default('AGENT').notNull(),
 	age: integer('age'),
 	gender: text('gender'),
@@ -118,6 +119,56 @@ export const clientPackages = pgTable('client_packages', {
 	max_agents: integer('max_agents').notNull().default(0),
 	demographics: boolean('demographics').notNull().default(false),
 	ages: boolean('ages').notNull().default(false)
+});
+
+export const consumerDeats = pgTable('consumer_details', {
+	consumerid: text()
+		.references(() => UsersTable.id)
+		.primaryKey()
+		.notNull(),
+	email: text()
+		.references(() => UsersTable.email)
+		.notNull(),
+	company_name: text().notNull(),
+	phone: text().notNull(),
+	county: text().notNull(),
+	sub_county: text().notNull(),
+	sector: text().notNull(),
+	disabled: boolean().notNull().default(false),
+	created_at: timestamp('expires_at', {
+		withTimezone: true,
+		mode: 'date'
+	})
+});
+
+export const consumerPackage = pgTable('consumer_package', {
+	id: serial().notNull().primaryKey(),
+	consumerid: text()
+		.references(() => UsersTable.id)
+		.notNull(),
+	package_id: text().notNull(),
+	package: text().notNull(),
+	package_type: text().notNull(),
+	invoiced: timestamp({
+		withTimezone: true,
+		mode: 'date'
+	}).notNull(),
+	expires: timestamp({
+		withTimezone: true,
+		mode: 'date'
+	}).notNull()
+});
+export const priceLookup = pgTable('price_lookup', {
+	id: serial().notNull(),
+	title: text().notNull(),
+	one_pack: text().notNull(),
+	six_pack: text().notNull(),
+	ten_pack: text().notNull(),
+	max_qns: integer().notNull(),
+	max_responses: integer().notNull(),
+	demographics: boolean().notNull().default(false),
+	api: boolean().notNull().default(false),
+	branding: boolean().notNull().default(false)
 });
 
 export const emailVerification = pgTable('email_verification', {

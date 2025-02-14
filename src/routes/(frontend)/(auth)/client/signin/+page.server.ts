@@ -14,8 +14,8 @@ import { eq } from 'drizzle-orm';
 import * as auth from '$lib/server/auth.js';
 import { redirect } from 'sveltekit-flash-message/server';
 import { handleLoginRedirect } from '$lib/custom/functions/helpers';
-import { setSessionTokenCookie } from '$lib/server/session';
 import bcrypt from 'bcrypt';
+import { getEmailUser } from '$lib/server/db/db_utils';
 
 export const load: PageServerLoad = async ({ locals: { user }, url, cookies }) => {
 	if (user) {
@@ -50,15 +50,7 @@ export const actions: Actions = {
 		// destructure form.data for validation
 		const { email, password } = form.data;
 		// If form Is valid check if exists
-		const [existingUser] = await db
-			.select({
-				id: UsersTable.id,
-				password: UsersTable.password,
-				role: UsersTable.role,
-				verified: UsersTable.isEmailVerified
-			})
-			.from(UsersTable)
-			.where(eq(UsersTable.email, email));
+		const existingUser = await getEmailUser(email);
 
 		// If does not exist
 		if (existingUser === undefined) {
@@ -73,15 +65,16 @@ export const actions: Actions = {
 			);
 		}
 		// Verify the password
-		const validPassword = await bcrypt.compare(password, existingUser.password); //await Bun.password.verify(password, existingUser.password)
+		const validPassword = await bcrypt.compare(password, existingUser.password as string); //await Bun.password.verify(password, existingUser.password)
 
 		if (!validPassword) {
 			return setError(form, 'password', 'Incorrect Password');
 		}
 
 		// create a session in the database
-		const session = await auth.createSession(existingUser.id);
-		setSessionTokenCookie(cookies, session.id, session.expiresAt);
+		const token = auth.generateSessionToken();
+		const session = await auth.createSession(token, existingUser.id);
+		auth.setSessionTokenCookie(cookies, session.id, session.expiresAt);
 
 		const redirectTo = url.searchParams.get('redirectTo');
 		if (redirectTo) {

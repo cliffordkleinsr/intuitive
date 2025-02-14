@@ -1,4 +1,4 @@
-import { and, asc, eq, gt, sql } from 'drizzle-orm';
+import { and, asc, eq, gt, lte, sql } from 'drizzle-orm';
 import { db } from './index';
 
 import {
@@ -20,12 +20,16 @@ import {
 	agentSurveysTable,
 	payoutRequests,
 	type surveyGenerateSchema,
-	branchingRules
+	branchingRules,
+	priceLookup,
+	consumerDeats,
+	consumerPackage
 } from './schema';
 import type { PgColumn, PgTable } from 'drizzle-orm/pg-core';
 import type { Cookies } from '@sveltejs/kit';
 import { redirect } from 'sveltekit-flash-message/server';
 import type { Question } from '$lib/types';
+import { toast } from 'svelte-sonner';
 
 export const deleteCUser = async (userid: string, surveyid: string) => {
 	await db.delete(surveyqnsTableV2).where(eq(surveyqnsTableV2.surveid, surveyid));
@@ -82,6 +86,43 @@ export const checkUserRole = async (email: string) => {
 	return queryResult;
 };
 
+export const createGoogleUser = async (googleUserId: string, username: string, email: string) => {
+	return await db
+		.insert(UsersTable)
+		.values({
+			id: crypto.randomUUID(),
+			googleId: googleUserId,
+			fullname: username,
+			email,
+			role: 'CLIENT'
+		})
+		.returning({ id: UsersTable.id });
+};
+
+export const getEmailUser = async (email: string) => {
+	const [user] = await db
+		.select({
+			id: UsersTable.id,
+			password: UsersTable.password,
+			role: UsersTable.role,
+			verified: UsersTable.isEmailVerified
+		})
+		.from(UsersTable)
+		.where(eq(UsersTable.email, email));
+	return user;
+};
+export const getUserFromGoogleId = async (googleUserId: string) => {
+	const [user] = await db
+		.select({
+			id: UsersTable.id,
+			password: UsersTable.password,
+			role: UsersTable.role,
+			verified: UsersTable.isEmailVerified
+		})
+		.from(UsersTable)
+		.where(eq(UsersTable.googleId, googleUserId));
+	return user;
+};
 // Insertion for any User
 export const insertNewUser = async (user: userInsertSchema) => {
 	return await db.insert(UsersTable).values(user);
@@ -109,14 +150,34 @@ export const deleteSurvey = async (surveyid: string) => {
 	await db.delete(SurveyTable).where(eq(SurveyTable.surveyid, surveyid));
 };
 
-// =========================== Client Package Utilities ==========================
+// =========================== Old Client Package Utilities ==========================
+
+export const checkOnetime = async (id: string) => {
+	const [onetime] = await db
+		.select({
+			state: clientData.onetime
+		})
+		.from(clientData)
+		.where(eq(clientData.clientId, id));
+	return onetime;
+};
+export const getOldPaymentStatus = async (id: string) => {
+	const [payment] = await db
+		.select({
+			status: clientData.payment_status
+		})
+		.from(clientData)
+		.where(eq(clientData.clientId, id));
+
+	return payment as { status: boolean };
+};
 
 /**
  * returns the expiry date & the package itself
  * @param id
  * @returns
  */
-export const retExpiryDate = async (id: string) => {
+const retExpiryDate = async (id: string) => {
 	const [expiry_date] = await db
 		.select({
 			expiry: sql<Date>`${clientData.expires_at}`,
@@ -129,23 +190,30 @@ export const retExpiryDate = async (id: string) => {
 };
 
 /**
- * Checks whether a surveys to date has reached and closes the survey
+ * Checks whether a surveys expiry date has reached and closes the survey
  * @param id
  * @param fromdb
  * @returns
  */
-export const checkDate = async (id: string, fromdb: Date, userid: string) => {
-	const diff = new Date().getTime() - fromdb.getTime();
-	if (diff > 0) {
-		await db
-			.update(SurveyTable)
-			.set({
-				status: 'Closed'
-			})
-			.where(sql`${SurveyTable.surveyid} = ${id} and ${SurveyTable.clientid} = ${userid}`);
-		return {
-			message: `Survey ${id} has been closed`
-		};
+export const disableOldSurvey = async (id: string) => {
+	const live = await db
+		.select({
+			surveyid: SurveyTable.surveyid,
+			expiry_date: SurveyTable.to
+		})
+		.from(SurveyTable)
+		.where(sql`${SurveyTable.status} = 'Live' and ${SurveyTable.clientid} = ${id}`);
+	for (const { surveyid, expiry_date } of live) {
+		const diff = new Date().getTime() - expiry_date!.getTime();
+		if (diff > 0) {
+			await db
+				.update(SurveyTable)
+				.set({
+					status: 'Closed'
+				})
+				.where(sql`${SurveyTable.surveyid} = ${surveyid} and ${SurveyTable.clientid} = ${id}`);
+			toast.warning(`Survey ${surveyid} has been closed`);
+		}
 	}
 };
 
@@ -170,6 +238,7 @@ export const getpackageFeatures = async (id: string) => {
 
 	return feats;
 };
+
 /**
  * Utility to analyze whether client package has expired
  * @param id
@@ -192,11 +261,85 @@ export const setpackageExpired = async (
 					expires_at: null
 				})
 				.where(eq(clientData.clientId, id));
-			return {
-				message: `Your subscription for the ${expiry_date.packagetype} plan has expired. Renew your plan`
-			};
+
+			toast.warning(
+				`Your subscription for the ${expiry_date.packagetype} plan has expired. Renew your plan`
+			);
 		}
 	}
+};
+/**
+ *complemenary to the above
+ * @param id
+ */
+export const expirePackage = async (id: string) => {
+	const features = await getpackageFeatures(id);
+	if (typeof features === 'object') {
+		if (typeof features.plan === 'string') {
+			const expiry_date = await retExpiryDate(id);
+			const { expiry } = expiry_date;
+			// to disable plans that have expired
+			if (new Date(expiry) < new Date()) {
+				const expired = await setpackageExpired(id, expiry_date);
+			}
+		}
+	}
+};
+
+// ============================= New Client Utilities ======================================
+
+/**
+ * Same as above but for the new pricing
+ * @param id
+ * @returns
+ */
+export const doPriceLookup = async (id: string) => {
+	const [on_demand_pkg] = await db
+		.select({
+			max_questions: priceLookup.max_qns,
+			max_responses: priceLookup.max_responses,
+			demographics: priceLookup.demographics,
+			api: priceLookup.api,
+			branding: priceLookup.branding
+		})
+		.from(priceLookup)
+		.leftJoin(consumerPackage, eq(consumerPackage.package_id, priceLookup.id))
+		.where(eq(consumerPackage.consumerid, id));
+	return on_demand_pkg;
+};
+export const getNewPaymentStatus = async (id: string) => {
+	const current_scope =
+		(
+			await db
+				.select()
+				.from(consumerPackage)
+				.where(and(eq(consumerPackage.consumerid, id), lte(consumerPackage.expires, new Date())))
+		).length > 0;
+	return current_scope;
+};
+
+export const disableNewSurvey = async (id: string) => {
+	const live = await db
+		.select({
+			surveyid: SurveyTable.surveyid,
+			expiry_date: SurveyTable.to
+		})
+		.from(SurveyTable)
+		.where(and(eq(SurveyTable.status, 'Live'), eq(SurveyTable.clientid, id)));
+	// needs work
+	// sql`${SurveyTable.status} = 'Live' and ${SurveyTable.clientid} = ${id}`
+	// for (const {surveyid, expiry_date} of live) {
+	// 	const diff = new Date().getTime() - expiry_date!.getTime();
+	// 	if (diff > 0) {
+	// 		await db
+	// 			.update(SurveyTable)
+	// 			.set({
+	// 				status: 'Closed'
+	// 			})
+	// 			.where(sql`${SurveyTable.surveyid} = ${surveyid} and ${SurveyTable.clientid} = ${id}`);
+	// 		toast.warning(`Survey ${surveyid} has been closed`)
+	// 	}
+	// }
 };
 /**
  * Utiliy that gets the list of questions from the surveyquestionsV2 table

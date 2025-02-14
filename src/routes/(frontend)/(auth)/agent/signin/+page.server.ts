@@ -18,7 +18,6 @@ import { redirect } from 'sveltekit-flash-message/server';
 import { handleLoginRedirect } from '$lib/custom/functions/helpers';
 import type { Actions, PageServerLoad } from './$types';
 import bcrypt from 'bcrypt';
-import { setSessionTokenCookie } from '$lib/server/session';
 
 export const load: PageServerLoad = async ({ locals: { user }, url, cookies }) => {
 	if (user) {
@@ -75,7 +74,7 @@ export const actions: Actions = {
 			);
 		}
 		// Verify the password
-		const validPassword = await bcrypt.compare(password, existingUser.password);
+		const validPassword = await bcrypt.compare(password, existingUser.password as string);
 
 		if (!validPassword) {
 			return setError(form, 'password', 'Incorrect Password');
@@ -89,8 +88,9 @@ export const actions: Actions = {
 			.where(eq(agentData.email, email));
 
 		// create a session in the database
-		const session = await auth.createSession(existingUser.id);
-		setSessionTokenCookie(cookies, session.id, session.expiresAt);
+		const token = auth.generateSessionToken();
+		const session = await auth.createSession(token, existingUser.id);
+		auth.setSessionTokenCookie(cookies, token, session.expiresAt);
 
 		if (external.state) {
 			redirect(

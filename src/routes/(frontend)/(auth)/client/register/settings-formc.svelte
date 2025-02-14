@@ -317,6 +317,6 @@
 				<a href="/client/signin" class="underline hover:text-primary"> Sign in </a>
 			</div>
 		</Card.Content>
-		<!-- <SuperDebug data={$formData}/> -->
+		<SuperDebug data={$formData} />
 	</Card.Root>
 </form>

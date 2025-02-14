@@ -9,7 +9,6 @@ import { redirect } from 'sveltekit-flash-message/server';
 import { db } from '$lib/server/db';
 import { emailVerification } from '$lib/server/db/schema';
 import { sendVerificationEmail } from '$lib/server/emailconfigs/email-messages';
-import { setSessionTokenCookie } from '$lib/server/session';
 import bcrypt from 'bcrypt';
 
 export const load: PageServerLoad = async ({ locals: { user }, url, cookies }) => {
@@ -74,7 +73,7 @@ export const actions: Actions = {
 
 			await insertClientData({
 				email: email,
-				county: county,
+				county: county as string,
 				sector: sector,
 				phone: phoneno,
 				clientId: userid,
@@ -108,15 +107,9 @@ export const actions: Actions = {
 			//     path: '/email-verification'
 			// })
 			//  create a session in the database
-			const session = await auth.createSession(userid);
-			setSessionTokenCookie(cookies, '', session.expiresAt);
-			// const session = await lucia.createSession(userid, {});
-			// const sessionCookie = lucia.createSessionCookie(session.id);
-
-			// cookies.set(sessionCookie.name, sessionCookie.value, {
-			// 	path: '.',
-			// 	...sessionCookie.attributes
-			// });
+			const token = auth.generateSessionToken();
+			const session = await auth.createSession(token, userid);
+			auth.setSessionTokenCookie(cookies, '', session.expiresAt);
 		} catch (err) {
 			console.error(err);
 

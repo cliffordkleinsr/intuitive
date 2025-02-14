@@ -38,7 +38,7 @@
 				</div>
 				<div class="flex justify-center gap-5 pt-10 lg:justify-start">
 					<Button href="/agent/signin" size="lg" variant="secondary">Agent Login</Button>
-					<Button variant="black" href="/client/signin" size="lg">Client Login</Button>
+					<Button variant="black" href="/client/login" size="lg">Client Login</Button>
 				</div>
 			</div>
 		</div>

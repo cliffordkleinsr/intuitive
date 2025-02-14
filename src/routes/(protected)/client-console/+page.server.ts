@@ -31,16 +31,6 @@ export const load: PageServerLoad = async ({ locals }) => {
 			.where(sql`${SurveyTable.clientid} = ${userid} and ${SurveyTable.status} = 'Closed'`)
 	]);
 
-	const sharable_survey = await db
-		.select({
-			sharable: SurveyTable.external
-		})
-		.from(SurveyTable).where(sql`
-			${SurveyTable.clientid} = ${userid}
-			and
-			${SurveyTable.status} = 'Live'
-		`);
-	// console.log(userid)
 	const total_agents = await db
 		.selectDistinctOn([AnswersTable.agentId], {
 			agent: AnswersTable.agentId
@@ -54,7 +44,6 @@ export const load: PageServerLoad = async ({ locals }) => {
 		all_surv: allsurveys,
 		draft_surv: draftsurveys,
 		live_surv: livesurveys,
-		closed_surv: closedsurveys,
-		extern: sharable_survey.length > 0 ? sharable_survey[0].sharable : 0
+		closed_surv: closedsurveys
 	};
 };

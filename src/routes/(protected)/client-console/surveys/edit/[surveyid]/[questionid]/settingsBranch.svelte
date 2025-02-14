@@ -1,32 +1,42 @@
 <script lang="ts">
-	import { enumBuilder, type OptionalSchema } from '$lib/custom/blocks/reader/super_schema';
+	import {
+		buildSelectSchema,
+		type BuildSelectSchema
+	} from '$lib/custom/blocks/reader/super_schema';
 	import { toast } from 'svelte-sonner';
-	import { superForm, type Infer, type SuperValidated } from 'sveltekit-superforms';
+	import SuperDebug, { superForm, type Infer, type SuperValidated } from 'sveltekit-superforms';
 	import { zodClient } from 'sveltekit-superforms/adapters';
 	import * as Select from '$lib/components/ui/select';
 	import type { clientData } from '$lib/types';
 	import * as Form from '$lib/components/ui/form/index.js';
-	import { items } from '$lib/custom/functions/helpers';
+	import { Button } from '$lib/components/ui/button';
 
 	type Surveyquestions = clientData['available_qns']; //Pick<clientData, "available_qns">["available_qns"]
 	let {
 		data,
-		options,
 		surveyqns,
 		qs
 	}: {
-		data: SuperValidated<Infer<OptionalSchema>>;
-		options: string[];
+		data: SuperValidated<Infer<BuildSelectSchema>>;
 		surveyqns: Surveyquestions[];
 		qs: Surveyquestions;
 	} = $props();
-
-	const optionalSchema = enumBuilder(options);
+	// let optionValues = $state(qs.options.map(() => ''));
+	// const triggerContent = (optionIndex: number) => {
+	// 	return (
+	// 		surveyqns
+	// 			.map((items) => ({
+	// 				label: items.question,
+	// 				value: items.question
+	// 			}))
+	// 			.find((f) => f.value === optionValues[optionIndex])?.label ?? 'Select an option'
+	// 	);
+	// };
+	const selectSchema = buildSelectSchema(qs.options.length);
 	const form = superForm(data, {
-		validators: zodClient(optionalSchema),
+		validators: zodClient(selectSchema),
 		onUpdated: () => {
 			if (!$message) return;
-
 			const { alertType, alertText } = $message;
 			if (alertType === 'success') {
 				toast.success(alertText);
@@ -38,13 +48,6 @@
 	});
 
 	const { form: formData, enhance, message, delayed } = form;
-
-	// let question_context = {
-	// 	get surveyqns() {
-	// 		return surveyqns;
-	// 	}
-	// };
-	let optionValues = $state(qs.options.map(() => ''));
 	const triggerContent = (optionIndex: number) => {
 		return (
 			surveyqns
@@ -52,31 +55,15 @@
 					label: items.question,
 					value: items.question
 				}))
-				.find((f) => f.value === optionValues[optionIndex])?.label ?? 'Select an option'
+				.find((f) => f.value === $formData[`option${optionIndex}`])?.label ?? 'Select an option' // Access from formData
 		);
 	};
-	// let optionValues = $state(
-	// 	question_context.surveyqns.map((question) =>
-	// 		question.options ? question.options.map(() => '') : []
-	// 	)
-	// );
-	// // let visible = $state(false);
-	// const triggerContent = (questionIndex:number, optionIndex: number) => {
-	// 	return (
-	// 		surveyqns
-	// 			.map((items) => ({
-	// 				label: items.question,
-	// 				value: items.question
-	// 			}))
-	// 			.find((f) => f.value === optionValues[questionIndex][optionIndex])?.label ??
-	// 		'Select an option'
-	// 	);
-	// };
 </script>
 
-<form method="POST" action="?/branchOpt" class="grid gap-2" use:enhance>
+<form method="POST" class="grid gap-2" use:enhance>
 	{#each qs.options as option, optionIndex}
-		<Form.Field {form} name="type">
+		{@const name = `option${optionIndex}`}
+		<Form.Field {form} {name}>
 			<Form.Control>
 				{#snippet children({ props })}
 					<div class="flex max-w-sm gap-1">
@@ -84,16 +71,18 @@
 						<span> = </span>
 						<p>{option}</p>
 					</div>
-					<div class="flex max-w-sm gap-1">
+					<div class="grid max-w-md gap-1">
 						<p>Then go to</p>
-						<Select.Root type="single" bind:value={$formData.type} name={props.name}>
+						<Select.Root type="single" bind:value={$formData[props.name]} name={props.name}>
 							<Select.Trigger {...props}>
-								{$formData.type ? $formData.type : 'Select an option'}
+								{triggerContent(optionIndex)}
 							</Select.Trigger>
 							<Select.Content>
 								{#each surveyqns as qns}
 									{#if new Date(qns.created_at) > new Date(qs.created_at)}
-										<Select.Item value={qns.question}>{qns.question}</Select.Item>
+										<Select.Item value={qns.question}>
+											{qns.question}
+										</Select.Item>
 									{/if}
 								{/each}
 							</Select.Content>
@@ -101,8 +90,26 @@
 					</div>
 				{/snippet}
 			</Form.Control>
-			<Form.FieldErrors />
+			<Form.FieldErrors>
+				{#snippet children({ errors, errorProps })}
+					{#each errors as err}
+						<span style="color: red;" {...errorProps}>{err}</span>
+					{/each}
+				{/snippet}
+			</Form.FieldErrors>
 		</Form.Field>
-		<Form.Button>Submit</Form.Button>
 	{/each}
+	{#if $delayed}
+		<Button class="flex gap-2" disabled={$delayed}>
+			<span
+				class="inline-block size-4 animate-spin rounded-full border-[3px] border-current border-t-transparent text-white"
+				role="status"
+				aria-label="loading"
+			></span>
+			Loading...
+		</Button>
+	{:else}
+		<Form.Button>Save</Form.Button>
+	{/if}
+	<!-- <SuperDebug data={$formData}/> -->
 </form>

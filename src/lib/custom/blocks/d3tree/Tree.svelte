@@ -74,11 +74,12 @@
 						<Rect
 							width={nodeWidth}
 							height={nodeHeight}
-							class={cn('fill-surface-100',
-							node.data.children
-								? 'stroke-primary hover:stroke-2'
-								: 'stroke-secondary [stroke-dasharray:1]')
-							}
+							class={cn(
+								'fill-surface-100',
+								node.data.children
+									? 'stroke-primary hover:stroke-2'
+									: 'stroke-secondary [stroke-dasharray:1]'
+							)}
 							rx={10}
 						/>
 						<Text
@@ -90,8 +91,8 @@
 							verticalAnchor="middle"
 							class={cn(
 								'pointer-events-none text-xs',
-								node.data.children ? 'fill-primary' : 'fill-secondary')
-							}
+								node.data.children ? 'fill-primary' : 'fill-secondary'
+							)}
 						/>
 					</Group>
 				{/each}

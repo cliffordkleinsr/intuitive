@@ -3,27 +3,27 @@ import { sha256 } from '@oslojs/crypto/sha2';
 import { encodeBase32LowerCaseNoPadding, encodeHexLowerCase } from '@oslojs/encoding';
 import { db } from '$lib/server/db';
 import * as table from '$lib/server/db/schema';
+import type { Cookies } from '@sveltejs/kit';
 
 // const DAY_IN_MS = 1000 * 60 * 60 * 24;
 // Changed time constants
 const HOUR_IN_MS = 1000 * 60 * 60; // 1 hour in milliseconds
 const RENEW_THRESHOLD = HOUR_IN_MS / 2; // 30 minutes in milliseconds
 
-export const sessionCookieName = 'session';
+export const sessionCookieName = 'auth-session';
 
-function generateSessionToken(): string {
+export function generateSessionToken(): string {
 	const bytes = crypto.getRandomValues(new Uint8Array(20));
 	const token = encodeBase32LowerCaseNoPadding(bytes);
 	return token;
 }
 
-export async function createSession(userId: string): Promise<table.Session> {
-	const token = generateSessionToken();
+export async function createSession(token: string, userId: string) {
 	const sessionId = encodeHexLowerCase(sha256(new TextEncoder().encode(token)));
 	const session: table.Session = {
 		id: sessionId,
 		userId,
-		expiresAt: new Date(Date.now() + HOUR_IN_MS) //DAY_IN_MS * 30)
+		expiresAt: new Date(Date.now() + HOUR_IN_MS * 30)
 	};
 	await db.insert(table.sessionsTable).values(session);
 	return session;
@@ -33,7 +33,8 @@ export async function invalidateSession(sessionId: string): Promise<void> {
 	await db.delete(table.sessionsTable).where(eq(table.sessionsTable.id, sessionId));
 }
 
-export async function validateSession(sessionId: string) {
+export async function validateSession(token: string) {
+	const sessionId = encodeHexLowerCase(sha256(new TextEncoder().encode(token)));
 	const [result] = await db
 		.select({
 			// Adjust user table here to tweak returned data
@@ -55,6 +56,7 @@ export async function validateSession(sessionId: string) {
 	if (!result) {
 		return { session: null, user: null };
 	}
+
 	const { session, user } = result;
 
 	const sessionExpired = Date.now() >= session.expiresAt.getTime();
@@ -76,3 +78,16 @@ export async function validateSession(sessionId: string) {
 }
 
 export type SessionValidationResult = Awaited<ReturnType<typeof validateSession>>;
+
+export function setSessionTokenCookie(cookies: Cookies, token: string, expiresAt: Date) {
+	cookies.set(sessionCookieName, token, {
+		expires: expiresAt,
+		path: '/'
+	});
+}
+
+export function deleteSessionTokenCookie(cookies: Cookies) {
+	cookies.delete(sessionCookieName, {
+		path: '/'
+	});
+}

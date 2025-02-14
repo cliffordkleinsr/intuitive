@@ -37,11 +37,38 @@ const rankBuilder = (aspects: string[]) => {
 const ratingSchema = z.object({
 	answer: z.number().min(1, 'Please select a rating').max(5)
 });
-export { openEndedSchema, multipleSchema, ratingSchema, enumBuilder, rankBuilder };
+
+// for select
+const buildSelectSchema = (numOptions: number) => {
+	const shape: Record<string, z.ZodString> = {};
+	for (let i = 0; i < numOptions; i++) {
+		shape[`option${i}`] = z.string({
+			required_error: `Please select an option for question ${i + 1}`
+		});
+	}
+	return z.object(shape);
+};
+
+export {
+	openEndedSchema,
+	multipleSchema,
+	ratingSchema,
+	enumBuilder,
+	buildSelectSchema,
+	rankBuilder
+};
 
 type OpenEndedSchema = typeof openEndedSchema;
 type MultipleSchema = typeof multipleSchema;
 type OptionalSchema = ReturnType<typeof enumBuilder>;
+type BuildSelectSchema = ReturnType<typeof buildSelectSchema>;
 type RankSchema = ReturnType<typeof rankBuilder>;
 type RateSchema = typeof ratingSchema;
-export type { OpenEndedSchema, MultipleSchema, OptionalSchema, RankSchema, RateSchema };
+export type {
+	OpenEndedSchema,
+	MultipleSchema,
+	OptionalSchema,
+	BuildSelectSchema,
+	RankSchema,
+	RateSchema
+};

@@ -21,6 +21,7 @@
 	import { Settings } from '$lib/custom/shardedlayouts';
 	import type { LayoutData } from './$types';
 	import type { Snippet } from 'svelte';
+	import { page } from '$app/state';
 
 	let { children, data }: { data: LayoutData; children: Snippet } = $props();
 
@@ -83,8 +84,8 @@
 				items: []
 			}
 		],
-		user: data.AuthedUser,
-		payment_status: data.payment.status,
+		user: data.user?.fullname as string,
+		payment_status: data.payment?.status as boolean,
 		action: '/client/signout'
 	};
 </script>
@@ -114,7 +115,7 @@
 			</Breadcrumb.Root>
 
 			<div class="ml-auto flex gap-2">
-				{#if !data.payment.status}
+				{#if data.payment?.status}
 					<div class="my-2 hidden h-5 md:block">
 						<Badge variant="outline"><a href="/client-console/billing">Unlock Pro</a></Badge>
 					</div>
@@ -128,7 +129,11 @@
 					/>
 					<span class="sr-only">Toggle theme</span>
 				</Button>
-				<Settings name={data.AuthedUser} action={ClientlayoutItems.action} items={dropProps} />
+				<Settings
+					name={String(data.user?.fullname)}
+					action={ClientlayoutItems.action}
+					items={dropProps}
+				/>
 			</div>
 		</header>
 		<main>

@@ -1,7 +1,6 @@
 import { fail } from '@sveltejs/kit';
 import type { Actions } from './$types';
 import * as auth from '$lib/server/auth.js';
-import { deleteSessionTokenCookie } from '$lib/server/session';
 import { redirect } from 'sveltekit-flash-message/server';
 import { handleLoginRedirect } from '$lib/custom/functions/helpers';
 export const actions: Actions = {
@@ -19,7 +18,7 @@ export const actions: Actions = {
 			);
 		}
 		await auth.invalidateSession(session.id);
-		deleteSessionTokenCookie(cookies);
-		redirect(302, '/client/signin', { type: 'info', message: 'Logged Out' }, cookies);
+		auth.deleteSessionTokenCookie(cookies);
+		redirect(302, '/client/login', { type: 'info', message: 'Logged Out' }, cookies);
 	}
 };

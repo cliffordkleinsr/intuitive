@@ -9,15 +9,23 @@
 	import DataTable from '$lib/components/data-table.svelte';
 	import { columns } from './(tableau)/columns';
 	let { data }: { data: PageData } = $props();
-	const { all_surv, draft_surv, live_surv, closed_surv, count, payment, share, extern } = data;
+	const {
+		all_surv,
+		draft_surv,
+		live_surv,
+		closed_surv,
+		count,
+		payment,
+		user: { fullname }
+	} = data;
 </script>
 
 <div
 	class="m-4 mt-4 flex flex-col gap-10"
-	data-title="Welcome {data.AuthedUser}"
+	data-title="Welcome {fullname}"
 	data-intro="This is your dashboard"
 >
-	<div class="grid gap-2 md:grid-cols-2 md:gap-8 lg:{share > 0 ? 'grid-cols-4' : 'grid-cols-3'}">
+	<div class="grid grid-cols-3 gap-2 md:grid-cols-2 md:gap-8">
 		<Card.Root data-intro="Create new surveys by clicking here" class="space-y-5 sm:col-span-1">
 			<Card.Header>
 				<Card.Title><ChartLine class="size-6 text-primary" /></Card.Title>
@@ -63,33 +71,6 @@
 				<Progress value={count} aria-label="{count / 100}% increase" />
 			</Card.Footer>
 		</Card.Root>
-		{#if share > 0}
-			<Card.Root
-				data-intro="These are the total people who have taken a survey that you've created"
-				class="lg:max-w-sm"
-				data-x-chunk-name="dashboard-05-chunk-2"
-				data-x-chunk-description="A stats card showing this month's total sales in USD, the percentage difference from last month, and a progress bar."
-			>
-				<Card.Header class="pb-2">
-					<Card.Description>Total Sharable Surveys</Card.Description>
-					<Card.Title class="text-3xl"></Card.Title>
-				</Card.Header>
-				<Card.Content class="text-3xl font-semibold">
-					{share}
-				</Card.Content>
-				<Card.Footer>
-					<Button
-						href="/client-console/shared"
-						size="default"
-						variant="default"
-						class="ml-auto w-full gap-1"
-					>
-						View sharable surveys
-						<ArrowUpRight class="h-4 w-4" />
-					</Button>
-				</Card.Footer>
-			</Card.Root>
-		{/if}
 	</div>
 	<Tabs.Root value="draft" class="mx-auto w-96 lg:w-full">
 		<Tabs.List class="mx-5 grid w-80 grid-cols-3 lg:w-[35rem]">
@@ -101,14 +82,16 @@
 				>Completed</Tabs.Trigger
 			>
 		</Tabs.List>
-		<Tabs.Content value="draft">
-			<DataTable data={draft_surv} columns={columns(payment.status, 'Draft')} />
-		</Tabs.Content>
-		<Tabs.Content value="running">
-			<DataTable data={live_surv} columns={columns(payment.status, 'Live')} />
-		</Tabs.Content>
-		<Tabs.Content value="completed">
-			<DataTable data={closed_surv} columns={columns(payment.status, 'Closed')} />
-		</Tabs.Content>
+		{#if payment}
+			<Tabs.Content value="draft">
+				<DataTable data={draft_surv} columns={columns(payment.status, 'Draft')} />
+			</Tabs.Content>
+			<Tabs.Content value="running">
+				<DataTable data={live_surv} columns={columns(payment.status, 'Live')} />
+			</Tabs.Content>
+			<Tabs.Content value="completed">
+				<DataTable data={closed_surv} columns={columns(payment.status, 'Closed')} />
+			</Tabs.Content>
+		{/if}
 	</Tabs.Root>
 </div>
