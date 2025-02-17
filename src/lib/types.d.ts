@@ -134,9 +134,11 @@ interface SurveyData {
 	};
 }
 interface clientData {
-	payment: {
-		status: boolean;
-	};
+	payment:
+		| {
+				status: boolean;
+		  }
+		| boolean;
 	features: {
 		gender_active: boolean;
 		ages: boolean;
@@ -157,6 +159,28 @@ interface clientData {
 	};
 	questions: clientData['available_qns'][];
 	otp: boolean;
+}
+interface Consumer {
+	payment: boolean;
+	features: {
+		gender_active: boolean;
+		ages: boolean;
+		maxqns: number;
+		maxagents: number;
+		maxsurv: number;
+		plan: string;
+	};
+	user: App.Locals['user'];
+	available_qns: {
+		id: string;
+		question: string;
+		question_type: string;
+		likert_key: string;
+		optionid: string[];
+		options: string[];
+		created_at: Date;
+	};
+	questions: clientData['available_qns'][];
 }
 interface GoogleIdTokenPayload {
 	iss: string;
@@ -188,5 +212,6 @@ export type {
 	Analytics,
 	Question,
 	clientData,
-	GoogleIdTokenPayload
+	GoogleIdTokenPayload,
+	Consumer
 };

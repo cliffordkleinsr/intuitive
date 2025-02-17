@@ -20,26 +20,28 @@ export const registerCSchema = z
 			.string({ required_error: 'Company designation is required' })
 			.min(2, { message: 'Company designation must have atleast 2 characters' })
 			.max(50, { message: 'Email cant have a maximum 50 characters' }),
-		phoneno: z
-			.string({ required_error: 'Phone number is required' })
-			.min(10, { message: 'Phone number must be more equal to ten digits' })
-			.regex(
-				/^(?:(?:\+254)|0)?(?:(?:11[01])|(?:7(?:0[0-9]|1[0-9]|2[0-9]|4[0-3]|4[5-6]|48|5[7-9]|6[8-9]|9[0-9])))[0-9]{6}$/gm,
-				{
-					message: 'Must be a valid Safaricom phone number'
-				}
-			),
-		county: z
-			.enum(counties.map((f) => f.name) as [Counties, ...Counties[]], {
-				errorMap: () => ({ message: 'Please select a valid County.' })
-			})
-			.optional(),
-		subctys: z
-			.string({
-				required_error: 'Must be valid Sub County.'
-			})
-			.min(2, { message: 'Please select a valid sub county' })
-			.max(25, { message: 'Please select a valid sub county' }),
+		// phoneno: z
+		// 	.string({ required_error: 'Phone number is required' })
+		// 	.min(12, { message: 'Phone number must be more equal to ten digits' })
+		// 	.regex(
+		// 		/^(?:(?:\+254)|0)?(?:(?:11[01])|(?:7(?:0[0-9]|1[0-9]|2[0-9]|4[0-3]|4[5-6]|48|5[7-9]|6[8-9]|9[0-9])))[0-9]{6}$/gm,
+		// 		{
+		// 			message: 'Must be a valid Safaricom phone number'
+		// 		}
+		// 	).trim(),
+		phoneno: z.string().nonempty(),
+		// county: z
+		// 	.enum(counties.map((f) => f.name) as [Counties, ...Counties[]], {
+		// 		errorMap: () => ({ message: 'Please select a valid County.' })
+		// 	}),
+		county: z.string().nonempty(),
+		subctys: z.string().nonempty(),
+		// subctys: z
+		// 	.string({
+		// 		required_error: 'Must be valid Sub County.'
+		// 	})
+		// 	.min(2, { message: 'Please select a valid sub county' })
+		// 	.max(25, { message: 'Please select a valid sub county' }),
 		sector: z
 			.string({
 				required_error: 'Must be valid Sector'

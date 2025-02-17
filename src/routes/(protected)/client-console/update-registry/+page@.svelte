@@ -182,11 +182,11 @@
 			</div>
 		</div>
 		<div>
-			<Form.Field {form} name="subctys">
+			<Form.Field {form} name="sector">
 				<Form.Control>
 					{#snippet children({ props })}
 						<Form.Label for="sector">Sector</Form.Label>
-						<Select.Root type="single" bind:value={$formData.sector} name="sector">
+						<Select.Root type="single" bind:value={$formData.sector} {...props}>
 							<Select.Trigger id="sector">
 								{$formData.sector ? $formData.sector : 'Select your sector of expertise'}
 							</Select.Trigger>

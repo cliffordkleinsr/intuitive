@@ -21,9 +21,10 @@ import {
 	payoutRequests,
 	type surveyGenerateSchema,
 	branchingRules,
-	priceLookup,
+	pricingTable,
 	consumerDeats,
-	consumerPackage
+	consumerPackage,
+	type ConsumerData
 } from './schema';
 import type { PgColumn, PgTable } from 'drizzle-orm/pg-core';
 import type { Cookies } from '@sveltejs/kit';
@@ -137,9 +138,23 @@ export const insertNewUser = async (user: userInsertSchema) => {
 export const insertRespData = async (data: RespondentInsertSchema) => {
 	return await db.insert(agentData).values(data);
 };
-// Insertion for Client Users
+// Insertion for Old Client Users
+/**Method to insert client data
+ * @deprecated use insertConsumerData instead
+ * @param data
+ * @returns
+ */
 export const insertClientData = async (data: ClientDataInsertSchema) => {
 	return await db.insert(clientData).values(data);
+};
+
+/**
+ * Method to insert ConsumerData
+ * @param data
+ * @returns
+ */
+export const insertConsumerData = async (data: ConsumerData) => {
+	return await db.insert(consumerDeats).values(data);
 };
 // Insertion for New Survey
 export const createNewSurvey = async (data: surveyGenerateSchema) => {
@@ -302,14 +317,14 @@ export const expirePackage = async (id: string) => {
 export const doPriceLookup = async (id: string) => {
 	const [on_demand_pkg] = await db
 		.select({
-			max_questions: priceLookup.max_qns,
-			max_responses: priceLookup.max_responses,
-			demographics: priceLookup.demographics,
-			api: priceLookup.api,
-			branding: priceLookup.branding
+			max_questions: pricingTable.max_qns,
+			max_responses: pricingTable.max_responses,
+			demographics: pricingTable.demographics,
+			api: pricingTable.api,
+			branding: pricingTable.branding
 		})
-		.from(priceLookup)
-		.leftJoin(consumerPackage, eq(consumerPackage.package_id, priceLookup.id))
+		.from(pricingTable)
+		.leftJoin(consumerPackage, eq(consumerPackage.package_id, pricingTable.id))
 		.where(eq(consumerPackage.consumerid, id));
 	return on_demand_pkg;
 };
@@ -322,6 +337,35 @@ export const getNewPaymentStatus = async (id: string) => {
 				.where(and(eq(consumerPackage.consumerid, id), lte(consumerPackage.expires, new Date())))
 		).length > 0;
 	return current_scope;
+};
+
+export const retSurveyInfo = async (id: string) => {
+	const select = {
+		id: SurveyTable.surveyid,
+		title: SurveyTable.surveyTitle,
+		created: sql<Date>`${SurveyTable.createdAt}::timestamp::date`,
+		status: SurveyTable.status
+	};
+	const [allsurveys, draftsurveys, livesurveys, closedsurveys] = await Promise.all([
+		db
+			.select(select)
+			.from(SurveyTable)
+			.where(sql`${SurveyTable.clientid} = ${id}`),
+		db
+			.select(select)
+			.from(SurveyTable)
+			.where(sql`${SurveyTable.clientid} = ${id} and ${SurveyTable.status} = 'Draft'`),
+		db
+			.select(select)
+			.from(SurveyTable)
+			.where(sql`${SurveyTable.clientid} = ${id} and ${SurveyTable.status} = 'Live'`),
+		db
+			.select(select)
+			.from(SurveyTable)
+			.where(sql`${SurveyTable.clientid} = ${id} and ${SurveyTable.status} = 'Closed'`)
+	]);
+
+	return [allsurveys, draftsurveys, livesurveys, closedsurveys];
 };
 
 export const disableNewSurvey = async (id: string) => {

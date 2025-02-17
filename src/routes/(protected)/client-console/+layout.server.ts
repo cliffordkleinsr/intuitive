@@ -21,6 +21,7 @@ export const load: LayoutServerLoad = async ({ locals: { user }, url, cookies })
 	const uid = user?.id as string;
 	const update_registry = await getRegistryState(uid);
 	const use_old = false;
+
 	if (!user) {
 		redirect(302, handleLoginRedirect('/client/login', url));
 	}
@@ -81,11 +82,15 @@ export const load: LayoutServerLoad = async ({ locals: { user }, url, cookies })
 			use_old
 		};
 	} else {
-		// // get features
-		// doPriceLookup(user.id),
-		// 	// payment status
-		// 	getNewPaymentStatus(user.id);
+		// get features
+		const [features, payment] = await Promise.all([
+			doPriceLookup(user.id),
+			// payment status
+			getNewPaymentStatus(user.id)
+		]);
 		return {
+			features,
+			payment,
 			use_old,
 			user
 		};

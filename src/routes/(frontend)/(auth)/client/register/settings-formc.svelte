@@ -10,6 +10,8 @@
 	import * as Select from '$lib/components/ui/select';
 	import * as Breadcrumb from '$lib/components/ui/breadcrumb/index.js';
 
+	// Extras
+	import { PhoneInput } from '$lib/components/ui/phone-input';
 	// sonner
 	import { toast } from 'svelte-sonner';
 
@@ -75,9 +77,9 @@
 				<Breadcrumb.Link href="/">Home</Breadcrumb.Link>
 			</Breadcrumb.Item>
 			<Breadcrumb.Separator></Breadcrumb.Separator>
-			<Breadcrumb.Item>
+			<!-- <Breadcrumb.Item>
 				<Breadcrumb.Link href="/client/signin">Client SignIn</Breadcrumb.Link>
-			</Breadcrumb.Item>
+			</Breadcrumb.Item> -->
 			<Breadcrumb.Separator></Breadcrumb.Separator>
 			<Breadcrumb.Item>
 				<Breadcrumb.Page>Client Registration</Breadcrumb.Page>
@@ -149,10 +151,12 @@
 								<Form.Control>
 									{#snippet children({ props })}
 										<Form.Label>Phone Number</Form.Label>
-										<Input
+										<PhoneInput
+											class="w-full"
 											{...props}
+											country="KE"
+											placeholder="Enter a phone number"
 											bind:value={$formData.phoneno}
-											placeholder="Input phone number"
 										/>
 									{/snippet}
 								</Form.Control>
@@ -171,11 +175,11 @@
 										{#snippet children({ props })}
 											<Form.Label>Company Location</Form.Label>
 											<Popover.Trigger
-												class={cn(
+												class={[
 													buttonVariants({ variant: 'outline' }),
 													'w-[200px] justify-between',
 													!$formData.county && 'text-muted-foreground'
-												)}
+												]}
 												role="combobox"
 												{...props}
 											>
@@ -186,32 +190,28 @@
 											<input hidden value={$formData.county} name={props.name} />
 										{/snippet}
 									</Form.Control>
-									<Popover.Content class="w-auto p-0" side="bottom">
+									<Popover.Content align="start" class="w-full p-0">
 										<Command.Root>
-											<Command.Input autofocus placeholder="Search County..." class="h-9" />
-											<Command.Empty>No County found.</Command.Empty>
-											<Command.Group>
-												<ScrollArea class="h-[200px] lg:h-96">
+											<Command.Input placeholder="Select your area of operation" class="h-9" />
+											<Command.List>
+												<Command.Empty>No framework found.</Command.Empty>
+												<Command.Group>
 													{#each counties as cty}
 														<Command.Item
 															value={cty.name}
 															onSelect={() => {
 																$formData.county = cty.name;
 																closeAndFocusTrigger(triggerId);
-																open = !open;
 															}}
 														>
-															{cty.name}
 															<Check
-																class={cn(
-																	'ml-auto h-4 w-4',
-																	cty.name !== $formData.county && 'text-transparent'
-																)}
+																class={cn(cty.name !== $formData.county && 'text-transparent')}
 															/>
+															{cty.name}
 														</Command.Item>
 													{/each}
-												</ScrollArea>
-											</Command.Group>
+												</Command.Group>
+											</Command.List>
 										</Command.Root>
 									</Popover.Content>
 								</Popover.Root>
@@ -222,10 +222,10 @@
 							<Form.Field {form} name="subctys">
 								<Form.Control>
 									{#snippet children({ props })}
-										<Form.Label>Sub-County</Form.Label>
-										<Select.Root type="single" bind:value={$formData.subctys} name={props.name}>
-											<Select.Trigger {...props}>
-												{$formData.subctys ? $formData.subctys : 'Select your area sub-county'}
+										<Form.Label for="subctys">Sub county</Form.Label>
+										<Select.Root type="single" bind:value={$formData.subctys} {...props}>
+											<Select.Trigger id="subctys">
+												{$formData.subctys ? $formData.subctys : 'select your area sub-county'}
 											</Select.Trigger>
 											<Select.Content>
 												{#if countyMap.has($formData.county)}
@@ -314,9 +314,9 @@
 			</div>
 			<div class="mt-4 text-center text-sm">
 				Already have an account?
-				<a href="/client/signin" class="underline hover:text-primary"> Sign in </a>
+				<a href="/client/login" class="underline hover:text-primary"> Log in </a>
 			</div>
 		</Card.Content>
-		<SuperDebug data={$formData} />
+		<!-- <SuperDebug data={$formData} /> -->
 	</Card.Root>
 </form>

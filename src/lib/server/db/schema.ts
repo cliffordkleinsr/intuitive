@@ -136,31 +136,16 @@ export const consumerDeats = pgTable('consumer_details', {
 	sub_county: text().notNull(),
 	sector: text().notNull(),
 	disabled: boolean().notNull().default(false),
-	created_at: timestamp('expires_at', {
+	created_at: timestamp('created_at', {
 		withTimezone: true,
 		mode: 'date'
 	})
+		.defaultNow()
+		.notNull()
 });
 
-export const consumerPackage = pgTable('consumer_package', {
-	id: serial().notNull().primaryKey(),
-	consumerid: text()
-		.references(() => UsersTable.id)
-		.notNull(),
-	package_id: text().notNull(),
-	package: text().notNull(),
-	package_type: text().notNull(),
-	invoiced: timestamp({
-		withTimezone: true,
-		mode: 'date'
-	}).notNull(),
-	expires: timestamp({
-		withTimezone: true,
-		mode: 'date'
-	}).notNull()
-});
-export const priceLookup = pgTable('price_lookup', {
-	id: serial().notNull(),
+export const pricingTable = pgTable('price_table', {
+	id: serial().primaryKey().notNull(),
 	title: text().notNull(),
 	one_pack: text().notNull(),
 	six_pack: text().notNull(),
@@ -172,6 +157,25 @@ export const priceLookup = pgTable('price_lookup', {
 	branding: boolean().notNull().default(false)
 });
 
+export const consumerPackage = pgTable('consumer_package', {
+	id: serial().notNull().primaryKey(),
+	consumerid: text()
+		.references(() => UsersTable.id)
+		.notNull(),
+	package_id: integer()
+		.references(() => pricingTable.id)
+		.notNull(),
+	package: text().notNull(),
+	package_type: text().notNull(),
+	invoiced: timestamp({
+		withTimezone: true,
+		mode: 'date'
+	}).notNull(),
+	expires: timestamp({
+		withTimezone: true,
+		mode: 'date'
+	}).notNull()
+});
 export const emailVerification = pgTable('email_verification', {
 	userId: text('user_id')
 		.notNull()
@@ -391,6 +395,7 @@ export const clientTransactions = pgTable('client_transactions', {
 });
 export type userInsertSchema = typeof UsersTable.$inferInsert;
 export type ClientDataInsertSchema = typeof clientData.$inferInsert;
+export type ConsumerData = typeof consumerDeats.$inferInsert;
 export type RespondentInsertSchema = typeof agentData.$inferInsert;
 export type surveyGenerateSchema = typeof SurveyTable.$inferInsert;
 export type surveySelectSchema = typeof SurveyTable.$inferSelect;
