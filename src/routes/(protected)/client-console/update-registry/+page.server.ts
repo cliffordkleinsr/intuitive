@@ -6,15 +6,17 @@ import { consumerDeats, UsersTable } from '$lib/server/db/schema';
 import { db } from '$lib/server/db';
 import { eq } from 'drizzle-orm';
 import { redirect } from 'sveltekit-flash-message/server';
+import { getRegistryState } from '$lib/server/db/db_utils';
 
-export const load = (async ({ cookies }) => {
-	const update_registry = cookies.get('update_registry') ?? null;
+export const load = (async ({ cookies, locals: { user } }) => {
+	const uid = user?.id as string;
+	const update_registry = await getRegistryState(uid); //cookies.get('update_registry') ?? null;
 
 	if (!Boolean(update_registry)) {
 		redirect(
 			303,
 			'/client-console',
-			{ type: 'warning', message: 'Registry already exists' },
+			{ type: 'warning', message: 'User already registered' },
 			cookies
 		);
 	}
@@ -61,9 +63,13 @@ export const actions: Actions = {
 				sub_county: subctys,
 				sector
 			});
-			cookies.delete('update_registry', {
-				path: '/'
-			});
+
+			await db
+				.update(UsersTable)
+				.set({
+					update_registry: false
+				})
+				.where(eq(UsersTable.id, userid));
 		} catch (error) {
 			console.error(error);
 			return message(form, {

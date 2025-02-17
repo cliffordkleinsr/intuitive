@@ -3,20 +3,33 @@ import { zod } from 'sveltekit-superforms/adapters';
 import type { Actions, PageServerLoad } from './$types';
 import { loginSchema } from './schema';
 import bcrypt from 'bcrypt';
-import { getEmailUser } from '$lib/server/db/db_utils';
+import { getEmailUser, getRegistryState } from '$lib/server/db/db_utils';
 
 import { createSession, generateSessionToken, setSessionTokenCookie } from '$lib/server/auth';
 import { redirect } from 'sveltekit-flash-message/server';
 import { handleLoginRedirect } from '$lib/custom/functions/helpers';
 
 export const load = (async ({ locals: { user }, cookies, url }) => {
-	if (user) {
+	const uid = user?.id as string;
+	const update_registry = await getRegistryState(uid); //cookies.get('update_registry') ?? null;
+	if (Boolean(update_registry)) {
 		redirect(
 			302,
 			handleLoginRedirect('/client-console/update-registry', url),
 			{
-				type: 'success',
-				message: 'Logged In Successfully'
+				type: 'info',
+				message: 'Please update registry before proceeding'
+			},
+			cookies
+		);
+	}
+	if (user) {
+		redirect(
+			302,
+			handleLoginRedirect('/client-console', url),
+			{
+				type: 'info',
+				message: 'User already logged in'
 			},
 			cookies
 		);

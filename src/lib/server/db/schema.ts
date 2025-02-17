@@ -33,6 +33,7 @@ export const UsersTable = pgTable('users', {
 	age: integer('age'),
 	gender: text('gender'),
 	pfp: text('profile_pic'),
+	update_registry: boolean().default(false).notNull(),
 	disabled: boolean('disabled').default(false).notNull(),
 	createdAt: timestamp('created_at', {
 		withTimezone: true,

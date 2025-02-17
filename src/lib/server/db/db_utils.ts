@@ -94,11 +94,22 @@ export const createGoogleUser = async (googleUserId: string, username: string, e
 			googleId: googleUserId,
 			fullname: username,
 			email,
-			role: 'CLIENT'
+			role: 'CLIENT',
+			update_registry: true
 		})
 		.returning({ id: UsersTable.id });
 };
 
+export const getRegistryState = async (id: string) => {
+	const [registry] = await db
+		.select({
+			state: UsersTable.update_registry
+		})
+		.from(UsersTable)
+		.where(eq(UsersTable.id, id));
+
+	return registry?.state;
+};
 export const getEmailUser = async (email: string) => {
 	const [user] = await db
 		.select({
@@ -112,15 +123,7 @@ export const getEmailUser = async (email: string) => {
 	return user;
 };
 export const getUserFromGoogleId = async (googleUserId: string) => {
-	const [user] = await db
-		.select({
-			id: UsersTable.id,
-			password: UsersTable.password,
-			role: UsersTable.role,
-			verified: UsersTable.isEmailVerified
-		})
-		.from(UsersTable)
-		.where(eq(UsersTable.googleId, googleUserId));
+	const [user] = await db.select().from(UsersTable).where(eq(UsersTable.googleId, googleUserId));
 	return user;
 };
 // Insertion for any User

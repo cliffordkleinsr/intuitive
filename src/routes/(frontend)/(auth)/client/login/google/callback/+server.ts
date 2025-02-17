@@ -5,6 +5,7 @@ import { decodeIdToken } from 'arctic';
 import type { OAuth2Tokens } from 'arctic';
 import type { GoogleIdTokenPayload } from '$lib/types';
 import { createGoogleUser, getUserFromGoogleId } from '$lib/server/db/db_utils';
+import { redirect } from 'sveltekit-flash-message/server';
 
 export const GET: RequestHandler = async ({ url, cookies }) => {
 	const code = url.searchParams.get('code');
@@ -44,12 +45,13 @@ export const GET: RequestHandler = async ({ url, cookies }) => {
 		const sessionToken = generateSessionToken();
 		const session = await createSession(sessionToken, existingUser.id);
 		setSessionTokenCookie(cookies, sessionToken, session.expiresAt);
-		return new Response(null, {
-			status: 302,
-			headers: {
-				Location: '/'
-			}
-		});
+		redirect(302, '/client-console', { type: 'success', message: 'User logged in' }, cookies);
+		// return new Response(null, {
+		// 	status: 302,
+		// 	headers: {
+		// 		Location: '/client-console'
+		// 	}
+		// });
 	}
 	// TODO: Replace this with your own DB query.
 	const [user] = await createGoogleUser(googleUserId, username, email);
@@ -57,14 +59,22 @@ export const GET: RequestHandler = async ({ url, cookies }) => {
 	const session = await createSession(sessionToken, user.id);
 	setSessionTokenCookie(cookies, sessionToken, session.expiresAt);
 	// cookie to update-registry
-	cookies.set('update_registry', 'true', {
-		path: '/',
-		maxAge: 60 * 60 * 24 * 5 // 5days
-	});
-	return new Response(null, {
-		status: 302,
-		headers: {
-			Location: '/'
-		}
-	});
+	// Done change to db call
+	// cookies.set('update_registry', 'true', {
+	// 	path: '/',
+	// 	maxAge: 60 * 60 * 24 * 5 // 5days
+	// });
+	// Done show toast
+	redirect(
+		302,
+		'/client-console/update-registry',
+		{ type: 'success', message: 'User Registered Successfully' },
+		cookies
+	);
+	// return new Response(null, {
+	// 	status: 302,
+	// 	headers: {
+	// 		Location: '/client-console/update-registry'
+	// 	}
+	// });
 };

@@ -121,7 +121,7 @@
 								d="M43.611 20.083H42V20H24v8h11.303a12.04 12.04 0 0 1-4.087 5.571l.003-.002l6.19 5.238C36.971 39.205 44 34 44 24c0-1.341-.138-2.65-.389-3.917"
 							/>
 						</svg>
-						Sign in with Google
+						Sign up/ Sign in with Google
 					</a>
 					<!-- <Button 
 						variant="outline"
@@ -138,13 +138,13 @@
 						
 						</Button> -->
 				</div>
-				<div class="mt-4 text-center text-sm">
+				<!-- <div class="mt-4 text-center text-sm">
 					Don't have an account?
 					<a href="/client/register" class="underline hover:text-primary"> Register </a>
-				</div>
-				<div class="mt-4 text-center text-sm">
+				</div> -->
+				<!-- <div class="mt-4 text-center text-sm">
 					<a href="/client/password/reset" class="underline hover:text-primary">Forgot Password?</a>
-				</div>
+				</div> -->
 			</Card.Content>
 		</Card.Root>
 	</form>
