@@ -101,14 +101,17 @@ export const createGoogleUser = async (googleUserId: string, username: string, e
 };
 
 export const getRegistryState = async (id: string) => {
-	const [registry] = await db
-		.select({
-			state: UsersTable.update_registry
-		})
-		.from(UsersTable)
-		.where(eq(UsersTable.id, id));
+	if (id) {
+		const [registry] = await db
+			.select({
+				state: UsersTable.update_registry
+			})
+			.from(UsersTable)
+			.where(eq(UsersTable.id, id));
 
-	return registry?.state;
+		return registry?.state;
+	}
+	return null;
 };
 export const getEmailUser = async (email: string) => {
 	const [user] = await db
