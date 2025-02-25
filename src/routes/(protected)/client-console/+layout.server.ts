@@ -23,7 +23,12 @@ export const load: LayoutServerLoad = async ({ locals: { user }, url, cookies })
 	const use_old = false;
 
 	if (!user) {
-		redirect(302, handleLoginRedirect('/client/login', url));
+		redirect(
+			302,
+			handleLoginRedirect('/client/login', url),
+			{ type: 'info', message: 'Log in to view page' },
+			cookies
+		);
 	}
 
 	if (Boolean(update_registry)) {

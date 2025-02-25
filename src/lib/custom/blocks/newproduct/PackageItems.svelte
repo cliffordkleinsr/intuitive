@@ -9,6 +9,7 @@
 	import { sineInOut } from 'svelte/easing';
 	import { getContext } from 'svelte';
 	import { MediaQuery } from 'svelte/reactivity';
+	import Portal2 from '../Portals/Portal2.svelte';
 
 	let { cluster } = $props();
 	// $inspect(getContext('logic'))
@@ -94,7 +95,77 @@
 				{#if logic.signup}
 					<Button variant="secondary" class=" w-full" href="/client/signin">Sign Up</Button>
 				{:else}
-					<Button variant="secondary" class=" w-full">Subscribe</Button>
+					<Portal2>
+						<!-- trigger -->
+						{#snippet trigger({ props })}
+							<Button variant="secondary" class="w-full" {...props}>Subscribe</Button>
+						{/snippet}
+						<!-- children -->
+						<div class="mx-auto w-full max-w-md">
+							<h1 class="text-2xl">Order Summary</h1>
+							<p>Review your selected plan before confirming</p>
+							<div class="flex items-center justify-between space-y-4">
+								<h3 class="text-lg font-semibold">{pkg.title}</h3>
+								<span class="text-2xl font-bold">
+									${cluster === 'advantage'
+										? pkg.six_pack
+										: cluster === 'advanced'
+											? pkg.ten_pack
+											: pkg.one_pack}
+								</span>
+							</div>
+
+							<ul class="space-y-2">
+								{#each pkg.features.slice(0, 3) as feature}
+									<li class="flex items-center">
+										<Check class="mr-2 h-4 w-4 text-green-500" />
+										<span class="text-sm">{feature}</span>
+									</li>
+								{/each}
+							</ul>
+							<div class="border-b py-5 outline-2">
+								<span class="text-lg font-semibold"> Package type: </span>
+								<span class="float-end text-end text-lg font-bold">
+									{cluster === 'advantage'
+										? '6 Pack'
+										: cluster === 'advanced'
+											? '10 Pack'
+											: 'On Demand'}
+								</span>
+							</div>
+						</div>
+						<Button
+							class="mt-3 w-full max-w-md"
+							variant="black"
+							onclick={() =>
+								localStorage.setItem(
+									'aurium',
+									JSON.stringify({
+										plan: pkg.title,
+										price:
+											cluster === 'advantage'
+												? pkg.six_pack
+												: cluster === 'advanced'
+													? pkg.ten_pack
+													: pkg.one_pack,
+										packagetype:
+											cluster === 'advantage'
+												? 'six_pack'
+												: cluster === 'advanced'
+													? 'ten_pack'
+													: 'one_pack'
+									})
+								)}
+							href="/client-console/billing/summary"
+						>
+							Checkout With
+							<img
+								class="w-14"
+								src="https://upload.wikimedia.org/wikipedia/commons/0/0b/M-PESA.png"
+								alt="Mpesa"
+							/>
+						</Button>
+					</Portal2>
 				{/if}
 			</Card.Footer>
 		</Card.Root>

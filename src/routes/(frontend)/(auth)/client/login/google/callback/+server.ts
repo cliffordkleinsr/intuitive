@@ -39,7 +39,7 @@ export const GET: RequestHandler = async ({ url, cookies }) => {
 	const claims = decodeIdToken(tokens.idToken()) as GoogleIdTokenPayload;
 	const googleUserId = claims.sub;
 	const username = claims.name as string;
-	const email = claims.email as string;
+	const picture = claims.picture as string;
 	const existingUser = await getUserFromGoogleId(googleUserId);
 	if (typeof existingUser !== 'undefined') {
 		const sessionToken = generateSessionToken();
@@ -54,7 +54,7 @@ export const GET: RequestHandler = async ({ url, cookies }) => {
 		// });
 	}
 	// TODO: Replace this with your own DB query.
-	const [user] = await createGoogleUser(googleUserId, username, email);
+	const [user] = await createGoogleUser(googleUserId, username, picture);
 	const sessionToken = generateSessionToken();
 	const session = await createSession(sessionToken, user.id);
 	setSessionTokenCookie(cookies, sessionToken, session.expiresAt);

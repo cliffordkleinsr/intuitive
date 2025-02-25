@@ -32,6 +32,11 @@ import { redirect } from 'sveltekit-flash-message/server';
 import type { Question } from '$lib/types';
 import { toast } from 'svelte-sonner';
 
+/**
+ * @deprecated No longer Needed
+ * @param userid
+ * @param surveyid
+ */
 export const deleteCUser = async (userid: string, surveyid: string) => {
 	await db.delete(surveyqnsTableV2).where(eq(surveyqnsTableV2.surveid, surveyid));
 	await db.delete(SurveyTable).where(eq(SurveyTable.clientid, userid));
@@ -39,10 +44,30 @@ export const deleteCUser = async (userid: string, surveyid: string) => {
 	await db.delete(sessionsTable).where(eq(sessionsTable.userId, userid));
 	await db.delete(UsersTable).where(eq(UsersTable.id, userid));
 };
+
+/**
+ * @deprecated No longer Needed
+ * @param userid
+ */
 export const deleteAUser = async (userid: string) => {
 	await db.delete(agentData).where(eq(agentData.agentid, userid));
 	await db.delete(sessionsTable).where(eq(sessionsTable.userId, userid));
 	await db.delete(UsersTable).where(eq(UsersTable.id, userid));
+};
+
+export const getconsumerDetails = async (userid: string) => {
+	const [consumer] = await db
+		.select({
+			businessName: consumerDeats.company_name,
+			businessAddressLine1: consumerDeats.phone,
+			invoiceNumber: consumerPackage.id,
+			invoiceDate: consumerPackage.invoiced,
+			expiryDates: consumerPackage.expires
+		})
+		.from(consumerDeats)
+		.leftJoin(consumerPackage, eq(consumerPackage.consumerid, consumerDeats.consumerid))
+		.where(eq(consumerDeats.consumerid, userid));
+	return consumer;
 };
 export const getCountAgents = async (variable: PgColumn, userId: string) => {
 	const queryResult = await db
@@ -87,14 +112,14 @@ export const checkUserRole = async (email: string) => {
 	return queryResult;
 };
 
-export const createGoogleUser = async (googleUserId: string, username: string, email: string) => {
+export const createGoogleUser = async (googleUserId: string, username: string, picture: string) => {
 	return await db
 		.insert(UsersTable)
 		.values({
 			id: crypto.randomUUID(),
 			googleId: googleUserId,
 			fullname: username,
-			email,
+			pfp: picture,
 			role: 'CLIENT',
 			update_registry: true
 		})

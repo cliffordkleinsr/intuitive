@@ -13,18 +13,20 @@
 	let {
 		name,
 		action,
-		items
+		items,
+		profile
 	}: {
 		name: string;
 		action: string;
 		items: dropdownItems[];
+		profile?: string;
 	} = $props();
 </script>
 
 <DropdownMenu.Root>
 	<DropdownMenu.Trigger>
 		<Avatar.Root>
-			<Avatar.Image src="" alt="@shadcn" />
+			<Avatar.Image src={profile} alt="@shadcn" />
 			<Avatar.Fallback>{getInitials(name)}</Avatar.Fallback>
 		</Avatar.Root>
 		<span class="sr-only">Toggle user menu</span>

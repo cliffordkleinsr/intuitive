@@ -85,7 +85,7 @@
 			}
 		],
 		user: data.user?.fullname as string,
-		payment_status: data.payment?.status as boolean,
+		payment_status: data.payment as boolean,
 		action: '/client/signout'
 	};
 </script>
@@ -115,7 +115,7 @@
 			</Breadcrumb.Root>
 
 			<div class="ml-auto flex gap-2">
-				{#if data.payment?.status}
+				{#if !data.payment}
 					<div class="my-2 hidden h-5 md:block">
 						<Badge variant="outline"><a href="/client-console/billing">Unlock Pro</a></Badge>
 					</div>
@@ -133,6 +133,7 @@
 					name={String(data.user?.fullname)}
 					action={ClientlayoutItems.action}
 					items={dropProps}
+					profile={String(data.user.pfp)}
 				/>
 			</div>
 		</header>

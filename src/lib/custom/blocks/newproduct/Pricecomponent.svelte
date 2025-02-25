@@ -7,14 +7,7 @@
 
 	let { signup = true } = $props();
 
-	setContext('logic', {
-		get signup() {
-			return signup;
-		},
-		set signup(v) {
-			signup = v;
-		}
-	});
+	setContext('logic', signup);
 
 	let pkg_pack = $state('onepack');
 </script>

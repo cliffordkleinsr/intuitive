@@ -58,7 +58,7 @@ export const actions: Actions = {
 				consumerid: id,
 				email,
 				company_name: company,
-				phone: phoneno,
+				phone: phoneno.replace(/\s+/g, ''),
 				county,
 				sub_county: subctys,
 				sector

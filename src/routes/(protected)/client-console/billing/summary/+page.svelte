@@ -8,7 +8,7 @@
 	import * as Form from '$lib/components/ui/form';
 
 	// superforms
-	import { superForm } from 'sveltekit-superforms';
+	import SuperDebug, { superForm } from 'sveltekit-superforms';
 	import { zodClient } from 'sveltekit-superforms/adapters';
 	// schema
 	import { billingSchema } from './billing';
@@ -37,8 +37,12 @@
 
 	const { form: formData, enhance, message, delayed } = form;
 
-	const { phoneno } = $derived(data);
-	let payment_plan: any | { plan: string; price: string } = $state();
+	const { phoneno } = data;
+	let ref_number = $state<string>();
+	if (phoneno.startsWith('+254')) {
+		ref_number = '0' + phoneno.split('+254')[1];
+	}
+	let payment_plan: any | { plan: string; price: string; packagetype: string } = $state();
 	let value = $state('4826298');
 	$effect(() => {
 		const plan = localStorage.getItem('aurium');
@@ -75,7 +79,7 @@
 		</Card.Content>
 		<Card.Footer class="grid max-w-sm gap-1">
 			<p class="text-sm text-muted-foreground">Enter account number</p>
-			<Input class="font-extrabold" value={phoneno} disabled />
+			<Input class="font-extrabold" value={ref_number} disabled />
 		</Card.Footer>
 		<Card.Footer class="grid max-w-sm gap-1">
 			<p class="text-sm text-muted-foreground">Enter amount in KES</p>
@@ -92,20 +96,12 @@
 				<Form.Field {form} name="phone">
 					<Form.Control>
 						{#snippet children({ props })}
-							<Input {...props} value={phoneno} class="hidden" />
+							<Input {...props} value={ref_number} class="hidden" />
 						{/snippet}
 					</Form.Control>
 					<Form.FieldErrors />
 				</Form.Field>
 				<Form.Field {form} name="price">
-					<Form.Control>
-						{#snippet children({ props })}
-							<Input {...props} value={phoneno} class="hidden" />
-						{/snippet}
-					</Form.Control>
-					<Form.FieldErrors />
-				</Form.Field>
-				<Form.Field {form} name="phone">
 					<Form.Control>
 						{#snippet children({ props })}
 							<Input {...props} value={Math.round(payment_plan?.price * 100)} class="hidden" />
@@ -121,6 +117,15 @@
 					</Form.Control>
 					<Form.FieldErrors />
 				</Form.Field>
+				<Form.Field {form} name="packagetype">
+					<Form.Control>
+						{#snippet children({ props })}
+							<Input {...props} value={payment_plan?.packagetype} class="hidden" />
+						{/snippet}
+					</Form.Control>
+					<Form.FieldErrors />
+				</Form.Field>
+				<!-- <SuperDebug data={$formData}/> -->
 				{#if $delayed}
 					<Button class="flex w-full gap-2" disabled={$delayed} variant="black">
 						<span
