@@ -13,8 +13,8 @@ export const load = (async ({ params }) => {
 	const [shared_surv] = await db
 		.select({
 			id: SurveyTable.surveyid,
-			title: SurveyTable.surveyTitle,
-			description: SurveyTable.surveyDescription
+			title: SurveyTable.title,
+			description: SurveyTable.description
 		})
 		.from(SurveyTable)
 		.where(eq(SurveyTable.surveyid, params.surveyId));

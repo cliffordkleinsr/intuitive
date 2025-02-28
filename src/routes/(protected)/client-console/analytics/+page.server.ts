@@ -7,8 +7,8 @@ export const load = (async ({ locals: { user } }) => {
 	const uid = user?.id as string;
 	const select = {
 		id: SurveyTable.surveyid,
-		title: SurveyTable.surveyTitle,
-		created: sql<Date>`${SurveyTable.createdAt}::timestamp::date`
+		title: SurveyTable.title,
+		created: sql<Date>`${SurveyTable.survey_expires}::timestamp::date`
 	};
 
 	const poll = await db
@@ -16,7 +16,7 @@ export const load = (async ({ locals: { user } }) => {
 		.from(SurveyTable)
 		.where(
 			sql`
-                ${SurveyTable.clientid} = ${uid} 
+                ${SurveyTable.consumer_id} = ${uid} 
                 and 
                 ${SurveyTable.status} != 'Draft'
                 `

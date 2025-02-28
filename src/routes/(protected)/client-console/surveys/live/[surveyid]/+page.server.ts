@@ -16,8 +16,8 @@ export const load: PageServerLoad = async ({ params }) => {
 	const [surveys] = await db
 		.select({
 			id: SurveyTable.surveyid,
-			title: SurveyTable.surveyTitle,
-			desc: SurveyTable.surveyDescription
+			title: SurveyTable.title,
+			desc: SurveyTable.description
 		})
 		.from(SurveyTable)
 		.where(eq(SurveyTable.surveyid, params.surveyid));

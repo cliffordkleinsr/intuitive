@@ -3,8 +3,8 @@ import { signinCSchema } from './schema';
 import { zod } from 'sveltekit-superforms/adapters';
 import type { Actions, PageServerLoad } from './$types';
 import {
-	clientData,
-	clientPackages,
+	// clientData,
+	// clientPackages,
 	emailVerification,
 	sessionsTable,
 	UsersTable

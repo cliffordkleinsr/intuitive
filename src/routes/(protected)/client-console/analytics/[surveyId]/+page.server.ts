@@ -5,8 +5,8 @@ import {
 	agentData,
 	agentSurveysTable,
 	AnswersTable,
-	clientData,
-	clientPackages,
+	// clientData,
+	// clientPackages,
 	surveyqnsTableV2,
 	UsersTable
 } from '$lib/server/db/schema';

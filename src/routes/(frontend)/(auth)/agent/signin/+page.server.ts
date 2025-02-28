@@ -6,7 +6,7 @@ import { db } from '$lib/server/db';
 import {
 	agentData,
 	agentSurveysTable,
-	clientData,
+	// clientData,
 	emailVerification,
 	sessionsTable,
 	smsVerification,
