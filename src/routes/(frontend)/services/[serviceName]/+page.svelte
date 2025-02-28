@@ -51,6 +51,6 @@
 	<img
 		class="mx-auto max-w-sm rounded-xl lg:mx-0 lg:my-24 lg:max-w-lg"
 		src={endpoint.service.img}
-		alt="s"
+		alt="service"
 	/>
 </section>

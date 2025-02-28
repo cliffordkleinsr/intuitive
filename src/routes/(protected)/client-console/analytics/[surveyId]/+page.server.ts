@@ -5,6 +5,8 @@ import {
 	agentData,
 	agentSurveysTable,
 	AnswersTable,
+	consumerDeats,
+	consumerPackage,
 	// clientData,
 	// clientPackages,
 	surveyqnsTableV2,
@@ -237,11 +239,11 @@ export const load: PageServerLoad = async ({ locals: { user }, params: { surveyI
 			.orderBy(asc(surveyqnsTableV2.updatedAt)),
 		db
 			.select({
-				subtype: clientPackages.packageDesc
+				subtype: consumerPackage.package_type
 			})
-			.from(clientData)
-			.leftJoin(clientPackages, eq(clientData.packageid, clientPackages.packageid))
-			.where(eq(clientData.clientId, usr))
+			.from(consumerPackage)
+			// .leftJoin(consumerPackage, eq(clientData.packageid, clientPackages.packageid))
+			.where(eq(consumerPackage.consumerid, usr))
 	]);
 	const analytics = await unionAll(rest, rank_analytics).orderBy(
 		asc(answerCounts.updated),

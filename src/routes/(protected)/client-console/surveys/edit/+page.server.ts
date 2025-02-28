@@ -8,7 +8,7 @@ export const load: PageServerLoad = async ({ locals }) => {
 		.select({
 			id: SurveyTable.surveyid,
 			title: SurveyTable.title,
-			created: sql<Date>`${SurveyTable.survey_expires}::timestamp::date`
+			expires: sql<Date>`${SurveyTable.survey_expires}::timestamp::date`
 		})
 		.from(SurveyTable)
 		.where(

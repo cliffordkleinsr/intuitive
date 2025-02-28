@@ -41,7 +41,6 @@
 	{:else}
 		<Drawer.Root
 			bind:open
-			controlledOpen={true}
 			onOpenChange={(open) => {
 				if (!open) {
 					history.back();

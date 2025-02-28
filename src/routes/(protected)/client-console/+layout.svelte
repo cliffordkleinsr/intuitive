@@ -88,6 +88,8 @@
 		payment_status: data.payment as boolean,
 		action: '/client/signout'
 	};
+	const profile = data.user.pfp ?? '';
+	// $inspect(profile)
 </script>
 
 <Sidebar.Provider>
@@ -133,7 +135,7 @@
 					name={String(data.user?.fullname)}
 					action={ClientlayoutItems.action}
 					items={dropProps}
-					profile={String(data.user.pfp)}
+					{profile}
 				/>
 			</div>
 		</header>

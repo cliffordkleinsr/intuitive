@@ -92,8 +92,8 @@
 				</ul>
 			</Card.Content>
 			<Card.Footer>
-				{#if logic.signup}
-					<Button variant="secondary" class=" w-full" href="/client/signin">Sign Up</Button>
+				{#if logic}
+					<Button variant="secondary" class=" w-full" href="/client/login">Sign Up</Button>
 				{:else}
 					<Portal2>
 						<!-- trigger -->
