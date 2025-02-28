@@ -19,8 +19,6 @@
 		payment,
 		consumer: { businessName, businessAddressLine1, invoiceNumber, invoiceDate, expiryDates }
 	} = data;
-	let accountName = 'unko';
-	let accountNumber = '00000000000000';
 </script>
 
 {#if payment}
@@ -96,16 +94,28 @@
 				<h2 class="font-customHeading pb-1 text-lg font-medium">PAYMENT INFORMATION:</h2>
 				<div id="invoice-info" class="w-84 grid grid-cols-2 gap-x-2">
 					<span class="text-left">Account Name:</span>
-					<span class="text-left">{accountName}</span>
+					<span class="text-left">{businessName}</span>
 
 					<span class="text-left">Account Number:</span>
-					<span class="text-left">{accountNumber}</span>
+					<span class="text-left uppercase">xxxxxxxxxxx</span>
 				</div>
 			</div>
 
 			<div>
 				<p class="font-customHeading pb-1 text-lg font-medium">SIGNATURE:</p>
-				<img src="https://i.ibb.co/L12kLFZ/hk-signature.png" alt="Signature" class="w-52 py-2" />
+				{#if $mode === 'dark'}
+					<img
+						src="https://res.cloudinary.com/dmy8yp9el/image/upload/v1740574483/signature_1_bwjxjs.png"
+						alt="Signature"
+						class="w-52 py-2"
+					/>
+				{:else}
+					<img
+						src="https://res.cloudinary.com/dmy8yp9el/image/upload/v1740574226/signature_kvelcl.png"
+						alt="Signature"
+						class="w-52 py-2"
+					/>
+				{/if}
 			</div>
 		</div>
 	</div>

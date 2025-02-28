@@ -6,7 +6,7 @@ import DataTableAdditional from './data-table-additional.svelte';
 export type Survey = {
 	id: string;
 	title: string;
-	created: Date;
+	expires: Date;
 	status: string;
 };
 
@@ -23,8 +23,8 @@ export const columns = (payment: boolean, survey: string): ColumnDef<Survey>[] =
 			header: 'Title'
 		},
 		{
-			accessorKey: 'created',
-			header: 'Created'
+			accessorKey: 'expires',
+			header: 'Expiry'
 		},
 		{
 			accessorKey: 'status',

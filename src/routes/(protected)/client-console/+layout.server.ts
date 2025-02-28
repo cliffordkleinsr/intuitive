@@ -2,7 +2,7 @@
 import type { LayoutServerLoad } from './$types';
 import { handleLoginRedirect } from '$lib/custom/functions/helpers';
 import { db } from '$lib/server/db';
-import { clientData, UsersTable } from '$lib/server/db/schema';
+import { UsersTable } from '$lib/server/db/schema';
 import { eq, sql } from 'drizzle-orm';
 import {
 	checkOnetime,
@@ -80,7 +80,7 @@ export const load: LayoutServerLoad = async ({ locals: { user }, url, cookies })
 			checkOnetime(user.id)
 		]);
 		return {
-			payment,
+			payment: payment.status,
 			features,
 			user,
 			is_onetime,
@@ -92,7 +92,11 @@ export const load: LayoutServerLoad = async ({ locals: { user }, url, cookies })
 			doPriceLookup(user.id),
 			// payment status
 			getNewPaymentStatus(user.id)
+			// expire survey
+			// disableSurvey(user.id),
 		]);
+
+		// console.log(features)
 		return {
 			features,
 			payment,

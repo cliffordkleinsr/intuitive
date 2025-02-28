@@ -39,11 +39,7 @@
 		title: 'Question List',
 		description: ''
 	};
-	let {
-		surveydata,
-		surveyqns,
-		features: { maxqns }
-	} = $derived(data);
+	let { surveydata, surveyqns, features } = $derived(data);
 
 	let loading = $state(false);
 	let open = $state(false);
@@ -96,7 +92,7 @@
 					</Card.Description>
 				</Card.Header>
 				<Card.Content class="grid gap-3 lg:grid-cols-2">
-					{#if surveyqns.length === maxqns}
+					{#if surveyqns.length === features.max_questions}
 						<div
 							class="rounded-lg border border-yellow-200 bg-yellow-100 p-4 text-sm text-yellow-800 dark:border-yellow-900 dark:bg-yellow-800/10 dark:text-yellow-500"
 							role="alert"
@@ -155,7 +151,6 @@
 							{:else}
 								<Drawer.Root
 									bind:open
-									controlledOpen={true}
 									onOpenChange={(open) => {
 										if (!open) {
 											history.back();

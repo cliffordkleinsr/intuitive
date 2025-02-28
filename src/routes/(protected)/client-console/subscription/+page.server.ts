@@ -1,5 +1,4 @@
 import { db } from '$lib/server/db';
-import { clientData, clientPackages } from '$lib/server/db/schema';
 import { eq, sql } from 'drizzle-orm';
 import type { PageServerLoad } from './$types';
 import { getconsumerDetails } from '$lib/server/db/db_utils';

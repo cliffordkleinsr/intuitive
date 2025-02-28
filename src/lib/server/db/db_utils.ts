@@ -5,12 +5,9 @@ import {
 	AnswersTable,
 	SurveyTable,
 	UsersTable,
-	clientData,
-	clientPackages,
 	agentData,
 	sessionsTable,
 	surveyqnsTableV2,
-	type ClientDataInsertSchema,
 	type RespondentInsertSchema,
 	type surveyQnsSchemaV2,
 	type userInsertSchema,
@@ -24,7 +21,8 @@ import {
 	pricingTable,
 	consumerDeats,
 	consumerPackage,
-	type ConsumerData
+	type ConsumerData,
+	SurveyTable
 } from './schema';
 import type { PgColumn, PgTable } from 'drizzle-orm/pg-core';
 import type { Cookies } from '@sveltejs/kit';
@@ -32,6 +30,9 @@ import { redirect } from 'sveltekit-flash-message/server';
 import type { Question } from '$lib/types';
 import { toast } from 'svelte-sonner';
 
+type ClientDataInsertSchema = any;
+let clientData: any = {};
+let clientPackages: any = {};
 /**
  * @deprecated No longer Needed
  * @param userid
@@ -45,6 +46,11 @@ export const deleteCUser = async (userid: string, surveyid: string) => {
 	await db.delete(UsersTable).where(eq(UsersTable.id, userid));
 };
 
+export function returnDateValue(type: string, plan: string) {
+	let date_val =
+		type === 'advanced' || type === 'advantage' ? 365 : plan !== 'Enterprise' ? 30 : 90;
+	return date_val;
+}
 /**
  * @deprecated No longer Needed
  * @param userid
@@ -61,8 +67,8 @@ export const getconsumerDetails = async (userid: string) => {
 			businessName: consumerDeats.company_name,
 			businessAddressLine1: consumerDeats.phone,
 			invoiceNumber: consumerPackage.id,
-			invoiceDate: consumerPackage.invoiced,
-			expiryDates: consumerPackage.expires
+			invoiceDate: sql<Date>`${consumerPackage.invoiced}::date`,
+			expiryDates: sql<Date>`${consumerPackage.expires}::date`
 		})
 		.from(consumerDeats)
 		.leftJoin(consumerPackage, eq(consumerPackage.consumerid, consumerDeats.consumerid))
@@ -78,7 +84,7 @@ export const getCountAgents = async (variable: PgColumn, userId: string) => {
 		.from(agentData)
 		.leftJoin(AnswersTable, eq(agentData.agentid, AnswersTable.agentId))
 		.leftJoin(SurveyTable, eq(AnswersTable.surveid, SurveyTable.surveyid))
-		.where(sql`${SurveyTable.clientid} = ${userId}`)
+		.where(sql`${SurveyTable.consumer_id} = ${userId}`)
 		.groupBy(variable);
 
 	return queryResult;
@@ -237,6 +243,7 @@ const retExpiryDate = async (id: string) => {
 
 /**
  * Checks whether a surveys expiry date has reached and closes the survey
+ * @deprecated for old surveys
  * @param id
  * @param fromdb
  * @returns
@@ -342,6 +349,8 @@ export const expirePackage = async (id: string) => {
 export const doPriceLookup = async (id: string) => {
 	const [on_demand_pkg] = await db
 		.select({
+			plan: pricingTable.title,
+			type: consumerPackage.package_type,
 			max_questions: pricingTable.max_qns,
 			max_responses: pricingTable.max_responses,
 			demographics: pricingTable.demographics,
@@ -359,7 +368,13 @@ export const getNewPaymentStatus = async (id: string) => {
 			await db
 				.select()
 				.from(consumerPackage)
-				.where(and(eq(consumerPackage.consumerid, id), lte(consumerPackage.expires, new Date())))
+				.where(
+					sql`
+						${consumerPackage.consumerid} = ${id}
+						and
+						(${consumerPackage.expires} - NOW()) < interval '30' day
+					`
+				)
 		).length > 0;
 	return current_scope;
 };
@@ -367,55 +382,67 @@ export const getNewPaymentStatus = async (id: string) => {
 export const retSurveyInfo = async (id: string) => {
 	const select = {
 		id: SurveyTable.surveyid,
-		title: SurveyTable.surveyTitle,
-		created: sql<Date>`${SurveyTable.createdAt}::timestamp::date`,
+		title: SurveyTable.title,
+		expires: sql<Date>`${SurveyTable.survey_expires}::timestamp::date`,
 		status: SurveyTable.status
 	};
 	const [allsurveys, draftsurveys, livesurveys, closedsurveys] = await Promise.all([
 		db
 			.select(select)
 			.from(SurveyTable)
-			.where(sql`${SurveyTable.clientid} = ${id}`),
+			.where(sql`${SurveyTable.consumer_id} = ${id}`),
 		db
 			.select(select)
 			.from(SurveyTable)
-			.where(sql`${SurveyTable.clientid} = ${id} and ${SurveyTable.status} = 'Draft'`),
+			.where(sql`${SurveyTable.consumer_id} = ${id} and ${SurveyTable.status} = 'Draft'`),
 		db
 			.select(select)
 			.from(SurveyTable)
-			.where(sql`${SurveyTable.clientid} = ${id} and ${SurveyTable.status} = 'Live'`),
+			.where(sql`${SurveyTable.consumer_id} = ${id} and ${SurveyTable.status} = 'Live'`),
 		db
 			.select(select)
 			.from(SurveyTable)
-			.where(sql`${SurveyTable.clientid} = ${id} and ${SurveyTable.status} = 'Closed'`)
+			.where(sql`${SurveyTable.consumer_id} = ${id} and ${SurveyTable.status} = 'Closed'`)
 	]);
 
 	return [allsurveys, draftsurveys, livesurveys, closedsurveys];
 };
 
-export const disableNewSurvey = async (id: string) => {
+export const disableSurvey = async (id: string) => {
 	const live = await db
 		.select({
 			surveyid: SurveyTable.surveyid,
-			expiry_date: SurveyTable.to
+			expiry_date: SurveyTable.survey_expires
 		})
 		.from(SurveyTable)
-		.where(and(eq(SurveyTable.status, 'Live'), eq(SurveyTable.clientid, id)));
-	// needs work
-	// sql`${SurveyTable.status} = 'Live' and ${SurveyTable.clientid} = ${id}`
-	// for (const {surveyid, expiry_date} of live) {
-	// 	const diff = new Date().getTime() - expiry_date!.getTime();
-	// 	if (diff > 0) {
-	// 		await db
-	// 			.update(SurveyTable)
-	// 			.set({
-	// 				status: 'Closed'
-	// 			})
-	// 			.where(sql`${SurveyTable.surveyid} = ${surveyid} and ${SurveyTable.clientid} = ${id}`);
-	// 		toast.warning(`Survey ${surveyid} has been closed`)
-	// 	}
-	// }
+		.where(sql`${SurveyTable.status} = 'Live' and ${SurveyTable.consumer_id} = ${id}`);
+	for (const { surveyid, expiry_date } of live) {
+		const diff = new Date().getTime() - expiry_date!.getTime();
+		if (diff > 0) {
+			await db
+				.update(SurveyTable)
+				.set({
+					status: 'Closed'
+				})
+				.where(sql`${SurveyTable.surveyid} = ${surveyid} and ${SurveyTable.consumer_id} = ${id}`);
+			toast.warning(`Survey ${surveyid} has been closed`);
+		}
+	}
 };
+// needs work
+// sql`${SurveyTable.status} = 'Live' and ${SurveyTable.clientid} = ${id}`
+// for (const {surveyid, expiry_date} of live) {
+// 	const diff = new Date().getTime() - expiry_date!.getTime();
+// 	if (diff > 0) {
+// 		await db
+// 			.update(SurveyTable)
+// 			.set({
+// 				status: 'Closed'
+// 			})
+// 			.where(sql`${SurveyTable.surveyid} = ${surveyid} and ${SurveyTable.clientid} = ${id}`);
+// 		toast.warning(`Survey ${surveyid} has been closed`)
+// 	}
+// }
 /**
  * Utiliy that gets the list of questions from the surveyquestionsV2 table
  * @param surveid
@@ -545,6 +572,7 @@ export const getpersistentIx = async (user: string, surveyid: string) => {
 
 /**
  * Updates the target once the survey has been completed
+ * @deprecated dont use
  * @param id
  */
 export const setTarget = async (id: string): Promise<void> => {
@@ -708,7 +736,7 @@ export const getAnswers = async (gender: string = '', userId: string, surveyid: 
 		.leftJoin(UsersTable, sql`${AnswersTable.agentId} =  ${UsersTable.id}`) // Join with UsersTable
 		.where(
 			sql`
-        ${SurveyTable.clientid} = ${userId} 
+        ${SurveyTable.consumer_id} = ${userId} 
         and ${SurveyTable.surveyid} = ${surveyid} 
         and ${UsersTable.gender} = ${gender}`
 		)

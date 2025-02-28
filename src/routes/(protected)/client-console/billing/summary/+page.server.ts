@@ -2,8 +2,6 @@ import type { Actions, PageServerLoad } from './$types';
 // import { CURRENCY_EXCHANGE_API } from '$env/static/private';
 import { db } from '$lib/server/db';
 import {
-	clientData,
-	clientPackages,
 	clientTransactions,
 	consumerDeats,
 	consumerPackage,
@@ -77,49 +75,19 @@ export const actions: Actions = {
 					})
 					.from(pricingTable)
 					.where(eq(pricingTable.title, plan));
+				const date = new Date();
 
-				await db.update(consumerPackage).set({
+				const dv = date.setDate(date.getDate() + date_val);
+
+				await db.insert(consumerPackage).values({
 					consumerid: userid,
 					package_id: lookup.packageid,
+					transaction_code: details[0].TransactionCode,
 					package: plan,
 					package_type: packagetype,
 					invoiced: new Date(),
-					expires: new Date(new Date().getDate() + date_val)
+					expires: new Date(dv)
 				});
-				// const [res] = await db
-				// 	.select({
-				// 		packageid: sql<string>`${clientPackages.packageid}`,
-				// 		typeid: sql<string>`
-				// 		CASE
-				// 			WHEN ${clientPackages.package_price_mn} = ${dollar_amt}
-				// 			THEN ${clientPackages.priceIdMn}
-				// 			ELSE ${clientPackages.priceIdYr}
-				// 		 END
-				// 	`,
-				// 		processed: sql<Date>`NOW()::timestamp`,
-				// 		expiry: sql<Date>`
-				// 		CASE
-				// 			WHEN ${clientPackages.package_price_mn} = ${dollar_amt}
-				// 			THEN NOW() + interval '30' day
-				// 			ELSE NOW() + interval '1' year
-				// 		END
-				// 	`
-				// 	})
-				// 	.from(clientPackages)
-				// 	.where(eq(clientPackages.packageDesc, plan));
-				// // and insert
-				// const { packageid, typeid, processed, expiry } = res;
-				// await db
-				// 	.update(clientData)
-				// 	.set({
-				// 		packageid,
-				// 		typeid,
-				// 		payment_status: true,
-				// 		processed_at: new Date(processed),
-				// 		expires_at: new Date(expiry),
-				// 		onetime: plan === 'One-time' ? true : false
-				// 	})
-				// 	.where(eq(clientData.clientId, userid));
 			} else {
 				return message(form, {
 					alertType: 'info',

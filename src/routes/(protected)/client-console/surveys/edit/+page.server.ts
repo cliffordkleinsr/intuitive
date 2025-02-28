@@ -7,11 +7,13 @@ export const load: PageServerLoad = async ({ locals }) => {
 	const surveys = await db
 		.select({
 			id: SurveyTable.surveyid,
-			title: SurveyTable.surveyTitle,
-			created: sql<Date>`${SurveyTable.createdAt}::timestamp::date`
+			title: SurveyTable.title,
+			created: sql<Date>`${SurveyTable.survey_expires}::timestamp::date`
 		})
 		.from(SurveyTable)
-		.where(sql`${locals.user?.id} = ${SurveyTable.clientid} and ${SurveyTable.status} = 'Draft'`);
+		.where(
+			sql`${locals.user?.id} = ${SurveyTable.consumer_id} and ${SurveyTable.status} = 'Draft'`
+		);
 
 	return {
 		surv: surveys

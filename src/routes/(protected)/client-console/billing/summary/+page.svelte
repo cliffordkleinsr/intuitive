@@ -61,7 +61,7 @@
 		</Card.Header>
 		<Card.Content>
 			<p class="text-sm text-muted-foreground">Enter Business Number</p>
-			<InputOTP.Root maxlength={6} bind:value disabled textalign="center" class="font-extrabold">
+			<InputOTP.Root maxlength={7} bind:value disabled textalign="center" class="font-extrabold">
 				{#snippet children({ cells })}
 					<InputOTP.Group>
 						{#each cells.slice(0, 3) as cell}
@@ -70,7 +70,7 @@
 					</InputOTP.Group>
 					<InputOTP.Separator />
 					<InputOTP.Group>
-						{#each cells.slice(3, 6) as cell}
+						{#each cells.slice(3, 7) as cell}
 							<InputOTP.Slot {cell} class="disabled" />
 						{/each}
 					</InputOTP.Group>

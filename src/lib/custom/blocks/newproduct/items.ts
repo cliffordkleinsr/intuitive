@@ -2,7 +2,7 @@
 
 export const packageList = [
 	{
-		id: '',
+		id: '2',
 		title: 'Basic',
 		one_pack: '29',
 		six_pack: '165',
@@ -18,7 +18,7 @@ export const packageList = [
 		]
 	},
 	{
-		id: '',
+		id: '3',
 		title: 'Premium',
 		one_pack: '99',
 		six_pack: '564',
@@ -34,7 +34,7 @@ export const packageList = [
 		]
 	},
 	{
-		id: '',
+		id: '4',
 		title: 'Enterprise',
 		one_pack: '299',
 		six_pack: '299',

@@ -3,134 +3,111 @@
 	import { Label } from '$lib/components/ui/label/index.js';
 	import { Button } from '$lib/components/ui/button';
 	import * as Form from '$lib/components/ui/form/index.js';
-	import { enhance } from '$app/forms';
 	import Clock from '$lib/custom/blocks/clock.svelte';
 	import type { PageData, ActionData } from './$types.js';
 	import { goto } from '$app/navigation';
 	import { addMonths } from '$lib/custom/functions/helpers.js';
+	import { toast } from 'svelte-sonner';
+	import { superForm } from 'sveltekit-superforms';
+	import { zodClient } from 'sveltekit-superforms/adapters';
+	import { Input } from '$lib/components/ui/input/index.js';
+	import { Textarea } from '$lib/components/ui/textarea/index.js';
+
+	import { schema } from './schema.js';
 
 	let {
-		form,
 		data
 	}: {
 		data: PageData;
-		form: ActionData;
 	} = $props();
 
-	let loading = $state(false);
-	const { survey_metrics, features } = data;
+	const { features } = data;
 
-	// $inspect(survey_metrics);
-	function isWithinCurrentMonth(dateString: string | number | Date) {
-		const date = new Date(dateString);
-		const now = new Date();
-		return date.getFullYear() === now.getFullYear() && date.getMonth() === now.getMonth();
-	}
+	const form = superForm(data.form, {
+		validators: zodClient(schema),
+		onUpdated: () => {
+			if (!$message) return;
 
-	function canCreateSurvey() {
-		if (features === undefined) return false;
-		if (
-			survey_metrics.packagetype === 'Yearly' &&
-			new Date(survey_metrics.expires_at).getFullYear() !== new Date().getFullYear()
-		) {
-			const surveysThisMonth = survey_metrics.surveys.filter((survey) =>
-				isWithinCurrentMonth(survey.created)
-			);
-			return surveysThisMonth.length < 2;
+			const { alertType, alertText } = $message;
+			if (alertType === 'success') {
+				toast.error(alertText);
+			}
+			if (alertType === 'error') {
+				toast.error(alertText);
+			}
 		}
-		return survey_metrics.surveys.length < features.maxsurv;
-	}
+	});
+	const { form: formData, enhance, message, delayed } = form;
 </script>
 
-<div class="m-4 flex max-w-screen-lg flex-col gap-5 lg:m-16">
-	<h1 class="ml-3 text-2xl">Create a new project</h1>
-	<form
-		method="post"
-		class="grid gap-4 lg:grid-cols-3"
-		use:enhance={() => {
-			loading = true;
-			return async ({ result, update }) => {
-				switch (true) {
-					case result.type === 'failure':
-						loading = false;
-						await update();
-						break;
-					case result.type === 'success':
-						loading = true;
-						await update();
-						break;
-					case result.type === 'redirect':
-						loading = true;
-						await update();
-						break;
-					default:
-						break;
-				}
-			};
-		}}
-	>
+<div class="m-4 flex flex-col items-center justify-center gap-5 lg:m-16">
+	<form method="post" class="grid w-full max-w-2xl space-y-2 p-4 lg:p-0" use:enhance>
 		<Card.Root class="col-span-2">
 			<Card.Header>
-				<Card.Title>Survey Details</Card.Title>
-				<Card.Description>Generate a survey</Card.Description>
+				<Card.Title>Generate a survey</Card.Title>
+				<Card.Description></Card.Description>
 			</Card.Header>
 			<Card.Content>
-				<div class="grid gap-6">
-					<Label for="title">Survey Title</Label>
-					<input
-						class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-						type="text"
-						name="surveyTitle"
-					/>
-					<Label for="description">Description</Label>
-					<textarea
-						class="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-						name="surveyDescription"
-					></textarea>
-					{#if form?.message}
-						<Label class="text-red-600">{form.message}</Label>
-					{/if}
-					{#if features === undefined}
-						<div
-							class="mt-2 rounded-lg bg-red-500 p-4 text-sm text-white"
-							role="alert"
-							tabindex="-1"
-							aria-labelledby="hs-solid-color-danger-label"
-						>
-							<span id="hs-solid-color-danger-label" class="font-bold">Error!</span> You are not subscribed
-							to any plan!
-						</div>
-					{:else if !canCreateSurvey()}
-						<div
-							class="rounded-lg border border-yellow-200 bg-yellow-100 p-4 text-sm text-yellow-800 dark:border-yellow-900 dark:bg-yellow-800/10 dark:text-yellow-500"
-							role="alert"
-						>
-							<span class="font-bold">Warning</span> alert! You have exceeded the maximum available
-							surveys for your plan {survey_metrics.packagetype === 'Yearly' ? 'this Month' : ''}
-						</div>
-					{:else}
-						<Form.Button class="max-w-sm" disabled={loading}>
-							{#if loading}
-								<div class="flex gap-2">
-									<span
-										class="inline-block size-4 animate-spin rounded-full border-[3px] border-current border-t-transparent text-white"
-										role="status"
-										aria-label="loading"
-									></span>
-									Loading...
-								</div>
-							{:else}
-								Submit
-							{/if}
-						</Form.Button>
-					{/if}
+				<div>
+					<Form.Field {form} name="title">
+						<Form.Control>
+							{#snippet children({ props })}
+								<Form.Label class="font-medium">Survey Title</Form.Label>
+								<Input
+									{...props}
+									type="text"
+									placeholder="Give your survey a title"
+									bind:value={$formData.title}
+								/>
+							{/snippet}
+						</Form.Control>
+						<Form.FieldErrors class="text-sm text-destructive" />
+					</Form.Field>
 				</div>
+				<div>
+					<Form.Field {form} name="description">
+						<Form.Control>
+							{#snippet children({ props })}
+								<Form.Label class="font-medium">Description</Form.Label>
+								<Textarea
+									{...props}
+									name="description"
+									id="description"
+									placeholder="Give your survey a description"
+									bind:value={$formData.description}
+								/>
+							{/snippet}
+						</Form.Control>
+						<Form.FieldErrors class="text-sm text-destructive" />
+					</Form.Field>
+				</div>
+				{#if features === undefined}
+					<div
+						class="mt-2 rounded-lg bg-red-500 p-4 text-sm text-white"
+						role="alert"
+						tabindex="-1"
+						aria-labelledby="hs-solid-color-danger-label"
+					>
+						<span id="hs-solid-color-danger-label" class="font-bold">Error!</span> You are not subscribed
+						to any plan!
+					</div>
+				{:else if $delayed}
+					<Button class="flex w-full gap-2" disabled={$delayed}>
+						<span
+							class="inline-block size-4 animate-spin rounded-full border-[3px] border-current border-t-transparent text-white"
+							role="status"
+							aria-label="loading"
+						></span>
+						Loading...
+					</Button>
+				{:else}
+					<Form.Button class="w-full">Submit</Form.Button>
+				{/if}
 			</Card.Content>
 		</Card.Root>
-		<Clock />
-		<Button class="max-w-md" variant="outline" href="/client-dash">Cancel</Button>
+
+		<Button class="" variant="outline" href="/client-dash">Cancel</Button>
 
 		<!-- <Button variant="outline" on:click={addData} on:click={() => active=false}>Save</Button> -->
 	</form>
-	<img class="w-52" src="https://i.postimg.cc/zXc27ndm/vector.png" alt="" />
 </div>

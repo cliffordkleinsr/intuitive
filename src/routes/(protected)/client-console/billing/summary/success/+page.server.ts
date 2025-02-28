@@ -4,7 +4,7 @@ import type { PageServerLoad } from './$types';
 export const load: PageServerLoad = async ({ parent, cookies }) => {
 	const { payment } = await parent();
 
-	if (!payment.status) {
+	if (!payment) {
 		redirect(303, '/client-console', { type: 'error', message: 'Not Authorized' }, cookies);
 	}
 };

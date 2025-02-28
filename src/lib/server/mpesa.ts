@@ -30,7 +30,9 @@ const getAccessToken = async () => {
 const initiateB2C = async (body: Params) => {
 	const { amount, phoneNumber } = body;
 	const cleanedNumber = phoneNumber.replace(/\D/g, '');
-	const formattedPhone = `254${cleanedNumber.slice(-9)}`;
+	const formattedPhone = phoneNumber.startsWith('254')
+		? phoneNumber
+		: `254${cleanedNumber.slice(-9)}`;
 
 	const url = 'https://api.safaricom.co.ke/mpesa/b2c/v3/paymentrequest';
 	const token = await getAccessToken();

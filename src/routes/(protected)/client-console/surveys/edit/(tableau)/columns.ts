@@ -6,7 +6,7 @@ import type { ColumnDef } from '@tanstack/table-core';
 export type Survey = {
 	id: string;
 	title: string;
-	created: Date;
+	expires: Date;
 };
 
 export const columns: ColumnDef<Survey>[] = [
@@ -21,8 +21,8 @@ export const columns: ColumnDef<Survey>[] = [
 		header: 'Title'
 	},
 	{
-		accessorKey: 'created',
-		header: 'Created'
+		accessorKey: 'expires',
+		header: 'Expiry'
 	},
 	{
 		accessorKey: 'actions',

@@ -13,7 +13,7 @@ export const load: PageServerLoad = async ({ locals: { user }, parent }) => {
 		})
 		.from(AnswersTable)
 		.leftJoin(SurveyTable, eq(AnswersTable.surveid, SurveyTable.surveyid))
-		.where(sql`${SurveyTable.clientid} = ${userid}`);
+		.where(sql`${SurveyTable.consumer_id} = ${userid}`);
 
 	return {
 		count: total_agents.length,

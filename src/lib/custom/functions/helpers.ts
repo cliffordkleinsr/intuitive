@@ -299,7 +299,7 @@ function deductAmount(amount: number) {
 	return deduction;
 }
 
-function addDays(date: string, days: number) {
+function addDays(date: string | number, days: number) {
 	let result = new Date(date);
 	result.setDate(result.getDate() + days);
 	return result;

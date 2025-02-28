@@ -1,126 +1,63 @@
-import { fail, redirect } from '@sveltejs/kit';
+import { redirect } from 'sveltekit-flash-message/server';
 import type { Actions, PageServerLoad } from './$types';
 import { db } from '$lib/server/db';
-import { clientData, clientPackages, SurveyTable } from '$lib/server/db/schema';
-import { createNewSurvey, getpackageFeatures } from '$lib/server/db/db_utils';
+import { SurveyTable } from '$lib/server/db/schema';
+import {
+	createNewSurvey,
+	doPriceLookup,
+	getpackageFeatures,
+	returnDateValue
+} from '$lib/server/db/db_utils';
 import { eq, sql } from 'drizzle-orm';
+import { message, superValidate } from 'sveltekit-superforms';
+import { zod } from 'sveltekit-superforms/adapters';
+import { schema } from './schema';
+import { addDays } from '$lib/custom/functions/helpers';
 
 export const load: PageServerLoad = async ({ locals: { user } }) => {
-	const sq = db
-		.select({
-			id: SurveyTable.surveyid,
-			clientid: clientData.clientId,
-			createdat: SurveyTable.createdAt,
-			packageid: clientData.packageid,
-			typeid: clientData.typeid,
-			processed: sql<Date>`${clientData.processed_at}::date`.as('processed'),
-			expires: sql<Date>`${clientData.expires_at}::date`.as('expires')
-		})
-		.from(clientData)
-		.leftJoin(SurveyTable, eq(SurveyTable.clientid, clientData.clientId))
-		.where(
-			sql`
-				${clientData.clientId} = ${user?.id}
-			`
-		)
-		.as('sq');
-	const [survey_metrics] = await db
-		.select({
-			id: sq.clientid,
-			surveys: sql<{ id: string; created: Date }[]>`
-				COALESCE(
-					json_agg(
-						CASE 
-							WHEN ${sq.id} IS NOT NULL THEN
-								json_build_object(
-									'id', ${sq.id},
-									'created', ${sq.createdat}::date
-								)
-							ELSE NULL 
-						END
-					) FILTER (WHERE ${sq.id} IS NOT NULL),
-					'[]'
-				)
-			`,
-			packagetype: sql<string>`
-		CASE
-				WHEN ${sq.typeid} = ${clientPackages.priceIdMn} THEN 'Monthly'
-				WHEN ${sq.typeid} = ${clientPackages.priceIdYr} THEN 'Yearly'
-				ELSE '0'
-			END
-		`,
-			subscribed_at: sq.processed,
-			expires_at: sq.expires
-		})
-		.from(sq)
-		.leftJoin(clientPackages, sql`${clientPackages.packageid} = ${sq.packageid}`)
-		.where(
-			sql`
-			${sq.clientid} = ${user?.id}
-		`
-		)
-		.groupBy(
-			sq.clientid,
-			sq.typeid,
-			sq.processed,
-			sq.expires,
-			clientPackages.priceIdMn,
-			clientPackages.priceIdYr
-		);
-	return {
-		survey_metrics
-	};
+	return { form: await superValidate(zod(schema)) };
 };
 
 export const actions: Actions = {
-	default: async ({ locals, request }) => {
-		type FormData = {
-			surveyTitle: string;
-			surveyDescription: string;
-		};
-		const data = Object.fromEntries(await request.formData()) as FormData;
-
-		const { surveyTitle, surveyDescription } = data;
-		const userid: string = locals.user?.id || '';
-
-		const { maxsurv } = await getpackageFeatures(userid);
-		const surveys = await db
-			.select({
-				id: SurveyTable.surveyid
-			})
-			.from(SurveyTable)
-			.leftJoin(clientData, eq(SurveyTable.clientid, clientData.clientId)).where(sql`
-                ${SurveyTable.createdAt} BETWEEN ${clientData.processed_at} - INTERVAL '1 week' AND ${clientData.expires_at} 
-                AND 
-                ${SurveyTable.clientid} = ${userid}
-            `);
-
-		// ensure not empty
-		if (surveyTitle === '') {
-			return fail(404, { message: 'Please fill in the Survey Title!' });
-		}
-
-		// Ensure that we cant submit if we have no plans
-		if (maxsurv === null) {
-			return fail(404, { message: 'You are not subscribed to any plan!' });
-		}
-		// Ensure we cant submit if weve exeeded our limit
-		if (surveys.length === maxsurv) {
-			return fail(404, {
-				message: 'You have exceeded the maximum available surveys for your plan!'
+	default: async ({ locals, request, cookies }) => {
+		let userid = locals.user?.id as string;
+		let form = await superValidate(request, zod(schema));
+		if (!form.valid) {
+			return message(form, {
+				alertType: 'error',
+				alertText: 'Please Check your entries, the form contains invalid data'
 			});
 		}
+
+		const { title, description } = form.data;
+		const { max_responses, plan, type } = await doPriceLookup(userid);
+		const today = Date.now();
+
+		const date_val = returnDateValue(type as string, plan);
+		const expiry_date = addDays(today, date_val);
+		const uuid = crypto.randomUUID();
 		try {
-			const id = crypto.randomUUID();
-			await createNewSurvey({
-				surveyid: id,
-				clientid: userid,
-				surveyTitle: surveyTitle,
-				surveyDescription: surveyDescription
+			await db.insert(SurveyTable).values({
+				surveyid: uuid,
+				consumer_id: userid,
+				title: title,
+				description: description,
+				max_responses: max_responses,
+				survey_expires: expiry_date
 			});
 		} catch (err) {
 			console.error(err);
+			return message(form, {
+				alertType: 'error',
+				alertText: 'An unexpected error occured'
+			});
 		}
-		redirect(303, '/client-console/surveys/edit');
+
+		redirect(
+			303,
+			`/client-console/surveys/edit/${uuid}`,
+			{ type: 'info', message: 'Survey Generated!' },
+			cookies
+		);
 	}
 };

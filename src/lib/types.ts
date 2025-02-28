@@ -84,6 +84,32 @@ interface Confirmation {
 	LastName: string;
 }
 
+interface customerAddressObject {
+	phone_number?: string;
+	email_address?: string;
+	country_code?: string;
+	first_name?: string;
+	middle_name?: string;
+	last_name?: string;
+	line_1?: string;
+	line_2?: string;
+	city?: string;
+	state?: string;
+	postal_code?: number;
+	zip_code?: number;
+}
+interface PesaPalOReq {
+	id: string;
+	currency: string;
+	amount: number;
+	description: string;
+	redirect_mode?: string;
+	callback_url: string;
+	cancellation_url?: string;
+	notification_id: string;
+	branch?: string;
+	billing_address: customerAddressObject;
+}
 interface GenAnalytics {
 	gender: string;
 	count: number;
@@ -140,12 +166,13 @@ interface clientData {
 		  }
 		| boolean;
 	features: {
-		gender_active: boolean;
-		ages: boolean;
-		maxqns: number;
-		maxagents: number;
-		maxsurv: number;
 		plan: string;
+		type: string | null;
+		max_questions: number;
+		max_responses: number;
+		demographics: boolean;
+		api: boolean;
+		branding: boolean;
 	};
 	user: App.Locals['user'];
 	available_qns: {
@@ -213,5 +240,6 @@ export type {
 	Question,
 	clientData,
 	GoogleIdTokenPayload,
-	Consumer
+	Consumer,
+	PesaPalOReq
 };

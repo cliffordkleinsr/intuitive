@@ -19,12 +19,12 @@ import { zod } from 'sveltekit-superforms/adapters';
 export const load: PageServerLoad = async ({ params, locals: { user } }) => {
 	const [data] = await db
 		.select({
-			title: SurveyTable.surveyTitle,
-			desc: SurveyTable.surveyDescription
+			title: SurveyTable.title,
+			desc: SurveyTable.description
 		})
 		.from(SurveyTable)
 		.where(
-			sql`${SurveyTable.surveyid} = ${params.surveyid} and ${SurveyTable.clientid} = ${user?.id}`
+			sql`${SurveyTable.surveyid} = ${params.surveyid} and ${SurveyTable.consumer_id} = ${user?.id}`
 		);
 
 	const questions = await db

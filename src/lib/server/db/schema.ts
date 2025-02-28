@@ -6,7 +6,8 @@ import {
 	timestamp,
 	boolean,
 	pgEnum,
-	uuid
+	uuid,
+	doublePrecision
 } from 'drizzle-orm/pg-core';
 // refs
 export const UserRole = pgEnum('UserRole', ['ADMIN', 'CLIENT', 'AGENT']);
@@ -74,53 +75,53 @@ export const agentData = pgTable('agent_data', {
 	referall_by: text()
 });
 
-export const clientData = pgTable('client_data', {
-	clientId: text('client_id')
-		.references(() => UsersTable.id)
-		.primaryKey()
-		.notNull(),
-	email: text('client_email')
-		.references(() => UsersTable.email)
-		.notNull(),
-	companyName: text('company_name').notNull(),
-	phone: text('phone').notNull(),
-	county: text('county').notNull(),
-	sector: text('sector').notNull(),
-	//additional
-	packageid: text('packageid'),
-	onetime: boolean('one_time').notNull().default(false),
-	typeid: text('package_type_id'),
-	payment_status: boolean('payment_status').notNull().default(false),
-	processed_at: timestamp('processed_at', {
-		withTimezone: true,
-		mode: 'date'
-	}),
-	expires_at: timestamp('expires_at', {
-		withTimezone: true,
-		mode: 'date'
-	}),
-	//
-	createdAt: timestamp('created_at', {
-		withTimezone: true,
-		mode: 'date'
-	})
-		.defaultNow()
-		.notNull()
-});
+// export const clientData = pgTable('client_data', {
+// 	clientId: text('client_id')
+// 		.references(() => UsersTable.id)
+// 		.primaryKey()
+// 		.notNull(),
+// 	email: text('client_email')
+// 		.references(() => UsersTable.email)
+// 		.notNull(),
+// 	companyName: text('company_name').notNull(),
+// 	phone: text('phone').notNull(),
+// 	county: text('county').notNull(),
+// 	sector: text('sector').notNull(),
+// 	//additional
+// 	packageid: text('packageid'),
+// 	onetime: boolean('one_time').notNull().default(false),
+// 	typeid: text('package_type_id'),
+// 	payment_status: boolean('payment_status').notNull().default(false),
+// 	processed_at: timestamp('processed_at', {
+// 		withTimezone: true,
+// 		mode: 'date'
+// 	}),
+// 	expires_at: timestamp('expires_at', {
+// 		withTimezone: true,
+// 		mode: 'date'
+// 	}),
+// 	//
+// 	createdAt: timestamp('created_at', {
+// 		withTimezone: true,
+// 		mode: 'date'
+// 	})
+// 		.defaultNow()
+// 		.notNull()
+// });
 
-export const clientPackages = pgTable('client_packages', {
-	packageid: text('packageid').primaryKey(),
-	packageDesc: text('package_description').notNull(),
-	package_price_mn: text('package_price_mn').notNull(),
-	package_price_yr: text('package_price_yr').notNull(),
-	priceIdMn: text('price_id_monthly'),
-	priceIdYr: text('price_id_annual'),
-	max_questions: integer('max_qns').notNull().default(1),
-	max_surv: integer('max_surveys').notNull().default(1),
-	max_agents: integer('max_agents').notNull().default(0),
-	demographics: boolean('demographics').notNull().default(false),
-	ages: boolean('ages').notNull().default(false)
-});
+// export const clientPackages = pgTable('client_packages', {
+// 	packageid: text('packageid').primaryKey(),
+// 	packageDesc: text('package_description').notNull(),
+// 	package_price_mn: text('package_price_mn').notNull(),
+// 	package_price_yr: text('package_price_yr').notNull(),
+// 	priceIdMn: text('price_id_monthly'),
+// 	priceIdYr: text('price_id_annual'),
+// 	max_questions: integer('max_qns').notNull().default(1),
+// 	max_surv: integer('max_surveys').notNull().default(1),
+// 	max_agents: integer('max_agents').notNull().default(0),
+// 	demographics: boolean('demographics').notNull().default(false),
+// 	ages: boolean('ages').notNull().default(false)
+// });
 
 export const consumerDeats = pgTable('consumer_details', {
 	consumerid: text()
@@ -150,8 +151,8 @@ export const pricingTable = pgTable('price_table', {
 	one_pack: text().notNull(),
 	six_pack: text().notNull(),
 	ten_pack: text().notNull(),
-	max_qns: integer().notNull(),
-	max_responses: integer().notNull(),
+	max_qns: doublePrecision().notNull(),
+	max_responses: doublePrecision().notNull(),
 	demographics: boolean().notNull().default(false),
 	api: boolean().notNull().default(false),
 	branding: boolean().notNull().default(false)
@@ -165,6 +166,7 @@ export const consumerPackage = pgTable('consumer_package', {
 	package_id: integer()
 		.references(() => pricingTable.id)
 		.notNull(),
+	transaction_code: text().notNull(),
 	package: text().notNull(),
 	package_type: text().notNull(),
 	invoiced: timestamp({
@@ -201,38 +203,35 @@ export const passwordReset = pgTable('password_reset', {
 	token: text('token').notNull()
 });
 
-// Surveys
-export const SurveyTable = pgTable('surveys', {
+// Old Surveys
+export const old_SurveyTable = pgTable('old_surveys', {
 	surveyid: text('surveyid').primaryKey().notNull(),
 	clientid: text('client_id').notNull(),
 	surveyTitle: text('survey_title').notNull(),
 	surveyDescription: text('survey_desc').notNull(),
 	status: Status('status').default('Draft').notNull(),
-	survey_points: integer('survey_points'),
 	target: integer('target'),
-	target_age: text('target_age'),
-	target_gender: text('target_gender'),
-	from: timestamp('from', {
-		mode: 'date'
-	}),
-	to: timestamp('to', {
-		mode: 'date'
-	}),
-	external: boolean('extern').default(false),
 	// answeredby: text("answerd_by"),
 	createdAt: timestamp('created_at', {
 		withTimezone: true,
 		mode: 'date'
 	})
 		.defaultNow()
-		.notNull(),
+		.notNull()
+});
 
-	updatedAt: timestamp('updated_at', {
+// New Surveys
+export const SurveyTable = pgTable('survey', {
+	surveyid: text().primaryKey().notNull(),
+	consumer_id: text().notNull(),
+	title: text().notNull(),
+	description: text(),
+	status: Status('status').default('Draft').notNull(),
+	max_responses: doublePrecision().notNull(),
+	survey_expires: timestamp({
 		withTimezone: true,
 		mode: 'date'
-	})
-		.defaultNow()
-		.notNull()
+	}).notNull()
 });
 
 export const progressTable = pgTable('agent_progress_table', {
@@ -378,7 +377,7 @@ export const agentTransactions = pgTable('agent_transactions', {
 		.notNull()
 });
 
-export const clientTransactions = pgTable('client_transactions', {
+export const clientTransactions = pgTable('consumer_transactions', {
 	id: serial().notNull().primaryKey(),
 	TransactionCode: text().notNull(),
 	TransAmount: integer().notNull(),
@@ -394,7 +393,7 @@ export const clientTransactions = pgTable('client_transactions', {
 	}).notNull()
 });
 export type userInsertSchema = typeof UsersTable.$inferInsert;
-export type ClientDataInsertSchema = typeof clientData.$inferInsert;
+// export type ClientDataInsertSchema = typeof clientData.$inferInsert;
 export type ConsumerData = typeof consumerDeats.$inferInsert;
 export type RespondentInsertSchema = typeof agentData.$inferInsert;
 export type surveyGenerateSchema = typeof SurveyTable.$inferInsert;
