@@ -3,7 +3,6 @@ import { db } from './index';
 
 import {
 	AnswersTable,
-	SurveyTable,
 	UsersTable,
 	agentData,
 	sessionsTable,
