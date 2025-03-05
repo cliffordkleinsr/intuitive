@@ -280,26 +280,24 @@ export const QuestionOptions = pgTable('question_options', {
 	questionId: uuid('questionid')
 		.references(() => surveyqnsTableV2.questionId)
 		.notNull(),
-	option: text('option').notNull()
+	option: text('option').notNull(),
+	order_index: integer('order_index').default(0).notNull()
 });
+
 // ==============================================================
-// Create a table for branching rules
-export const branchingRules = pgTable('branching_rules', {
-	ruleId: uuid().primaryKey().defaultRandom().primaryKey().notNull(),
-	questionId: uuid()
+export const QuestionBranching = pgTable('question_branching', {
+	branchId: uuid('branchid').defaultRandom().primaryKey().notNull(),
+	surveid: text('surveyid')
+		.references(() => SurveyTable.surveyid)
+		.notNull(),
+	questionId: uuid('questionid')
 		.references(() => surveyqnsTableV2.questionId)
 		.notNull(),
-	selectedOptionId: uuid()
+	optionId: uuid('optionid')
 		.references(() => QuestionOptions.optionId)
 		.notNull(),
-	nextQuestionId: uuid()
+	nextQuestionId: uuid('next_questionid')
 		.references(() => surveyqnsTableV2.questionId)
-		.notNull(),
-	created_at: timestamp({
-		withTimezone: true,
-		mode: 'date'
-	})
-		.defaultNow()
 		.notNull()
 });
 

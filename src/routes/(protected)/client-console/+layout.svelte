@@ -57,12 +57,12 @@
 						title: 'Manage Surveys',
 						url: '/client-console/surveys/edit',
 						icon: SlidersVertical
-					},
-					{
-						title: 'Go Live',
-						url: '/client-console/surveys/live',
-						icon: RadioTower
 					}
+					// {
+					// 	title: 'Go Live',
+					// 	url: '/client-console/surveys/live',
+					// 	icon: RadioTower
+					// }
 				]
 			},
 			{

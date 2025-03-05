@@ -35,12 +35,14 @@
 		qs,
 		edits,
 		deletes,
+		disabled,
 		children
 	}: {
 		index: number;
 		qs: Quest;
 		edits: Snippet;
 		deletes: Snippet;
+		disabled?: boolean;
 		children?: Snippet;
 	} = $props();
 </script>
@@ -132,7 +134,7 @@
 		<AlertDialog.Root>
 			<AlertDialog.Trigger>
 				{#snippet child({ props })}
-					<Button {...props} variant="outline">Edit</Button>
+					<Button {...props} variant="outline" {disabled}>Edit</Button>
 				{/snippet}
 			</AlertDialog.Trigger>
 			<AlertDialog.Content>

@@ -1,4 +1,4 @@
-import { and, asc, eq, gt, lte, sql } from 'drizzle-orm';
+import { and, asc, eq, gt, inArray, lte, sql } from 'drizzle-orm';
 import { db } from './index';
 
 import {
@@ -16,12 +16,13 @@ import {
 	agentSurveysTable,
 	payoutRequests,
 	type surveyGenerateSchema,
-	branchingRules,
+	// branchingRules,
 	pricingTable,
 	consumerDeats,
 	consumerPackage,
 	type ConsumerData,
-	SurveyTable
+	SurveyTable,
+	QuestionBranching
 } from './schema';
 import type { PgColumn, PgTable } from 'drizzle-orm/pg-core';
 import type { Cookies } from '@sveltejs/kit';
@@ -131,7 +132,7 @@ export const createGoogleUser = async (googleUserId: string, username: string, p
 		.returning({ id: UsersTable.id });
 };
 
-export const getRegistryState = async (id: string) => {
+export const getRegistryState = async (id: string): Promise<Boolean | null> => {
 	if (id) {
 		const [registry] = await db
 			.select({
@@ -526,12 +527,113 @@ export const deleteProgressData = async (user: string, surveyid: string) => {
 //
 
 /**
- * Get a list of all the questions we are answering
- * @param questionId
- * @returns {Array}
+ * Gets the list of questions from the survey
+ * @param surveyid
+ * @returns {Promise<Array<Object>>}
  */
-export const getsurveyQuestions = async (questionId: string) => {
-	return await db
+export const getsurveyQuestions = async (surveyid: string) => {
+	const questions = await db
+		.select({
+			id: surveyqnsTableV2.questionId,
+			question: surveyqnsTableV2.question,
+			question_type: surveyqnsTableV2.questionT,
+			likert_key: sql<string>`${surveyqnsTableV2.likertKey}`,
+			optionid: sql<
+				string[]
+			>`ARRAY_AGG(${QuestionOptions.optionId} ORDER BY ${QuestionOptions.order_index})`,
+			options: sql<
+				string[]
+			>`ARRAY_AGG(${QuestionOptions.option} ORDER BY ${QuestionOptions.order_index})`,
+			created_at: surveyqnsTableV2.createdAt
+		})
+		.from(surveyqnsTableV2)
+		.leftJoin(QuestionOptions, eq(surveyqnsTableV2.questionId, QuestionOptions.questionId))
+		.where(eq(surveyqnsTableV2.surveid, surveyid))
+		.groupBy(surveyqnsTableV2.questionId, surveyqnsTableV2.question)
+		.orderBy(asc(surveyqnsTableV2.createdAt));
+
+	return questions;
+};
+
+export async function getBranches(surveyid: string) {
+	const branches = await db
+		.select()
+		.from(QuestionBranching)
+		.where(eq(QuestionBranching.surveid, surveyid));
+
+	return branches;
+}
+// Helper to order questions based on branching
+interface Questions {
+	id: string;
+	question: string;
+	question_type: string;
+	likert_key: string;
+	optionid: string[];
+	options: string[];
+	created_at: Date;
+}
+interface Branches {
+	questionId: string;
+	surveid: string;
+	optionId: string;
+	branchId: string;
+	nextQuestionId: string;
+}
+export function orderQuestions(questions: Questions[], branches: Branches[]): Questions[] {
+	// Map each question ID to its question data
+	const questionMap = new Map(questions.map((q) => [q.id, q]));
+
+	// Build a mapping: questionId -> array of nextQuestionIds
+	const branchMap = new Map<string, string[]>();
+	branches.forEach((branch) => {
+		const list = branchMap.get(branch.questionId) || [];
+		list.push(branch.nextQuestionId);
+		branchMap.set(branch.questionId, list);
+	});
+
+	// Identify root questions:
+	// A question is considered "root" if it is never referenced as a nextQuestionId in any branch.
+	const referenced = new Set(branches.map((b) => b.nextQuestionId));
+	const roots = questions.filter((q) => !referenced.has(q.id));
+
+	const ordered: any[] = [];
+	const visited = new Set<string>();
+
+	// Depth-first search to traverse the branch tree
+	function traverse(questionId: string) {
+		if (visited.has(questionId)) return;
+		visited.add(questionId);
+
+		const question = questionMap.get(questionId);
+		if (question) {
+			ordered.push(question);
+		}
+		const children = branchMap.get(questionId) || [];
+		// For consistent order, you might sort children by created_at or another field if needed
+		children.forEach((childId) => traverse(childId));
+	}
+
+	// Start traversal from each root
+	roots.forEach((root) => traverse(root.id));
+
+	// In case some questions were not reached (e.g., disconnected parts), append them
+	questions.forEach((q) => {
+		if (!visited.has(q.id)) {
+			ordered.push(q);
+		}
+	});
+
+	return ordered;
+}
+
+/**
+ * Get the question attributes by id
+ * @param questionId
+ * @returns {Promise<Array<Object>>}
+ */
+export const getsurveyQuestionByID = async (questionId: string) => {
+	const questions = await db
 		.select({
 			id: surveyqnsTableV2.questionId,
 			question: surveyqnsTableV2.question,
@@ -546,7 +648,91 @@ export const getsurveyQuestions = async (questionId: string) => {
 		.where(eq(surveyqnsTableV2.questionId, questionId))
 		.groupBy(surveyqnsTableV2.questionId, surveyqnsTableV2.question)
 		.orderBy(asc(surveyqnsTableV2.updatedAt));
+	return questions;
 };
+
+export function generateFlow(questions: Questions[], branches: Branches[]) {
+	const orderedQuestions = orderQuestions(questions, branches);
+
+	const nodes: any[] = [];
+	const edges: any[] = [];
+	const positionMap = new Map<string, any>();
+
+	const xSpacing = 400;
+	const ySpacing = 120;
+	let x = 0,
+		y = 0;
+
+	// Map of question IDs to children (from branches)
+	const childrenMap = new Map<string, string[]>();
+	branches.forEach(({ questionId, nextQuestionId }) => {
+		if (!childrenMap.has(questionId)) {
+			childrenMap.set(questionId, []);
+		}
+		childrenMap.get(questionId)!.push(nextQuestionId);
+	});
+
+	const visited = new Set<string>();
+
+	function placeNode(questionId: string, x: number, y: number) {
+		if (visited.has(questionId)) return;
+		visited.add(questionId);
+
+		const question = orderedQuestions.find((q) => q.id === questionId);
+		if (!question) return;
+
+		// Store position
+		positionMap.set(questionId, { x, y });
+
+		// Create the node
+		nodes.push({
+			id: questionId,
+			type: 'default',
+			data: { label: question.question },
+			position: { x, y }
+		});
+
+		// Get children (if any branches exist)
+		const children = childrenMap.get(questionId) || [];
+
+		if (children.length) {
+			let startX = x - ((children.length - 1) * xSpacing) / 2;
+
+			children.forEach((childId, index) => {
+				edges.push({
+					id: `${questionId}-${childId}`,
+					source: questionId,
+					target: childId,
+					animated: true
+				});
+
+				// Recursive placement for branch children
+				placeNode(childId, startX + index * xSpacing, y + ySpacing);
+			});
+		} else {
+			// If no branch, link to the next question in order
+			const nextIndex = orderedQuestions.findIndex((q) => q.id === questionId) + 1;
+			if (nextIndex < orderedQuestions.length) {
+				const nextQuestion = orderedQuestions[nextIndex];
+				edges.push({
+					id: `${questionId}-${nextQuestion.id}`,
+					source: questionId,
+					target: nextQuestion.id
+				});
+
+				placeNode(nextQuestion.id, x, y + ySpacing);
+			}
+		}
+	}
+
+	// Start placing nodes from the first ordered question
+	if (orderedQuestions.length) {
+		placeNode(orderedQuestions[0].id, x, y);
+	}
+
+	return { nodes, edges };
+}
+
 /**
  * Analyzes whether we have a stored index in persistent storage
  * @param user

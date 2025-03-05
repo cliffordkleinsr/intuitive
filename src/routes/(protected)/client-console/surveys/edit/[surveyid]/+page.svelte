@@ -28,6 +28,9 @@
 
 	import { MediaQuery } from 'svelte/reactivity';
 	import { page } from '$app/state';
+	import SettingsLive from './(live)/settingsLive.svelte';
+	import Flow from '$lib/custom/blocks/xyflow/Flow.svelte';
+	import { writable } from 'svelte/store';
 
 	interface PageProps {
 		data: PageData;
@@ -39,7 +42,7 @@
 		title: 'Question List',
 		description: ''
 	};
-	let { surveydata, surveyqns, features } = $derived(data);
+	let { surveydata, surveyqns, features, branches, flow } = $derived(data);
 
 	let loading = $state(false);
 	let open = $state(false);
@@ -70,7 +73,15 @@
 		}
 	});
 
+	function hasBranch(questionid: string) {
+		const has_branch = typeof branches.find((b) => b.questionId === questionid) === 'object';
+		return has_branch;
+	}
 	const isDesktop = new MediaQuery('min-width: 768px');
+
+	let newflow = () => flow;
+	let nodes = writable(newflow().nodes);
+	let edges = writable(newflow().edges);
 </script>
 
 <div class="m-3">
@@ -123,18 +134,25 @@
 				Preview Questions
 				<ArrowUpRight />
 			{/snippet}
-			<div class="overflow-auto">
+			<div class="max-h-[600px] overflow-y-auto">
 				{#each surveyqns as qs, index}
-					<PreviewComp {index} {qs}>
+					<PreviewComp {index} {qs} disabled={hasBranch(qs.id)}>
 						{#if qs.question_type === 'Optional'}
-							<a
-								class={[buttonVariants({ variant: 'outline' })]}
-								onclick={onLinkClick}
-								href="/client-console/surveys/edit/{page.params.surveyid}/{qs.id}"
-							>
-								Branch
-								<Split />
-							</a>
+							{#if hasBranch(qs.id)}
+								<Button variant="outline" disabled>
+									Branch
+									<Split />
+								</Button>
+							{:else}
+								<a
+									class={[buttonVariants({ variant: 'outline' })]}
+									onclick={onLinkClick}
+									href="/client-console/surveys/edit/{page.params.surveyid}/{qs.id}"
+								>
+									Branch
+									<Split />
+								</a>
+							{/if}
 							{#if isDesktop.current}
 								<Dialog.Root
 									bind:open
@@ -244,7 +262,18 @@
 				Preview logic path
 				<ArrowUpRight />
 			{/snippet}
-			<Tree />
+			<Flow {nodes} {edges} />
+		</Portal>
+		<Portal title={surveydata.title} description={surveydata.desc as string} variant="secondary">
+			{#snippet trigger()}
+				Going Live
+			{/snippet}
+			<img
+				class="mx-auto w-48 shrink-0"
+				src="https://res.cloudinary.com/dmy8yp9el/image/upload/v1725974109/anfir41re6vnhxecg52s.png"
+				alt="live"
+			/>
+			<SettingsLive data={data.live_form} />
 		</Portal>
 	</div>
 </div>

@@ -1,7 +1,12 @@
 import type { Actions, PageServerLoad } from './$types';
 import { db } from '$lib/server/db';
-import { eq, asc, sql } from 'drizzle-orm';
-import { QuestionOptions, SurveyTable, surveyqnsTableV2 } from '$lib/server/db/schema';
+import { eq, asc, sql, and } from 'drizzle-orm';
+import {
+	QuestionBranching,
+	QuestionOptions,
+	SurveyTable,
+	surveyqnsTableV2
+} from '$lib/server/db/schema';
 import {
 	checkZodSchema,
 	editZodSchema,
@@ -11,44 +16,59 @@ import {
 	rateZodSchema,
 	singleZodSchema
 } from './editSchems';
-import { addSurveyQuestionsv2, getsurveyQuestions } from '$lib/server/db/db_utils';
+import {
+	addSurveyQuestionsv2,
+	generateFlow,
+	getBranches,
+	getsurveyQuestions,
+	orderQuestions
+} from '$lib/server/db/db_utils';
 import { ZodError } from 'zod';
-import { fail, redirect } from '@sveltejs/kit';
-import { superValidate } from 'sveltekit-superforms';
+import { fail } from '@sveltejs/kit';
+import { message, superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
-export const load: PageServerLoad = async ({ params, locals: { user } }) => {
-	const [data] = await db
+import { schema } from './(live)/schema';
+import { redirect } from 'sveltekit-flash-message/server';
+
+export const load: PageServerLoad = async ({ params, locals: { user }, cookies }) => {
+	const [title_desc] = await db
 		.select({
 			title: SurveyTable.title,
-			desc: SurveyTable.description
+			desc: SurveyTable.description,
+			status: SurveyTable.status
 		})
 		.from(SurveyTable)
 		.where(
-			sql`${SurveyTable.surveyid} = ${params.surveyid} and ${SurveyTable.consumer_id} = ${user?.id}`
+			and(
+				eq(SurveyTable.surveyid, params.surveyid),
+				eq(SurveyTable.consumer_id, user?.id as string)
+			)
 		);
-
-	const questions = await db
-		.select({
-			id: surveyqnsTableV2.questionId,
-			question: surveyqnsTableV2.question,
-			question_type: surveyqnsTableV2.questionT,
-			likert_key: sql<string>`${surveyqnsTableV2.likertKey}`,
-			optionid: sql<string[]>`ARRAY_AGG(${QuestionOptions.optionId}) AS optionid`,
-			options: sql<string[]>`ARRAY_AGG(${QuestionOptions.option}) AS options`,
-			created_at: surveyqnsTableV2.createdAt
-		})
-		.from(surveyqnsTableV2)
-		.leftJoin(QuestionOptions, eq(surveyqnsTableV2.questionId, QuestionOptions.questionId))
-		.where(eq(surveyqnsTableV2.surveid, params.surveyid))
-		.groupBy(surveyqnsTableV2.questionId, surveyqnsTableV2.question)
-		.orderBy(asc(surveyqnsTableV2.createdAt));
+	if (title_desc?.status !== 'Draft')
+		redirect(
+			303,
+			'/client-console',
+			{
+				type: 'warning',
+				message: `Survey ${params.surveyid} has been marked as Live and can no longer be viewed`
+			},
+			cookies
+		);
+	const qns = await getsurveyQuestions(params.surveyid);
+	const branches = await getBranches(params.surveyid);
+	const questions = orderQuestions(qns, branches);
+	const flow = generateFlow(qns, branches);
 	// console.log(questions)
-	// console.log(questions)
+	// console.log(qns)
 	// for the optionalschema
 	// const optionalSchema = enumBuilder(pool_questions.options);
+	// console.debug(questions)
 	return {
-		surveydata: data,
-		surveyqns: questions
+		surveydata: title_desc,
+		surveyqns: questions,
+		branches,
+		flow,
+		live_form: await superValidate(zod(schema))
 	};
 };
 
@@ -123,24 +143,29 @@ export const actions: Actions = {
 			radio_question: data.get('radio_question'),
 			radio_option: data.getAll('radio_option')
 		};
+
 		const quid = crypto.randomUUID();
 
 		try {
 			// Validate and insert the question once
 			const { radio_question, radio_option } = radioZodSchema.parse(construct);
 
-			const options = radio_option.map((item) => ({
+			const options = radio_option.map((item, index) => ({
 				questionId: quid,
-				option: item
+				option: item,
+				order_index: index
 			}));
-			await db.insert(surveyqnsTableV2).values({
-				questionId: quid,
-				surveid: params.surveyid,
-				questionT: 'Optional',
-				question: radio_question
+			// console.log(options)
+			await db.transaction(async (tx) => {
+				await tx.insert(surveyqnsTableV2).values({
+					questionId: quid,
+					surveid: params.surveyid,
+					questionT: 'Optional',
+					question: radio_question
+				});
+				await tx.insert(QuestionOptions).values(options);
 			});
 			// Insert the option
-			await db.insert(QuestionOptions).values(options);
 		} catch (err) {
 			if (err instanceof ZodError) {
 				const { fieldErrors: errors } = err.flatten();
@@ -254,6 +279,8 @@ export const actions: Actions = {
 		const { questionId } = data;
 
 		try {
+			await db.delete(QuestionBranching).where(eq(QuestionBranching.nextQuestionId, questionId));
+			await db.delete(QuestionBranching).where(eq(QuestionBranching.questionId, questionId));
 			await db.delete(QuestionOptions).where(eq(QuestionOptions.questionId, questionId));
 			await db.delete(surveyqnsTableV2).where(eq(surveyqnsTableV2.questionId, questionId));
 			await db.delete(surveyqnsTableV2).where(eq(surveyqnsTableV2.questionId, questionId));
@@ -314,9 +341,32 @@ export const actions: Actions = {
 		}
 	},
 
-	branchOpt: async ({ request }) => {
-		// const surveyqns = await getsurveyQuestions(questionId);
-		// const form = await superValidate(request, zod(subjectSchema));
-		console.log(await request.formData());
+	goLive: async ({ request, params, cookies }) => {
+		let live_form = await superValidate(request, zod(schema));
+		// validate
+		if (!live_form.valid) {
+			return message(live_form, {
+				alertType: 'error',
+				alertText: 'Please Check your entries, the form contains invalid data'
+			});
+		}
+
+		const [live_survey] = await db
+			.update(SurveyTable)
+			.set({
+				status: 'Live'
+			})
+			.where(eq(SurveyTable.surveyid, params.surveyid))
+			.returning({ expiry: SurveyTable.survey_expires });
+
+		redirect(
+			303,
+			'/client-console',
+			{
+				type: 'info',
+				message: `Survey ${params.surveyid} has been marked as Live and will expire on ${live_survey.expiry}`
+			},
+			cookies
+		);
 	}
 };

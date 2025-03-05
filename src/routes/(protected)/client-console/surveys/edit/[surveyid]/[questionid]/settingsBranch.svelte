@@ -53,7 +53,7 @@
 			surveyqns
 				.map((items) => ({
 					label: items.question,
-					value: items.question
+					value: items.id
 				}))
 				.find((f) => f.value === $formData[`option${optionIndex}`])?.label ?? 'Select an option' // Access from formData
 		);
@@ -80,7 +80,7 @@
 							<Select.Content>
 								{#each surveyqns as qns}
 									{#if new Date(qns.created_at) > new Date(qs.created_at)}
-										<Select.Item value={qns.question}>
+										<Select.Item value={qns.id}>
 											{qns.question}
 										</Select.Item>
 									{/if}
