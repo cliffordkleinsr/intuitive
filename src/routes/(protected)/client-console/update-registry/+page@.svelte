@@ -4,16 +4,10 @@
 	import type { PageData } from './$types';
 	import * as Form from '$lib/components/ui/form';
 	import { zodClient } from 'sveltekit-superforms/adapters';
-	import Label from '$lib/components/ui/label/label.svelte';
-	import Button, { buttonVariants } from '$lib/components/ui/button/button.svelte';
+	import Button from '$lib/components/ui/button/button.svelte';
 	import Input from '$lib/components/ui/input/input.svelte';
 	import PhoneInput from '$lib/components/ui/phone-input/phone-input.svelte';
-	import Check from 'lucide-svelte/icons/check';
-	import ChevronsUpDown from 'lucide-svelte/icons/chevrons-up-down';
-	import * as Popover from '$lib/components/ui/popover/index';
-	import * as Command from '$lib/components/ui/command/index';
-	import { tick } from 'svelte';
-	import { cn } from '$lib/utils';
+	import { LocationSelector } from '$lib/components/ui/location-input';
 
 	let open = $state(false);
 	let combovalue = $state('');
@@ -36,7 +30,11 @@
 	}: {
 		data: PageData;
 	} = $props();
+
+	let countryName = $state('') as string;
+	let stateName = $state('') as string;
 	const form = superForm(data.form, {
+		dataType: 'json',
 		validators: zodClient(schema),
 		onUpdated: () => {
 			if (!$message) return;
@@ -52,10 +50,15 @@
 	});
 	const triggerId = useId();
 	const { form: formData, enhance, message, delayed } = form;
+
+	let selectedCountry: any = $state(null);
+	let selectedState: any = $state(null);
 </script>
 
-<div class="flex min-h-[60vh] flex-col items-center justify-center">
-	<h1 class="text-center text-2xl">Update Your details before proceeding</h1>
+<div class="flex flex-col items-center justify-center py-10">
+	<h1 class="py-4 text-center text-lg text-muted-foreground">
+		Update Your details before proceeding
+	</h1>
 	<form method="post" use:enhance class="w-full max-w-md space-y-2 p-4 lg:p-0">
 		<div>
 			<Form.Field {form} name="email">
@@ -97,7 +100,7 @@
 						<PhoneInput
 							class="w-full"
 							{...props}
-							country="KE"
+							country="US"
 							placeholder="Enter a phone number"
 							bind:value={$formData.phoneno}
 						/>
@@ -106,80 +109,29 @@
 				<Form.FieldErrors />
 			</Form.Field>
 		</div>
-		<div class="grid gap-2">
-			<div class="grid gap-4 lg:grid-cols-2">
-				<div class="grid gap-2">
-					<Form.Field {form} name="county">
-						<Popover.Root bind:open>
-							<Form.Control id={triggerId}>
-								{#snippet children({ props })}
-									<Form.Label>Company Location</Form.Label>
-									<Popover.Trigger
-										class={[
-											buttonVariants({ variant: 'outline' }),
-											'w-[200px] justify-between',
-											!$formData.county && 'text-muted-foreground'
-										]}
-										role="combobox"
-										{...props}
-									>
-										{counties.find((f) => f.name === $formData.county)?.name ?? 'Select a County'}
-										<ChevronsUpDown class="ml-2 h-4 w-4 shrink-0 opacity-50" />
-									</Popover.Trigger>
-									<input hidden value={$formData.county} name={props.name} />
-								{/snippet}
-							</Form.Control>
-							<Popover.Content align="start" class="w-full p-0">
-								<Command.Root>
-									<Command.Input placeholder="Select your area of operation" class="h-9" />
-									<Command.List>
-										<Command.Empty>No framework found.</Command.Empty>
-										<Command.Group>
-											{#each counties as cty}
-												<Command.Item
-													value={cty.name}
-													onSelect={() => {
-														combovalue = cty.name;
-														$formData.county = cty.name;
-														closeAndFocusTrigger(triggerId);
-													}}
-												>
-													<Check class={cn(cty.name !== $formData.county && 'text-transparent')} />
-													{cty.name}
-												</Command.Item>
-											{/each}
-										</Command.Group>
-									</Command.List>
-								</Command.Root>
-							</Popover.Content>
-						</Popover.Root>
-						<Form.FieldErrors />
-					</Form.Field>
-				</div>
-				<div class="grid gap-2">
-					<Form.Field {form} name="subctys">
-						<Form.Control>
-							{#snippet children({ props })}
-								<Form.Label for="subctys">Sub county</Form.Label>
-								<Select.Root type="single" bind:value={$formData.subctys} {...props}>
-									<Select.Trigger id="subctys">
-										{$formData.subctys ? $formData.subctys : 'select your area sub-county'}
-									</Select.Trigger>
-									<Select.Content>
-										{#if countyMap.has($formData.county)}
-											{@const ctys = countyMap.get($formData.county)}
-											{#each ctys as ct}
-												<Select.Item value={ct} label={ct}></Select.Item>
-											{/each}
-										{/if}
-									</Select.Content>
-								</Select.Root>
-							{/snippet}
-						</Form.Control>
-						<Form.FieldErrors />
-					</Form.Field>
-				</div>
-			</div>
+		<div>
+			<Form.Field {form} name="location">
+				<Form.Control>
+					{#snippet children({ props })}
+						<Form.Label>Select Country</Form.Label>
+						<LocationSelector
+							{...props}
+							bind:selectedCountry
+							bind:selectedState
+							onCountryChange={(country) => {
+								countryName = country?.name || '';
+								$formData.location.country = countryName || '';
+							}}
+							onStateChange={(state) => {
+								stateName = state?.name || '';
+								$formData.location.state = stateName;
+							}}
+						/>
+					{/snippet}
+				</Form.Control>
+				<Form.Description />
+				<Form.FieldErrors />
+			</Form.Field>
 		</div>
 		<div>
 			<Form.Field {form} name="sector">

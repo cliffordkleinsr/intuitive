@@ -8,6 +8,7 @@
 	import Mail from 'lucide-svelte/icons/mail';
 	import Phone from 'lucide-svelte/icons/phone';
 	import MapPin from 'lucide-svelte/icons/map-pin';
+	import BaseMap from '$lib/custom/blocks/maplibre/BaseMap.svelte';
 	let { data }: { data: PageData } = $props();
 
 	const pageprops = {
@@ -144,7 +145,8 @@
 				</p>
 			</div>
 			<div class="mb-8 overflow-hidden rounded-lg shadow-lg">
-				<iframe
+				<BaseMap />
+				<!-- <iframe
 					title="Intuitive Insights"
 					src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3988.7994116755094!2d36.7898792!3d-1.2949051!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x182f11ddf10f0a1b%3A0xd8f7f55cd40764b1!2sIntuitive%20Insights!5e0!3m2!1sen!2ske!4v1736236028078!5m2!1sen!2ske"
 					width="100%"
@@ -153,7 +155,7 @@
 					allowfullscreen={true}
 					loading="lazy"
 					referrerpolicy="no-referrer-when-downgrade"
-				></iframe>
+				></iframe> -->
 			</div>
 			<div class="grid gap-8 md:grid-cols-2">
 				<div class="rounded-lg p-6 shadow-md">

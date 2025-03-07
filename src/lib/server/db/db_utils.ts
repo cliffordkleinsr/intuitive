@@ -1,4 +1,4 @@
-import { and, asc, eq, gt, sql } from 'drizzle-orm';
+import { and, asc, eq, gt, sql, lt } from 'drizzle-orm';
 import { db } from './index';
 
 import {
@@ -351,6 +351,16 @@ export const doPriceLookup = async (id: string) => {
 		.select({
 			plan: pricingTable.title,
 			type: consumerPackage.package_type,
+			price: sql<number>`
+				CASE
+					WHEN ${consumerPackage.package_type} = 'one_pack'
+					THEN ${pricingTable.one_pack}::integer
+					WHEN ${consumerPackage.package_type} = 'six_pack'
+					THEN ${pricingTable.six_pack}::integer
+					WHEN ${consumerPackage.package_type} = 'ten_pack'
+					THEN ${pricingTable.ten_pack}::integer
+				END CASE
+			`,
 			max_questions: pricingTable.max_qns,
 			max_responses: pricingTable.max_responses,
 			demographics: pricingTable.demographics,
@@ -363,6 +373,16 @@ export const doPriceLookup = async (id: string) => {
 	return on_demand_pkg;
 };
 export const getNewPaymentStatus = async (id: string) => {
+	// returnDateValue(type, plan)
+	const [{ type, plan }] = await db
+		.select({
+			type: consumerPackage.package_type,
+			plan: consumerPackage.package
+		})
+		.from(consumerPackage)
+		.where(eq(consumerPackage.consumerid, id));
+	const date_val = returnDateValue(type, plan);
+	// console.debug(date_val)
 	const current_scope =
 		(
 			await db
@@ -372,13 +392,38 @@ export const getNewPaymentStatus = async (id: string) => {
 					sql`
 						${consumerPackage.consumerid} = ${id}
 						and
-						(${consumerPackage.expires} - NOW()) < interval '30' day
+						(${consumerPackage.expires} - NOW()) < (interval '1' day * ${date_val})
 					`
 				)
 		).length > 0;
 	return current_scope;
 };
 
+export const getSubscriptionStatus = async (id: string) => {
+	const surveys = await db
+		.select({
+			id: SurveyTable.surveyid,
+			package_type: consumerPackage.package_type
+		})
+		.from(SurveyTable)
+		.leftJoin(consumerPackage, eq(consumerPackage.consumerid, SurveyTable.consumer_id))
+		.where(
+			and(
+				eq(SurveyTable.consumer_id, id as string),
+				lt(SurveyTable.created_at, consumerPackage.expires)
+			)
+		);
+
+	// Count surveys per package type
+	const onePackCount = surveys.filter((s) => s.package_type === 'one_pack').length;
+	const sixPackCount = surveys.filter((s) => s.package_type === 'six_pack').length;
+	const tenPackCount = surveys.filter((s) => s.package_type === 'ten_pack').length;
+
+	const cant_create_one = onePackCount > 0;
+	const cant_create_six = sixPackCount <= 6;
+	const cant_create_ten = tenPackCount <= 10;
+	return [cant_create_one, cant_create_six, cant_create_ten];
+};
 export const retSurveyInfo = async (id: string) => {
 	const select = {
 		id: SurveyTable.surveyid,

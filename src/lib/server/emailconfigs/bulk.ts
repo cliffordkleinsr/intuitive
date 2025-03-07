@@ -1,6 +1,7 @@
 import type { DSVParsedArray } from 'd3-dsv';
 import { sendBulkEmail } from '../email-send';
 import { BASE_URL } from './config';
+import { message } from 'sveltekit-superforms';
 
 const sendSurveyEmail = async (name: string, email: string, href: string, best: string) => {
 	const htmlEmail = `
@@ -20,18 +21,22 @@ const sendSurveyEmail = async (name: string, email: string, href: string, best: 
 };
 
 export const sendBulkEmailCSV = (
-	csv: Array<{ name: string; email: string }> | any,
+	csv: Array<{ Name: string; Email: string }> | any,
 	href: string,
-	regards: string
+	regards: string,
+	form: any
 ) => {
-	csv.map(async (it: { name: any; email: any }) => {
-		const { name, email } = it;
-		if (!name && !email) {
-			console.error('name and email are not here');
-			return;
+	csv.map(async (it: { Name: any; Email: any }) => {
+		const { Name, Email } = it;
+		if (!Name && !Email) {
+			console.error('Name and Email are not here');
+			return message(form, {
+				alertType: 'warning',
+				alertText: 'Name and Email are not in the csv entry column'
+			});
 		}
 		try {
-			await sendSurveyEmail(name, email, href, regards);
+			await sendSurveyEmail(Name, Email, href, regards);
 		} catch (err) {
 			console.error(err);
 		}

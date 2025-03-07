@@ -4,7 +4,7 @@
 	import { columns } from './(tableau)/columns';
 
 	let { data }: { data: PageData } = $props();
-	const { sharable } = data;
+	const { livesurveys } = data;
 </script>
 
-<DataTable data={sharable} {columns} />
+<DataTable data={livesurveys} {columns} />

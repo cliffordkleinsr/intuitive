@@ -60,7 +60,7 @@
 	{#if $delayed}
 		<Button class="flex w-full gap-2" disabled={$delayed} variant="black">
 			<span
-				class="inline-block size-4 animate-spin rounded-full border-[3px] border-current border-t-transparent text-white"
+				class="inline-block size-4 animate-spin rounded-full border-[3px] border-current border-t-transparent text-white dark:text-black"
 				role="status"
 				aria-label="loading"
 			></span>

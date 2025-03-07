@@ -54,7 +54,7 @@ export const actions: Actions = {
 		// 	});
 		// }
 		// destructure form.data for some operations and insertions
-		const { fullname, email, company, phoneno, county, subctys, sector, password } = form.data;
+		const { fullname, email, company, phoneno, location, sector, password } = form.data;
 
 		// check if the email is already registered
 		const exists = await checkIfEmailExists(email);
@@ -79,8 +79,8 @@ export const actions: Actions = {
 				await tx.insert(consumerDeats).values({
 					consumerid: userid,
 					email,
-					county,
-					sub_county: subctys,
+					country: location.country,
+					state: location.state,
 					sector,
 					phone: phoneno.replace(/\s+/g, ''),
 					company_name: company

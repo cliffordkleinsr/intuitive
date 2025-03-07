@@ -8,6 +8,7 @@ import { fileSchema } from './schema';
 import { csvParse, autoType } from 'd3-dsv';
 import { sendBulkEmailCSV } from '$lib/server/emailconfigs/bulk';
 import { ratelimit } from '$lib/server/redis';
+import { doPriceLookup, getNewPaymentStatus } from '$lib/server/db/db_utils';
 
 export const load = (async ({ params }) => {
 	const [shared_surv] = await db
@@ -36,6 +37,20 @@ export const actions: Actions = {
 				alertText: 'Please Check your entries, the form contains invalid data'
 			});
 		}
+		const payment = await getNewPaymentStatus(userid);
+		if (!payment) {
+			return message(form, {
+				alertType: 'error',
+				alertText: 'Your are not authorized to use this automation'
+			});
+		}
+		const { api } = await doPriceLookup(userid);
+		if (!api) {
+			return message(form, {
+				alertType: 'error',
+				alertText: 'Your are not authorized to use this automation'
+			});
+		}
 		const { success, reset } = await ratelimit.span.limit(userid);
 		if (!success) {
 			const totalMinutes = Math.ceil((reset - Date.now()) / (1000 * 60));
@@ -57,6 +72,7 @@ export const actions: Actions = {
 				`You are being rate limited, please wait ${timeText} and try again`
 			);
 		}
+
 		const c2j = csvParse(await form.data.csv.text(), autoType);
 
 		// console.log(c2j)
@@ -75,7 +91,8 @@ export const actions: Actions = {
 		}
 		try {
 			let href = `${url.origin}/anonymous/${params.surveyId}`;
-			sendBulkEmailCSV(c2j, href, username);
+			// console.log(c2j)
+			sendBulkEmailCSV(c2j, href, username, form);
 		} catch (err) {
 			console.error(err);
 		}

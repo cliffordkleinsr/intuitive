@@ -37,6 +37,11 @@
 			el?.focus();
 		}, 0);
 	};
+	$effect(() => {
+		if (el && el.value !== value) {
+			el.value = value ?? '';
+		}
+	});
 </script>
 
 <div class="flex place-items-center">

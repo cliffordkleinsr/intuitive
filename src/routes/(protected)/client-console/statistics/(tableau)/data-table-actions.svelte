@@ -4,7 +4,7 @@
 	let { id }: { id: string } = $props();
 </script>
 
-<a class={buttonVariants({ variant: 'secondary' })} href="/client-console/analytics/{id}">
-	View Analytics
+<a class={buttonVariants({ variant: 'secondary' })} href="/client-console/statistics/{id}">
+	Statistics
 	<ArrowUpRight class="size-4" />
 </a>

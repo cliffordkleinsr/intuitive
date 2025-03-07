@@ -44,7 +44,7 @@ export const actions: Actions = {
 			.from(UsersTable)
 			.where(eq(UsersTable.id, userid));
 		// destructure form.data for some operations and insertions
-		const { company, phoneno, county, subctys, sector, email } = form.data;
+		const { company, phoneno, location, sector, email } = form.data;
 		const { id } = user_data;
 
 		try {
@@ -59,8 +59,8 @@ export const actions: Actions = {
 				email,
 				company_name: company,
 				phone: phoneno.replace(/\s+/g, ''),
-				county,
-				sub_county: subctys,
+				country: location.country,
+				state: location.state,
 				sector
 			});
 

@@ -1,15 +1,20 @@
 import nodemailer, { type Transporter } from 'nodemailer';
-import { SECRET_SMTP2GO_PASSWORD, SECRET_SMTP2GO_USERNAME } from '$env/static/private';
+import {
+	SECRET_MAILJET_PASSWORD,
+	SECRET_MAILJET_USERNAME,
+	SECRET_SMTP2GO_PASSWORD,
+	SECRET_SMTP2GO_USERNAME
+} from '$env/static/private';
 
 let transporter: Transporter;
 // create Nodemailer SMTP transporter
 transporter = nodemailer.createTransport({
-	host: 'mail.smtp2go.com',
-	port: 2525,
+	host: 'in-v3.mailjet.com',
+	port: 587,
 	secure: false,
 	auth: {
-		user: SECRET_SMTP2GO_USERNAME,
-		pass: SECRET_SMTP2GO_PASSWORD
+		user: SECRET_MAILJET_USERNAME,
+		pass: SECRET_MAILJET_PASSWORD
 	}
 });
 export default async function sendEmail(

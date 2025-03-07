@@ -1,21 +1,30 @@
 import { redirect } from 'sveltekit-flash-message/server';
 import type { Actions, PageServerLoad } from './$types';
 import { db } from '$lib/server/db';
-import { SurveyTable } from '$lib/server/db/schema';
+import { consumerPackage, SurveyTable } from '$lib/server/db/schema';
 import {
 	createNewSurvey,
 	doPriceLookup,
 	getpackageFeatures,
+	getSubscriptionStatus,
 	returnDateValue
 } from '$lib/server/db/db_utils';
-import { eq, sql } from 'drizzle-orm';
+import { eq, lt, and, ne } from 'drizzle-orm';
 import { message, superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 import { schema } from './schema';
 import { addDays } from '$lib/custom/functions/helpers';
 
 export const load: PageServerLoad = async ({ locals: { user } }) => {
-	return { form: await superValidate(zod(schema)) };
+	const [cant_create_one, cant_create_six, cant_create_ten] = await getSubscriptionStatus(
+		user?.id as string
+	);
+	return {
+		form: await superValidate(zod(schema)),
+		cant_create_one,
+		cant_create_six,
+		cant_create_ten
+	};
 };
 
 export const actions: Actions = {

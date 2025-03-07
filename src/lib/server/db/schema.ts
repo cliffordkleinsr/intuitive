@@ -133,8 +133,8 @@ export const consumerDeats = pgTable('consumer_details', {
 		.notNull(),
 	company_name: text().notNull(),
 	phone: text().notNull(),
-	county: text().notNull(),
-	sub_county: text().notNull(),
+	country: text().notNull(),
+	state: text().notNull(),
 	sector: text().notNull(),
 	disabled: boolean().notNull().default(false),
 	created_at: timestamp('created_at', {
@@ -228,6 +228,12 @@ export const SurveyTable = pgTable('survey', {
 	description: text(),
 	status: Status('status').default('Draft').notNull(),
 	max_responses: doublePrecision().notNull(),
+	created_at: timestamp('created_at', {
+		withTimezone: true,
+		mode: 'date'
+	})
+		.defaultNow()
+		.notNull(),
 	survey_expires: timestamp({
 		withTimezone: true,
 		mode: 'date'

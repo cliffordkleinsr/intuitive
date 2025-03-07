@@ -30,12 +30,16 @@ export const registerCSchema = z
 		// 		}
 		// 	).trim(),
 		phoneno: z.string().nonempty(),
+		location: z.object({
+			country: z.string(),
+			state: z.string()
+		}),
 		// county: z
 		// 	.enum(counties.map((f) => f.name) as [Counties, ...Counties[]], {
 		// 		errorMap: () => ({ message: 'Please select a valid County.' })
 		// 	}),
-		county: z.string().nonempty(),
-		subctys: z.string().nonempty(),
+		// county: z.string().nonempty(),
+		// subctys: z.string().nonempty(),
 		// subctys: z
 		// 	.string({
 		// 		required_error: 'Must be valid Sub County.'

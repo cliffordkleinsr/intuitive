@@ -21,7 +21,7 @@
 		data: PageData;
 	} = $props();
 
-	const { features } = data;
+	const { cant_create_one, cant_create_six, cant_create_ten } = data;
 
 	const form = superForm(data.form, {
 		validators: zodClient(schema),
@@ -81,15 +81,15 @@
 						<Form.FieldErrors class="text-sm text-destructive" />
 					</Form.Field>
 				</div>
-				{#if features === undefined}
+				{#if cant_create_one || cant_create_six || cant_create_ten}
 					<div
 						class="mt-2 rounded-lg bg-red-500 p-4 text-sm text-white"
 						role="alert"
 						tabindex="-1"
 						aria-labelledby="hs-solid-color-danger-label"
 					>
-						<span id="hs-solid-color-danger-label" class="font-bold">Error!</span> You are not subscribed
-						to any plan!
+						<span id="hs-solid-color-danger-label" class="font-bold">Error!</span>
+						You have exceeded your survey limit for your current subscription!
 					</div>
 				{:else if $delayed}
 					<Button class="flex w-full gap-2" disabled={$delayed}>
@@ -106,7 +106,7 @@
 			</Card.Content>
 		</Card.Root>
 
-		<Button class="" variant="outline" href="/client-dash">Cancel</Button>
+		<Button class="" variant="outline" href="/client-console">Cancel</Button>
 
 		<!-- <Button variant="outline" on:click={addData} on:click={() => active=false}>Save</Button> -->
 	</form>

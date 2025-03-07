@@ -24,7 +24,7 @@
 		Updating Live
 		<span class="absolute end-0 top-0 -me-1.5 -mt-1.5 flex size-2">
 			<span
-				class="absolute inline-flex size-full animate-ping rounded-full bg-red-400 opacity-75 dark:bg-red-600"
+				class="absolute inline-flex size-full animate-ping rounded-full bg-cyan-400 opacity-75 dark:bg-cyan-600"
 			></span>
 			<span class="relative inline-flex size-2 rounded-full bg-green-500"></span>
 		</span>

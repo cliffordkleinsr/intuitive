@@ -37,12 +37,16 @@
 	import Meta from '$lib/custom/seo/meta.svelte';
 	import { countyMap } from '$lib/json/subcountis';
 	import { useId } from 'bits-ui';
+	import { LocationSelector } from '$lib/components/ui/location-input';
 
 	// KitLoad<MiddleWare>
 	// export let data: SuperValidated<Infer<RegisterCSchema>>;
 	let { data }: { data: SuperValidated<Infer<RegisterCSchema>> } = $props();
 
+	let countryName = $state('') as string;
+	let stateName = $state('') as string;
 	const form = superForm(data, {
+		dataType: 'json',
 		validators: zodClient(registerCSchema),
 		onUpdated: () => {
 			if (!$message) return;
@@ -59,6 +63,8 @@
 	const triggerId = useId();
 	const { form: formData, enhance, message, delayed } = form;
 
+	let selectedCountry: any = $state(null);
+	let selectedState: any = $state(null);
 	// command
 	let open: boolean = $state(false);
 
@@ -76,10 +82,6 @@
 			<Breadcrumb.Item>
 				<Breadcrumb.Link href="/">Home</Breadcrumb.Link>
 			</Breadcrumb.Item>
-			<Breadcrumb.Separator></Breadcrumb.Separator>
-			<!-- <Breadcrumb.Item>
-				<Breadcrumb.Link href="/client/signin">Client SignIn</Breadcrumb.Link>
-			</Breadcrumb.Item> -->
 			<Breadcrumb.Separator></Breadcrumb.Separator>
 			<Breadcrumb.Item>
 				<Breadcrumb.Page>Client Registration</Breadcrumb.Page>
@@ -152,8 +154,8 @@
 									{#snippet children({ props })}
 										<Form.Label>Phone Number</Form.Label>
 										<PhoneInput
-											class="w-full"
 											{...props}
+											class="w-full"
 											country="KE"
 											placeholder="Enter a phone number"
 											bind:value={$formData.phoneno}
@@ -166,82 +168,29 @@
 					</div>
 				</div>
 
-				<div class="grid gap-2">
-					<div class="grid gap-4 lg:grid-cols-2">
-						<div class="grid gap-2">
-							<Form.Field {form} name="county">
-								<Popover.Root bind:open>
-									<Form.Control id={triggerId}>
-										{#snippet children({ props })}
-											<Form.Label>Company Location</Form.Label>
-											<Popover.Trigger
-												class={[
-													buttonVariants({ variant: 'outline' }),
-													'w-[200px] justify-between',
-													!$formData.county && 'text-muted-foreground'
-												]}
-												role="combobox"
-												{...props}
-											>
-												{counties.find((f) => f.name === $formData.county)?.name ??
-													'Select a County'}
-												<ChevronsUpDown class="ml-2 h-4 w-4 shrink-0 opacity-50" />
-											</Popover.Trigger>
-											<input hidden value={$formData.county} name={props.name} />
-										{/snippet}
-									</Form.Control>
-									<Popover.Content align="start" class="w-full p-0">
-										<Command.Root>
-											<Command.Input placeholder="Select your area of operation" class="h-9" />
-											<Command.List>
-												<Command.Empty>No framework found.</Command.Empty>
-												<Command.Group>
-													{#each counties as cty}
-														<Command.Item
-															value={cty.name}
-															onSelect={() => {
-																$formData.county = cty.name;
-																closeAndFocusTrigger(triggerId);
-															}}
-														>
-															<Check
-																class={cn(cty.name !== $formData.county && 'text-transparent')}
-															/>
-															{cty.name}
-														</Command.Item>
-													{/each}
-												</Command.Group>
-											</Command.List>
-										</Command.Root>
-									</Popover.Content>
-								</Popover.Root>
-								<Form.FieldErrors />
-							</Form.Field>
-						</div>
-						<div class="grid gap-2">
-							<Form.Field {form} name="subctys">
-								<Form.Control>
-									{#snippet children({ props })}
-										<Form.Label for="subctys">Sub county</Form.Label>
-										<Select.Root type="single" bind:value={$formData.subctys} {...props}>
-											<Select.Trigger id="subctys">
-												{$formData.subctys ? $formData.subctys : 'select your area sub-county'}
-											</Select.Trigger>
-											<Select.Content>
-												{#if countyMap.has($formData.county)}
-													{@const ctys = countyMap.get($formData.county)}
-													{#each ctys as ct}
-														<Select.Item value={ct} label={ct}></Select.Item>
-													{/each}
-												{/if}
-											</Select.Content>
-										</Select.Root>
-									{/snippet}
-								</Form.Control>
-								<Form.FieldErrors />
-							</Form.Field>
-						</div>
-					</div>
+				<div>
+					<Form.Field {form} name="location">
+						<Form.Control>
+							{#snippet children({ props })}
+								<Form.Label>Select Country</Form.Label>
+								<LocationSelector
+									{...props}
+									bind:selectedCountry
+									bind:selectedState
+									onCountryChange={(country) => {
+										countryName = country?.name || '';
+										$formData.location.country = countryName || '';
+									}}
+									onStateChange={(state) => {
+										stateName = state?.name || '';
+										$formData.location.state = stateName;
+									}}
+								/>
+							{/snippet}
+						</Form.Control>
+						<Form.Description />
+						<Form.FieldErrors />
+					</Form.Field>
 				</div>
 				<div class="grid gap-2">
 					<Form.Field {form} name="sector">

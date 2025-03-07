@@ -7,7 +7,7 @@
 
 {#if survey === 'Draft'}
 	<a class={buttonVariants({ variant: 'secondary' })} href="/client-console/surveys/edit/{id}">
-		View
+		Edit
 		<ArrowUpRight class="size-4" />
 	</a>
 {:else}

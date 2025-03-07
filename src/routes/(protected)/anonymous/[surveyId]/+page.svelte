@@ -3,10 +3,14 @@
 	import * as Card from '$lib/components/ui/card';
 	import Clock from 'lucide-svelte/icons/clock';
 	import { Button } from '$lib/components/ui/button';
+	import { Checkbox } from '$lib/components/ui/checkbox/index.js';
+	import { Label } from '$lib/components/ui/label/index.js';
+	import { page } from '$app/state';
 
 	let { data }: { data: PageData } = $props();
 
-	const { uri, current_ix, question_cnt, survId } = data;
+	let checked = $state(false);
+	let { current_ix, question_cnt, survId } = $derived(data);
 </script>
 
 <div class="mx-auto flex h-fit max-w-sm flex-col py-20">
@@ -14,19 +18,26 @@
 	<Card.Root class="mt-5">
 		<Card.Header class="rounded-t-lg bg-yellow-300 text-center">
 			<Card.Title class="text-xl text-neutral-500">Total Survey Questions</Card.Title>
-			<Card.Title class="text-sm text-neutral-500">ID: {survId}</Card.Title>
+			<!-- <Card.Title class="text-sm text-neutral-500">{survId}</Card.Title> -->
 			<Card.Description>
-				<Button variant="ghost" class="hover:bg-inherit hover:text-neutral-400" size="icon"
-					><Clock class="size-5" /> {question_cnt}'</Button
-				>
+				<Button variant="ghost" class="hover:bg-inherit hover:text-neutral-400" size="icon">
+					<Clock class="size-5" />
+					{question_cnt}'
+				</Button>
 			</Card.Description>
 		</Card.Header>
-		<Card.Content class="mt-14 text-center">
-			<Button variant="outline" class="rounded-xl" size="lg" href={uri}>
+		<Card.Content class="py-10 text-center">
+			<Button
+				variant="outline"
+				class="rounded-xl"
+				size="lg"
+				disabled={!checked && !(current_ix > 0)}
+				href={checked || current_ix > 0 ? `/anonymous/${page.params.surveyId}/pre` : undefined}
+			>
 				{current_ix > 0 ? 'Continue where you left off' : 'Start the survey'}
 			</Button>
 		</Card.Content>
-		<Card.Footer class="mt-7">
+		<Card.Footer>
 			<div class="flex flex-col gap-2 text-center">
 				<h1 class="font-mono text-xs font-bold text-neutral-600 dark:text-slate-300">
 					Your responses are completely anonymous
@@ -39,10 +50,23 @@
 			</div>
 		</Card.Footer>
 	</Card.Root>
-	<p class="mt-32 text-center text-xs">
-		By taking this survey you agree to the <a
-			href="##"
-			class=" text-blue-400 underline-offset-1 hover:underline">Terms & Conditions</a
-		>
-	</p>
+	{#if !(current_ix > 0)}
+		<div class="mx-auto flex items-center space-x-2 py-5">
+			<Checkbox id="terms" bind:checked aria-labelledby="terms-label" />
+			<div class="grid gap-1.5 leading-none">
+				<Label
+					for="terms1"
+					class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+				>
+					Accept terms and conditions
+				</Label>
+				<p class="text-center text-xs">
+					By taking this survey you agree to the <a
+						href="/terms"
+						class=" text-blue-400 underline-offset-1 hover:underline">Terms & Conditions</a
+					>
+				</p>
+			</div>
+		</div>
+	{/if}
 </div>

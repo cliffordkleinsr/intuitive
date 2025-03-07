@@ -44,7 +44,7 @@
 	</DropdownMenu.Root>
 {:else}
 	<a class={buttonVariants({ variant: 'secondary' })} href="/client-console/analytics/{id}">
-		View
+		View Analytics
 		<ArrowUpRight class="size-4" />
 	</a>
 {/if}
