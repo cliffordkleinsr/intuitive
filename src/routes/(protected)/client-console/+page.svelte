@@ -60,19 +60,21 @@
 				<Progress value={count} aria-label="{count / 100}% increase" />
 			</Card.Footer>
 		</Card.Root>
-		<Card.Root class="max-w-lg">
-			<Card.Header class="pb-2">
-				<Card.Title class="text-end text-lg">Total Running Surveys</Card.Title>
-				<Card.Description class="text-end text-lg">
-					<Badge variant="secondary">
-						{all_surv.length}
-					</Badge>
-				</Card.Description>
-			</Card.Header>
-			<Card.Footer>
-				<Button class="w-1/2" href="/client-console/shared" variant="secondary">View All</Button>
-			</Card.Footer>
-		</Card.Root>
+		{#if live_surv.length > 0}
+			<Card.Root class="max-w-lg">
+				<Card.Header class="pb-2">
+					<Card.Title class="text-end text-lg">Total Running Surveys</Card.Title>
+					<Card.Description class="text-end text-lg">
+						<Badge variant="secondary">
+							{live_surv.length}
+						</Badge>
+					</Card.Description>
+				</Card.Header>
+				<Card.Footer>
+					<Button class="w-1/2" href="/client-console/shared" variant="secondary">View All</Button>
+				</Card.Footer>
+			</Card.Root>
+		{/if}
 	</div>
 	<Tabs.Root value="draft" class="mx-auto w-96 lg:w-full">
 		<Tabs.List class="mx-5 grid w-80 grid-cols-3 lg:w-[35rem]">

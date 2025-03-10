@@ -374,29 +374,36 @@ export const doPriceLookup = async (id: string) => {
 };
 export const getNewPaymentStatus = async (id: string) => {
 	// returnDateValue(type, plan)
-	const [{ type, plan }] = await db
+	const [data] = await db
 		.select({
 			type: consumerPackage.package_type,
 			plan: consumerPackage.package
 		})
 		.from(consumerPackage)
 		.where(eq(consumerPackage.consumerid, id));
-	const date_val = returnDateValue(type, plan);
-	// console.debug(date_val)
-	const current_scope =
-		(
-			await db
-				.select()
-				.from(consumerPackage)
-				.where(
-					sql`
-						${consumerPackage.consumerid} = ${id}
-						and
-						(${consumerPackage.expires} - NOW()) < (interval '1' day * ${date_val})
-					`
-				)
-		).length > 0;
-	return current_scope;
+
+	if (data) {
+		const { type, plan } = data;
+		const date_val = returnDateValue(type, plan);
+
+		// console.debug(date_val)
+		const current_scope =
+			(
+				await db
+					.select()
+					.from(consumerPackage)
+					.where(
+						sql`
+							${consumerPackage.consumerid} = ${id}
+							and
+							(${consumerPackage.expires} - NOW()) < (interval '1' day * ${date_val})
+						`
+					)
+			).length > 0;
+		return current_scope;
+	} else {
+		return false;
+	}
 };
 
 export const getSubscriptionStatus = async (id: string) => {

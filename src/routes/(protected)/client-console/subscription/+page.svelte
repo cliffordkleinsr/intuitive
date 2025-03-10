@@ -17,7 +17,7 @@
 	let { data }: { data: PageData } = $props();
 	const {
 		payment,
-		features: { plan, type, price },
+		features,
 		consumer: { businessName, businessAddressLine1, invoiceNumber, invoiceDate, expiryDates }
 	} = data;
 	// $inspect(type, price)
@@ -65,7 +65,7 @@
 				<h2 class="font-customHeading pb-1 text-lg font-medium">INVOICE INFORMATION:</h2>
 				<div id="invoice-info" class="grid w-80 grid-cols-2">
 					<span class="text-left">Invoice Type:</span>
-					<span class="text-right">{plan}</span>
+					<span class="text-right">{features?.plan}</span>
 
 					<span class="text-left">Invoice Date:</span>
 					<span class="text-right">{invoiceDate}</span>
@@ -81,7 +81,7 @@
 				<thead>
 					<tr class="border-b">
 						<th class="font-customHeading w-24 p-1 text-left font-medium">Total Due:</th>
-						<th class="p-1 text-left indent-2">${price}</th>
+						<th class="p-1 text-left indent-2">${features?.price}</th>
 					</tr>
 					<tr class="">
 						<th class="font-customHeading w-24 p-1 text-left font-medium">Due Date:</th>

@@ -9,7 +9,7 @@ export const actions: Actions = {
 			// return fail(401, { message: 'You do not have a valid sesion' });
 			redirect(
 				302,
-				handleLoginRedirect('/client/signin', url),
+				handleLoginRedirect('/client/login', url),
 				{
 					type: 'info',
 					message: 'Not Authorised'
