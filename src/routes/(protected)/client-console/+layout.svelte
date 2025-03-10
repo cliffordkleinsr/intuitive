@@ -86,7 +86,7 @@
 		],
 		user: data.user?.fullname as string,
 		payment_status: data.payment as boolean,
-		action: '/client/login'
+		action: '/client/signout'
 	};
 	const profile = data.user.pfp ?? '';
 	// $inspect(profile)
