@@ -222,6 +222,41 @@ interface GoogleIdTokenPayload {
 	// Add other claims as needed
 }
 
+interface GeocodeAPI {
+	accuracy: number;
+	latitude: number;
+	longitude: number;
+	altitude: number | null;
+	altitudeAccuracy: number | null;
+	heading: number | null;
+	speed: number | null;
+}
+interface NominatimResponse {
+	place_id?: string;
+	licence?: string;
+	osm_type?: string;
+	osm_id?: string;
+	lat?: string;
+	lon?: string;
+	place_rank?: string;
+	category?: string;
+	type?: string;
+	importance?: string;
+	addresstype?: string;
+	display_name?: string;
+	name?: string;
+	address?: {
+		road?: string;
+		village?: string;
+		state_district?: string;
+		state?: string;
+		postcode?: string;
+		country?: string;
+		country_code?: string;
+	};
+	boundingbox?: [string, string, string, string];
+}
+
 export type {
 	SurveyData,
 	Agent,
@@ -241,5 +276,7 @@ export type {
 	clientData,
 	GoogleIdTokenPayload,
 	Consumer,
-	PesaPalOReq
+	PesaPalOReq,
+	GeocodeAPI,
+	NominatimResponse
 };

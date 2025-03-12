@@ -22,10 +22,11 @@ import {
 	consumerPackage,
 	type ConsumerData,
 	SurveyTable,
-	QuestionBranching
+	QuestionBranching,
+	user_analytics
 } from './schema';
 import type { PgColumn, PgTable } from 'drizzle-orm/pg-core';
-import type { Cookies } from '@sveltejs/kit';
+import type { Cookies, RequestHandler } from '@sveltejs/kit';
 import { redirect } from 'sveltekit-flash-message/server';
 import type { Question } from '$lib/types';
 import { toast } from 'svelte-sonner';
@@ -632,51 +633,123 @@ interface Branches {
 	branchId: string;
 	nextQuestionId: string;
 }
-export function orderQuestions(questions: Questions[], branches: Branches[]): Questions[] {
-	// Map each question ID to its question data
-	const questionMap = new Map(questions.map((q) => [q.id, q]));
+// export function orderQuestions(questions: Questions[], branches: Branches[]): Questions[] {
+// 	// Map each question ID to its question data
+// 	const questionMap = new Map(questions.map((q) => [q.id, q]));
 
-	// Build a mapping: questionId -> array of nextQuestionIds
-	const branchMap = new Map<string, string[]>();
+// 	// Build a mapping: questionId -> array of nextQuestionIds
+// 	const branchMap = new Map<string, string[]>();
+// 	branches.forEach((branch) => {
+// 		const list = branchMap.get(branch.questionId) || [];
+// 		list.push(branch.nextQuestionId);
+// 		branchMap.set(branch.questionId, list);
+// 	});
+
+// 	// Identify root questions:
+// 	// A question is considered "root" if it is never referenced as a nextQuestionId in any branch.
+// 	const referenced = new Set(branches.map((b) => b.nextQuestionId));
+// 	const roots = questions.filter((q) => !referenced.has(q.id));
+
+// 	const ordered: Questions[] = [];
+// 	const visited = new Set<string>();
+
+// 	// Depth-first search to traverse the branch tree
+// 	function traverse(questionId: string) {
+// 		if (visited.has(questionId)) return;
+// 		visited.add(questionId);
+
+// 		const question = questionMap.get(questionId);
+// 		if (question) {
+// 			ordered.push(question);
+// 		}
+// 		const children = branchMap.get(questionId) || [];
+// 		// For consistent order, you might sort children by created_at or another field if needed
+// 		children.forEach((childId) => traverse(childId));
+// 	}
+
+// 	// Start traversal from each root
+// 	roots.forEach((root) => traverse(root.id));
+
+// 	// In case some questions were not reached (e.g., disconnected parts), append them
+// 	questions.forEach((q) => {
+// 		if (!visited.has(q.id)) {
+// 			ordered.push(q);
+// 		}
+// 	});
+
+// 	return ordered;
+// }
+
+export function orderQuestions(questions: Questions[], branches: Branches[]) {
+	const questionMap = new Map(questions.map((q) => [q.id, q]));
+	const branchMap = new Map<string, Branches[]>();
+
+	// Organize branches
 	branches.forEach((branch) => {
-		const list = branchMap.get(branch.questionId) || [];
-		list.push(branch.nextQuestionId);
-		branchMap.set(branch.questionId, list);
+		if (!branchMap.has(branch.questionId)) {
+			branchMap.set(branch.questionId, []);
+		}
+		branchMap.get(branch.questionId)!.push(branch);
 	});
 
-	// Identify root questions:
-	// A question is considered "root" if it is never referenced as a nextQuestionId in any branch.
+	// Identify root questions (not referenced as a nextQuestionId)
 	const referenced = new Set(branches.map((b) => b.nextQuestionId));
 	const roots = questions.filter((q) => !referenced.has(q.id));
 
-	const ordered: any[] = [];
+	const ordered: Questions[] = [];
 	const visited = new Set<string>();
 
-	// Depth-first search to traverse the branch tree
 	function traverse(questionId: string) {
 		if (visited.has(questionId)) return;
 		visited.add(questionId);
-
 		const question = questionMap.get(questionId);
 		if (question) {
 			ordered.push(question);
 		}
-		const children = branchMap.get(questionId) || [];
-		// For consistent order, you might sort children by created_at or another field if needed
+		const children = branchMap.get(questionId)?.map((b) => b.nextQuestionId) || [];
 		children.forEach((childId) => traverse(childId));
 	}
 
 	// Start traversal from each root
 	roots.forEach((root) => traverse(root.id));
 
-	// In case some questions were not reached (e.g., disconnected parts), append them
+	// Append any disconnected questions
 	questions.forEach((q) => {
 		if (!visited.has(q.id)) {
 			ordered.push(q);
 		}
 	});
 
-	return ordered;
+	// Build an index mapping for quick lookup
+	const questionIndexMap = new Map(ordered.map((q, index) => [q.id, index]));
+
+	return { ordered, questionIndexMap, branchMap };
+}
+
+export function getNextQuestion(
+	currentQuestionId: string,
+	selectedOptionId: string | null, // Selected answer option
+	orderedQuestions: Questions[],
+	questionIndexMap: Map<string, number>,
+	branchMap: Map<string, Branches[]>
+): Questions | null {
+	// 1️⃣ Check for branching
+	const branches = branchMap.get(currentQuestionId);
+	if (branches) {
+		const matchedBranch = branches.find((b) => b.optionId === selectedOptionId);
+		if (matchedBranch) {
+			return orderedQuestions.find((q) => q.id === matchedBranch.nextQuestionId) || null;
+		}
+	}
+
+	// 2️⃣ Fallback to ordered list
+	const currentIndex = questionIndexMap.get(currentQuestionId);
+	if (currentIndex !== undefined && currentIndex < orderedQuestions.length - 1) {
+		return orderedQuestions[currentIndex + 1];
+	}
+
+	// No more questions
+	return null;
 }
 
 /**
@@ -691,8 +764,12 @@ export const getsurveyQuestionByID = async (questionId: string) => {
 			question: surveyqnsTableV2.question,
 			question_type: surveyqnsTableV2.questionT,
 			likert_key: sql<string>`${surveyqnsTableV2.likertKey}`,
-			optionid: sql<string[]>`ARRAY_AGG(${QuestionOptions.optionId})`,
-			options: sql<string[]>`ARRAY_AGG(${QuestionOptions.option})`,
+			optionid: sql<
+				string[]
+			>`ARRAY_AGG(${QuestionOptions.optionId} ORDER BY ${QuestionOptions.order_index})`,
+			options: sql<
+				string[]
+			>`ARRAY_AGG(${QuestionOptions.option} ORDER BY ${QuestionOptions.order_index})`,
 			created_at: surveyqnsTableV2.createdAt
 		})
 		.from(surveyqnsTableV2)
@@ -703,8 +780,26 @@ export const getsurveyQuestionByID = async (questionId: string) => {
 	return questions;
 };
 
+export const fetchOptionIdfromOption = async (questionId: string, option: string) => {
+	const [optionid] = await db
+		.select({
+			optionid: QuestionOptions.optionId
+		})
+		.from(surveyqnsTableV2)
+		.leftJoin(
+			QuestionOptions,
+			and(
+				eq(surveyqnsTableV2.questionId, QuestionOptions.questionId),
+				eq(QuestionOptions.option, option)
+			)
+		)
+		.where(eq(surveyqnsTableV2.questionId, questionId))
+		.groupBy(surveyqnsTableV2.questionId, surveyqnsTableV2.question, QuestionOptions.optionId);
+
+	return optionid;
+};
 export function generateFlow(questions: Questions[], branches: Branches[]) {
-	const orderedQuestions = orderQuestions(questions, branches);
+	const { ordered: orderedQuestions } = orderQuestions(questions, branches);
 
 	const nodes: any[] = [];
 	const edges: any[] = [];
@@ -1089,51 +1184,51 @@ export const indexReset = (cookies: Cookies): void => {
 };
 
 // Function to get next question based on current answer
-export async function getNextQuestion(
-	currentQuestionId: string,
-	selectedOptionId: string | null,
-	surveyid: string,
-	currentat: Date
-): Promise<any | null> {
-	// If no option selected, get next question by updated_at
-	if (!selectedOptionId) {
-		const [next] = await db
-			.select()
-			.from(surveyqnsTableV2)
-			.where(
-				and(eq(surveyqnsTableV2.surveid, surveyid), gt(surveyqnsTableV2.updatedAt, currentat))
-			);
-		return next;
-	}
+// export async function getNextQuestion(
+// 	currentQuestionId: string,
+// 	selectedOptionId: string | null,
+// 	surveyid: string,
+// 	currentat: Date
+// ): Promise<any | null> {
+// 	// If no option selected, get next question by updated_at
+// 	if (!selectedOptionId) {
+// 		const [next] = await db
+// 			.select()
+// 			.from(surveyqnsTableV2)
+// 			.where(
+// 				and(eq(surveyqnsTableV2.surveid, surveyid), gt(surveyqnsTableV2.updatedAt, currentat))
+// 			);
+// 		return next;
+// 	}
 
-	// Check if there's a branching rule for this option
-	const [branchingRule] = await db
-		.select()
-		.from(branchingRules)
-		.where(
-			and(
-				eq(branchingRules.questionId, currentQuestionId),
-				eq(branchingRules.selectedOptionId, selectedOptionId)
-			)
-		);
+// 	// Check if there's a branching rule for this option
+// 	const [branchingRule] = await db
+// 		.select()
+// 		.from(branchingRules)
+// 		.where(
+// 			and(
+// 				eq(branchingRules.questionId, currentQuestionId),
+// 				eq(branchingRules.selectedOptionId, selectedOptionId)
+// 			)
+// 		);
 
-	if (branchingRule) {
-		const [braqn] = await db
-			.select()
-			.from(surveyqnsTableV2)
-			.where(eq(surveyqnsTableV2.questionId, branchingRule.nextQuestionId));
-		return braqn;
-	}
+// 	if (branchingRule) {
+// 		const [braqn] = await db
+// 			.select()
+// 			.from(surveyqnsTableV2)
+// 			.where(eq(surveyqnsTableV2.questionId, branchingRule.nextQuestionId));
+// 		return braqn;
+// 	}
 
-	// If no branching rule, fall back to next question by updated_at
-	const [neqns] = await db
-		.select()
-		.from(surveyqnsTableV2)
-		.where(
-			and(eq(surveyqnsTableV2.questionId, surveyid), gt(surveyqnsTableV2.updatedAt, currentat))
-		);
-	return neqns;
-}
+// 	// If no branching rule, fall back to next question by updated_at
+// 	const [neqns] = await db
+// 		.select()
+// 		.from(surveyqnsTableV2)
+// 		.where(
+// 			and(eq(surveyqnsTableV2.questionId, surveyid), gt(surveyqnsTableV2.updatedAt, currentat))
+// 		);
+// 	return neqns;
+// }
 
 /**
  *  Redirects with condition
@@ -1197,39 +1292,106 @@ export async function handleSurveyProgress({
  */
 export async function handleSurveyProgressExt({
 	surveyId,
-	cookies
+	cookies,
+	selectedOptionId,
+	address
 }: {
 	surveyId: string;
 	cookies: Cookies;
+	selectedOptionId?: string;
+	address: any;
 }) {
-	// Get current progress and total questions
+	// Fetch all questions and branches
 	const ids = await questionCount(surveyId);
+	const branches = await getBranches(surveyId);
 
-	// Get current index from cookies or database
+	// Get current progress
 	let current_ix = parseInt(cookies.get('current_ix') ?? '0');
+	let next: string | null = null;
 
-	// Increment if not at the end
-	if (current_ix < ids.length - 1) {
-		current_ix++;
-		indexParser(current_ix, cookies);
-		// Get next question ID
-		const next = ids[current_ix].id;
+	// Get visited questions from cookies
+	let visited: Set<string> = new Set(cookies.get('has_visited')?.split(',') || []);
+	// console.log("Before:", visited);
 
-		// Update progress in database
+	const currentQuestionId = ids[current_ix]?.id;
+	visited.add(currentQuestionId); // Mark current question as visited
 
-		// Redirect to next question
-		redirect(
-			303,
-			`/anonymous/${surveyId}/${next}`,
-			{ type: 'success', message: 'Input Successfully Recorded' },
-			cookies
+	// **1. Check if a branch exists for the selected answer**
+	if (selectedOptionId) {
+		const branch = branches.find(
+			(b) => b.questionId === currentQuestionId && b.optionId === selectedOptionId
 		);
-	} else {
-		// clear client cookie
-		indexReset(cookies);
-		//then redirect
-		redirect(303, '/anonymous/complete');
+		if (branch) {
+			next = branch.nextQuestionId;
+			visited.add(next); // Ensure the branched question is tracked
+			// Update current_ix to the branched question's index if it exists in the sequential list
+			const branchIndex = ids.findIndex((q) => q.id === next);
+			if (branchIndex !== -1) {
+				current_ix = branchIndex;
+			}
+		}
 	}
+
+	// **2. If no branch is found, follow sequential order while skipping visited questions**
+	if (!next) {
+		let newIndex = current_ix;
+		while (newIndex < ids.length - 1) {
+			newIndex++;
+			if (!visited.has(ids[newIndex]?.id)) {
+				next = ids[newIndex]?.id;
+				visited.add(next);
+				current_ix = newIndex; // update current_ix
+				break;
+			}
+		}
+	}
+
+	// **3. If no next question, end survey**
+	if (!next) {
+		// clear ix cookies
+		indexReset(cookies);
+		// clear has_visited cookie
+		cookies.set('has_visited', '0', {
+			path: '/',
+			httpOnly: true,
+			sameSite: 'strict',
+			maxAge: 0 // Expire the cookie immediately
+		});
+		// clear has_started cookie
+		cookies.set('has_started', '0', {
+			path: '/',
+			httpOnly: true,
+			sameSite: 'strict',
+			maxAge: 0 // Expire the cookie immediately
+		});
+		// mark as complete
+		await db
+			.update(user_analytics)
+			.set({
+				has_completed: true
+			})
+			.where(eq(user_analytics.client_address, address));
+		redirect(303, `/anonymous/${surveyId}/complete`);
+	}
+
+	// **4. Update `current_ix` in cookies**
+	indexParser(current_ix, cookies); // Ensure `current_ix` updates
+	cookies.set('has_visited', Array.from(visited).join(','), {
+		path: '/',
+		httpOnly: true,
+		sameSite: 'lax',
+		maxAge: 60 * 60 * 24 // 24 hours
+	});
+
+	// console.log("After:", visited, "Next:", next, "Updated Index:", current_ix);
+
+	// **5. Redirect to the next question**
+	redirect(
+		303,
+		`/anonymous/${surveyId}/${next}`,
+		{ type: 'success', message: 'Input Successfully Recorded' },
+		cookies
+	);
 }
 
 export async function validateAnswerNotExists(

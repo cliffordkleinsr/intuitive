@@ -328,7 +328,20 @@ export const AnswersTable = pgTable('answers', {
 		.notNull()
 });
 
-export const ext_answersTable = pgTable('ext_answers', {
+export const user_analytics = pgTable('user_analytics', {
+	id: serial().primaryKey().notNull(),
+	surveyid: text()
+		.references(() => SurveyTable.surveyid)
+		.notNull(),
+	level_of_education: text().notNull(),
+	sector: text().notNull(),
+	country: text().notNull(),
+	state: text(),
+	client_address: text().notNull(),
+	has_completed: boolean().default(false).notNull()
+});
+export const response_table = pgTable('response_table', {
+	id: serial().notNull().primaryKey(),
 	questionId: uuid('questionid')
 		.references(() => surveyqnsTableV2.questionId)
 		.notNull(),

@@ -6,25 +6,34 @@ import {
 	ratingSchema
 } from '$lib/custom/blocks/reader/super_schema';
 import {
+	fetchOptionIdfromOption,
+	getBranches,
+	getNextQuestion,
+	getsurveyQuestionByID,
 	getsurveyQuestions,
 	handleSurveyProgressExt,
+	orderQuestions,
 	questionCount,
 	validateAnswerNotExists
 } from '$lib/server/db/db_utils';
 import { message, superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 import type { Actions, PageServerLoad } from './$types';
-import { ext_answersTable } from '$lib/server/db/schema';
+import { QuestionOptions, response_table, surveyqnsTableV2 } from '$lib/server/db/schema';
 import { db } from '$lib/server/db';
 
-export const load = (async ({ params, cookies }) => {
-	const [surveyqns, ids] = await Promise.all([
+export const load = (async ({ params: { surveyId, questionId }, cookies }) => {
+	const [surveyqns, branches, ids] = await Promise.all([
 		// params
-		getsurveyQuestions(params.questionId),
-		questionCount(params.surveyId)
+		getsurveyQuestionByID(questionId),
+		getBranches(surveyId),
+		questionCount(surveyId)
 	]);
-
+	// Order questions
+	// const { ordered, questionIndexMap, branchMap } = orderQuestions(surveyqns, branches);
+	// console.log(branches)
 	let pool_size = ids.length;
+	// console.log(ids)
 	let pool_questions = surveyqns[0];
 	// for the optionalschema
 	const optionalSchema = enumBuilder(pool_questions.options);
@@ -40,6 +49,8 @@ export const load = (async ({ params, cookies }) => {
 	let current_ix = parseInt(cookies.get('current_ix') ?? '0');
 
 	const cache = { current_ix, pool_size, pool_questions };
+	// Determine the next question (pass null if no option has been selected)
+	// const nextQuestion = getNextQuestion(questionId, null, ordered, questionIndexMap, branchMap);
 	return {
 		openEndedForm,
 		optionalForm,
@@ -47,12 +58,12 @@ export const load = (async ({ params, cookies }) => {
 		multiForm,
 		rateForm,
 		cache,
-		cur_id: params.questionId
+		cur_id: questionId
 	};
 }) satisfies PageServerLoad;
 
 export const actions: Actions = {
-	singleform: async ({ request, params: { surveyId, questionId }, cookies }) => {
+	singleform: async ({ request, params: { surveyId, questionId }, cookies, getClientAddress }) => {
 		const openEndedForm = await superValidate(request, zod(openEndedSchema));
 		// validate
 		if (!openEndedForm.valid) {
@@ -65,7 +76,7 @@ export const actions: Actions = {
 		const { answer } = openEndedForm.data;
 
 		try {
-			await db.insert(ext_answersTable).values({
+			await db.insert(response_table).values({
 				questionId: questionId,
 				surveid: surveyId,
 				answer: answer
@@ -79,11 +90,11 @@ export const actions: Actions = {
 			});
 		}
 		// Dynamic routing with incremental counter
-		const next = await handleSurveyProgressExt({ surveyId, cookies });
+		return await handleSurveyProgressExt({ surveyId, cookies, address: getClientAddress() });
 	},
-	radioGroup: async ({ request, params: { surveyId, questionId }, cookies }) => {
+	radioGroup: async ({ request, params: { surveyId, questionId }, cookies, getClientAddress }) => {
 		// build the schema
-		const surveyqns = await getsurveyQuestions(questionId);
+		const surveyqns = await getsurveyQuestionByID(questionId);
 		const optionalSchema = enumBuilder(surveyqns[0]?.options);
 
 		const optionalForm = await superValidate(request, zod(optionalSchema));
@@ -99,7 +110,7 @@ export const actions: Actions = {
 		const { type } = optionalForm.data;
 
 		try {
-			await db.insert(ext_answersTable).values({
+			await db.insert(response_table).values({
 				questionId: questionId,
 				surveid: surveyId,
 				answer: type
@@ -112,12 +123,27 @@ export const actions: Actions = {
 				alertText: 'An Unexpected error occured'
 			});
 		}
+
 		// Dynamic routing with incremental counter
-		return await handleSurveyProgressExt({ surveyId, cookies });
+		const opts = await fetchOptionIdfromOption(questionId, type);
+		if (opts)
+			return await handleSurveyProgressExt({
+				surveyId,
+				cookies,
+				selectedOptionId: opts.optionid as string,
+				address: getClientAddress()
+			});
+
+		return await handleSurveyProgressExt({
+			surveyId,
+			cookies,
+			selectedOptionId: undefined,
+			address: getClientAddress()
+		});
 	},
-	rankform: async ({ request, params: { surveyId, questionId }, cookies }) => {
+	rankform: async ({ request, params: { surveyId, questionId }, cookies, getClientAddress }) => {
 		// build the schema
-		const surveyqns = await getsurveyQuestions(questionId);
+		const surveyqns = await getsurveyQuestionByID(questionId);
 		const rankSchema = rankBuilder(surveyqns[0]?.options);
 
 		const rankForm = await superValidate(request, zod(rankSchema));
@@ -139,7 +165,7 @@ export const actions: Actions = {
 
 		try {
 			for (const [answer, rankId] of Object.entries(rankForm.data)) {
-				await db.insert(ext_answersTable).values({
+				await db.insert(response_table).values({
 					questionId: questionId,
 					surveid: surveyId,
 					rankId: rankId,
@@ -155,9 +181,14 @@ export const actions: Actions = {
 			});
 		}
 		// Dynamic routing with incremental counter
-		return await handleSurveyProgressExt({ surveyId, cookies });
+		return await handleSurveyProgressExt({ surveyId, cookies, address: getClientAddress() });
 	},
-	checkboxMultiple: async ({ request, params: { surveyId, questionId }, cookies }) => {
+	checkboxMultiple: async ({
+		request,
+		params: { surveyId, questionId },
+		cookies,
+		getClientAddress
+	}) => {
 		const multiForm = await superValidate(request, zod(multipleSchema));
 		// validate
 		if (!multiForm.valid) {
@@ -170,7 +201,7 @@ export const actions: Actions = {
 		const { items } = multiForm.data;
 		try {
 			for (const { id, label } of items) {
-				await db.insert(ext_answersTable).values({
+				await db.insert(response_table).values({
 					questionId: questionId,
 					surveid: surveyId,
 					optionId: id,
@@ -186,9 +217,9 @@ export const actions: Actions = {
 			});
 		}
 		// Dynamic routing with incremental counter
-		return await handleSurveyProgressExt({ surveyId, cookies });
+		return await handleSurveyProgressExt({ surveyId, cookies, address: getClientAddress() });
 	},
-	rateform: async ({ request, params: { surveyId, questionId }, cookies }) => {
+	rateform: async ({ request, params: { surveyId, questionId }, cookies, getClientAddress }) => {
 		const rateForm = await superValidate(request, zod(ratingSchema));
 		// validate
 		if (!rateForm.valid) {
@@ -201,7 +232,7 @@ export const actions: Actions = {
 		const { answer } = rateForm.data;
 
 		try {
-			await db.insert(ext_answersTable).values({
+			await db.insert(response_table).values({
 				questionId: questionId,
 				surveid: surveyId,
 				answer: answer.toString()
@@ -215,6 +246,6 @@ export const actions: Actions = {
 			});
 		}
 		// Dynamic routing with incremental counter
-		return await handleSurveyProgressExt({ surveyId, cookies });
+		return await handleSurveyProgressExt({ surveyId, cookies, address: getClientAddress() });
 	}
 };

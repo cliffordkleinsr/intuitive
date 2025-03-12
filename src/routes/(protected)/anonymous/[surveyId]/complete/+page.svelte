@@ -21,7 +21,7 @@
 	alt=""
 />
 <div class="mt-24 flex flex-1 justify-center lg:ml-48">
-	<Button href="/agent-console/surveys/take">Explore More Surveys</Button>
+	<h1 class="text-md">You can now close this tab</h1>
 </div>
 
 <style lang="css">

@@ -10,7 +10,8 @@
 	let { data }: { data: PageData } = $props();
 
 	let checked = $state(false);
-	let { current_ix, question_cnt, survId } = $derived(data);
+	let { current_ix, question_cnt, uri } = $derived(data);
+	// let v = () => current_ix
 </script>
 
 <div class="mx-auto flex h-fit max-w-sm flex-col py-20">
@@ -32,7 +33,13 @@
 				class="rounded-xl"
 				size="lg"
 				disabled={!checked && !(current_ix > 0)}
-				href={checked || current_ix > 0 ? `/anonymous/${page.params.surveyId}/pre` : undefined}
+				href={checked
+					? current_ix === 0
+						? `/anonymous/${page.params.surveyId}/pre`
+						: uri
+					: current_ix > 0
+						? uri
+						: undefined}
 			>
 				{current_ix > 0 ? 'Continue where you left off' : 'Start the survey'}
 			</Button>

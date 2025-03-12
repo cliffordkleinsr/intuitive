@@ -16,7 +16,7 @@
 	import { LocationSelector } from '$lib/components/ui/location-input';
 
 	let { data }: { data: PageData } = $props();
-
+	const { uri } = data;
 	let countryName = $state('') as string;
 	let stateName = $state('') as string;
 	const form = superForm(data.form, {
@@ -42,11 +42,13 @@
 	let selectedCountry: any = $state(null);
 	let selectedState: any = $state(null);
 
-	let location = useGeolocation();
-	// $inspect(location.position.timestamp)
 	$effect(() => {
-		$formData.location = location.position.coords;
+		if (!navigator.geolocation) toast.info('Geolocation is not supported by your browser');
+		const pos = navigator.geolocation.getCurrentPosition((position) => {
+			$formData.location = position.coords;
+		});
 
+		$formData.uri = uri;
 		return () => {
 			countryName = '';
 			stateName = '';
@@ -56,11 +58,13 @@
 	});
 </script>
 
-<div class="mx-auto max-w-2xl px-5 py-10">
+<div class="mx-auto max-w-xl px-5 py-10">
 	<Card.Root>
 		<Card.Header>
 			<Card.Title>Before you begin</Card.Title>
-			<Card.Description>We need to collect some information</Card.Description>
+			<Card.Description>
+				<p>We kindly ask that you accept any propmts requested for this page</p>
+			</Card.Description>
 		</Card.Header>
 		<Card.Content>
 			<form method="post" use:enhance class="w-full space-y-2 p-4 lg:p-0">
@@ -71,7 +75,9 @@
 								<Label class="font-medium">Education Background</Label>
 								<Select.Root type="single" bind:value={$formData.education} name={props.name}>
 									<Select.Trigger {...props}>
-										{$formData.education ? $formData.education : 'Select an education bracket'}
+										{$formData.education
+											? $formData.education
+											: 'Kindly tell us more about youreducational background'}
 									</Select.Trigger>
 									<Select.Content>
 										{#each educations as education}
@@ -128,13 +134,17 @@
 					<Form.Field {form} name="location">
 						<Form.Control>
 							{#snippet children({ props })}
-								<Input
-									{...props}
-									type="text"
-									placeholder="Please tell us more about your sector of expertise"
-									bind:value={location.position.coords}
-									class="hidden"
-								/>
+								<Input {...props} type="text" bind:value={$formData.location} class="hidden" />
+							{/snippet}
+						</Form.Control>
+						<Form.FieldErrors class="text-sm text-destructive" />
+					</Form.Field>
+				</div>
+				<div>
+					<Form.Field {form} name="uri">
+						<Form.Control>
+							{#snippet children({ props })}
+								<Input {...props} type="text" bind:value={$formData.uri} class="hidden" />
 							{/snippet}
 						</Form.Control>
 						<Form.FieldErrors class="text-sm text-destructive" />
@@ -151,7 +161,9 @@
 							Loading...
 						</Button>
 					{:else}
-						<Form.Button class="w-full" variant="secondary" type="submit">Submit</Form.Button>
+						<Form.Button class="w-full" variant="secondary" type="submit"
+							>Begin the survey</Form.Button
+						>
 					{/if}
 				</div>
 			</form>

@@ -56,7 +56,7 @@ export const load: PageServerLoad = async ({ params, locals: { user }, cookies }
 		);
 	const qns = await getsurveyQuestions(params.surveyid);
 	const branches = await getBranches(params.surveyid);
-	const questions = orderQuestions(qns, branches);
+	const { ordered: questions } = orderQuestions(qns, branches);
 	const flow = generateFlow(qns, branches);
 	// console.log(questions)
 	// console.log(qns)

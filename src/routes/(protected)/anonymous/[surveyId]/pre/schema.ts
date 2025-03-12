@@ -16,5 +16,6 @@ export let schema = z.object({
 			heading: z.number().nullable(),
 			speed: z.number().nullable()
 		})
-		.optional()
+		.optional(),
+	uri: z.string().nonempty()
 });
