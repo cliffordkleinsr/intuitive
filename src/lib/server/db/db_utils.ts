@@ -1389,11 +1389,29 @@ export async function handleSurveyProgressExt({
 	redirect(
 		303,
 		`/anonymous/${surveyId}/${next}`,
-		{ type: 'success', message: 'Input Successfully Recorded' },
+		{ type: 'success', message: 'Saved!' },
 		cookies
 	);
 }
 
+export const setIpCookie = async (cookies:Cookies) => {
+	const endpoint = 'https://api.ipify.org?format=json'
+	const res = await fetch(endpoint)
+	interface Address {
+		ip: string
+	}
+	
+	const { ip }  = await res.json() as Address
+	cookies.set("8b17347e9c2b10a9cc1d7bc1cdeefda1", ip, {
+		path: '/',
+		sameSite: 'strict'
+	})
+	return ip
+}
+
+export const getIpCookie = (cookies: Cookies) => {
+	return cookies.get("8b17347e9c2b10a9cc1d7bc1cdeefda1")
+}
 export async function validateAnswerNotExists(
 	questionid: string,
 	cookies: Cookies,

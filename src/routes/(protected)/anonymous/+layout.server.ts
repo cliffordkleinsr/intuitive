@@ -3,9 +3,13 @@ import { db } from '$lib/server/db';
 import { surveyqnsTableV2, user_analytics } from '$lib/server/db/schema';
 import { asc, eq, and } from 'drizzle-orm';
 import { redirect } from 'sveltekit-flash-message/server';
+import { setIpCookie } from '$lib/server/db/db_utils';
 
-export const load = (async ({ params: { surveyId }, cookies, getClientAddress, url }) => {
+export const load = (async ({ params: { surveyId }, cookies, url, fetch }) => {
 	const surveid = surveyId as string;
+	const ip = await setIpCookie(cookies)
+
+
 	const [ids, surveyqns, [user_data]] = await Promise.all([
 		db
 			.select({
@@ -22,7 +26,7 @@ export const load = (async ({ params: { surveyId }, cookies, getClientAddress, u
 			.where(
 				and(
 					eq(user_analytics.surveyid, surveid),
-					eq(user_analytics.client_address, getClientAddress())
+					eq(user_analytics.client_address, ip)
 				)
 			)
 	]);
@@ -35,7 +39,7 @@ export const load = (async ({ params: { surveyId }, cookies, getClientAddress, u
 		if (has_completed) {
 			redirect(
 				303,
-				'/',
+				`/anonymous/${surveid}/complete`,
 				{ type: 'info', message: 'You have already completed this survey' },
 				cookies
 			);

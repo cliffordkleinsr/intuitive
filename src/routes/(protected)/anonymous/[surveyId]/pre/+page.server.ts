@@ -6,11 +6,11 @@ import type { NominatimResponse } from '$lib/types';
 import { db } from '$lib/server/db';
 import { user_analytics } from '$lib/server/db/schema';
 import { redirect } from 'sveltekit-flash-message/server';
+import { getIpCookie } from '$lib/server/db/db_utils';
 
 export const load = (async ({ cookies, params: { surveyId }, parent }) => {
 	const { uri } = await parent();
 	let has_started = Boolean(cookies.get('has_started')) ?? false;
-
 	if (has_started) {
 		redirect(303, uri, { type: 'warning', message: 'Not allowed survey has began' }, cookies);
 	}
@@ -20,7 +20,7 @@ export const load = (async ({ cookies, params: { surveyId }, parent }) => {
 }) satisfies PageServerLoad;
 
 export const actions: Actions = {
-	default: async ({ request, fetch, params: { surveyId }, cookies, getClientAddress }) => {
+	default: async ({ request, fetch, params: { surveyId }, cookies }) => {
 		const form = await superValidate(request, zod(schema));
 		// validate
 		if (!form.valid) {
@@ -45,7 +45,7 @@ export const actions: Actions = {
 				state = reverse_coords?.address?.state;
 			}
 		}
-		const ip = getClientAddress();
+		const ip = getIpCookie(cookies) as string
 
 		try {
 			if (loc && education && sector) {
