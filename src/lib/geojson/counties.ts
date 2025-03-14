@@ -2,7 +2,6 @@ import type { FeatureCollection } from 'geojson';
 
 export const counties: FeatureCollection = {
 	type: 'FeatureCollection',
-
 	features: [
 		{
 			type: 'Feature',

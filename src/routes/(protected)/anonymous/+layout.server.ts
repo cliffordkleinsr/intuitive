@@ -7,8 +7,7 @@ import { setIpCookie } from '$lib/server/db/db_utils';
 
 export const load = (async ({ params: { surveyId }, cookies, url, fetch }) => {
 	const surveid = surveyId as string;
-	const ip = await setIpCookie(cookies)
-
+	const ip = await setIpCookie(cookies);
 
 	const [ids, surveyqns, [user_data]] = await Promise.all([
 		db
@@ -23,12 +22,7 @@ export const load = (async ({ params: { surveyId }, cookies, url, fetch }) => {
 		db
 			.select()
 			.from(user_analytics)
-			.where(
-				and(
-					eq(user_analytics.surveyid, surveid),
-					eq(user_analytics.client_address, ip)
-				)
-			)
+			.where(and(eq(user_analytics.surveyid, surveid), eq(user_analytics.client_address, ip)))
 	]);
 	let current_ix = parseInt(cookies.get('current_ix') ?? '0');
 	let uri = `/anonymous/${surveid}/${ids[current_ix].id}`;

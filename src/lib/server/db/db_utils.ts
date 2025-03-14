@@ -1,4 +1,4 @@
-import { and, asc, eq, gt, sql, lt } from 'drizzle-orm';
+import { and, asc, eq, gt, sql, lt, count, desc, countDistinct, ne, sum } from 'drizzle-orm';
 import { db } from './index';
 
 import {
@@ -23,13 +23,15 @@ import {
 	type ConsumerData,
 	SurveyTable,
 	QuestionBranching,
-	user_analytics
+	user_analytics,
+	response_table
 } from './schema';
-import type { PgColumn, PgTable } from 'drizzle-orm/pg-core';
+import { unionAll, type PgColumn, type PgTable } from 'drizzle-orm/pg-core';
 import type { Cookies, RequestHandler } from '@sveltejs/kit';
 import { redirect } from 'sveltekit-flash-message/server';
 import type { Question } from '$lib/types';
 import { toast } from 'svelte-sonner';
+import { updated } from '$app/state';
 
 type ClientDataInsertSchema = any;
 let clientData: any = {};
@@ -1386,32 +1388,196 @@ export async function handleSurveyProgressExt({
 	// console.log("After:", visited, "Next:", next, "Updated Index:", current_ix);
 
 	// **5. Redirect to the next question**
-	redirect(
-		303,
-		`/anonymous/${surveyId}/${next}`,
-		{ type: 'success', message: 'Saved!' },
-		cookies
-	);
+	redirect(303, `/anonymous/${surveyId}/${next}`, { type: 'success', message: 'Saved!' }, cookies);
 }
 
-export const setIpCookie = async (cookies:Cookies) => {
-	const endpoint = 'https://api.ipify.org?format=json'
-	const res = await fetch(endpoint)
+export const setIpCookie = async (cookies: Cookies) => {
+	const endpoint = 'https://api.ipify.org?format=json';
+	const res = await fetch(endpoint);
 	interface Address {
-		ip: string
+		ip: string;
 	}
-	
-	const { ip }  = await res.json() as Address
-	cookies.set("8b17347e9c2b10a9cc1d7bc1cdeefda1", ip, {
+
+	const { ip } = (await res.json()) as Address;
+	cookies.set('8b17347e9c2b10a9cc1d7bc1cdeefda1', ip, {
 		path: '/',
 		sameSite: 'strict'
-	})
-	return ip
-}
+	});
+	return ip;
+};
 
 export const getIpCookie = (cookies: Cookies) => {
-	return cookies.get("8b17347e9c2b10a9cc1d7bc1cdeefda1")
-}
+	return cookies.get('8b17347e9c2b10a9cc1d7bc1cdeefda1');
+};
+
+export const getAnalytics = async (surveyId: string) => {
+	const answerCounts = db
+		.select({
+			question: surveyqnsTableV2.question,
+			question_type: surveyqnsTableV2.questionT,
+			answer: response_table.answer,
+			updated: sql<Date>`${surveyqnsTableV2.updatedAt}`.as('updated_at'),
+			answer_count: count(response_table.answer).as('answer_count'),
+			percentage: sql<number>`
+					ROUND(
+						COUNT(*)::decimal / 
+						SUM(COUNT(*)) OVER (PARTITION BY ${surveyqnsTableV2.question}) * 100,
+						1
+					)
+				`.as('percentage')
+		})
+		.from(surveyqnsTableV2)
+		.rightJoin(response_table, sql`${response_table.questionId} = ${surveyqnsTableV2.questionId}`)
+		.where(and(eq(response_table.surveid, surveyId), ne(surveyqnsTableV2.questionT, 'Ranking')))
+		.groupBy(
+			surveyqnsTableV2.questionId,
+			surveyqnsTableV2.question,
+			surveyqnsTableV2.questionT,
+			response_table.answer
+		)
+		.orderBy(desc(count(response_table.answer)))
+		.as('answer_counts');
+
+	// CTE to calculate total distinct agents per question
+	const totalAgentsCTE = db
+		.select({
+			questionId: surveyqnsTableV2.questionId,
+			totalAgents: count(user_analytics.id).as('totalAgents')
+		})
+		.from(surveyqnsTableV2)
+		.rightJoin(user_analytics, sql`${user_analytics.surveyid} = ${surveyqnsTableV2.surveid}`)
+		.where(and(eq(surveyqnsTableV2.surveid, surveyId), eq(surveyqnsTableV2.questionT, 'Ranking')))
+		.groupBy(surveyqnsTableV2.questionId)
+		.as('totalAgentsCTE');
+
+	// Main query using the CTE
+	const rank_stats = db
+		.select({
+			question: surveyqnsTableV2.question,
+			question_type: surveyqnsTableV2.questionT,
+			answer: response_table.answer,
+			updated: sql<Date>`${surveyqnsTableV2.updatedAt}`.as('updated_at'),
+			rank: response_table.rankId,
+			count: totalAgentsCTE.totalAgents
+		})
+		.from(surveyqnsTableV2)
+		.rightJoin(response_table, eq(response_table.questionId, surveyqnsTableV2.questionId))
+		.leftJoin(totalAgentsCTE, eq(totalAgentsCTE.questionId, surveyqnsTableV2.questionId))
+		.where(and(eq(surveyqnsTableV2.surveid, surveyId), eq(surveyqnsTableV2.questionT, 'Ranking')))
+		.groupBy(
+			response_table.answer,
+			response_table.rankId,
+			surveyqnsTableV2.updatedAt,
+			surveyqnsTableV2.question,
+			surveyqnsTableV2.questionT,
+			totalAgentsCTE.totalAgents
+		)
+		.as('rank_stats');
+	// end
+	// builders
+	const rest = db
+		.select({
+			question: sql<string>`${answerCounts.question}`,
+			question_type: sql<string>`${answerCounts.question_type}`,
+			answer_statistics: sql<{ answer: string; rank: string; count: number; percentage: number }[]>`
+				json_agg(
+				json_build_object(
+					'answer', ${answerCounts.answer},
+					'count', ${answerCounts.answer_count}
+				)
+				)`,
+			updated: answerCounts.updated
+		})
+		.from(answerCounts)
+		.groupBy(answerCounts.question, answerCounts.question_type, answerCounts.updated)
+		.orderBy(asc(answerCounts.updated));
+	const rank_analytics = db
+		.select({
+			question: sql<string>`${rank_stats.question}`,
+			question_type: sql<string>`${rank_stats.question_type}`,
+			answer_statistics: sql<{ answer: string; rank: string; count: number; percentage: number }[]>`
+					json_agg(
+						json_build_object(
+							'answer', ${rank_stats.answer},
+							'rank', ${rank_stats.rank},
+							'count', ${rank_stats.count}
+						)
+					)`,
+			updated: rank_stats.updated
+		})
+		.from(rank_stats)
+		.groupBy(rank_stats.question, rank_stats.question_type, rank_stats.updated)
+		.orderBy(asc(rank_stats.updated));
+	const analytics = await unionAll(rest, rank_analytics).orderBy(
+		asc(answerCounts.updated),
+		asc(rank_stats.updated)
+	);
+
+	return analytics;
+};
+
+export const simplifiedAnalytics = async (id: string) => {
+	const sq1 = db
+		.select({
+			question_id: response_table.questionId,
+			answer: response_table.answer,
+			count: count().as('count'),
+			rank: response_table.rankId
+		})
+		.from(response_table)
+		.where(eq(response_table.surveid, id))
+		.groupBy(response_table.answer, response_table.questionId, response_table.rankId)
+		.as('sq1');
+	const sq2 = db
+		.select({
+			question_id: surveyqnsTableV2.questionId,
+			count: count(user_analytics.id).as('cnt')
+		})
+		.from(surveyqnsTableV2)
+		.rightJoin(user_analytics, sql`${user_analytics.surveyid} = ${surveyqnsTableV2.surveid}`)
+		.where(eq(surveyqnsTableV2.surveid, id))
+		.groupBy(surveyqnsTableV2.questionId)
+		.as('sq2');
+	const query = {
+		question: surveyqnsTableV2.question,
+		question_type: surveyqnsTableV2.questionT,
+		answer_statistics: sql<{ answer: string; rank: string; count: number; percentage: number }[]>`
+			json_agg(
+				json_build_object(
+					'answer', ${sq1.answer},
+					'count', ${sq1.count},
+					'rank', ${sq1.rank},
+					'percentage', round(
+						${sq1.count}::decimal / 
+						${sq2.count}::decimal * 100
+					)
+				)
+			)
+		`,
+		updated: surveyqnsTableV2.updatedAt
+	};
+
+	const res_rnk = db
+		.select(query)
+		.from(surveyqnsTableV2)
+		.leftJoin(sq1, eq(surveyqnsTableV2.questionId, sq1.question_id))
+		.leftJoin(sq2, eq(surveyqnsTableV2.questionId, sq2.question_id))
+		.where(and(eq(surveyqnsTableV2.surveid, id), eq(surveyqnsTableV2.questionT, 'Ranking')))
+		.groupBy(surveyqnsTableV2.question, surveyqnsTableV2.questionT, surveyqnsTableV2.updatedAt)
+		.orderBy(asc(surveyqnsTableV2.updatedAt));
+	const res = db
+		.select(query)
+		.from(surveyqnsTableV2)
+		.leftJoin(sq1, eq(surveyqnsTableV2.questionId, sq1.question_id))
+		.leftJoin(sq2, eq(surveyqnsTableV2.questionId, sq2.question_id))
+		.where(and(eq(surveyqnsTableV2.surveid, id), ne(surveyqnsTableV2.questionT, 'Ranking')))
+		.groupBy(surveyqnsTableV2.question, surveyqnsTableV2.questionT, surveyqnsTableV2.updatedAt)
+		.orderBy(asc(surveyqnsTableV2.updatedAt));
+
+	const result = await unionAll(res, res_rnk);
+
+	return result;
+};
 export async function validateAnswerNotExists(
 	questionid: string,
 	cookies: Cookies,

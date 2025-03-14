@@ -45,7 +45,7 @@ export const actions: Actions = {
 				state = reverse_coords?.address?.state;
 			}
 		}
-		const ip = getIpCookie(cookies) as string
+		const ip = getIpCookie(cookies) as string;
 
 		try {
 			if (loc && education && sector) {

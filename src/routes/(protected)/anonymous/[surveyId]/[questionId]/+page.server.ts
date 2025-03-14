@@ -90,9 +90,9 @@ export const actions: Actions = {
 				alertText: 'An Unexpected error occured'
 			});
 		}
-		const ip = getIpCookie(cookies)
+		const ip = getIpCookie(cookies);
 		// Dynamic routing with incremental counter
-		return await handleSurveyProgressExt({ surveyId, cookies, address:ip});
+		return await handleSurveyProgressExt({ surveyId, cookies, address: ip });
 	},
 	radioGroup: async ({ request, params: { surveyId, questionId }, cookies }) => {
 		// build the schema
@@ -128,7 +128,7 @@ export const actions: Actions = {
 
 		// Dynamic routing with incremental counter
 		const opts = await fetchOptionIdfromOption(questionId, type);
-		const ip = getIpCookie(cookies)
+		const ip = getIpCookie(cookies);
 		if (opts)
 			return await handleSurveyProgressExt({
 				surveyId,
@@ -183,16 +183,11 @@ export const actions: Actions = {
 				alertText: 'An Unexpected error occured'
 			});
 		}
-		const ip = getIpCookie(cookies)
+		const ip = getIpCookie(cookies);
 		// Dynamic routing with incremental counter
-		return await handleSurveyProgressExt({ surveyId, cookies, address:ip });
+		return await handleSurveyProgressExt({ surveyId, cookies, address: ip });
 	},
-	checkboxMultiple: async ({
-		request,
-		params: { surveyId, questionId },
-		cookies,
-
-	}) => {
+	checkboxMultiple: async ({ request, params: { surveyId, questionId }, cookies }) => {
 		const multiForm = await superValidate(request, zod(multipleSchema));
 		// validate
 		if (!multiForm.valid) {
@@ -220,9 +215,9 @@ export const actions: Actions = {
 				alertText: 'An Unexpected error occured'
 			});
 		}
-		const ip = getIpCookie(cookies)
+		const ip = getIpCookie(cookies);
 		// Dynamic routing with incremental counter
-		return await handleSurveyProgressExt({ surveyId, cookies, address:ip });
+		return await handleSurveyProgressExt({ surveyId, cookies, address: ip });
 	},
 	rateform: async ({ request, params: { surveyId, questionId }, cookies }) => {
 		const rateForm = await superValidate(request, zod(ratingSchema));
@@ -250,8 +245,8 @@ export const actions: Actions = {
 				alertText: 'An Unexpected error occured'
 			});
 		}
-		const ip = getIpCookie(cookies)
+		const ip = getIpCookie(cookies);
 		// Dynamic routing with incremental counter
-		return await handleSurveyProgressExt({ surveyId, cookies, address:ip});
+		return await handleSurveyProgressExt({ surveyId, cookies, address: ip });
 	}
 };

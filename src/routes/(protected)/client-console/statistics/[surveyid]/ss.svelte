@@ -151,7 +151,7 @@
 							geo={{
 								projection: geoNaturalEarth1,
 								fitGeojson: countries,
-								applyTransform: ['scale', 'translate']
+								applyTransform: ['translate', 'scale']
 							}}
 							transform={{
 								initialScrollMode: 'none',
@@ -171,7 +171,8 @@
 											geojson={feature}
 											{tooltip}
 											fill={colorScale(feature.properties.data?.count ?? 0)}
-											class="stroke-none"
+											class="stroke-none hover:stroke-white"
+											{strokeWidth}
 											onclick={() => {
 												if (selectedState === feature.id) {
 													selectedState = null;
@@ -194,7 +195,11 @@
 									{#each countries.features as feature}
 										<GeoPath
 											geojson={feature}
-											class={cn('pointer-events-none fill-none stroke-black/30')}
+											{strokeWidth}
+											class={cn(
+												'pointer-events-none fill-none stroke-black/30',
+												selectedState ? 'opacity-0' : 'opacity-100'
+											)}
 											{tooltip}
 										/>
 									{/each}
@@ -206,8 +211,7 @@
 											geojson={feature}
 											fill={colorScale(feature.properties.data?.count ?? 0)}
 											{tooltip}
-											class="stroke-none"
-											strokeWidth={1 / transform.scale}
+											class="stroke-none hover:stroke-white"
 											onclick={() => {
 												selectedState = null;
 												transform.reset();
@@ -223,9 +227,7 @@
 								class="absolute bottom-0 m-1 rounded bg-surface-100/80 px-2 py-1 backdrop-blur-sm"
 							/>
 							<Tooltip.Root let:data>
-								{@const d =
-									populationByFips.get(data.properties.name) ??
-									populationByFipsSt.get(data.properties.name)}
+								{@const d = populationByFips.get(data.properties.name)}
 								{@const [longitude, latitude] = projection.invert?.([tooltip.x, tooltip.y]) ?? []}
 								<Tooltip.Header>{data.properties.name}</Tooltip.Header>
 								<Tooltip.List>

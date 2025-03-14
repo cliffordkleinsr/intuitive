@@ -16,18 +16,17 @@
 <h1 class="mt-5 text-center text-xl font-bold">Thank You</h1>
 <p class="text-center text-sm">for your time</p>
 <div class=" flex justify-center">
-<img
-	class=""
-	src="https://i.postimg.cc/3RRzs1mf/original-ea83f90331767ab60e5eb641984115ed-removebg-preview.png"
-	alt=""
-/>
+	<img
+		class=""
+		src="https://i.postimg.cc/3RRzs1mf/original-ea83f90331767ab60e5eb641984115ed-removebg-preview.png"
+		alt=""
+	/>
 </div>
 <div class="mt-24 flex flex-1 justify-center">
 	<h1 class="text-md">You can now close this tab</h1>
 </div>
 <div class="mt-4 flex flex-1 justify-center">
-<!-- <p>Or go back <a class="underline underline-offset-1" href="/">Home</a></p>   -->
-	
+	<!-- <p>Or go back <a class="underline underline-offset-1" href="/">Home</a></p>   -->
 </div>
 
 <style lang="css">
