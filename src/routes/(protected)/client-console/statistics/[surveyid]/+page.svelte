@@ -30,7 +30,7 @@
 	import UnfoldVertical from 'lucide-svelte/icons/unfold-vertical';
 	import { Button, buttonVariants } from '$lib/components/ui/button';
 	import { Progress } from '$lib/components/ui/progress';
-	// import { states } from '$lib/geojson/states';
+	import { states } from '$lib/geojson/states';
 	import { cn } from '$lib/utils';
 	let { data }: { data: PageData } = $props();
 
@@ -49,23 +49,20 @@
 		(d) => d.id
 	);
 
-	// let selectedCountiesFeatures = $derived(
-	// 	states
-	// 		.filter((f) => String(f.id) === selectedState)
-	// 		.flatMap((county) =>
-	// 			county.features.map((feature) => ({
-	// 				...feature,
-	// 				properties: {
-	// 					...feature.properties,
-	// 					name:
-	// 						feature.properties?.COUNTY_NAM ||
-	// 						feature.properties?.CONSTITUEN ||
-	// 						`County ${feature.id}`,
-	// 					data: populationByFipsSt.get(feature?.properties?.COUNTY_NAM)
-	// 				}
-	// 			}))
-	// 		)
-	// );
+	let selectedCountiesFeatures = $derived(
+		states
+			.filter((f) => String(f.id) === selectedState)
+			.flatMap((county) =>
+				county.features.map((feature) => ({
+					...feature,
+					properties: {
+						...feature.properties,
+						name: feature.properties?.COUNTY_NAM,
+						data: populationByFipsSt.get(feature?.properties?.COUNTY_NAM)
+					}
+				}))
+			)
+	);
 
 	const populationByFips = index(data.popn, (d) => d.id);
 	let enrichedCountriesFeatures = $derived.by(() => {
@@ -200,7 +197,7 @@
 									{/each}
 								</g>
 
-								<!-- {#each selectedCountiesFeatures as feature (feature.id)}
+								{#each selectedCountiesFeatures as feature (feature.id)}
 									<g in:fade={{ duration: 300, delay: 600 }} out:fade={{ duration: 300 }}>
 										<GeoPath
 											geojson={feature}
@@ -214,7 +211,7 @@
 											}}
 										/>
 									</g>
-								{/each} -->
+								{/each}
 							</Svg>
 							<Legend
 								scale={colorScale}

@@ -4,6 +4,7 @@ import { count, and, eq, sql } from 'drizzle-orm';
 import type { PageServerLoad } from './$types';
 import type { GeometryCollection, Topology } from 'topojson-specification';
 import { getAnalytics, simplifiedAnalytics } from '$lib/server/db/db_utils';
+import type { FeatureCollection } from 'geojson';
 
 export const load = (async ({ fetch, params: { surveyid } }) => {
 	const res = await fetch('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json');
@@ -12,6 +13,11 @@ export const load = (async ({ fetch, params: { surveyid } }) => {
 		land: GeometryCollection;
 	}>;
 
+	const response = await fetch(
+		'https://cdn.jsdelivr.net/gh/cliffordkleinsr/assets@latest/states.geojson'
+	);
+
+	const states_geojson = (await response.json()) as FeatureCollection;
 	const popn = await db
 		.select({
 			id: user_analytics.country,
@@ -54,6 +60,7 @@ export const load = (async ({ fetch, params: { surveyid } }) => {
 	).length;
 	return {
 		geojson,
+		states_geojson,
 		popn,
 		popn_cnty,
 		sec,
