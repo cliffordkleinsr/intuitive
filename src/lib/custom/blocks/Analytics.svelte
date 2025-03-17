@@ -5,7 +5,7 @@
 	import { format } from '@layerstack/utils';
 	import * as Table from '$lib/components/ui/table';
 	import { Progress } from '$lib/components/ui/progress';
-	import { counties } from '$lib/geojson/counties';
+	// import { counties } from '$lib/geojson/counties';
 	import { interpolateOranges, interpolateRdBu } from 'd3-scale-chromatic';
 	import { Button, buttonVariants } from '$lib/components/ui/button';
 	import Download from 'lucide-svelte/icons/download';
@@ -166,7 +166,7 @@
 							'h-[600px]'
 						]}
 					>
-						<CakeMap geoObject={counties} locale_analytics={county} />
+						<!-- <CakeMap geoObject={counties} locale_analytics={county} /> -->
 					</div>
 					{#if subtype === 'One-time' || subtype === 'Basic' || subtype === null}
 						<div class="absolute top-1/2 lg:right-[250px]">
@@ -204,7 +204,7 @@
 							c="count"
 							props={{
 								bars: { class: 'fill-orange-400' },
-								xAxis: { format: (value) => format(Math.abs(value), 'metric') }
+								xAxis: { format: (value:number) => format(Math.abs(value), 'metric') }
 							}}
 							orientation="horizontal"
 						/>
