@@ -13,11 +13,6 @@ export const load = (async ({ fetch, params: { surveyid } }) => {
 		land: GeometryCollection;
 	}>;
 
-	const response = await fetch(
-		'https://cdn.jsdelivr.net/gh/cliffordkleinsr/assets@latest/states.geojson'
-	);
-
-	const states_geojson = (await response.json()) as FeatureCollection;
 	const popn = await db
 		.select({
 			id: user_analytics.country,
@@ -60,7 +55,6 @@ export const load = (async ({ fetch, params: { surveyid } }) => {
 	).length;
 	return {
 		geojson,
-		states_geojson,
 		popn,
 		popn_cnty,
 		sec,

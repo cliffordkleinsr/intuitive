@@ -3,35 +3,31 @@
 	import * as Card from '$lib/components/ui/card';
 	import { fade } from 'svelte/transition';
 	import { cubicInOut, cubicOut } from 'svelte/easing';
-	import { geoAlbersUsa, geoAlbers, geoMercator, geoOrthographic, geoNaturalEarth1 } from 'd3-geo';
+	import { geoNaturalEarth1 } from 'd3-geo';
 	import { feature } from 'topojson-client';
 	import * as Table from '$lib/components/ui/table';
 	import * as Collapsible from '$lib/components/ui/collapsible';
 	import {
-		Canvas,
 		Chart,
 		GeoPath,
 		Svg,
-		Graticule,
 		Tooltip,
 		geoFitObjectTransform,
-		TransformContext,
 		Legend,
 		BarChart,
 		PieChart
 	} from 'layerchart';
-	import type { GeometryObjectA } from 'topojson-specification';
 	import { index } from 'd3-array';
 	import { scaleQuantile } from 'd3-scale';
 	import { interpolateOranges, schemeOranges } from 'd3-scale-chromatic';
-	import { format, stringify } from '@layerstack/utils';
+	import { format } from '@layerstack/utils';
 	import { quantize } from 'd3-interpolate';
 
 	import UnfoldVertical from 'lucide-svelte/icons/unfold-vertical';
-	import { Button, buttonVariants } from '$lib/components/ui/button';
+	import { Button } from '$lib/components/ui/button';
 	import { Progress } from '$lib/components/ui/progress';
-	import { states } from '$lib/geojson/states';
 	import { cn } from '$lib/utils';
+	import type { Feature, FeatureCollection } from 'geojson';
 	let { data }: { data: PageData } = $props();
 
 	let variable = $state() as boolean[];
@@ -39,7 +35,7 @@
 		(x) => x.question_type !== 'Ranking' && x.question_type !== 'Single'
 	);
 	const countries = feature(data.geojson, data.geojson.objects.countries);
-	let selectedState: GeometryObjectA['id'] | null = $state(null);
+	let selectedState: string | null = $state(null);
 
 	const populationByFipsSt = index(
 		data.popn_cnty.map((v) => ({
@@ -49,20 +45,20 @@
 		(d) => d.id
 	);
 
-	let selectedCountiesFeatures = $derived(
-		states
-			.filter((f) => String(f.id) === selectedState)
-			.flatMap((county) =>
-				county.features.map((feature) => ({
-					...feature,
-					properties: {
-						...feature.properties,
-						name: feature.properties?.COUNTY_NAM,
-						data: populationByFipsSt.get(feature?.properties?.COUNTY_NAM)
-					}
-				}))
-			)
-	);
+	// let selectedCountiesFeatures = $derived(
+	// 	states
+	// 		.filter((f) => String(f.id) === selectedState)
+	// 		.flatMap((county) =>
+	// 			county.features.map((feature) => ({
+	// 				...feature,
+	// 				properties: {
+	// 					...feature.properties,
+	// 					name: feature.properties?.COUNTY_NAM,
+	// 					data: populationByFipsSt.get(feature?.properties?.COUNTY_NAM)
+	// 				}
+	// 			}))
+	// 		)
+	// );
 
 	const populationByFips = index(data.popn, (d) => d.id);
 	let enrichedCountriesFeatures = $derived.by(() => {
@@ -130,6 +126,30 @@
 			variable = [];
 		};
 	});
+
+	let selectedCountiesFeatures = $state() as Feature[] | Array<undefined>;
+	$effect(() => {
+		(async function () {
+			// $inspect(selectedState)
+			if (selectedState === 'Kenya') {
+				const res = await fetch(
+					'https://cdn.jsdelivr.net/gh/cliffordkleinsr/asstes@latest/kenya.geojson'
+				);
+				const state = (await res.json()) as FeatureCollection;
+				selectedCountiesFeatures = state.features.map((feature) => ({
+					...feature,
+					properties: {
+						...feature.properties,
+						name: feature.properties?.COUNTY_NAM,
+						data: populationByFipsSt.get(feature?.properties?.COUNTY_NAM)
+					}
+				}));
+			} else {
+				selectedCountiesFeatures = [];
+			}
+		})();
+	});
+	// $inspect(selectedState)
 	// $inspect(selectedCountiesFeatures)
 	// data.sec = [...data.sec, {id:"Health", count: 3}, {id:"Politics", count: 5}, {id: "Agriculture", count:3}, {id: "Education", count:3}]
 </script>
@@ -170,11 +190,11 @@
 											fill={colorScale(feature.properties.data?.count ?? 0)}
 											class="stroke-none"
 											onclick={() => {
-												if (selectedState === feature.id) {
+												if (selectedState === feature.properties.name) {
 													selectedState = null;
 													transform.reset();
 												} else {
-													selectedState = feature.id;
+													selectedState = feature.properties.name;
 													const featureTransform = geoFitObjectTransform(
 														projection,
 														[width, height],
@@ -197,11 +217,11 @@
 									{/each}
 								</g>
 
-								{#each selectedCountiesFeatures as feature (feature.id)}
+								{#each selectedCountiesFeatures as feature (feature?.id)}
 									<g in:fade={{ duration: 300, delay: 600 }} out:fade={{ duration: 300 }}>
 										<GeoPath
 											geojson={feature}
-											fill={colorScale(feature.properties.data?.count ?? 0)}
+											fill={colorScale(feature?.properties?.data?.count ?? 0)}
 											{tooltip}
 											class="stroke-none"
 											strokeWidth={1 / transform.scale}
@@ -271,7 +291,7 @@
 					y="count"
 					props={{
 						bars: { class: 'fill-orange-400' },
-						yAxis: { format: (value) => format(Math.abs(value), 'metric') }
+						yAxis: { format: (value: number) => format(Math.abs(value), 'metric') }
 					}}
 				/>
 			</div>
