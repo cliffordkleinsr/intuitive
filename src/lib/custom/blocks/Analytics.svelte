@@ -204,7 +204,7 @@
 							c="count"
 							props={{
 								bars: { class: 'fill-orange-400' },
-								xAxis: { format: (value:number) => format(Math.abs(value), 'metric') }
+								xAxis: { format: (value: number) => format(Math.abs(value), 'metric') }
 							}}
 							orientation="horizontal"
 						/>

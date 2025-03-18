@@ -5,6 +5,7 @@ import type { PageServerLoad } from './$types';
 import type { GeometryCollection, Topology } from 'topojson-specification';
 import { getAnalytics, simplifiedAnalytics } from '$lib/server/db/db_utils';
 import type { FeatureCollection } from 'geojson';
+import { fetchGeoJsons } from '$lib/custom/functions/helpers';
 
 export const load = (async ({ fetch, params: { surveyid } }) => {
 	const res = await fetch('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json');
@@ -53,8 +54,12 @@ export const load = (async ({ fetch, params: { surveyid } }) => {
 	const total_responses = (
 		await db.select().from(user_analytics).where(eq(user_analytics.surveyid, surveyid))
 	).length;
+
+	const countries = await fetchGeoJsons();
+	// console.log(kenya)
 	return {
 		geojson,
+		countries,
 		popn,
 		popn_cnty,
 		sec,

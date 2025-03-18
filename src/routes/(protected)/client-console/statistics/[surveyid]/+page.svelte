@@ -127,31 +127,39 @@
 		};
 	});
 
-	let selectedCountiesFeatures = $state() as Feature[] | Array<undefined>;
-	$effect(() => {
-		(async function () {
-			// $inspect(selectedState)
-			if (selectedState === 'Kenya') {
-				const res = await fetch(
-					'https://cdn.jsdelivr.net/gh/cliffordkleinsr/asstes@latest/kenya.geojson'
-				);
-				const state = (await res.json()) as FeatureCollection;
-				selectedCountiesFeatures = state.features.map((feature) => ({
-					...feature,
-					properties: {
-						...feature.properties,
-						name: feature.properties?.COUNTY_NAM,
-						data: populationByFipsSt.get(feature?.properties?.COUNTY_NAM)
-					}
-				}));
-			} else {
-				selectedCountiesFeatures = [];
+	const states = () => (selectedState === 'Kenya' ? data.countries.kenya : undefined);
+	let selectedCountiesFeatures = $derived(
+		states()?.features.map((feature) => ({
+			...feature,
+			properties: {
+				...feature.properties,
+				name: feature.properties?.COUNTY_NAM,
+				data: populationByFipsSt.get(feature?.properties?.COUNTY_NAM)
 			}
-		})();
-	});
-	// $inspect(selectedState)
+		}))
+	) as Feature[];
+	// let selectedCountiesFeatures = $state() as Feature[] | Array<undefined>;
+
+	// $effect(() => {
+	// 		// $inspect(selectedState)
+	// 		if (selectedState === 'Kenya') {
+	// 			const state = data.kenya;
+	// 			selectedCountiesFeatures = state.features.map((feature) => ({
+	// 				...feature,
+	// 				properties: {
+	// 					...feature.properties,
+	// 					name: feature.properties?.COUNTY_NAM,
+	// 					data: populationByFipsSt.get(feature?.properties?.COUNTY_NAM)
+	// 				}
+	// 			}));
+	// 		} else {
+	// 			selectedCountiesFeatures = [];
+	// 		}
+	// });
+	// $inspect(cachedState)
 	// $inspect(selectedCountiesFeatures)
-	// data.sec = [...data.sec, {id:"Health", count: 3}, {id:"Politics", count: 5}, {id: "Agriculture", count:3}, {id: "Education", count:3}]
+	// data.sec = [...data.sec, {id:"Health", count: 3}, {id:"Politics", count: 5}, {id: "Agriculture", count:3}, {id: "Education", count:3}, {id: "Automotive", count: 5}]
+	// data.edu = [...data.edu, {id: "Under-Graduate", count: 2}, {id: "Primary", count: 6}, {id: "High-School", count: 3}, {id: "Tertiary", count : 5}]
 </script>
 
 <div class="px-3 py-5">
@@ -168,7 +176,7 @@
 							geo={{
 								projection: geoNaturalEarth1,
 								fitGeojson: countries,
-								applyTransform: ['scale', 'translate']
+								applyTransform: ['translate', 'scale']
 							}}
 							transform={{
 								initialScrollMode: 'none',
@@ -187,8 +195,11 @@
 										<GeoPath
 											geojson={feature}
 											{tooltip}
-											fill={colorScale(feature.properties.data?.count ?? 0)}
-											class="stroke-none"
+											fill={selectedState
+												? colorScale(0)
+												: colorScale(feature.properties.data?.count ?? 0)}
+											class="stroke-none hover:stroke-white"
+											{strokeWidth}
 											onclick={() => {
 												if (selectedState === feature.properties.name) {
 													selectedState = null;
@@ -224,7 +235,19 @@
 											fill={colorScale(feature?.properties?.data?.count ?? 0)}
 											{tooltip}
 											class="stroke-none"
-											strokeWidth={1 / transform.scale}
+											onclick={() => {
+												selectedState = null;
+												transform.reset();
+											}}
+										/>
+									</g>
+								{/each}
+								{#each selectedCountiesFeatures as feature}
+									<g in:fade={{ duration: 300, delay: 600 }} out:fade={{ duration: 300 }}>
+										<GeoPath
+											geojson={feature}
+											{tooltip}
+											class="pointer-events-none fill-none stroke-black/30"
 											onclick={() => {
 												selectedState = null;
 												transform.reset();

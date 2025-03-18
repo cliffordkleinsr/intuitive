@@ -256,6 +256,22 @@ interface NominatimResponse {
 	};
 	boundingbox?: [string, string, string, string];
 }
+interface IP_API {
+	status: string;
+	country: string;
+	countryCode: string;
+	region: string;
+	regionName: string;
+	city: string;
+	zip: string;
+	lat: number;
+	lon: number;
+	timezone: string;
+	isp: string;
+	org: string;
+	as: string;
+	query: string;
+}
 
 export type {
 	SurveyData,
@@ -278,5 +294,6 @@ export type {
 	Consumer,
 	PesaPalOReq,
 	GeocodeAPI,
-	NominatimResponse
+	NominatimResponse,
+	IP_API
 };

@@ -71,15 +71,15 @@
 				icon: Coins,
 				items: []
 			},
+			// {
+			// 	title: 'Audience',
+			// 	url: '/client-console/audience',
+			// 	icon: Earth,
+			// 	items: []
+			// },
 			{
-				title: 'Audience',
-				url: '/client-console/audience',
-				icon: Earth,
-				items: []
-			},
-			{
-				title: 'Analytics',
-				url: '/client-console/analytics',
+				title: 'Statistics',
+				url: '/client-console/statistics',
 				icon: ChartLine,
 				items: []
 			}

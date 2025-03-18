@@ -2,13 +2,13 @@ import { message, superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 import type { Actions, PageServerLoad } from './$types';
 import { schema } from './schema';
-import type { NominatimResponse } from '$lib/types';
+import type { IP_API, NominatimResponse } from '$lib/types';
 import { db } from '$lib/server/db';
 import { user_analytics } from '$lib/server/db/schema';
 import { redirect } from 'sveltekit-flash-message/server';
 import { getIpCookie } from '$lib/server/db/db_utils';
 
-export const load = (async ({ cookies, params: { surveyId }, parent }) => {
+export const load = (async ({ cookies, parent }) => {
 	const { uri } = await parent();
 	let has_started = Boolean(cookies.get('has_started')) ?? false;
 	if (has_started) {
@@ -31,19 +31,27 @@ export const actions: Actions = {
 		}
 
 		const { location, loc, education, sector, uri } = form.data;
-		const res = await fetch('/api/nomatim', {
-			method: 'POST',
-			body: JSON.stringify(location)
-		});
-		const reverse_coords = (await res.json()) as NominatimResponse;
-		const analyzed_country = reverse_coords?.address?.country;
+		// const res = await fetch('/api/nomatim', {
+		// 	method: 'POST',
+		// 	body: JSON.stringify(location)
+		// });
+
+		const response = await fetch('http://ip-api.com/json');
+		const reverse_coords = (await response.json()) as IP_API;
+		// const reverse_coords = (await res.json()) as NominatimResponse;
+		// const analyzed_country = reverse_coords?.address?.country;
 		let country = loc.country;
 		let state = loc.state;
-		if (analyzed_country) {
+		if (reverse_coords) {
+			const analyzed_country = reverse_coords.country;
 			if (loc.country !== analyzed_country) {
-				country = analyzed_country;
-				state = reverse_coords?.address?.state;
+				country = reverse_coords.country;
 			}
+			state = reverse_coords.city;
+			// if (loc.country !== analyzed_country) {
+			// 	country = analyzed_country;
+			// 	state = reverse_coords?.address?.state;
+			// }
 		}
 		const ip = getIpCookie(cookies) as string;
 

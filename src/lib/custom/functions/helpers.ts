@@ -1,4 +1,5 @@
 import { DateFormatter } from '@internationalized/date';
+import type { FeatureCollection } from 'geojson';
 import { tick } from 'svelte';
 // import { PENDING_VERIFICATION_COOKIE, type pendingVerificationType } from "$lib/server/email"
 
@@ -314,6 +315,17 @@ function addMonths(date: Date, months: number) {
 	return date;
 }
 
+async function fetchGeoJsons() {
+	const ken_response = await fetch(
+		'https://cdn.jsdelivr.net/gh/cliffordkleinsr/asstes@latest/kenya.geojson'
+	);
+	const kenya = (await ken_response.json()) as FeatureCollection;
+
+	return {
+		kenya
+	};
+}
+
 export {
 	items,
 	df,
@@ -330,5 +342,6 @@ export {
 	calculateAge,
 	deductAmount,
 	addDays,
-	addMonths
+	addMonths,
+	fetchGeoJsons
 };
