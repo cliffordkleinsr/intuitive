@@ -15,7 +15,7 @@
 	import { Input } from '$lib/components/ui/input';
 	import { useId } from 'bits-ui';
 	import { Button, buttonVariants } from '$lib/components/ui/button';
-	import {  educations, employments, incomes } from '$lib/json';
+	import { educations, employments, incomes } from '$lib/json';
 	import { closeAndFocusTrigger } from '$lib/custom/functions/helpers';
 
 	import ChevronsUpDown from 'lucide-svelte/icons/chevrons-up-down';

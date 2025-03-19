@@ -11,9 +11,10 @@
 	import { Button } from '$lib/components/ui/button';
 	import { Badge } from '$lib/components/ui/badge';
 	import type { PageData } from './$types';
-	import BatteryFull from 'lucide-svelte/icons/battery-full';
-	import BatteryLow from 'lucide-svelte/icons/battery-low';
-	import BatteryMedium from 'lucide-svelte/icons/battery-medium';
+	import { Textarea } from '$lib/components/ui/textarea';
+	import { cubicInOut } from 'svelte/easing';
+	import { fade } from 'svelte/transition';
+	import { Label } from '$lib/components/ui/label';
 
 	let { data }: { data: PageData } = $props();
 	const {
@@ -29,10 +30,12 @@
 			current_ix,
 			pool_size
 		},
-		cur_id
+		cur_id,
+		branch_for
 	} = data;
 
 	let cnt = current_ix + 1;
+	let tooltip = $state(false);
 	const progress = Math.round((cnt / pool_size) * 100);
 </script>
 
@@ -62,6 +65,23 @@
 
 	{#if question_type === 'Multiple'}
 		<MultiComponent data={multiForm} {question} {cur_id} {optionid} {options} />
+	{/if}
+
+	{#if branch_for}
+		<div class="w-full max-w-md py-3">
+			<Button
+				class="flex justify-center self-center"
+				variant="secondary"
+				onclick={() => (tooltip = !tooltip)}>?</Button
+			>
+			{#if tooltip}
+				<div class="py-1" transition:fade={{ delay: 300, duration: 600, easing: cubicInOut }}>
+					<Label for="email">This Question Maps to:</Label>
+
+					<Textarea value={branch_for.question} disabled />
+				</div>
+			{/if}
+		</div>
 	{/if}
 </div>
 

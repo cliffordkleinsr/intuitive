@@ -56,32 +56,32 @@ export const actions: Actions = {
 
 		const ip = getIpCookie(cookies) as string;
 
-		// try {
-		// 	if (loc && education && sector) {
-		// 		await db.insert(user_analytics).values({
-		// 			surveyid: surveyId as string,
-		// 			level_of_education: education,
-		// 			sector: sector,
-		// 			country: country,
-		// 			state: state,
-		// 			client_address: ip
-		// 		});
-		// 	}
-		// 	cookies.set('has_started', String(true), {
-		// 		path: '/',
-		// 		httpOnly: true,
-		// 		sameSite: 'strict',
-		// 		maxAge: 60 * 60 * 24 * 7 // expires after 7 days
-		// 	});
-		// } catch (err) {
-		// 	console.error(err);
-		// 	return message(form, {
-		// 		alertType: 'error',
-		// 		alertText: 'An Unexpected error occured',
-		// 		err
-		// 	});
-		// }
+		try {
+			if (loc && education && sector) {
+				await db.insert(user_analytics).values({
+					surveyid: surveyId as string,
+					level_of_education: education,
+					sector: sector,
+					country: country,
+					state: state,
+					client_address: ip
+				});
+			}
+			cookies.set('has_started', String(true), {
+				path: '/',
+				httpOnly: true,
+				sameSite: 'strict',
+				maxAge: 60 * 60 * 24 * 7 // expires after 7 days
+			});
+		} catch (err) {
+			console.error(err);
+			return message(form, {
+				alertType: 'error',
+				alertText: 'An Unexpected error occured',
+				err
+			});
+		}
 
-		// redirect(303, uri, { type: 'success', message: 'You can now begin the survey' }, cookies);
+		redirect(303, uri, { type: 'success', message: 'You can now begin the survey' }, cookies);
 	}
 };

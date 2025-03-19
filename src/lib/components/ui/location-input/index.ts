@@ -1,1 +1,1 @@
-export { default as LocationSelector } from './Locationinput.svelte';
+export { default as LocationSelector } from './LocationSelector.svelte';

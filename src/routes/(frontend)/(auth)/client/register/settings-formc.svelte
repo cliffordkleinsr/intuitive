@@ -60,8 +60,8 @@
 	const triggerId = useId();
 	const { form: formData, enhance, message, delayed } = form;
 
-	let selectedCountry = $state(null);
-	let selectedState = $state(null);
+	let selectedCountry_loc = $state(null);
+	let selectedState_loc = $state(null);
 	// command
 	let open: boolean = $state(false);
 
@@ -172,8 +172,8 @@
 								<Form.Label>Select Country</Form.Label>
 								<LocationSelector
 									{...props}
-									bind:selectedCountry
-									bind:selectedState
+									bind:selectedCountry={selectedCountry_loc}
+									bind:selectedState={selectedState_loc}
 									onCountryChange={(country) => {
 										$formData.location.country = (country?.name as string) || '';
 									}}

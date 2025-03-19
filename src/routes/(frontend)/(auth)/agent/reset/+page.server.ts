@@ -26,8 +26,7 @@ export const actions: Actions = {
 			});
 		}
 
-		let { password, income, employment, education, referal, sector, dateofbirth } =
-			form.data;
+		let { password, income, employment, education, referal, sector, dateofbirth } = form.data;
 		// console.log(form)
 		try {
 			const hashPassword = await bcrypt.hash(password, 15);

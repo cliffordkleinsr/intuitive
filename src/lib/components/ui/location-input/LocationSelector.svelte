@@ -1,40 +1,21 @@
-<script lang="ts">
-	import { cn } from '$lib/utils';
+<!--
+	Installed from github/sikandarjodd/form-builder
+-->
 
+<script lang="ts">
 	import Check from 'lucide-svelte/icons/check';
 	import ChevronsUpDown from 'lucide-svelte/icons/chevrons-up-down';
 
-	import Button from '$lib/components/ui/button/button.svelte';
-	import * as Popover from '$lib/components/ui/popover/index';
-	import * as Command from '$lib/components/ui/command/index';
-	import { ScrollArea, Scrollbar } from '$lib/components/ui/scroll-area/index';
+	import Button from '../button/button.svelte';
+	import * as Popover from '../popover/index';
+	import * as Command from '../command/index';
+	import { ScrollArea, Scrollbar } from '../scroll-area/index';
 
-	// import countries from "./assets/countries.json";
-	// import states from "./assets/states.json";
+	import countries from './assets/countries.json';
+	import states from './assets/states.json';
 	import type { CountryProps, Props, StateProps } from './types';
+	import { cn } from '../utils';
 
-	let countries = $state() as CountryProps[];
-	let states = $state() as StateProps[];
-
-	$effect(() => {
-		(async function () {
-			const [res_countries, res_states] = await Promise.all([
-				fetch(
-					'https://cdn.jsdelivr.net/gh/SikandarJODD/form-builder@latest/src/lib/data/countries.json'
-				),
-				fetch(
-					'https://cdn.jsdelivr.net/gh/SikandarJODD/form-builder@latest/src/lib/data/states.json'
-				)
-			]);
-			if (!res_countries.ok) return;
-			countries = await res_countries.json();
-			states = await res_states.json();
-		})();
-		return () => {
-			countries = [];
-			states = [];
-		};
-	});
 	let {
 		disabled = false,
 		onCountryChange,
@@ -49,8 +30,8 @@
 	let openStateDropdown = $state(false);
 
 	// Cast imported JSON data to their respective types
-	let countriesData = () => countries;
-	let statesData = () => states;
+	let countriesData = countries as CountryProps[];
+	let statesData = states as StateProps[];
 
 	function handleCountrySelect(country: CountryProps) {
 		selectedCountry = $state.snapshot(country);
@@ -66,7 +47,7 @@
 
 	let availableStates: StateProps[] | [] = $derived.by(() => {
 		if (!selectedCountry) return [];
-		return statesData().filter((state) => state.country_id === selectedCountry?.id);
+		return statesData.filter((state) => state.country_id === selectedCountry?.id);
 	});
 </script>
 
@@ -104,30 +85,30 @@
 				<Command.List>
 					<Command.Empty>No country found.</Command.Empty>
 					<Command.Group>
-						<ScrollArea class="h-[300px]">
-							{#each countriesData() as country}
-								<Command.Item
-									value={country.name}
-									onSelect={() => {
-										handleCountrySelect(country);
-										openCountryDropdown = false;
-									}}
-									class="flex cursor-pointer items-center justify-between text-sm"
-								>
-									<div class="flex items-center gap-2">
-										<span>{country.emoji}</span>
-										<span>{country.name}</span>
-									</div>
-									<Check
-										class={cn(
-											'h-4 w-4',
-											selectedCountry?.id === country.id ? 'opacity-100' : 'opacity-0'
-										)}
-									/>
-								</Command.Item>
-							{/each}
-							<Scrollbar orientation="vertical" />
-						</ScrollArea>
+						<!-- <ScrollArea class="h-[300px]"> -->
+						{#each countriesData as country}
+							<Command.Item
+								value={country.name}
+								onSelect={() => {
+									handleCountrySelect(country);
+									openCountryDropdown = false;
+								}}
+								class="flex cursor-pointer items-center justify-between text-sm"
+							>
+								<div class="flex items-center gap-2">
+									<span>{country.emoji}</span>
+									<span>{country.name}</span>
+								</div>
+								<Check
+									class={cn(
+										'h-4 w-4',
+										selectedCountry?.id === country.id ? 'opacity-100' : 'opacity-0'
+									)}
+								/>
+							</Command.Item>
+						{/each}
+						<!-- <Scrollbar orientation="vertical" />
+						</ScrollArea> -->
 					</Command.Group>
 				</Command.List>
 			</Command.Root>

@@ -50,6 +50,12 @@ export const load = (async ({ params: { surveyId, questionId }, cookies }) => {
 	let current_ix = parseInt(cookies.get('current_ix') ?? '0');
 
 	const cache = { current_ix, pool_size, pool_questions };
+	const this_branch = branches.find(
+		(b) => b.questionId === questionId || b.nextQuestionId === questionId
+	);
+	const qns = await getsurveyQuestions(surveyId);
+	const branch_for = qns.find((q) => q.id === this_branch?.questionId && q.id !== questionId);
+
 	// Determine the next question (pass null if no option has been selected)
 	// const nextQuestion = getNextQuestion(questionId, null, ordered, questionIndexMap, branchMap);
 	return {
@@ -59,7 +65,8 @@ export const load = (async ({ params: { surveyId, questionId }, cookies }) => {
 		multiForm,
 		rateForm,
 		cache,
-		cur_id: questionId
+		cur_id: questionId,
+		branch_for
 	};
 }) satisfies PageServerLoad;
 
