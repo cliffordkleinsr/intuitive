@@ -45,7 +45,7 @@ export interface StateProps {
 }
 
 // Define types (same as in React version)
-export type LocationProps = {
+export type Props = {
 	disabled?: boolean;
 	onCountryChange?: (country: CountryProps | null) => void;
 	onStateChange?: (state: StateProps | null) => void;

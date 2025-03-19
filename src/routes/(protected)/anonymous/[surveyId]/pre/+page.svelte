@@ -43,10 +43,10 @@
 	let selectedState: any = $state(null);
 
 	$effect(() => {
-		if (!navigator.geolocation) toast.info('Geolocation is not supported by your browser');
-		const pos = navigator.geolocation.getCurrentPosition((position) => {
-			$formData.location = position.coords;
-		});
+		// if (!navigator.geolocation) toast.info('Geolocation is not supported by your browser');
+		// const pos = navigator.geolocation.getCurrentPosition((position) => {
+		// 	$formData.location = position.coords;
+		// });
 
 		$formData.uri = uri;
 		return () => {
@@ -63,7 +63,7 @@
 		<Card.Header>
 			<Card.Title>Before you begin</Card.Title>
 			<Card.Description>
-				<p>We kindly ask that you accept any propmts requested for this page</p>
+				<!-- <p>We kindly ask that you accept any propmts requested for this page</p> -->
 			</Card.Description>
 		</Card.Header>
 		<Card.Content>
@@ -77,7 +77,7 @@
 									<Select.Trigger {...props}>
 										{$formData.education
 											? $formData.education
-											: 'Kindly tell us more about youreducational background'}
+											: 'Kindly tell us more about your educational background'}
 									</Select.Trigger>
 									<Select.Content>
 										{#each educations as education}
@@ -130,7 +130,7 @@
 						<Form.FieldErrors />
 					</Form.Field>
 				</div>
-				<div>
+				<!-- <div>
 					<Form.Field {form} name="location">
 						<Form.Control>
 							{#snippet children({ props })}
@@ -139,7 +139,7 @@
 						</Form.Control>
 						<Form.FieldErrors class="text-sm text-destructive" />
 					</Form.Field>
-				</div>
+				</div> -->
 				<div>
 					<Form.Field {form} name="uri">
 						<Form.Control>

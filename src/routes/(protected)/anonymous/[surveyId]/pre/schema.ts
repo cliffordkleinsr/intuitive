@@ -6,16 +6,16 @@ export let schema = z.object({
 		country: z.string(),
 		state: z.string().optional()
 	}),
-	location: z
-		.object({
-			accuracy: z.number(),
-			latitude: z.number(),
-			longitude: z.number(),
-			altitude: z.number().nullable(),
-			altitudeAccuracy: z.number().nullable(),
-			heading: z.number().nullable(),
-			speed: z.number().nullable()
-		})
-		.optional(),
+	// location: z
+	// 	.object({
+	// 		accuracy: z.number(),
+	// 		latitude: z.number(),
+	// 		longitude: z.number(),
+	// 		altitude: z.number().nullable(),
+	// 		altitudeAccuracy: z.number().nullable(),
+	// 		heading: z.number().nullable(),
+	// 		speed: z.number().nullable()
+	// 	})
+	// 	.optional(),
 	uri: z.string().nonempty()
 });

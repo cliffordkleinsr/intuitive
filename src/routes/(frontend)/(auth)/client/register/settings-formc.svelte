@@ -29,13 +29,12 @@
 	import { type SuperValidated, type Infer } from 'sveltekit-superforms';
 
 	// ZOD SCHEMA
-	import { counties, registerCSchema, type RegisterCSchema } from './schema';
+	import { registerCSchema, type RegisterCSchema } from './schema';
 
 	// Local Variables
 	import { closeAndFocusTrigger } from '$lib/custom/functions/helpers';
 	import { sectors } from '$lib/json/index';
 	import Meta from '$lib/custom/seo/meta.svelte';
-	import { countyMap } from '$lib/json/subcountis';
 	import { useId } from 'bits-ui';
 	import { LocationSelector } from '$lib/components/ui/location-input';
 
@@ -43,8 +42,6 @@
 	// export let data: SuperValidated<Infer<RegisterCSchema>>;
 	let { data }: { data: SuperValidated<Infer<RegisterCSchema>> } = $props();
 
-	let countryName = $state('') as string;
-	let stateName = $state('') as string;
 	const form = superForm(data, {
 		dataType: 'json',
 		validators: zodClient(registerCSchema),
@@ -63,8 +60,8 @@
 	const triggerId = useId();
 	const { form: formData, enhance, message, delayed } = form;
 
-	let selectedCountry: any = $state(null);
-	let selectedState: any = $state(null);
+	let selectedCountry = $state(null);
+	let selectedState = $state(null);
 	// command
 	let open: boolean = $state(false);
 
@@ -178,12 +175,10 @@
 									bind:selectedCountry
 									bind:selectedState
 									onCountryChange={(country) => {
-										countryName = country?.name || '';
-										$formData.location.country = countryName || '';
+										$formData.location.country = (country?.name as string) || '';
 									}}
 									onStateChange={(state) => {
-										stateName = state?.name || '';
-										$formData.location.state = stateName;
+										$formData.location.state = (state?.name as string) || '';
 									}}
 								/>
 							{/snippet}

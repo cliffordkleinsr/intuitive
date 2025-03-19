@@ -11,7 +11,7 @@
 	// sonner
 	import { toast } from 'svelte-sonner';
 	// ZOD SCHEMA
-	import { counties, registerRSchema, type RegisterRSchema } from './schema';
+	import { registerRSchema, type RegisterRSchema } from './schema';
 
 	// Lucid Icons
 	import ChevronsUpDown from 'lucide-svelte/icons/chevrons-up-down';
@@ -43,7 +43,7 @@
 	import { items, df, closeAndFocusTrigger } from '$lib/custom/functions/helpers';
 	import type { Snapshot } from './$types';
 	import Meta from '$lib/custom/seo/meta.svelte';
-	import { countyMap } from '$lib/json/subcountis';
+	// import { countyMap } from '$lib/json/subcountis';
 	import { fly, scale } from 'svelte/transition';
 	import { quintOut } from 'svelte/easing';
 	import { useId } from 'bits-ui';
@@ -377,7 +377,7 @@
 						</div>
 					</div>
 
-					<div class="grid gap-2">
+					<!-- <div class="grid gap-2">
 						<div class="grid gap-4 lg:grid-cols-2">
 							<div class="grid gap-2">
 								<Form.Field {form} name="county">
@@ -457,7 +457,7 @@
 								</Form.Field>
 							</div>
 						</div>
-					</div>
+					</div> -->
 
 					<div class="grid gap-2">
 						<div class="grid gap-4 lg:grid-cols-2">

@@ -1,49 +1,73 @@
 <script lang="ts">
+	import { cn } from '$lib/utils';
+
 	import Check from 'lucide-svelte/icons/check';
 	import ChevronsUpDown from 'lucide-svelte/icons/chevrons-up-down';
+
 	import Button from '$lib/components/ui/button/button.svelte';
 	import * as Popover from '$lib/components/ui/popover/index';
 	import * as Command from '$lib/components/ui/command/index';
 	import { ScrollArea, Scrollbar } from '$lib/components/ui/scroll-area/index';
 
-	import { cn } from '$lib/utils';
-	import type { LocationProps, StateProps, CountryProps } from './types';
-	import { countries, states } from './assets/index';
+	// import countries from "./assets/countries.json";
+	// import states from "./assets/states.json";
+	import type { CountryProps, Props, StateProps } from './types';
 
+	let countries = $state() as CountryProps[];
+	let states = $state() as StateProps[];
+
+	$effect(() => {
+		(async function () {
+			const [res_countries, res_states] = await Promise.all([
+				fetch(
+					'https://cdn.jsdelivr.net/gh/SikandarJODD/form-builder@latest/src/lib/data/countries.json'
+				),
+				fetch(
+					'https://cdn.jsdelivr.net/gh/SikandarJODD/form-builder@latest/src/lib/data/states.json'
+				)
+			]);
+			if (!res_countries.ok) return;
+			countries = await res_countries.json();
+			states = await res_states.json();
+		})();
+		return () => {
+			countries = [];
+			states = [];
+		};
+	});
 	let {
 		disabled = false,
 		onCountryChange,
 		onStateChange,
 		selectedCountry = $bindable(null),
 		selectedState = $bindable(null)
-	}: LocationProps = $props();
+	}: Props = $props();
 
 	// Using Svelte 5 runes for reactive state
 
 	let openCountryDropdown = $state(false);
 	let openStateDropdown = $state(false);
 
-	let availableStates: StateProps[] | [] = $derived.by(() => {
-		if (!selectedCountry) return [];
-		return statesData.filter((state) => state.country_id === selectedCountry?.id);
-	});
-
 	// Cast imported JSON data to their respective types
-	const countriesData = countries as CountryProps[];
-
-	const statesData = states as StateProps[];
+	let countriesData = () => countries;
+	let statesData = () => states;
 
 	function handleCountrySelect(country: CountryProps) {
-		selectedCountry = country;
+		selectedCountry = $state.snapshot(country);
 		selectedState = null; // Reset state when country changes
-		if (onCountryChange) onCountryChange(country);
-		if (onStateChange) onStateChange(null);
+		onCountryChange?.(country);
+		onStateChange?.(null);
 	}
 
 	function handleStateSelect(state: StateProps) {
 		selectedState = state;
-		if (onStateChange) onStateChange(state);
+		onStateChange?.(state);
 	}
+
+	let availableStates: StateProps[] | [] = $derived.by(() => {
+		if (!selectedCountry) return [];
+		return statesData().filter((state) => state.country_id === selectedCountry?.id);
+	});
 </script>
 
 <div class="flex gap-4">
@@ -52,7 +76,7 @@
 		open={openCountryDropdown}
 		onOpenChange={() => (openCountryDropdown = !openCountryDropdown)}
 	>
-		<Popover.Trigger>
+		<Popover.Trigger class={[availableStates.length > 0 ? 'w-1/2' : 'w-full']}>
 			{#snippet child({ props })}
 				<Button
 					{...props}
@@ -74,14 +98,14 @@
 				</Button>
 			{/snippet}
 		</Popover.Trigger>
-		<Popover.Content class="w-[300px] p-0">
+		<Popover.Content class={['p-0', availableStates.length > 0 ? 'w-fit' : 'w-96']} align="start">
 			<Command.Root>
 				<Command.Input placeholder="Search country..." />
 				<Command.List>
 					<Command.Empty>No country found.</Command.Empty>
 					<Command.Group>
 						<ScrollArea class="h-[300px]">
-							{#each countriesData as country}
+							{#each countriesData() as country}
 								<Command.Item
 									value={country.name}
 									onSelect={() => {
@@ -102,7 +126,6 @@
 									/>
 								</Command.Item>
 							{/each}
-
 							<Scrollbar orientation="vertical" />
 						</ScrollArea>
 					</Command.Group>
@@ -112,13 +135,12 @@
 	</Popover.Root>
 
 	<!-- State Selector - Only shown if selected country has states -->
-	<!-- {availableStates.length > 0 && ( -->
 	{#if availableStates.length > 0}
 		<Popover.Root
 			open={openStateDropdown}
 			onOpenChange={() => (openStateDropdown = !openStateDropdown)}
 		>
-			<Popover.Trigger>
+			<Popover.Trigger class="w-1/2">
 				{#snippet child({ props })}
 					<Button
 						{...props}
@@ -137,7 +159,7 @@
 					</Button>
 				{/snippet}
 			</Popover.Trigger>
-			<Popover.Content class="p-0">
+			<Popover.Content class="p-0" align="start">
 				<Command.Root>
 					<Command.Input placeholder="Search state..." />
 					<Command.List>
@@ -162,7 +184,6 @@
 										/>
 									</Command.Item>
 								{/each}
-
 								<Scrollbar orientation="vertical" />
 							</ScrollArea>
 						</Command.Group>

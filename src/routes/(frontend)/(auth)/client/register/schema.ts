@@ -1,8 +1,8 @@
 import { z } from 'zod';
-import cty from '$lib/json/counties.json';
+// import cty from '$lib/json/counties.json';
 
-export const counties = cty;
-type Counties = (typeof counties)[number]['name'];
+// export const counties = cty;
+// type Counties = (typeof counties)[number]['name'];
 
 export const registerCSchema = z
 	.object({
