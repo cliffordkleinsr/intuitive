@@ -18,9 +18,6 @@
 	import { enhance } from '$app/forms';
 	import { goto, invalidateAll, preloadData, pushState } from '$app/navigation';
 	import { toast } from 'svelte-sonner';
-	import * as Select from '$lib/components/ui/select';
-	import Tree from '$lib/custom/blocks/d3tree/Tree.svelte';
-	import SettingsBranch from './[questionid]/settingsBranch.svelte';
 	import * as Dialog from '$lib/components/ui/dialog';
 	import * as Drawer from '$lib/components/ui/drawer';
 	import AvailableQns from './[questionid]/+page.svelte';

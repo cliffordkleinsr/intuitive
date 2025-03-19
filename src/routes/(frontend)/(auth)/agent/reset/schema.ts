@@ -1,8 +1,8 @@
 import { z } from 'zod';
-import cty from '$lib/json/counties.json';
+// import cty from '$lib/json/counties.json';
 
-export const counties = cty;
-type Counties = (typeof counties)[number]['name'];
+// export const counties = cty;
+// type Counties = (typeof counties)[number]['name'];
 
 export const resetSchema = z
 	.object({
@@ -29,9 +29,9 @@ export const resetSchema = z
 					message: 'Must be a valid Safaricom phone number'
 				}
 			),
-		county: z.enum(counties.map((f) => f.name) as [Counties, ...Counties[]], {
-			errorMap: () => ({ message: 'Please select a valid County.' })
-		}),
+		// county: z.enum(counties.map((f) => f.name) as [Counties, ...Counties[]], {
+		// 	errorMap: () => ({ message: 'Please select a valid County.' })
+		// }),
 		subctys: z
 			.string({
 				required_error: 'Must be valid Sub County.'

@@ -26,7 +26,7 @@ export const actions: Actions = {
 			});
 		}
 
-		let { password, county, subctys, income, employment, education, referal, sector, dateofbirth } =
+		let { password, income, employment, education, referal, sector, dateofbirth } =
 			form.data;
 		// console.log(form)
 		try {
@@ -44,8 +44,8 @@ export const actions: Actions = {
 					.update(agentData)
 					.set({
 						dateofbirth,
-						county,
-						subcounty: subctys,
+						county: '',
+						subcounty: '',
 						sector,
 						income,
 						employment,

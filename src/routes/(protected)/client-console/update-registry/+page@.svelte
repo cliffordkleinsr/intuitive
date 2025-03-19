@@ -22,8 +22,7 @@
 	import { toast } from 'svelte-sonner';
 	import { useId } from 'bits-ui';
 	import { closeAndFocusTrigger } from '$lib/custom/functions/helpers';
-	import { counties, sectors } from '$lib/json';
-	import { countyMap } from '$lib/json/subcountis';
+	import { sectors } from '$lib/json';
 
 	let {
 		data

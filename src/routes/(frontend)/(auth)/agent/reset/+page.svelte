@@ -13,10 +13,9 @@
 	import { toast } from 'svelte-sonner';
 	import { resetSchema } from './schema';
 	import { Input } from '$lib/components/ui/input';
-	import { countyMap } from '$lib/json/subcountis';
 	import { useId } from 'bits-ui';
 	import { Button, buttonVariants } from '$lib/components/ui/button';
-	import { counties, educations, employments, incomes } from '$lib/json';
+	import {  educations, employments, incomes } from '$lib/json';
 	import { closeAndFocusTrigger } from '$lib/custom/functions/helpers';
 
 	import ChevronsUpDown from 'lucide-svelte/icons/chevrons-up-down';
@@ -82,7 +81,7 @@
 					</div>
 
 					<div class="grid gap-4 md:grid-cols-2">
-						<Form.Field {form} name="county" class="grid gap-2">
+						<!-- <Form.Field {form} name="county" class="grid gap-2">
 							<Popover.Root bind:open>
 								<Form.Control id={triggerId}>
 									{#snippet children({ props })}
@@ -153,7 +152,7 @@
 								{/snippet}
 							</Form.Control>
 							<Form.FieldErrors />
-						</Form.Field>
+						</Form.Field> -->
 
 						<Form.Field {form} name="income">
 							<Form.Control>
