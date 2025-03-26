@@ -16,14 +16,10 @@ import { schema } from './schema';
 import { addDays } from '$lib/custom/functions/helpers';
 
 export const load: PageServerLoad = async ({ locals: { user } }) => {
-	const [cant_create_one, cant_create_six, cant_create_ten] = await getSubscriptionStatus(
-		user?.id as string
-	);
+	const consumer_details = await getSubscriptionStatus(user?.id as string);
 	return {
 		form: await superValidate(zod(schema)),
-		cant_create_one,
-		cant_create_six,
-		cant_create_ten
+		consumer_details
 	};
 };
 

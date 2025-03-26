@@ -410,29 +410,41 @@ export const getNewPaymentStatus = async (id: string) => {
 };
 
 export const getSubscriptionStatus = async (id: string) => {
-	const surveys = await db
+	// const surveys = await db
+	// 	.select({
+	// 		id: SurveyTable.surveyid,
+	// 		package_type: consumerPackage.package_type
+	// 	})
+	// 	.from(SurveyTable)
+	// 	.leftJoin(consumerPackage, and(
+	// 		eq(consumerPackage.consumerid, SurveyTable.consumer_id),
+	// 		eq(consumerPackage.consumerid, id),
+	// 	))
+	// 	.where(
+	// 		and(
+	// 			eq(SurveyTable.consumer_id, id as string),
+	// 			lt(SurveyTable.created_at, consumerPackage.expires)
+	// 		)
+	// 	);
+	const [consumer_details] = await db
 		.select({
-			id: SurveyTable.surveyid,
-			package_type: consumerPackage.package_type
+			package_type: consumerPackage.package_type,
+			surveys: count(SurveyTable.surveyid)
 		})
-		.from(SurveyTable)
-		.leftJoin(consumerPackage, eq(consumerPackage.consumerid, SurveyTable.consumer_id))
-		.where(
-			and(
-				eq(SurveyTable.consumer_id, id as string),
-				lt(SurveyTable.created_at, consumerPackage.expires)
-			)
-		);
+		.from(consumerPackage)
+		.leftJoin(SurveyTable, eq(SurveyTable.consumer_id, consumerPackage.consumerid))
+		.where(eq(consumerPackage.consumerid, id))
+		.groupBy(consumerPackage.package_type);
 
 	// Count surveys per package type
-	const onePackCount = surveys.filter((s) => s.package_type === 'one_pack').length;
-	const sixPackCount = surveys.filter((s) => s.package_type === 'six_pack').length;
-	const tenPackCount = surveys.filter((s) => s.package_type === 'ten_pack').length;
+	// const onePackCount = surveys.filter((s) => s.package_type === 'one_pack').length;
+	// const sixPackCount = surveys.filter((s) => s.package_type === 'six_pack').length;
+	// const tenPackCount = surveys.filter((s) => s.package_type === 'ten_pack').length;
 
-	const cant_create_one = onePackCount > 0;
-	const cant_create_six = sixPackCount <= 6;
-	const cant_create_ten = tenPackCount <= 10;
-	return [cant_create_one, cant_create_six, cant_create_ten];
+	// const cant_create_one = onePackCount > 0;
+	// const cant_create_six = sixPackCount <= 6;
+	// const cant_create_ten = tenPackCount <= 10;
+	return consumer_details;
 };
 export const retSurveyInfo = async (id: string) => {
 	const select = {

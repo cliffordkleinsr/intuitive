@@ -102,12 +102,12 @@
 			<Separator orientation="vertical" class="mr-2 h-4" />
 			<Breadcrumb.Root>
 				<Breadcrumb.List>
-					<Breadcrumb.Item>
+					<!-- <Breadcrumb.Item>
 						<Breadcrumb.Link href="/client-console/audience">Audience</Breadcrumb.Link>
 					</Breadcrumb.Item>
-					<Breadcrumb.Separator />
+					<Breadcrumb.Separator /> -->
 					<Breadcrumb.Item>
-						<Breadcrumb.Link href="/client-console/analytics">Analytics</Breadcrumb.Link>
+						<Breadcrumb.Link href="/client-console/statistics">Statistics</Breadcrumb.Link>
 					</Breadcrumb.Item>
 					<Breadcrumb.Separator />
 					<Breadcrumb.Item>

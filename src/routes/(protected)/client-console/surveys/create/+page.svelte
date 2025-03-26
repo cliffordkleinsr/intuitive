@@ -21,7 +21,7 @@
 		data: PageData;
 	} = $props();
 
-	const { cant_create_one, cant_create_six, cant_create_ten } = data;
+	const { consumer_details } = data;
 
 	const form = superForm(data.form, {
 		validators: zodClient(schema),
@@ -81,7 +81,7 @@
 						<Form.FieldErrors class="text-sm text-destructive" />
 					</Form.Field>
 				</div>
-				{#if cant_create_one || cant_create_six || cant_create_ten}
+				{#if consumer_details.surveys > 0}
 					<div
 						class="mt-2 rounded-lg bg-red-500 p-4 text-sm text-white"
 						role="alert"

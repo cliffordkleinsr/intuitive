@@ -1,6 +1,11 @@
 import { db } from '$lib/server/db';
-import { QuestionOptions, surveyqnsTableV2, SurveyTable } from '$lib/server/db/schema';
-import { eq, sql } from 'drizzle-orm';
+import {
+	QuestionBranching,
+	QuestionOptions,
+	surveyqnsTableV2,
+	SurveyTable
+} from '$lib/server/db/schema';
+import { and, eq, sql } from 'drizzle-orm';
 import type { Actions, PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async ({ locals }) => {
@@ -29,8 +34,24 @@ export const actions: Actions = {
 		const { id } = data;
 		// console.log(data)
 		try {
-			await db.delete(surveyqnsTableV2).where(eq(surveyqnsTableV2.surveid, id));
-			await db.delete(SurveyTable).where(eq(SurveyTable.surveyid, id));
+			const ids = await db
+				.select({
+					el: QuestionOptions.optionId
+				})
+				.from(surveyqnsTableV2)
+				.leftJoin(QuestionOptions, eq(surveyqnsTableV2.questionId, QuestionOptions.questionId))
+				.where(eq(surveyqnsTableV2.surveid, id));
+			await db.transaction(async (tx) => {
+				await tx.delete(QuestionBranching).where(eq(QuestionBranching.surveid, id));
+				for (const { el } of ids) {
+					if (el) {
+						// console.log(id)
+						await tx.delete(QuestionOptions).where(eq(QuestionOptions.optionId, el));
+					}
+				}
+				await tx.delete(surveyqnsTableV2).where(eq(surveyqnsTableV2.surveid, id));
+				await tx.delete(SurveyTable).where(eq(SurveyTable.surveyid, id));
+			});
 		} catch (err) {
 			console.error(err);
 		}
