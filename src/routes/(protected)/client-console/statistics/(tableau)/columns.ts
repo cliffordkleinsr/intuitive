@@ -7,6 +7,7 @@ export type Survey = {
 	id: string;
 	title: string;
 	expires: Date;
+	status: string;
 };
 
 export const columns: ColumnDef<Survey>[] = [
@@ -27,7 +28,7 @@ export const columns: ColumnDef<Survey>[] = [
 	{
 		accessorKey: ' ',
 		cell: ({ row }) => {
-			return renderComponent(DataTableLive, {});
+			return renderComponent(DataTableLive, { status: row.original.status });
 		}
 	}
 ];

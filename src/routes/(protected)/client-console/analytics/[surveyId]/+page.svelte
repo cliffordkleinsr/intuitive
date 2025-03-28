@@ -9,14 +9,27 @@
 		sector_analytics,
 		county_analytics,
 		analytics,
-		raw
+		raw,
+		kenya
 		// subscription: { subtype }
 	} = data;
 	let subtype = 'Premium Business';
+
+	$effect(() => {
+		const words: Map<number, string> = new Map();
+		for (const element of analytics) {
+			if (element.question_type === 'Single') {
+				element.answer_statistics.forEach((e, i) => {
+					words.set(i, e.answer);
+				});
+			}
+		}
+	});
 </script>
 
 <Analytics
 	{total_responses}
+	geoObject={kenya}
 	gender={gender_analytics}
 	sector={sector_analytics}
 	{analytics}

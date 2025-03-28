@@ -7,6 +7,7 @@ import {
 	AnswersTable,
 	consumerDeats,
 	consumerPackage,
+	response_table,
 	// clientData,
 	// clientPackages,
 	surveyqnsTableV2,
@@ -14,6 +15,7 @@ import {
 } from '$lib/server/db/schema';
 import { unionAll } from 'drizzle-orm/pg-core';
 import { csvFormat } from 'd3-dsv';
+import { fetchGeoJsons } from '$lib/custom/functions/helpers';
 
 export const load: PageServerLoad = async ({ locals: { user }, params: { surveyId } }) => {
 	const usr = user?.id as string;
@@ -249,6 +251,7 @@ export const load: PageServerLoad = async ({ locals: { user }, params: { surveyI
 		asc(answerCounts.updated),
 		asc(rank_stats.updated)
 	);
+	const { kenya } = await fetchGeoJsons();
 	return {
 		cumulative_analytics,
 		gender_analytics,
@@ -256,6 +259,7 @@ export const load: PageServerLoad = async ({ locals: { user }, params: { surveyI
 		county_analytics,
 		analytics,
 		raw: csvFormat(raw_analytics),
-		subscription
+		subscription,
+		kenya
 	};
 };

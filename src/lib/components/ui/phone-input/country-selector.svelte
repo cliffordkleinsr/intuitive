@@ -13,6 +13,7 @@
 	import { cn } from '../../../blocks/utils/utils';
 	import Flag from './flag.svelte';
 	import type { Country, CountryCode } from 'svelte-tel-input/types';
+	import { tick } from 'svelte';
 
 	interface Props {
 		/** List of countries */
@@ -37,16 +38,26 @@
 	let selectedCountry = $derived(countries.find((a) => a.iso2 == selected));
 
 	let open = $state(false);
-
+	let triggerRef = $state<HTMLButtonElement>(null!);
+	// We want to refocus the trigger button when the user selects
+	// an item from the list so users can continue navigating the
+	// rest of the form with the keyboard.
+	function closeAndFocusTrigger() {
+		open = false;
+		tick().then(() => {
+			triggerRef.focus();
+		});
+	}
 	const selectCountry = (country: Country) => {
 		selected = country.iso2;
 		open = false;
 		onselect?.(selected);
+		closeAndFocusTrigger();
 	};
 </script>
 
 <Popover.Root bind:open>
-	<Popover.Trigger>
+	<Popover.Trigger bind:ref={triggerRef}>
 		{#snippet child({ props })}
 			<Button
 				type="button"
@@ -54,6 +65,8 @@
 				class={cn('flex gap-1 rounded-e-none rounded-s-lg px-3')}
 				{disabled}
 				{...props}
+				role="combobox"
+				aria-expanded={open}
 			>
 				<Flag country={selectedCountry} />
 				<ChevronsUpDown

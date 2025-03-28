@@ -7,6 +7,8 @@
 	import { page } from '$app/state';
 	import { navigating } from '$app/state';
 	import Clockloader from '$lib/custom/blocks/spinner/Clockloader.svelte';
+	import { RenderScan } from 'svelte-render-scan';
+	import { dev } from '$app/environment';
 
 	const flash = getFlash(page);
 
@@ -47,4 +49,7 @@
 	</div>
 {:else}
 	{@render children()}
+{/if}
+{#if dev}
+	<RenderScan />
 {/if}

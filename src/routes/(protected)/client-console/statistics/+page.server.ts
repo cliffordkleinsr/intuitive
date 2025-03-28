@@ -9,7 +9,8 @@ export const load = (async ({ locals: { user } }) => {
 		.select({
 			id: SurveyTable.surveyid,
 			title: SurveyTable.title,
-			expires: sql<Date>`${SurveyTable.survey_expires}::timestamp::date`
+			expires: sql<Date>`${SurveyTable.survey_expires}::timestamp::date`,
+			status: SurveyTable.status
 		})
 		.from(SurveyTable)
 		.where(and(eq(SurveyTable.consumer_id, uid), ne(SurveyTable.status, 'Draft')));

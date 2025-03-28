@@ -15,10 +15,14 @@
 	import FileText from 'lucide-svelte/icons/file-text';
 	import { toast } from 'svelte-sonner';
 	import type { GenAnalytics, SecAnalytics, LocAnalytics, Analytics } from '$lib/types';
+	import type { FeatureCollection } from 'geojson';
+	import WordCloud from './wordcloud/WordCloud.svelte';
+	import { text } from 'd3-fetch';
 
 	let {
 		total_responses,
 		gender,
+		geoObject,
 		sector,
 		county,
 		analytics,
@@ -27,6 +31,7 @@
 	}: {
 		total_responses: number;
 		gender: GenAnalytics[];
+		geoObject: FeatureCollection;
 		sector: SecAnalytics[];
 		county: LocAnalytics[];
 		analytics: Analytics[];
@@ -166,7 +171,7 @@
 							'h-[600px]'
 						]}
 					>
-						<!-- <CakeMap geoObject={counties} locale_analytics={county} /> -->
+						<CakeMap {geoObject} locale_analytics={county} />
 					</div>
 					{#if subtype === 'One-time' || subtype === 'Basic' || subtype === null}
 						<div class="absolute top-1/2 lg:right-[250px]">
@@ -180,7 +185,7 @@
 			</Card.Root>
 		</div>
 		<div class="grid gap-2">
-			<Card.Root>
+			<!-- <Card.Root>
 				<Card.Header>
 					<Card.Title class="text-2xl">Average Completion Time</Card.Title>
 					<Card.Description></Card.Description>
@@ -188,7 +193,7 @@
 				<Card.Footer class="text-xl font-semibold">
 					<p>TBA</p>
 				</Card.Footer>
-			</Card.Root>
+			</Card.Root> -->
 			<Card.Root>
 				<Card.Header>
 					<Card.Title>Gender Distribution</Card.Title>
@@ -220,7 +225,7 @@
 					<div
 						class={[
 							subtype === null ? 'pointer-events-none blur-md' : '',
-							'w-full rounded border p-4 lg:h-[350px]'
+							'w-full rounded border p-4 lg:h-[400px]'
 						]}
 					>
 						<PieChart
@@ -287,6 +292,12 @@
 							</h1>
 						</div>
 					{/if}
+				{/if}
+				{#if statistic.question_type === 'Single'}
+					{@const textContent = statistic.answer_statistics.map((stat) => stat.answer).join('.\n')}
+					<div class="place-items-center">
+						<WordCloud text={textContent} />
+					</div>
 				{/if}
 				<!-- Add horizontal scroll only if needed -->
 				{#if statistic.question_type === 'Single' || statistic.question_type === 'Ranking'}

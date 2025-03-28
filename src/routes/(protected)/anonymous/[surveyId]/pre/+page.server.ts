@@ -37,23 +37,11 @@ export const actions: Actions = {
 		// });
 
 		const response = await fetch('http://ip-api.com/json');
-		const reverse_coords = (await response.json()) as IP_API;
+		console.log(await response.json());
 		// const reverse_coords = (await res.json()) as NominatimResponse;
 		// const analyzed_country = reverse_coords?.address?.country;
 		let country = loc.country;
 		let state = loc.state;
-		if (reverse_coords) {
-			const analyzed_country = reverse_coords.country;
-			if (loc.country !== analyzed_country) {
-				country = reverse_coords.country;
-			}
-			state = reverse_coords.city;
-			// if (loc.country !== analyzed_country) {
-			// 	country = analyzed_country;
-			// 	state = reverse_coords?.address?.state;
-			// }
-		}
-
 		const ip = getIpCookie(cookies) as string;
 
 		try {
