@@ -37,9 +37,9 @@
 	const countries = feature(data.geojson, data.geojson.objects.countries);
 	let selectedState: string | null = $state(null);
 
-	const populationByFipsSt = index(
+	const populationByCount = index(
 		data.popn_cnty.map((v) => ({
-			id: v.id?.trim()?.toUpperCase(), // Convert to uppercase to match COUNTY_NAM
+			id: v.id?.trim(),
 			count: v.count
 		})),
 		(d) => d.id
@@ -127,19 +127,39 @@
 		};
 	});
 
-	const states = () => (selectedState === 'Kenya' ? data.countries.kenya : undefined);
-	let selectedCountiesFeatures = $derived(
-		states()?.features.map((feature) => ({
-			...feature,
-			properties: {
-				...feature.properties,
-				name: feature.properties?.COUNTY_NAM,
-				data: populationByFipsSt.get(feature?.properties?.COUNTY_NAM)
-			}
-		}))
-	) as Feature[];
-	// let selectedCountiesFeatures = $state() as Feature[] | Array<undefined>;
+	// const states = () => (selectedState === 'Kenya' ? data.countries.kenya : selectedState === 'Germany'? data.countries.deutscheland: undefined  );
+	// let selectedCountiesFeatures = $derived(
+	// 	states()?.features.map((feature) => ({
+	// 		...feature,
+	// 		properties: {
+	// 			...feature.properties,
+	// 			name: feature.properties?.COUNTY_NAM,
+	// 			data: populationByFipsSt.get(feature?.properties?.COUNTY_NAM)
+	// 		}
+	// 	}))
+	// ) as Feature[];
 
+	let selectedCountiesFeatures = $derived.by(() => {
+		if (selectedState === 'Kenya') {
+			return data.countries.kenya?.features.map((feature) => ({
+				...feature,
+				properties: {
+					...feature.properties,
+					name: feature.properties?.COUNTY_NAM,
+					data: populationByCount.get(feature?.properties?.COUNTY_NAM)
+				}
+			}));
+		}
+		if (selectedState === 'Germany') {
+			return data.countries.deutscheland?.features.map((feature) => ({
+				...feature,
+				properties: {
+					...feature.properties,
+					data: populationByCount.get(feature.properties?.name)
+				}
+			}));
+		}
+	}) as Feature[];
 	// $effect(() => {
 	// 		// $inspect(selectedState)
 	// 		if (selectedState === 'Kenya') {
@@ -265,7 +285,7 @@
 							<Tooltip.Root let:data>
 								{@const d =
 									populationByFips.get(data.properties.name) ??
-									populationByFipsSt.get(data.properties.name)}
+									populationByCount.get(data.properties.name)}
 								{@const [longitude, latitude] = projection.invert?.([tooltip.x, tooltip.y]) ?? []}
 								<Tooltip.Header>{data.properties.name}</Tooltip.Header>
 								<Tooltip.List>

@@ -21,7 +21,7 @@
 	import { Settings } from '$lib/custom/shardedlayouts';
 	import type { LayoutData } from './$types';
 	import type { Snippet } from 'svelte';
-	import { page } from '$app/state';
+	import Meta from '$lib/custom/seo/meta.svelte';
 
 	let { children, data }: { data: LayoutData; children: Snippet } = $props();
 
@@ -90,8 +90,14 @@
 	};
 	const profile = data.user.pfp ?? '';
 	// $inspect(profile)
+	const pageprops = {
+		title: 'Intuitive Insights Console',
+		description: 'Your all in one analysis tool',
+		type: 'Website'
+	};
 </script>
 
+<Meta {...pageprops} />
 <Sidebar.Provider>
 	<AppSidebar {...ClientlayoutItems} />
 	<Sidebar.Inset>

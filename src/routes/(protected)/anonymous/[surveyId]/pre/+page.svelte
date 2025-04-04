@@ -8,12 +8,15 @@
 	import * as Select from '$lib/components/ui/select';
 	import { Button } from '$lib/components/ui/button';
 
+	import { sectors } from '$lib/json/index';
 	import SuperDebug, { superForm } from 'sveltekit-superforms';
 	import { zod, zodClient } from 'sveltekit-superforms/adapters';
 	import { schema } from './schema';
 	import { toast } from 'svelte-sonner';
 	import { educations } from '$lib/json';
 	import { LocationSelector } from '$lib/components/ui/location-input';
+	import { ScrollArea } from '$lib/components/ui/scroll-area';
+	import { countyMap } from '$lib/json/subcountis';
 
 	let { data }: { data: PageData } = $props();
 	const { uri } = data;
@@ -90,22 +93,46 @@
 						<Form.FieldErrors class="text-sm text-destructive" />
 					</Form.Field>
 				</div>
-				<div>
+				<div class="grid gap-2">
 					<Form.Field {form} name="sector">
 						<Form.Control>
 							{#snippet children({ props })}
-								<Label class="font-medium">Sector</Label>
-								<Input
-									{...props}
-									type="text"
-									placeholder="Please tell us more about your sector of expertise"
-									bind:value={$formData.sector}
-								/>
+								<Form.Label>Sectors</Form.Label>
+								<Select.Root type="single" bind:value={$formData.sector} name={props.name}>
+									<Select.Trigger {...props}>
+										{$formData.sector ? $formData.sector : 'Select your a sector'}
+									</Select.Trigger>
+									<Select.Content side="bottom">
+										<ScrollArea class="h-[200px] lg:h-96">
+											{#each sectors as sector}
+												<Select.Item value={sector.value} label={sector.label}></Select.Item>
+											{/each}
+										</ScrollArea>
+									</Select.Content>
+								</Select.Root>
 							{/snippet}
 						</Form.Control>
-						<Form.FieldErrors class="text-sm text-destructive" />
+						<Form.FieldErrors />
 					</Form.Field>
 				</div>
+				{#if $formData.sector === 'Others'}
+					<div>
+						<Form.Field {form} name="others">
+							<Form.Control>
+								{#snippet children({ props })}
+									<Form.Label></Form.Label>
+									<Input
+										{...props}
+										type="text"
+										bind:value={$formData.others}
+										placeholder="Specify which sector"
+									/>
+								{/snippet}
+							</Form.Control>
+							<Form.FieldErrors />
+						</Form.Field>
+					</div>
+				{/if}
 				<div>
 					<Form.Field {form} name="loc">
 						<Form.Control>
@@ -130,6 +157,32 @@
 						<Form.FieldErrors />
 					</Form.Field>
 				</div>
+				{#if $formData.loc.country === 'Kenya'}
+					<div class="grid gap-2">
+						<Form.Field {form} name="sub">
+							<Form.Control>
+								{#snippet children({ props })}
+									<Form.Label>Sub-County</Form.Label>
+									<Select.Root type="single" bind:value={$formData.sub} name={props.name}>
+										<Select.Trigger {...props}>
+											{$formData.sub ? $formData.sub : 'Select a sub-county'}
+										</Select.Trigger>
+										<Select.Content>
+											{#if countyMap.has($formData.loc.state)}
+												{@const ctys = countyMap.get($formData.loc.state)}
+												{#each ctys as ct}
+													<Select.Item value={ct} label={ct}></Select.Item>
+												{/each}
+											{/if}
+										</Select.Content>
+									</Select.Root>
+								{/snippet}
+							</Form.Control>
+							<Form.FieldErrors />
+						</Form.Field>
+					</div>
+				{/if}
+
 				<!-- <div>
 					<Form.Field {form} name="location">
 						<Form.Control>

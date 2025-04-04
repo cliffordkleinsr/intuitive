@@ -15280,7 +15280,7 @@
 	},
 	{
 		"id": 3018,
-		"name": "Hesse",
+		"name": "Hessen",
 		"country_id": 82,
 		"country_code": "DE",
 		"country_name": "Germany",
@@ -15313,7 +15313,7 @@
 	},
 	{
 		"id": 3017,
-		"name": "North Rhine-Westphalia",
+		"name": "Nordrhein-Westfalen",
 		"country_id": 82,
 		"country_code": "DE",
 		"country_name": "Germany",
@@ -15324,7 +15324,7 @@
 	},
 	{
 		"id": 3019,
-		"name": "Rhineland-Palatinate",
+		"name": "Rheinland-Pfalz",
 		"country_id": 82,
 		"country_code": "DE",
 		"country_name": "Germany",
@@ -15379,7 +15379,7 @@
 	},
 	{
 		"id": 3015,
-		"name": "Thuringia",
+		"name": "Thüringen",
 		"country_id": 82,
 		"country_code": "DE",
 		"country_name": "Germany",
@@ -22254,7 +22254,7 @@
 	},
 	{
 		"id": 191,
-		"name": "Nairobi City",
+		"name": "Nairobi",
 		"country_id": 113,
 		"country_code": "KE",
 		"country_name": "Kenya",

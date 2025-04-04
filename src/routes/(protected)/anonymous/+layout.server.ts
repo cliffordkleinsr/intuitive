@@ -1,13 +1,13 @@
 import type { LayoutServerLoad } from './$types';
 import { db } from '$lib/server/db';
-import { surveyqnsTableV2, user_analytics } from '$lib/server/db/schema';
+import { surveyqnsTableV2, SurveyTable, user_analytics } from '$lib/server/db/schema';
 import { asc, eq, and } from 'drizzle-orm';
 import { redirect } from 'sveltekit-flash-message/server';
 import { setIpCookie } from '$lib/server/db/db_utils';
 
-export const load = (async ({ params: { surveyId }, cookies, url, fetch }) => {
+export const load = (async ({ params: { surveyId }, cookies, url, fetch, getClientAddress }) => {
 	const surveid = surveyId as string;
-	const ip = await setIpCookie(cookies);
+	const ip = getClientAddress(); //await setIpCookie(cookies);
 
 	const [ids, surveyqns, [user_data]] = await Promise.all([
 		db
@@ -27,8 +27,8 @@ export const load = (async ({ params: { surveyId }, cookies, url, fetch }) => {
 	let current_ix = parseInt(cookies.get('current_ix') ?? '0');
 	let uri = `/anonymous/${surveid}/${ids[current_ix].id}`;
 	// console.log(getClientAddress())
-
-	if (user_data && !url.pathname.includes('complete')) {
+	let has_completed = Boolean(cookies.get('has_completed') ?? false);
+	if (user_data && has_completed && !url.pathname.includes('complete')) {
 		const has_completed = user_data.has_completed;
 		if (has_completed) {
 			redirect(
@@ -39,10 +39,17 @@ export const load = (async ({ params: { surveyId }, cookies, url, fetch }) => {
 			);
 		}
 	}
+	const [details] = await db
+		.select({
+			title: SurveyTable.title
+		})
+		.from(SurveyTable)
+		.where(eq(SurveyTable.surveyid, surveid));
 	return {
 		uri,
 		current_ix,
 		question_cnt: surveyqns.length,
-		survId: surveid
+		survId: surveid,
+		title: details.title
 	};
 }) satisfies LayoutServerLoad;

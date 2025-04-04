@@ -337,6 +337,7 @@ export const user_analytics = pgTable('user_analytics', {
 	sector: text().notNull(),
 	country: text().notNull(),
 	state: text(),
+	sub: text(),
 	client_address: text().notNull(),
 	has_completed: boolean().default(false).notNull()
 });

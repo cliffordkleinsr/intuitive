@@ -15,6 +15,7 @@
 	import { cubicInOut } from 'svelte/easing';
 	import { fade } from 'svelte/transition';
 	import { Label } from '$lib/components/ui/label';
+	import { page } from '$app/state';
 
 	let { data }: { data: PageData } = $props();
 	const {
@@ -68,21 +69,23 @@
 	{/if}
 
 	{#if branch_for}
-		<div class="w-full max-w-md py-3">
-			<Button
-				class="flex justify-center self-center"
-				variant="secondary"
-				onclick={() => (tooltip = !tooltip)}>?</Button
-			>
-			{#if tooltip}
-				<div class="py-1" transition:fade={{ delay: 300, duration: 600, easing: cubicInOut }}>
-					<Label for="email">This Question Maps to:</Label>
-
-					<Textarea value={branch_for.question} disabled />
-				</div>
-			{/if}
+		<div class="py-1">
+			<Button variant="secondary" onclick={() => (tooltip = !tooltip)}>?</Button>
 		</div>
+		{#if tooltip}
+			<div
+				class="w-full max-w-md"
+				transition:fade={{ delay: 100, duration: 400, easing: cubicInOut }}
+			>
+				<Label for="email">This Question Maps to:</Label>
+
+				<Textarea value={branch_for.question} disabled />
+			</div>
+		{/if}
 	{/if}
+</div>
+<div class="grid place-items-center py-1">
+	<Button variant="outline" href="/anonymous/{page.params.surveyId}">Go back</Button>
 </div>
 
 <div class="absolute inset-x-2 top-6">

@@ -13,7 +13,7 @@
 	}
 	let { text = '' }: { text: string } = $props();
 
-	const tokens = nlp(text.toLowerCase()).nouns().trim().text();
+	const tokens = nlp(text.toLowerCase()).match('#Noun').trim().text();
 	const grams = nlp<StatsMethods>(tokens).unigrams();
 	// Convert to a frequency map
 	const wordCounts: Record<string, number> = grams.reduce(

@@ -10,12 +10,12 @@
 	let { data }: { data: PageData } = $props();
 
 	let checked = $state(false);
-	let { current_ix, question_cnt, uri } = $derived(data);
+	let { current_ix, question_cnt, uri, title } = $derived(data);
 	// let v = () => current_ix
 </script>
 
 <div class="mx-auto flex h-fit max-w-sm flex-col py-20">
-	<h1 class="text-center text-sm antialiased">Share your opinions on things that matter</h1>
+	<h1 class="text-center font-semibold antialiased">{title}</h1>
 	<Card.Root class="mt-5">
 		<Card.Header class="rounded-t-lg bg-yellow-300 text-center">
 			<Card.Title class="text-xl text-neutral-500">Total Survey Questions</Card.Title>

@@ -12,7 +12,8 @@ import {
 	getOldPaymentStatus,
 	doPriceLookup,
 	getNewPaymentStatus,
-	getRegistryState
+	getRegistryState,
+	disableSurvey
 } from '$lib/server/db/db_utils';
 import { redirect } from 'sveltekit-flash-message/server';
 
@@ -42,9 +43,9 @@ export const load: LayoutServerLoad = async ({ locals: { user }, url, cookies })
 	const [features, payment] = await Promise.all([
 		doPriceLookup(user.id),
 		// payment status
-		getNewPaymentStatus(user.id)
+		getNewPaymentStatus(user.id),
 		// expire survey
-		// disableSurvey(user.id),
+		disableSurvey(user.id)
 	]);
 
 	// console.log(features)

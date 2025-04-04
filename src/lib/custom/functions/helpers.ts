@@ -71,7 +71,7 @@ function handleLoginRedirect(
 
 // calpitalizes first leter of a word
 function capitalizeFirstLetter(str: string) {
-	return str.charAt(0).toUpperCase() + str.slice(1);
+	return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
 }
 
 // Calculates your age
@@ -317,12 +317,16 @@ function addMonths(date: Date, months: number) {
 
 async function fetchGeoJsons() {
 	const ken_response = await fetch(
-		'https://cdn.jsdelivr.net/gh/cliffordkleinsr/asstes@latest/kenya.geojson'
+		'https://cdn.jsdelivr.net/gh/cliffordkleinsr/asstes@latest/kenya_compact.geojson'
+	);
+	const de_response = await fetch(
+		'https://cdn.jsdelivr.net/gh/cliffordkleinsr/asstes@latest/de.json'
 	);
 	const kenya = (await ken_response.json()) as FeatureCollection;
-
+	const deutscheland = (await de_response.json()) as FeatureCollection;
 	return {
-		kenya
+		kenya,
+		deutscheland
 	};
 }
 

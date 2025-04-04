@@ -71,7 +71,7 @@ export const load = (async ({ params: { surveyId, questionId }, cookies }) => {
 }) satisfies PageServerLoad;
 
 export const actions: Actions = {
-	singleform: async ({ request, params: { surveyId, questionId }, cookies }) => {
+	singleform: async ({ request, params: { surveyId, questionId }, cookies, getClientAddress }) => {
 		const openEndedForm = await superValidate(request, zod(openEndedSchema));
 		// validate
 		if (!openEndedForm.valid) {
@@ -97,11 +97,11 @@ export const actions: Actions = {
 				alertText: 'An Unexpected error occured'
 			});
 		}
-		const ip = getIpCookie(cookies);
+		const ip = getClientAddress(); //getIpCookie(cookies);
 		// Dynamic routing with incremental counter
 		return await handleSurveyProgressExt({ surveyId, cookies, address: ip });
 	},
-	radioGroup: async ({ request, params: { surveyId, questionId }, cookies }) => {
+	radioGroup: async ({ request, params: { surveyId, questionId }, cookies, getClientAddress }) => {
 		// build the schema
 		const surveyqns = await getsurveyQuestionByID(questionId);
 		const optionalSchema = enumBuilder(surveyqns[0]?.options);
@@ -135,7 +135,7 @@ export const actions: Actions = {
 
 		// Dynamic routing with incremental counter
 		const opts = await fetchOptionIdfromOption(questionId, type);
-		const ip = getIpCookie(cookies);
+		const ip = getClientAddress(); //getIpCookie(cookies);
 		if (opts)
 			return await handleSurveyProgressExt({
 				surveyId,
@@ -151,7 +151,7 @@ export const actions: Actions = {
 			address: ip
 		});
 	},
-	rankform: async ({ request, params: { surveyId, questionId }, cookies }) => {
+	rankform: async ({ request, params: { surveyId, questionId }, cookies, getClientAddress }) => {
 		// build the schema
 		const surveyqns = await getsurveyQuestionByID(questionId);
 		const rankSchema = rankBuilder(surveyqns[0]?.options);
@@ -190,11 +190,16 @@ export const actions: Actions = {
 				alertText: 'An Unexpected error occured'
 			});
 		}
-		const ip = getIpCookie(cookies);
+		const ip = getClientAddress();
 		// Dynamic routing with incremental counter
 		return await handleSurveyProgressExt({ surveyId, cookies, address: ip });
 	},
-	checkboxMultiple: async ({ request, params: { surveyId, questionId }, cookies }) => {
+	checkboxMultiple: async ({
+		request,
+		params: { surveyId, questionId },
+		cookies,
+		getClientAddress
+	}) => {
 		const multiForm = await superValidate(request, zod(multipleSchema));
 		// validate
 		if (!multiForm.valid) {
@@ -222,11 +227,11 @@ export const actions: Actions = {
 				alertText: 'An Unexpected error occured'
 			});
 		}
-		const ip = getIpCookie(cookies);
+		const ip = getClientAddress(); //getIpCookie(cookies);
 		// Dynamic routing with incremental counter
 		return await handleSurveyProgressExt({ surveyId, cookies, address: ip });
 	},
-	rateform: async ({ request, params: { surveyId, questionId }, cookies }) => {
+	rateform: async ({ request, params: { surveyId, questionId }, cookies, getClientAddress }) => {
 		const rateForm = await superValidate(request, zod(ratingSchema));
 		// validate
 		if (!rateForm.valid) {
@@ -252,7 +257,7 @@ export const actions: Actions = {
 				alertText: 'An Unexpected error occured'
 			});
 		}
-		const ip = getIpCookie(cookies);
+		const ip = getClientAddress(); //getIpCookie(cookies);
 		// Dynamic routing with incremental counter
 		return await handleSurveyProgressExt({ surveyId, cookies, address: ip });
 	}

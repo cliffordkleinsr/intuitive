@@ -20,7 +20,7 @@ export const load = (async ({ cookies, parent }) => {
 }) satisfies PageServerLoad;
 
 export const actions: Actions = {
-	default: async ({ request, fetch, params: { surveyId }, cookies }) => {
+	default: async ({ request, fetch, params: { surveyId }, cookies, getClientAddress }) => {
 		const form = await superValidate(request, zod(schema));
 		// validate
 		if (!form.valid) {
@@ -30,29 +30,31 @@ export const actions: Actions = {
 			});
 		}
 
-		const { loc, education, sector, uri } = form.data;
+		const { loc, education, sector, others, uri, sub } = form.data;
+		let sec = typeof others !== 'undefined' ? others : sector;
 		// const res = await fetch('/api/nomatim', {
 		// 	method: 'POST',
 		// 	body: JSON.stringify(location)
 		// });
 
-		const response = await fetch('http://ip-api.com/json');
-		console.log(await response.json());
+		// const response = await fetch('http://ip-api.com/json');
+		// console.log(await response.json());
 		// const reverse_coords = (await res.json()) as NominatimResponse;
 		// const analyzed_country = reverse_coords?.address?.country;
 		let country = loc.country;
 		let state = loc.state;
-		const ip = getIpCookie(cookies) as string;
+		// const ip = getIpCookie(cookies) as string;
 
 		try {
-			if (loc && education && sector) {
+			if (loc && education && sec) {
 				await db.insert(user_analytics).values({
 					surveyid: surveyId as string,
 					level_of_education: education,
-					sector: sector,
+					sector: sec,
 					country: country,
 					state: state,
-					client_address: ip
+					sub: sub,
+					client_address: getClientAddress()
 				});
 			}
 			cookies.set('has_started', String(true), {

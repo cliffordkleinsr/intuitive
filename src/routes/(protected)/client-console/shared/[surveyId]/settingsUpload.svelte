@@ -13,7 +13,7 @@
 
 	import { Button } from '$lib/components/ui/button';
 
-	let { data }: { data: SuperValidated<Infer<Fileschema>> } = $props();
+	let { data, plan }: { data: SuperValidated<Infer<Fileschema>>; plan?: string } = $props();
 	const form = superForm(data, {
 		validators: zodClient(fileSchema),
 		onUpdated: () => {
@@ -51,6 +51,7 @@
 					accept=".csv, text/csv"
 					bind:files={$file}
 					hidden
+					disabled={plan === 'Basic'}
 				/>
 			{/snippet}
 		</Form.Control>
@@ -67,7 +68,7 @@
 			Loading...
 		</Button>
 	{:else}
-		<Form.Button class="w-full" variant="black">Submit</Form.Button>
+		<Form.Button class="w-full" variant="black" disabled={plan === 'Basic'}>Submit</Form.Button>
 	{/if}
 </form>
 <!-- <div class="text-start">

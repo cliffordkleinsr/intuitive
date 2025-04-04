@@ -12,6 +12,7 @@
 	let { data }: { data: PageData } = $props();
 	const {
 		shared_surv: { title, description },
+		features: { plan },
 		form
 	} = data;
 
@@ -60,11 +61,13 @@
 			</div>
 		</Card.Content>
 		<Card.Footer class="grid w-full gap-2">
-			<SettingsUpload data={form} />
+			<SettingsUpload data={form} {plan} />
 		</Card.Footer>
 	</Card.Root>
-	<p class="text-start text-sm italic text-muted-foreground">Example Data format:</p>
-	<Card.Root>
+	{#if plan !== 'Basic'}
+		<p class="text-start text-sm italic text-muted-foreground">Example Data format:</p>
+	{/if}
+	<Card.Root class={[plan !== 'Basic' ? '' : ' pointer-events-none blur-sm']}>
 		<Card.Content>
 			<Table.Root>
 				<Table.Caption>list of names & emails</Table.Caption>

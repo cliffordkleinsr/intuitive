@@ -134,7 +134,7 @@
 						{#if selectedState}
 							<span>{selectedState.name}</span>
 						{:else}
-							<span>Select State...</span>
+							<span>{selectedCountry?.name === 'Kenya' ? 'Select County' : 'Select State...'}</span>
 						{/if}
 						<ChevronsUpDown class="h-4 w-4 shrink-0 opacity-50" />
 					</Button>

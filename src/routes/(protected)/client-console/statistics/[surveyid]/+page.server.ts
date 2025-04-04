@@ -56,7 +56,6 @@ export const load = (async ({ fetch, params: { surveyid } }) => {
 	).length;
 
 	const countries = await fetchGeoJsons();
-	// console.log(kenya)
 	return {
 		geojson,
 		countries,

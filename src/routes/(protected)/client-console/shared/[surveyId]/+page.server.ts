@@ -9,8 +9,13 @@ import { csvParse, autoType } from 'd3-dsv';
 import { sendBulkEmailCSV } from '$lib/server/emailconfigs/bulk';
 import { ratelimit } from '$lib/server/redis';
 import { doPriceLookup, getNewPaymentStatus } from '$lib/server/db/db_utils';
+import { redirect } from 'sveltekit-flash-message/server';
 
-export const load = (async ({ params }) => {
+export const load = (async ({ params, parent, cookies }) => {
+	const { payment } = await parent();
+	if (!payment) {
+		redirect(303, '/client-console', { message: 'Not Authorized', type: 'warning' }, cookies);
+	}
 	const [shared_surv] = await db
 		.select({
 			id: SurveyTable.surveyid,
@@ -19,6 +24,7 @@ export const load = (async ({ params }) => {
 		})
 		.from(SurveyTable)
 		.where(eq(SurveyTable.surveyid, params.surveyId));
+
 	return {
 		shared_surv,
 		form: await superValidate(zod(fileSchema))
