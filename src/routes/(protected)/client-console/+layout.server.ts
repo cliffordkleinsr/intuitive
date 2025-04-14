@@ -1,6 +1,6 @@
 // import type { Actions } from '@sveltejs/kit';
 import type { LayoutServerLoad } from './$types';
-import { handleLoginRedirect } from '$lib/custom/functions/helpers';
+import { fetchGeoJsons, handleLoginRedirect } from '$lib/custom/functions/helpers';
 import { db } from '$lib/server/db';
 import { UsersTable } from '$lib/server/db/schema';
 import { eq, sql } from 'drizzle-orm';

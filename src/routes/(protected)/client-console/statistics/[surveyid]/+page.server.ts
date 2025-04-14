@@ -22,7 +22,7 @@ export const load = (async ({ fetch, params: { surveyid } }) => {
 		.from(user_analytics)
 		.where(and(eq(user_analytics.surveyid, surveyid)))
 		.groupBy(user_analytics.country);
-	const popn_cnty = await db
+	let popn_cnty = await db
 		.select({
 			id: user_analytics.state,
 			count: count()
@@ -30,7 +30,7 @@ export const load = (async ({ fetch, params: { surveyid } }) => {
 		.from(user_analytics)
 		.where(and(eq(user_analytics.surveyid, surveyid)))
 		.groupBy(user_analytics.state);
-	const sec = await db
+	let sec = await db
 		.select({
 			id: user_analytics.sector,
 			count: count()
@@ -39,7 +39,7 @@ export const load = (async ({ fetch, params: { surveyid } }) => {
 		.where(and(eq(user_analytics.surveyid, surveyid)))
 		.groupBy(user_analytics.sector);
 
-	const edu = await db
+	let edu = await db
 		.select({
 			id: user_analytics.level_of_education,
 			count: count()
@@ -55,10 +55,34 @@ export const load = (async ({ fetch, params: { surveyid } }) => {
 		await db.select().from(user_analytics).where(eq(user_analytics.surveyid, surveyid))
 	).length;
 
-	const countries = await fetchGeoJsons();
+	// const countries = ;
+	// console.log(popn_cnty)
+	// dummy
+	// popn_cnty = [...popn_cnty, {id: 'Kiambu', count: 54}, {id: 'Nakuru', count:13}, {id: 'Machakos', count: 5}, {id: "Murang'a", count: 1}, { id: 'Homa bay', count: 17}, {id: 'Kilifi', count: 13},  {id: 'Uasin gishu', count: 23}, {id: 'Taita taveta', count: 23}, {id: "Makueni", count: 7}, {id: "Kajiado", count: 11}, {id: "Narok", count: 4}, {id: "Kericho", count: 2}], {id: "Kisii", count: 2}
+	// sec = [
+	// 	...sec,
+	// 	{ id: 'Agriculture', count: 20 },
+	// 	{ id: 'Technology', count: 45 },
+	// 	{ id: 'Healthcare', count: 32 },
+	// 	{ id: 'Education', count: 27 },
+	// 	{ id: 'Finance', count: 38 },
+	// 	{ id: 'Construction', count: 22 },
+	// 	{ id: 'Retail', count: 30 },
+	// 	{ id: 'Energy', count: 18 },
+	// 	{ id: 'Transportation', count: 25 },
+	// 	{ id: 'Entertainment', count: 15 }
+	//   ];
+	//   edu = [
+	// 	{ id: 'Primary', count: 12 },
+	// 	{ id: 'Secondary', count: 18 },
+	// 	{ id: 'Post-Graduate', count: 25 },
+	// 	{ id: 'Vocational', count: 30 },
+
+	//   ];
+
 	return {
 		geojson,
-		countries,
+		countries: await fetchGeoJsons(),
 		popn,
 		popn_cnty,
 		sec,

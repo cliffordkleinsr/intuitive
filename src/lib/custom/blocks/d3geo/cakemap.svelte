@@ -18,7 +18,7 @@
 
 	const population = locale_analytics.map((d) => {
 		return {
-			id: d.county.toUpperCase(),
+			id: d.county,
 			respondents: +d.value
 		};
 	});

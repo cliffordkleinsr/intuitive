@@ -51,5 +51,5 @@
 	{@render children()}
 {/if}
 {#if dev}
-	<RenderScan />
+	<!-- <RenderScan /> -->
 {/if}

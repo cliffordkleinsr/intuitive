@@ -61,7 +61,9 @@
 			</div>
 		</Card.Content>
 		<Card.Footer class="grid w-full gap-2">
-			<SettingsUpload data={form} {plan} />
+			{#if plan !== 'Basic'}
+				<SettingsUpload data={form} />
+			{/if}
 		</Card.Footer>
 	</Card.Root>
 	{#if plan !== 'Basic'}

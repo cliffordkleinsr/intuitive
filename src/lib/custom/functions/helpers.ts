@@ -1,6 +1,7 @@
 import { DateFormatter } from '@internationalized/date';
 import type { FeatureCollection } from 'geojson';
 import { tick } from 'svelte';
+import { toast } from 'svelte-sonner';
 // import { PENDING_VERIFICATION_COOKIE, type pendingVerificationType } from "$lib/server/email"
 
 // ALL TYPES FOR THIS FILE
@@ -315,18 +316,32 @@ function addMonths(date: Date, months: number) {
 	return date;
 }
 
+function exportRaw(text: string) {
+	if (text.length === 0) {
+		toast.info('There is no data to export');
+	} else {
+		let fname = 'report.csv';
+		const File = new Blob([text], { type: 'text/csv' });
+		window.URL = window.URL || window.webkitURL;
+		const dlBtn = document.createElement('a');
+		dlBtn.setAttribute('href', window.URL.createObjectURL(File));
+		dlBtn.setAttribute('download', fname);
+		dlBtn.click();
+
+		// Clean up and remove the link
+		document.body.removeChild(dlBtn);
+	}
+}
+
 async function fetchGeoJsons() {
-	const ken_response = await fetch(
-		'https://cdn.jsdelivr.net/gh/cliffordkleinsr/asstes@latest/kenya_compact.geojson'
-	);
-	const de_response = await fetch(
-		'https://cdn.jsdelivr.net/gh/cliffordkleinsr/asstes@latest/de.json'
-	);
-	const kenya = (await ken_response.json()) as FeatureCollection;
-	const deutscheland = (await de_response.json()) as FeatureCollection;
+	const [ken_response, de_response] = await Promise.all([
+		fetch('https://cdn.jsdelivr.net/gh/cliffordkleinsr/asstes@latest/kenya_compact.geojson'),
+		fetch('https://cdn.jsdelivr.net/gh/cliffordkleinsr/asstes@latest/de.json')
+	]);
+	const [kenya, deutscheland] = await Promise.all([ken_response.json(), de_response.json()]);
 	return {
-		kenya,
-		deutscheland
+		kenya: kenya as FeatureCollection,
+		deutscheland: deutscheland as FeatureCollection
 	};
 }
 
@@ -347,5 +362,6 @@ export {
 	deductAmount,
 	addDays,
 	addMonths,
-	fetchGeoJsons
+	fetchGeoJsons,
+	exportRaw
 };

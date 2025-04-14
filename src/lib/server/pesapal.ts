@@ -2,19 +2,20 @@ import { dev } from '$app/environment';
 import { PESAPAL_CONSUMER_KEY, PESAPAL_CONSUMER_SECRET } from '$env/static/private';
 import type { PesaPalOReq } from '$lib/types';
 
-const authToken = async () => {
+export const authToken = async () => {
 	const url = dev
 		? 'https://cybqa.pesapal.com/pesapalv3/api/Auth/RequestToken'
 		: 'https://pay.pesapal.com/v3/api/Auth/RequestToken';
 	const payload = {
-		consumer_key: PESAPAL_CONSUMER_KEY,
-		consumer_secret: PESAPAL_CONSUMER_SECRET
+		'consumer_key': PESAPAL_CONSUMER_KEY,
+		'consumer_secret': PESAPAL_CONSUMER_SECRET
 	};
+	// console.log(payload)
 	const res = await fetch(url, {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json',
-			accept: 'application/json'
+			'Accept': 'application/json'
 		},
 		body: JSON.stringify(payload)
 	});
@@ -23,6 +24,7 @@ const authToken = async () => {
 		return;
 	}
 	const data = await res.json();
+	// console.log(data)
 	return data.token;
 };
 
@@ -36,7 +38,6 @@ export const regeisteripnURL = async () => {
 		ipn_notification_type: 'POST'
 	};
 	const token = await authToken();
-	// console.log(token)
 	const response = await fetch(url, {
 		method: 'POST',
 		headers: {
@@ -70,6 +71,7 @@ export const getRegisteredIPNS = async () => {
 		return;
 	}
 	const data = await response.json();
+	console.log(data)
 	return data;
 };
 
@@ -100,7 +102,8 @@ export const submitOrderRequest = async (
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json',
-			accept: 'application/json'
+			accept: 'application/json',
+			Authorization: `Bearer ${token}`
 		},
 		body: JSON.stringify(payload)
 	});

@@ -22,12 +22,18 @@
 	import { interpolateOranges, schemeOranges } from 'd3-scale-chromatic';
 	import { format } from '@layerstack/utils';
 	import { quantize } from 'd3-interpolate';
-
+	import FileText from 'lucide-svelte/icons/file-text';
 	import UnfoldVertical from 'lucide-svelte/icons/unfold-vertical';
 	import { Button } from '$lib/components/ui/button';
 	import { Progress } from '$lib/components/ui/progress';
 	import { cn } from '$lib/utils';
 	import type { Feature, FeatureCollection } from 'geojson';
+	import { exportRaw } from '$lib/custom/functions/helpers';
+	import { toast } from 'svelte-sonner';
+	import { innerWidth } from 'svelte/reactivity/window';
+	import { IsMobile } from '$lib/hooks/is-mobile.svelte';
+	import { MediaQuery } from 'svelte/reactivity';
+	import WordCloud from '$lib/custom/blocks/wordcloud/WordCloud.svelte';
 	let { data }: { data: PageData } = $props();
 
 	let variable = $state() as boolean[];
@@ -183,6 +189,21 @@
 </script>
 
 <div class="px-3 py-5">
+	<div id="kutton" class="flex gap-2 py-1">
+		<Button
+			variant="secondary"
+			onclick={() => {
+				variable = variable.map((x) => (x = !x));
+				printstate = !printstate;
+				setTimeout(() => {
+					data.analytics.length > 0 ? window.print() : toast.info('There is no data to print');
+				}, 50);
+			}}
+			size="sm"
+		>
+			Export PDF <FileText />
+		</Button>
+	</div>
 	<div class="grid grid-cols-[repeat(2,1fr)] gap-x-[10px] gap-y-[10px]">
 		<div class="col-span-2">
 			<Card.Root>
@@ -191,7 +212,13 @@
 					<Card.Description>Responses Globally</Card.Description>
 				</Card.Header>
 				<Card.Content>
-					<div class="relative h-[550px] overflow-hidden">
+					<div
+						class={[
+							printstate ? 'ml-auto' : 'overflow-hidden ',
+							printstate && selectedState ? ' overflow-clip' : '',
+							`relative mx-auto h-[550px] w-[1200px]`
+						]}
+					>
 						<Chart
 							geo={{
 								projection: geoNaturalEarth1,
@@ -370,6 +397,14 @@
 								/>
 							</div>
 						{/if}
+						{#if statistic.question_type === 'Single' && statistic.answer_statistics.length > 15}
+							{@const textContent = statistic.answer_statistics
+								.map((stat) => stat.answer)
+								.join('.\n')}
+							<div class="place-items-center">
+								<WordCloud text={textContent} />
+							</div>
+						{/if}
 						<!-- Add horizontal scroll only if needed -->
 						{#if statistic.question_type === 'Single' || statistic.question_type === 'Ranking'}
 							<Collapsible.Root class="space-y-2" bind:open={variable[ix]}>
@@ -505,3 +540,16 @@
 		</div>
 	</div>
 </div>
+
+<style>
+	@media print {
+		@page {
+			size: auto; /* auto is the initial value */
+			margin: 0; /* this affects the margin in the printer settings */
+		}
+
+		#kutton {
+			visibility: hidden;
+		}
+	}
+</style>

@@ -29,10 +29,10 @@
 					<div class="mt-5 flex max-w-2xl gap-2">
 						<p class="text-6xl font-extralight text-white">|</p>
 						<p class="text-md text-neutral-50 drop-shadow-md dark:text-neutral-400">
-							We provide strategies and insights to enhance corporate reputation and brand image in
-							Kenya, elevate brand visibility, and deliver the best customer experience. Our
-							data-driven solutions help businesses across various industries, including retail,
-							NGOs, hospitality, healthcare, and financial services in Kenya.
+							At Intuitive Insights, we are a professional research and analytics firm dedicated to
+							helping organizations enhance their corporate reputation, customer experience, and
+							brand visibility globally. Our suite of advanced features empowers businesses to gather,
+							analyze, and act on feedback, ensuring strategic decision-making that drives growth.
 						</p>
 					</div>
 				</div>

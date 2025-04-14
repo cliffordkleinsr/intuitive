@@ -15,16 +15,16 @@
 	} = data;
 	let subtype = 'Premium Business';
 
-	$effect(() => {
-		const words: Map<number, string> = new Map();
-		for (const element of analytics) {
-			if (element.question_type === 'Single') {
-				element.answer_statistics.forEach((e, i) => {
-					words.set(i, e.answer);
-				});
-			}
-		}
-	});
+	// $effect(() => {
+	// 	const words: Map<number, string> = new Map();
+	// 	for (const element of analytics) {
+	// 		if (element.question_type === 'Single') {
+	// 			element.answer_statistics.forEach((e, i) => {
+	// 				words.set(i, e.answer);
+	// 			});
+	// 		}
+	// 	}
+	// });
 </script>
 
 <Analytics
