@@ -81,7 +81,17 @@
 						<Form.FieldErrors class="text-sm text-destructive" />
 					</Form.Field>
 				</div>
-				{#if consumer_details.surveys > 0}
+				{#if !consumer_details}
+					<div
+						class="mt-2 rounded-lg bg-red-500 p-4 text-sm text-white"
+						role="alert"
+						tabindex="-1"
+						aria-labelledby="hs-solid-color-danger-label"
+					>
+						<span id="hs-solid-color-danger-label" class="font-bold">Error!</span>
+						You have exceeded your survey limit for your current subscription!
+					</div>
+				{:else if consumer_details.surveys > 0}
 					<div
 						class="mt-2 rounded-lg bg-red-500 p-4 text-sm text-white"
 						role="alert"

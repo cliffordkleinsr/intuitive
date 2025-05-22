@@ -143,7 +143,7 @@
 						>Or register with an Email</a
 					>
 				</div>
-				<!-- <div class="mt-4 text-center text-sm">
+				<!-- <div class="py-1 text-center text-xs">
 					<a href="/client/password/reset" class="underline hover:text-primary">Forgot Password?</a>
 				</div> -->
 			</Card.Content>

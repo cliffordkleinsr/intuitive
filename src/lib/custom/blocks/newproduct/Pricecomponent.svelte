@@ -24,14 +24,26 @@
 			</Tabs.Trigger>
 			<Tabs.Trigger value="advantage" class="h-8">
 				{#snippet child({ props })}
-					<Button variant="secondary" size="sm" {...props} onclick={() => (pkg_pack = 'advantage')} disabled>
+					<Button
+						variant="secondary"
+						size="sm"
+						{...props}
+						onclick={() => (pkg_pack = 'advantage')}
+						disabled
+					>
 						Advantage
 					</Button>
 				{/snippet}
 			</Tabs.Trigger>
 			<Tabs.Trigger value="advanced" class="h-8">
 				{#snippet child({ props })}
-					<Button variant="secondary" size="sm" {...props} onclick={() => (pkg_pack = 'advanced')} disabled>
+					<Button
+						variant="secondary"
+						size="sm"
+						{...props}
+						onclick={() => (pkg_pack = 'advanced')}
+						disabled
+					>
 						Advanced
 					</Button>
 				{/snippet}

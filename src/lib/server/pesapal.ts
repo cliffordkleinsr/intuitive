@@ -7,15 +7,15 @@ export const authToken = async () => {
 		? 'https://cybqa.pesapal.com/pesapalv3/api/Auth/RequestToken'
 		: 'https://pay.pesapal.com/v3/api/Auth/RequestToken';
 	const payload = {
-		'consumer_key': PESAPAL_CONSUMER_KEY,
-		'consumer_secret': PESAPAL_CONSUMER_SECRET
+		consumer_key: PESAPAL_CONSUMER_KEY,
+		consumer_secret: PESAPAL_CONSUMER_SECRET
 	};
 	// console.log(payload)
 	const res = await fetch(url, {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json',
-			'Accept': 'application/json'
+			Accept: 'application/json'
 		},
 		body: JSON.stringify(payload)
 	});
@@ -71,7 +71,7 @@ export const getRegisteredIPNS = async () => {
 		return;
 	}
 	const data = await response.json();
-	console.log(data)
+	console.log(data);
 	return data;
 };
 

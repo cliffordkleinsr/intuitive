@@ -31,8 +31,9 @@
 						<p class="text-md text-neutral-50 drop-shadow-md dark:text-neutral-400">
 							At Intuitive Insights, we are a professional research and analytics firm dedicated to
 							helping organizations enhance their corporate reputation, customer experience, and
-							brand visibility globally. Our suite of advanced features empowers businesses to gather,
-							analyze, and act on feedback, ensuring strategic decision-making that drives growth.
+							brand visibility globally. Our suite of advanced features empowers businesses to
+							gather, analyze, and act on feedback, ensuring strategic decision-making that drives
+							growth.
 						</p>
 					</div>
 				</div>
