@@ -6,7 +6,7 @@
 	import CreditCard from 'lucide-svelte/icons/credit-card';
 	import EllipsisVertical from 'lucide-svelte/icons/ellipsis-vertical';
 	import Truck from 'lucide-svelte/icons/truck';
-	import { Button } from '$lib/components/ui/button/index.js';
+	import { Button, buttonVariants } from '$lib/components/ui/button/index.js';
 	import * as Card from '$lib/components/ui/card/index.js';
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu/index.js';
 	import { Separator } from '$lib/components/ui/separator/index.js';
@@ -130,5 +130,8 @@
 			src="https://i.postimg.cc/jjMJt36P/coming-soon.png"
 			alt="soon"
 		/>
+		<a href="/client-console/billing" class={[buttonVariants({ variant: 'outline' }), 'mt-10']}>
+			Subscribe
+		</a>
 	</div>
 {/if}

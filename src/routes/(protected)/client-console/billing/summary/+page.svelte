@@ -38,10 +38,14 @@
 	const { form: formData, enhance, message, delayed } = form;
 
 	const { phoneno } = data;
+
 	let ref_number = $state<string>();
 	if (phoneno.startsWith('+254')) {
 		ref_number = '0' + phoneno.split('+254')[1];
+	} else {
+		ref_number = phoneno;
 	}
+
 	let payment_plan: any | { plan: string; price: string; packagetype: string } = $state();
 	let value = $state('4826298');
 	$effect(() => {

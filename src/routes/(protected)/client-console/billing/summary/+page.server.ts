@@ -57,7 +57,7 @@ export const actions: Actions = {
 				and
 				${clientTransactions.TransAmount} = ${price}
 				and
-				(${clientTransactions.TransTime} - NOW()) < interval '1' day
+				${clientTransactions.TransTime} >= NOW() - interval '1 day'
 				`
 			);
 		try {

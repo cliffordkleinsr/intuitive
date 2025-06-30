@@ -17,6 +17,7 @@ import { addDays } from '$lib/custom/functions/helpers';
 
 export const load: PageServerLoad = async ({ locals: { user } }) => {
 	const consumer_details = await getSubscriptionStatus(user?.id as string);
+	// console.log(consumer_details)
 	return {
 		form: await superValidate(zod(schema)),
 		consumer_details

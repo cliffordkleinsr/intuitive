@@ -432,7 +432,15 @@ export const getSubscriptionStatus = async (id: string) => {
 			surveys: count(SurveyTable.surveyid)
 		})
 		.from(consumerPackage)
-		.leftJoin(SurveyTable, eq(SurveyTable.consumer_id, consumerPackage.consumerid))
+		.leftJoin(
+			SurveyTable,
+			// eq(SurveyTable.consumer_id, consumerPackage.consumerid)
+			sql`
+				${SurveyTable.consumer_id} = ${consumerPackage.consumerid}
+				and
+				date_trunc('month', ${SurveyTable.created_at}) = date_trunc('month', NOW())
+			`
+		)
 		.where(eq(consumerPackage.consumerid, id))
 		.groupBy(consumerPackage.package_type);
 
