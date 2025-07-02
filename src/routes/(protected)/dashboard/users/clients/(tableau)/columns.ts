@@ -5,7 +5,7 @@ import type { ColumnDef } from '@tanstack/table-core';
 export type Survey = {
 	id: string;
 	name: string;
-	email: string;
+	email: string | null;
 	createdat: Date;
 };
 

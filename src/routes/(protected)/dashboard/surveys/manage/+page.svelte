@@ -4,7 +4,7 @@
 	import { columns } from './(tableau)/columns';
 
 	let { data }: { data: PageData } = $props();
-	const { survey_list } = data;
+	const { surv } = data;
 </script>
 
-<DataTable data={survey_list} {columns} />
+<DataTable data={surv} {columns} />

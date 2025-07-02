@@ -1,12 +1,13 @@
-import DataTableActions from './data-table-actions.svelte';
 import { renderComponent } from '$lib/components/ui/data-table';
+import DataTableActions from './data-table-actions.svelte';
+import DataTableAdditional from './data-table-additional.svelte';
 import type { ColumnDef } from '@tanstack/table-core';
 
 export type Survey = {
 	id: string;
 	title: string;
+	expires: Date;
 	status: string;
-	created: Date;
 };
 
 export const columns: ColumnDef<Survey>[] = [
@@ -21,11 +22,16 @@ export const columns: ColumnDef<Survey>[] = [
 		header: 'Title'
 	},
 	{
-		accessorKey: 'status',
-		header: 'Status'
+		accessorKey: 'expires',
+		header: 'Expiry'
 	},
 	{
-		accessorKey: 'created',
-		header: 'Created'
+		accessorKey: 'actions',
+		cell: ({ row }) => {
+			return renderComponent(DataTableAdditional, {
+				id: row.original.id,
+				status: row.original.status
+			});
+		}
 	}
 ];

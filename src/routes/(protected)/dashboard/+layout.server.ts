@@ -13,22 +13,22 @@ export const load: LayoutServerLoad = async ({ locals: { user }, url }) => {
 	const [survey_time, surveys, live] = await Promise.all([
 		db
 			.select({
-				time: sql<Date>`${SurveyTable.createdAt}::timestamp::date`,
+				time: sql<Date>`${SurveyTable.created_at}::timestamp::date`,
 				count: count()
 			})
 			.from(SurveyTable)
-			.groupBy(SurveyTable.createdAt)
+			.groupBy(SurveyTable.created_at)
 			.limit(7),
 
 		db
 			.select({
-				title: SurveyTable.surveyTitle,
+				title: SurveyTable.title,
 				responses: count(AnswersTable.answer),
 				total: countDistinct(AnswersTable.agentId)
 			})
 			.from(SurveyTable)
 			.leftJoin(AnswersTable, sql`${AnswersTable.surveid} = ${SurveyTable.surveyid}`)
-			.groupBy(SurveyTable.surveyTitle),
+			.groupBy(SurveyTable.title),
 
 		db
 			.select()
@@ -36,7 +36,6 @@ export const load: LayoutServerLoad = async ({ locals: { user }, url }) => {
 			.where(sql`${SurveyTable.status} = 'Live'`)
 	]);
 
-	// console.log(surveys)
 	return {
 		user,
 		survey_time,

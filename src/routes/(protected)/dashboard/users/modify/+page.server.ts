@@ -3,7 +3,7 @@ import { zod } from 'sveltekit-superforms/adapters';
 import type { Actions, PageServerLoad } from './$types';
 import { fileSchema } from './schema';
 import { csvParse, autoType } from 'd3-dsv';
-import { agentData, UsersTable, type Agent } from '$lib/server/db/schema';
+import { agentData, UsersTable } from '$lib/server/db/schema';
 import { db } from '$lib/server/db';
 import { eq } from 'drizzle-orm';
 import { calculateAge } from '$lib/custom/functions/helpers';
@@ -35,7 +35,7 @@ export const actions: Actions = {
 				});
 			}
 			await db.transaction(async (tx) => {
-				c2j.map(async (items: Agent | any) => {
+				c2j.map(async (items: any) => {
 					const { agent_id, dob, county, subcounty, sector, income, employment, education } = items;
 
 					// Validate required fields

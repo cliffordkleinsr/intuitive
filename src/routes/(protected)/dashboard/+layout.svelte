@@ -49,11 +49,11 @@
 						url: '/dashboard/users/clients',
 						icon: UserPen
 					},
-					{
-						title: 'Agents',
-						url: '/dashboard/users/agents',
-						icon: UserSearch
-					},
+					// {
+					// 	title: 'Agents',
+					// 	url: '/dashboard/users/agents',
+					// 	icon: UserSearch
+					// },
 					{
 						title: 'Report',
 						url: '/dashboard/users/report',
@@ -75,12 +75,12 @@
 						title: 'Manage',
 						url: '/dashboard/surveys/manage',
 						icon: SlidersVertical
-					},
-					{
-						title: 'Summary',
-						url: '/dashboard/surveys/summary',
-						icon: FolderKanban
 					}
+					// {
+					// 	title: 'Summary',
+					// 	url: '/dashboard/surveys/summary',
+					// 	icon: FolderKanban
+					// }
 				]
 			},
 			{

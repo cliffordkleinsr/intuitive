@@ -16,6 +16,7 @@
 		"db:studio": "drizzle-kit studio"
 	},
 	"devDependencies": {
+		"@lucide/svelte": "^0.482.0",
 		"@sveltejs/adapter-auto": "^3.3.1",
 		"@sveltejs/kit": "^2.16.1",
 		"@sveltejs/vite-plugin-svelte": "^4.0.4",
@@ -24,7 +25,7 @@
 		"@types/eslint": "^9.6.1",
 		"@types/node": "^22.10.7",
 		"autoprefixer": "^10.4.20",
-		"bits-ui": "^1.0.0-next.78",
+		"bits-ui": "^1.4.7",
 		"clsx": "^2.1.1",
 		"drizzle-kit": "^0.28.1",
 		"eslint": "^9.18.0",
@@ -45,6 +46,7 @@
 		"tailwindcss-animate": "^1.0.7",
 		"typescript": "^5.7.3",
 		"typescript-eslint": "^8.21.0",
+		"vaul-svelte": "^1.0.0-next.7",
 		"vite": "^5.4.14",
 		"zod": "^3.24.1"
 	},
@@ -58,7 +60,9 @@
 		"@types/d3-scale": "^4.0.8",
 		"@types/d3-scale-chromatic": "^3.1.0",
 		"@types/geojson": "^7946.0.15",
+		"@xyflow/svelte": "^1.2.1",
 		"bcrypt": "^5.1.1",
+		"caniuse-lite": "^1.0.30001726",
 		"d3-array": "^3.2.4",
 		"d3-dsv": "^3.0.1",
 		"d3-geo": "^3.1.1",

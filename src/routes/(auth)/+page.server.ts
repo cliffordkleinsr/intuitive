@@ -54,7 +54,7 @@ export const actions: Actions = {
 		}
 
 		// Verify the password
-		const validPassword = await bcrypt.compare(password, existingUser.password); //await Bun.password.verify(password, existingUser.password)
+		const validPassword = await bcrypt.compare(password, existingUser.password!); //await Bun.password.verify(password, existingUser.password)
 
 		if (!validPassword) {
 			return setError(form, 'password', 'Incorrect Password');

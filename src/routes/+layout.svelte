@@ -4,7 +4,8 @@
 	import { toast } from 'svelte-sonner';
 	import { Toaster } from '$lib/components/ui/sonner';
 	import { getFlash } from 'sveltekit-flash-message';
-	import { page } from '$app/stores';
+	// import { page } from '$app/stores';
+	import { page } from '$app/state';
 
 	const flash = getFlash(page);
 

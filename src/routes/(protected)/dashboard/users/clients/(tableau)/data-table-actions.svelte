@@ -5,7 +5,7 @@
 	let { id }: { id: string } = $props();
 </script>
 
-<a class={buttonVariants({ variant: 'secondary' })} href="/dashboard/users/agents/{id}">
+<a class={buttonVariants({ variant: 'secondary' })} href="/dashboard/users/clients/{id}">
 	View
 	<ArrowUpRight class="size-4" />
 </a>
