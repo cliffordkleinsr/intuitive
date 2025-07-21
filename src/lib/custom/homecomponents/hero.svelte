@@ -20,7 +20,7 @@
 					<h1
 						class="block text-xl font-semibold text-neutral-50 drop-shadow-xl dark:text-neutral-200 md:text-2xl lg:text-3xl"
 					>
-						Corporate reputation <span class=" font-extralight">|</span> Customer experience
+						Corporate reputation <span class=" font-extralight">|</span> Brand Image <br>Customer experience
 					</h1>
 				</div>
 				<!-- End Title -->
