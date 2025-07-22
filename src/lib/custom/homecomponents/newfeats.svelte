@@ -10,13 +10,13 @@
 					Powerful Platform Features
 				</div>
 				<h2 class="text-3xl font-bold tracking-tighter sm:text-5xl">
-					Elevate Your Feedback Gathering
+					Strengthen your brand strategy
 				</h2>
 				<p
 					class="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed"
 				>
 					We offer a wide range of features to help you gather insightful feedback, analyze data,
-					and make informed decisions. Whether you’re in Kenya or abroad, our platform ensures you
+					and make informed decisions. Our platform ensures you
 					stay ahead of the competition.
 				</p>
 			</div>
@@ -25,41 +25,41 @@
 			class="mx-auto grid items-start gap-8 sm:max-w-4xl sm:grid-cols-2 md:gap-12 lg:max-w-5xl lg:grid-cols-3"
 		>
 			<div class="grid gap-1">
-				<h3 class="text-lg font-bold">Customizable</h3>
+				<h3 class="text-lg font-bold">Brand strategy & positioning</h3>
 				<p class="text-sm text-muted-foreground">
-					Create platform insights with a variety of customization options to match your brand.
+					Strengthen brand perception, trust & market relevance.
 				</p>
 			</div>
 			<div class="grid gap-1">
-				<h3 class="text-lg font-bold">Real-Time Reporting</h3>
+				<h3 class="text-lg font-bold">Digital marketing execution</h3>
 				<p class="text-sm text-muted-foreground">
-					Get instant insights with our advanced analytics and reporting tools.
+					Drive engagement, awareness & leads using digital tools.
 				</p>
 			</div>
 			<div class="grid gap-1">
-				<h3 class="text-lg font-bold">Seamless Distribution</h3>
+				<h3 class="text-lg font-bold">Web presence consulting</h3>
 				<p class="text-sm text-muted-foreground">
-					Gather insights via email, social media, or embed them on your website.
+					Help clients improve or launch digital platforms that reflect customer needs.
 				</p>
 			</div>
 			<div class="grid gap-1">
-				<h3 class="text-lg font-bold">Multilingual Support</h3>
+				<h3 class="text-lg font-bold">Customer engagement strategy</h3>
 				<p class="text-sm text-muted-foreground">
-					Reach a global audience by creating surveys in multiple languages.
+					Translate insights into deeper long term engagement.
 				</p>
 			</div>
 			<div class="grid gap-1">
-				<h3 class="text-lg font-bold">Secure and Compliant</h3>
+				<h3 class="text-lg font-bold">Campaign strategy execution</h3>
 				<p class="text-sm text-muted-foreground">
-					Ensure data privacy and security with our robust compliance features.
+					Help organizations run specific campaigns for visibility, launches or repositioning.
 				</p>
 			</div>
-			<div class="grid gap-1">
+			<!-- <div class="grid gap-1">
 				<h3 class="text-lg font-bold">Seamless Integrations</h3>
 				<p class="text-sm text-muted-foreground">
 					Seamlessly connect your data with your favorite tools and platforms.
 				</p>
-			</div>
+			</div> -->
 		</div>
 		<div class="flex flex-row items-start justify-center gap-4">
 			<Button href="/client/signin" variant="black" size="lg">Start for Free</Button>
