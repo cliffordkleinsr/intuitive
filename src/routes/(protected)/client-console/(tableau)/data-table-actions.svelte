@@ -31,15 +31,15 @@
 			<DropdownMenu.Group>
 				<DropdownMenu.Label>Actions</DropdownMenu.Label>
 				<DropdownMenu.Item>
-					<a href="/client-console/surveys/questionnaire/{id}">Manage Question</a>
+					<a href="/client-console/surveys/edit/{id}">Manage Question</a>
 				</DropdownMenu.Item>
 			</DropdownMenu.Group>
-			{#if payment_stat}
+			<!-- {#if payment_stat}
 				<DropdownMenu.Separator />
 				<DropdownMenu.Item>
 					<a href="/client-console/surveys/live/{id}">Go Live</a>
 				</DropdownMenu.Item>
-			{/if}
+			{/if} -->
 		</DropdownMenu.Content>
 	</DropdownMenu.Root>
 {:else}

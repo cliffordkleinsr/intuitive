@@ -1,4 +1,5 @@
 <script lang="ts">
+	import BasePriceComp from '$lib/custom/blocks/newproduct/BasePriceComp.svelte';
 	import Pricecomponent from '$lib/custom/blocks/newproduct/Pricecomponent.svelte';
 	import Pricer from '$lib/custom/blocks/product/pricer.svelte';
 	import Meta from '$lib/custom/seo/meta.svelte';
@@ -16,4 +17,5 @@
 
 <Meta {...props} />
 <!-- <Pricer {...pricerprops} /> -->
-<Pricecomponent />
+<!-- <Pricecomponent /> -->
+<BasePriceComp />
