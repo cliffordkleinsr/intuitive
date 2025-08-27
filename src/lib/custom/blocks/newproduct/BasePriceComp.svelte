@@ -7,7 +7,7 @@
 
 <div class="mx-auto flex max-w-5xl flex-col p-5">
 	<div class="grid w-full gap-2 md:grid-cols-3">
-				<Card.Root class="col-span-3">
+		<Card.Root class="col-span-3">
 			<Card.Header>
 				<Card.Title>Consultancy Services</Card.Title>
 				<Card.Description
@@ -118,8 +118,8 @@
 				<Card.Header class="text-center">
 					<Card.Title>{pkg.title}</Card.Title>
 					<Card.Title class="text-4xl">
-					${pkg.one_pack}
-				</Card.Title>
+						${pkg.one_pack}
+					</Card.Title>
 					<Card.Description>{pkg.comments}</Card.Description>
 				</Card.Header>
 
@@ -154,6 +154,5 @@
 				</Card.Footer>
 			</Card.Root>
 		{/each}
-
 	</div>
 </div>
