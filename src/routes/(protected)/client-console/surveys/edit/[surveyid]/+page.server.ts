@@ -269,7 +269,7 @@ export const actions: Actions = {
 		}
 		redirect(302, `/client-console/surveys/edit/${params.surveyid}`);
 	},
-	deleteSurvQns: async ({ request }) => {
+	deleteSurvQns: async ({ request, params, cookies }) => {
 		type EntryId = {
 			questionId: string;
 			questionType: string;
@@ -287,8 +287,9 @@ export const actions: Actions = {
 		} catch (err) {
 			console.error(err);
 		}
+		redirect(302, `/client-console/surveys/edit/${params.surveyid}`);
 	},
-	editSurvQns: async ({ request }) => {
+	editSurvQns: async ({ request, params }) => {
 		const data = await request.formData();
 		const qns = data.get('question') as string;
 		const qid = data.get('questionId') as string;
@@ -329,6 +330,7 @@ export const actions: Actions = {
 				console.error(err);
 			}
 		}
+		redirect(302, `/client-console/surveys/edit/${params.surveyid}`);
 	},
 	deleteOpt: async ({ request }) => {
 		const data = Object.fromEntries(await request.formData());

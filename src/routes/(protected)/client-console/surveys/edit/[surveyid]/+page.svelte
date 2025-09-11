@@ -15,8 +15,8 @@
 	import ArrowUpRight from 'lucide-svelte/icons/arrow-up-right';
 	import { PreviewComp } from '$lib/custom/blocks/question_composition';
 	import { Trash2 } from 'lucide-svelte';
-	import { enhance } from '$app/forms';
-	import { goto, invalidateAll, preloadData, pushState } from '$app/navigation';
+	import { applyAction, enhance } from '$app/forms';
+	import { goto, invalidate, invalidateAll, preloadData, pushState } from '$app/navigation';
 	import { toast } from 'svelte-sonner';
 	import * as Dialog from '$lib/components/ui/dialog';
 	import * as Drawer from '$lib/components/ui/drawer';
@@ -42,6 +42,7 @@
 	let { surveydata, surveyqns, features, branches, flow } = $derived(data);
 
 	let loading = $state(false);
+	let save_loading = $state(false);
 	let open = $state(false);
 
 	async function onLinkClick(e: MouseEvent & { currentTarget: HTMLAnchorElement }) {
@@ -180,7 +181,21 @@
 						{/if}
 
 						{#snippet edits()}
-							<form action="?/editSurvQns" method="post" use:enhance>
+							<form
+								action="?/editSurvQns"
+								method="post"
+								use:enhance={() => {
+									return async ({ result }) => {
+										save_loading = true;
+										if (result.type === 'redirect') {
+											toast.success('Updated Successfully');
+											goto(result.location, { invalidateAll: true });
+										} else {
+											await applyAction(result);
+										}
+									};
+								}}
+							>
 								<AlertDialog.Footer>
 									<div class="grid w-full gap-2">
 										<Input type="text" value={qs.question} name="question" />
@@ -205,7 +220,20 @@
 											{/each}
 										{/if}
 										<AlertDialog.Cancel>Cancel</AlertDialog.Cancel>
-										<Button type="submit">Save</Button>
+										<Button class="w-full" type="submit" disabled={save_loading}>
+											{#if save_loading}
+												<div class="flex gap-2">
+													<span
+														class="inline-block size-4 animate-spin rounded-full border-[3px] border-current border-t-transparent text-white"
+														role="status"
+														aria-label="loading"
+													></span>
+													Loading...
+												</div>
+											{:else}
+												Save
+											{/if}
+										</Button>
 									</div>
 
 									<!--<AlertDialog.Action>Continue</AlertDialog.Action> -->
@@ -218,17 +246,22 @@
 								method="post"
 								use:enhance={() => {
 									loading = true;
-									return async ({ result, update }) => {
-										if (result.type === 'success') {
-											loading = false;
-											await invalidateAll();
-
-											loading = false;
+									return async ({ result }) => {
+										if (result.type === 'redirect') {
 											toast.success('Deleted Successfully');
+											goto(result.location, { invalidateAll: true });
 										} else {
-											loading = false;
-											await update();
+											await applyAction(result);
 										}
+										// if (result.type === 'success') {
+										// 	loading = false;
+
+										// 	toast.success('Deleted Successfully');
+										// 	await invalidateAll();
+										// } else {
+										// 	loading = false;
+										// 	await update();
+										// }
 									};
 								}}
 							>

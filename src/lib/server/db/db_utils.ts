@@ -429,7 +429,8 @@ export const getSubscriptionStatus = async (id: string) => {
 	const [consumer_details] = await db
 		.select({
 			package_type: consumerPackage.package_type,
-			surveys: count(SurveyTable.surveyid)
+			surveys: count(SurveyTable.surveyid),
+			expired: sql<boolean>`${consumerPackage.expires} < now()`.as('expired')
 		})
 		.from(consumerPackage)
 		.leftJoin(
@@ -442,7 +443,7 @@ export const getSubscriptionStatus = async (id: string) => {
 			`
 		)
 		.where(eq(consumerPackage.consumerid, id))
-		.groupBy(consumerPackage.package_type);
+		.groupBy(consumerPackage.package_type, consumerPackage.expires);
 
 	// Count surveys per package type
 	// const onePackCount = surveys.filter((s) => s.package_type === 'one_pack').length;
