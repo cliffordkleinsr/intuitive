@@ -40,50 +40,6 @@
 		>
 			About
 		</a>
-		<DropdownMenu.Root>
-			<DropdownMenu.Trigger
-				class="{page.url.pathname.startsWith('/industries')
-					? 'text-foreground'
-					: 'text-muted-foreground'} transition-colors hover:text-primary"
-				>Industries</DropdownMenu.Trigger
-			>
-			<DropdownMenu.Content class="mt-4 text-muted-foreground transition-colors">
-				<DropdownMenu.Group>
-					<DropdownMenu.Item><a href="/industries/hospitality">Hospitality</a></DropdownMenu.Item>
-					<DropdownMenu.Item><a href="/industries/healthcare">Healthcare</a></DropdownMenu.Item>
-					<DropdownMenu.Item><a href="/industries/retail_fmcg">Retail</a></DropdownMenu.Item>
-					<DropdownMenu.Item
-						><a href="/industries/financial_services">Financial services</a></DropdownMenu.Item
-					>
-					<DropdownMenu.Item><a href="/industries/ngo">NGO's</a></DropdownMenu.Item>
-				</DropdownMenu.Group>
-			</DropdownMenu.Content>
-		</DropdownMenu.Root>
-		<DropdownMenu.Root>
-			<DropdownMenu.Trigger
-				class="{page.url.pathname.startsWith('/services')
-					? 'text-foreground'
-					: 'text-muted-foreground'} transition-colors hover:text-primary"
-				>Services</DropdownMenu.Trigger
-			>
-			<DropdownMenu.Content class="mt-4 text-muted-foreground transition-colors">
-				<DropdownMenu.Group>
-					<DropdownMenu.Item>
-						<a href="/services/corp_rep">Corporate reputation</a></DropdownMenu.Item
-					>
-					<DropdownMenu.Item><a href="/services/brand_image">Brand image</a></DropdownMenu.Item>
-					<DropdownMenu.Item
-						><a href="/services/customer_experience">Customer experience</a></DropdownMenu.Item
-					>
-					<!-- <DropdownMenu.Item
-						><a href="/services/product_assessment">Product assessment</a></DropdownMenu.Item
-					> -->
-					<DropdownMenu.Item
-						><a href="/services/market_reaserch">Market research</a></DropdownMenu.Item
-					>
-				</DropdownMenu.Group>
-			</DropdownMenu.Content>
-		</DropdownMenu.Root>
 		<a
 			href="/pricing"
 			class="{page.url.pathname === '/pricing'

@@ -43,6 +43,7 @@
 
 	let loading = $state(false);
 	let save_loading = $state(false);
+	let template_loading = $state(false);
 	let open = $state(false);
 
 	async function onLinkClick(e: MouseEvent & { currentTarget: HTMLAnchorElement }) {
@@ -80,6 +81,24 @@
 	let newflow = () => flow;
 	let nodes = writable(newflow().nodes);
 	let edges = writable(newflow().edges);
+
+	const templates = [
+		{
+			id: 1,
+			qns: 'Are you happy?',
+			name: 'single_question'
+		},
+		{
+			id: 2,
+			qns: 'Tell us Why',
+			name: 'single_question'
+		},
+		{
+			id: 3,
+			qns: 'What do yo do to stay happy',
+			name: 'single_question'
+		}
+	];
 </script>
 
 <div class="m-3">
@@ -126,6 +145,61 @@
 					<QuestionType />
 				</Card.Content>
 			</Card.Root>
+		</div>
+		<div class="flex flex-col gap-1">
+			<h1 class="text-xl font-semibold">Choose a template</h1>
+			<div class="grid grid-cols-4 gap-2">
+				<Card.Root>
+					<Card.Header>
+						<Card.Title>Happyness Engagement</Card.Title>
+					</Card.Header>
+					<Card.Content>
+						<Portal title="Preview">
+							{#snippet trigger()}
+								View Questions
+								<ArrowUpRight />
+							{/snippet}
+							<form
+								action="?/addTemplate"
+								method="post"
+								class="flex flex-col gap-2"
+								use:enhance={() => {
+									return async ({ result }) => {
+										template_loading = true;
+										if (result.type === 'redirect') {
+											toast.success('Deleted Successfully');
+											goto(result.location, { invalidateAll: true });
+										} else {
+											await applyAction(result);
+										}
+									};
+								}}
+							>
+								{#each templates as template}
+									<div class="flex items-center justify-center gap-3">
+										<span>{template.id}.</span>
+										<Input type="text" bind:value={template.qns} name={template.name} />
+									</div>
+								{/each}
+								<Button class="w-full" type="submit" disabled={template_loading} variant="black">
+									{#if template_loading}
+										<div class="flex gap-2">
+											<span
+												class="inline-block size-4 animate-spin rounded-full border-[3px] border-current border-t-transparent text-white dark:text-black"
+												role="status"
+												aria-label="loading"
+											></span>
+											Loading...
+										</div>
+									{:else}
+										Add
+									{/if}
+								</Button>
+							</form>
+						</Portal>
+					</Card.Content>
+				</Card.Root>
+			</div>
 		</div>
 		<Portal {...portProps} class="max-h-full max-w-xl">
 			{#snippet trigger()}
@@ -219,7 +293,7 @@
 												{/if}
 											{/each}
 										{/if}
-										<AlertDialog.Cancel>Cancel</AlertDialog.Cancel>
+										<AlertDialog.Cancel type="button">Cancel</AlertDialog.Cancel>
 										<Button class="w-full" type="submit" disabled={save_loading}>
 											{#if save_loading}
 												<div class="flex gap-2">

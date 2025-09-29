@@ -343,6 +343,20 @@ export const actions: Actions = {
 		}
 	},
 
+	addTemplate: async ({ request, params }) => {
+		const questions = (await request.formData()).getAll('single_question') as string[];
+		const pre = questions.map((q) => ({
+			surveid: params.surveyid,
+			question: q
+		}));
+		try {
+			await db.insert(surveyqnsTableV2).values(pre);
+		} catch (err) {
+			console.error(err);
+		}
+		redirect(302, `/client-console/surveys/edit/${params.surveyid}`);
+	},
+
 	goLive: async ({ request, params, cookies }) => {
 		let live_form = await superValidate(request, zod(schema));
 		// validate
