@@ -96,6 +96,7 @@
 		"svelte-kit-bot-block": "^0.0.7",
 		"svelte-sonner": "^0.3.28",
 		"sveltekit-flash-message": "^2.4.6",
-		"sveltekit-rate-limiter": "^0.6.2"
+		"sveltekit-rate-limiter": "^0.6.2",
+		"topojson-client": "^3.1.0"
 	}
 }
