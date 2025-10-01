@@ -79,7 +79,6 @@ export const load = (async ({ fetch, params: { surveyid } }) => {
 	// 	{ id: 'Vocational', count: 30 },
 
 	//   ];
-
 	return {
 		geojson,
 		countries: await fetchGeoJsons(),

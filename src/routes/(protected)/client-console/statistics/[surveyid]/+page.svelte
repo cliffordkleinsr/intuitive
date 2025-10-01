@@ -86,9 +86,17 @@
 
 		return scaleQuantile<string, string>().domain(dataset).range(schemeOranges[7]);
 	});
+	type RankingRow = {
+		rank: string;
+		[answer: string]: number | string; // `rank` is string, others are numbers
+	};
 
+	interface Series {
+		key: string;
+		color: string;
+	}
 	let printstate = $state(false) as boolean;
-	let processedData: any[] = $state([]);
+	let processedData: RankingRow[] = $state([]);
 	let proxyprocessedData = () => processedData;
 	let rankData: any[] = [];
 	for (const { question_type, answer_statistics } of data.analytics) {
@@ -102,21 +110,33 @@
 			});
 		}
 	}
-
-	let keys: any = $state({});
-	let series: any[] = $state([]);
+	let keys: string[] = $state([]);
+	let series: Series[] = $state([]);
 	const keyColors = [
-		'hsl(var(--color-orange))',
-		'hsl(var(--color-violet))',
-		'hsl(var(--color-cyan))',
-		'hsl(var(--color-blue))',
-		'hsl(var(--color-stone))'
+		'hsl(var(--orange))',
+		'hsl(var(--violet))',
+		'hsl(var(--cyan))',
+		'hsl(var(--blue))',
+		'hsl(var(--stone))'
 	];
 	if (proxyprocessedData().length > 0) {
-		keys = Object.keys(proxyprocessedData()[0]).filter((k) => k !== 'rank');
-		series = proxyprocessedData().map((_, index) => ({
-			key: keys[index],
-			color: keyColors[index]
+		const keySet = new Set<string>();
+		// keys = Object.keys(proxyprocessedData()[0]).filter((k) => k !== 'rank');
+		// let proxyKeys = () => keys
+		// series = proxyprocessedData().map((_, index) => ({
+		// 	key: keys[index],
+		// 	color: keyColors[index]
+		// }));
+		for (const row of proxyprocessedData()) {
+			Object.keys(row).forEach((k) => {
+				if (k !== 'rank') keySet.add(k);
+			});
+		}
+		keys = Array.from(keySet);
+		let proxyKeys = () => keys;
+		series = proxyKeys().map((k, index) => ({
+			key: k,
+			color: keyColors[index % keyColors.length]
 		}));
 	}
 
@@ -165,6 +185,7 @@
 				}
 			}));
 		}
+		return [];
 	}) as Feature[];
 	// $effect(() => {
 	// 		// $inspect(selectedState)
@@ -222,18 +243,17 @@
 						<Chart
 							geo={{
 								projection: geoNaturalEarth1,
-								fitGeojson: countries,
-								applyTransform: ['translate', 'scale']
+								fitGeojson: countries
+								// applyTransform: ['translate', 'scale']
 							}}
 							transform={{
+								mode: 'canvas',
 								initialScrollMode: 'none',
 								tweened: { duration: 800, easing: cubicOut }
 							}}
 							let:projection
 							let:transform
 							let:tooltip
-							let:width
-							let:height
 						>
 							{@const strokeWidth = 1 / transform.scale}
 							<Svg>
@@ -247,19 +267,29 @@
 												: colorScale(feature.properties.data?.count ?? 0)}
 											class="stroke-none hover:stroke-white"
 											{strokeWidth}
-											onclick={() => {
+											onclick={(e, geoPath) => {
 												if (selectedState === feature.properties.name) {
 													selectedState = null;
 													transform.reset();
 												} else {
 													selectedState = feature.properties.name;
-													const featureTransform = geoFitObjectTransform(
-														projection,
-														[width, height],
-														feature
+													const [[left, top], [right, bottom]] = geoPath.bounds(feature);
+													const width = right - left;
+													const height = bottom - top;
+													const x = (left + right) / 2;
+													const y = (top + bottom) / 2;
+													const padding = 20;
+													transform.zoomTo(
+														{ x, y },
+														{ width: width + padding, height: height + padding }
 													);
-													transform.setTranslate(featureTransform.translate);
-													transform.setScale(featureTransform.scale);
+													// const featureTransform = geoFitObjectTransform(
+													// 	projection,
+													// 	[width, height],
+													// 	feature
+													// );
+													// transform.setTranslate(featureTransform.translate);
+													// transform.setScale(featureTransform.scale);
 												}
 											}}
 										/>
@@ -275,13 +305,14 @@
 									{/each}
 								</g>
 
-								{#each selectedCountiesFeatures as feature (feature?.id)}
+								{#each selectedCountiesFeatures as feature (feature.id)}
 									<g in:fade={{ duration: 300, delay: 600 }} out:fade={{ duration: 300 }}>
 										<GeoPath
 											geojson={feature}
 											fill={colorScale(feature?.properties?.data?.count ?? 0)}
 											{tooltip}
-											class="stroke-none"
+											strokeWidth={1 / transform.scale}
+											class="stroke-none hover:fill-red-800"
 											onclick={() => {
 												selectedState = null;
 												transform.reset();
@@ -294,6 +325,7 @@
 										<GeoPath
 											geojson={feature}
 											{tooltip}
+											strokeWidth={1 / transform.scale}
 											class="pointer-events-none fill-none stroke-black/30"
 											onclick={() => {
 												selectedState = null;
@@ -361,8 +393,10 @@
 					y="count"
 					props={{
 						bars: { class: 'fill-orange-400' },
+						xAxis: { format: 'none' },
 						yAxis: { format: (value: number) => format(Math.abs(value), 'metric') }
 					}}
+					renderContext="svg"
 				/>
 			</div>
 		</div>
@@ -473,7 +507,7 @@
 																	<Table.Cell></Table.Cell>
 																	<Table.Cell></Table.Cell>
 																	<Table.Cell></Table.Cell>
-																	<Table.Cell></Table.Cell>
+																	<Table.Cell>Overall</Table.Cell>
 																	<Table.Cell class="text-right text-sm font-normal"
 																		>100%</Table.Cell
 																	>

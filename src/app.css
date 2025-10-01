@@ -4,6 +4,13 @@
 
 @layer base {
 	:root {
+		/* layercake */
+		--orange: 24.6 95% 53.1%;
+		--violet: 258.3 89.5% 66.3%;
+		--cyan: 188.7 94.5% 42.7%;
+		--blue: 217.2 91.2% 59.8%;
+		--stone: 25 5.3% 44.7%;
+
 		--background: 0 0% 100%;
 		--foreground: 20 14.3% 4.1%;
 		--card: 0 0% 100%;
