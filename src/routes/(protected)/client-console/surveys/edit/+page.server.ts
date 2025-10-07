@@ -30,28 +30,31 @@ export const actions: Actions = {
 		type En = {
 			id: string;
 		};
-		const data = Object.fromEntries(await request.formData()) as En;
-		const { id } = data;
+		// const data = Object.fromEntries(await request.formData()) as En;
+		// const { id } = data;
+		const data = await request.formData();
+		const id = data.get('id') as string;
 		// console.log(data)
 		try {
-			const ids = await db
-				.select({
-					el: QuestionOptions.optionId
-				})
-				.from(surveyqnsTableV2)
-				.leftJoin(QuestionOptions, eq(surveyqnsTableV2.questionId, QuestionOptions.questionId))
-				.where(eq(surveyqnsTableV2.surveid, id));
-			await db.transaction(async (tx) => {
-				await tx.delete(QuestionBranching).where(eq(QuestionBranching.surveid, id));
-				for (const { el } of ids) {
-					if (el) {
-						// console.log(id)
-						await tx.delete(QuestionOptions).where(eq(QuestionOptions.optionId, el));
-					}
-				}
-				await tx.delete(surveyqnsTableV2).where(eq(surveyqnsTableV2.surveid, id));
-				await tx.delete(SurveyTable).where(eq(SurveyTable.surveyid, id));
-			});
+			// const ids = await db
+			// 	.select({
+			// 		el: QuestionOptions.optionId
+			// 	})
+			// 	.from(surveyqnsTableV2)
+			// 	.leftJoin(QuestionOptions, eq(surveyqnsTableV2.questionId, QuestionOptions.questionId))
+			// 	.where(eq(surveyqnsTableV2.surveid, id));
+			// await db.transaction(async (tx) => {
+			// 	await tx.delete(QuestionBranching).where(eq(QuestionBranching.surveid, id));
+			// 	for (const { el } of ids) {
+			// 		if (el) {
+			// 			// console.log(id)
+			// 			await tx.delete(QuestionOptions).where(eq(QuestionOptions.optionId, el));
+			// 		}
+			// 	}
+			// 	await tx.delete(surveyqnsTableV2).where(eq(surveyqnsTableV2.surveid, id));
+			// 	await tx.delete(SurveyTable).where(eq(SurveyTable.surveyid, id));
+			// });
+			await db.delete(SurveyTable).where(eq(SurveyTable.surveyid, id));
 		} catch (err) {
 			console.error(err);
 		}

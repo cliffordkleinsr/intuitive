@@ -146,7 +146,7 @@
 				</Card.Content>
 			</Card.Root>
 		</div>
-		<div class="flex flex-col gap-1">
+		<!-- <div class="flex flex-col gap-1">
 			<h1 class="text-xl font-semibold">Choose a template</h1>
 			<div class="grid grid-cols-4 gap-2">
 				<Card.Root>
@@ -200,7 +200,7 @@
 					</Card.Content>
 				</Card.Root>
 			</div>
-		</div>
+		</div> -->
 		<Portal {...portProps} class="max-h-full max-w-xl">
 			{#snippet trigger()}
 				Preview Questions

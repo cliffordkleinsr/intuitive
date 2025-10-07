@@ -78,6 +78,14 @@
 			};
 		});
 	});
+
+	//scaleQuantile takes the entire dataset.
+
+	// Splits it into N quantiles (where N = size of your color range).
+
+	// If you only have 2 data points, most quantiles collapse → several bins are unused.
+
+	// So for [2, 3] + 7 colors, both values fall into the lowest bin.
 	let colorScale = $derived.by(() => {
 		// Determine the dataset based on zoom level
 		const dataset = selectedState
@@ -86,6 +94,24 @@
 
 		return scaleQuantile<string, string>().domain(dataset).range(schemeOranges[7]);
 	});
+	// let colorScale = $derived.by(() => {
+	// const dataset = selectedState
+	// 	? data.popn_cnty.map((d: any) => d.count)
+	// 	: data.popn.map((d: any) => d.count);
+
+	// const min = Math.min(...dataset);
+	// const max = Math.max(...dataset);
+
+	// // pad by a tiny fraction of the range
+	// const pad = (max - min) * 0.01 || 1; // fallback for identical values
+
+	// return scaleQuantile<string>()
+	// 	.domain([min - pad, ...dataset, max + pad])
+	// 	.range(schemeOranges[7]);
+	// });
+
+	// $inspect(data.popn_cnty)
+
 	type RankingRow = {
 		rank: string;
 		[answer: string]: number | string; // `rank` is string, others are numbers
@@ -237,7 +263,7 @@
 						class={[
 							printstate ? 'ml-auto' : 'overflow-hidden ',
 							printstate && selectedState ? ' overflow-clip' : '',
-							`relative mx-auto h-[550px] w-[1200px]`
+							`relative mx-auto h-[550px] md:w-[1000px]`
 						]}
 					>
 						<Chart
@@ -312,7 +338,7 @@
 											fill={colorScale(feature?.properties?.data?.count ?? 0)}
 											{tooltip}
 											strokeWidth={1 / transform.scale}
-											class="stroke-none hover:fill-red-800"
+											class="stroke-none"
 											onclick={() => {
 												selectedState = null;
 												transform.reset();
@@ -366,7 +392,7 @@
 		</div>
 		<div class="col-span-2 md:col-span-1">
 			<h1 class="text-sm text-muted-foreground">Responses by Sector</h1>
-			<div class="relative h-[400px] w-full rounded border p-4">
+			<div class="relative h-[350px] w-full rounded border p-4">
 				<PieChart
 					data={data.sec}
 					key="id"
@@ -386,7 +412,7 @@
 		</div>
 		<div class="col-span-2 md:col-span-1">
 			<h1 class="text-sm text-muted-foreground">Responses by Literacy rate</h1>
-			<div class="relative h-[400px] w-full rounded border p-4">
+			<div class="relative h-[350px] w-full rounded border p-4">
 				<BarChart
 					data={data.edu}
 					x="id"
@@ -507,7 +533,7 @@
 																	<Table.Cell></Table.Cell>
 																	<Table.Cell></Table.Cell>
 																	<Table.Cell></Table.Cell>
-																	<Table.Cell>Overall</Table.Cell>
+																	<Table.Cell></Table.Cell>
 																	<Table.Cell class="text-right text-sm font-normal"
 																		>100%</Table.Cell
 																	>

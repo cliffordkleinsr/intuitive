@@ -16,13 +16,56 @@
 	import CopyCheck from 'lucide-svelte/icons/copy-check';
 	import Mail from 'lucide-svelte/icons/mail';
 	import { page } from '$app/state';
+	import * as Dialog from '$lib/components/ui/dialog';
+	import { applyAction, enhance } from '$app/forms';
+	import { toast } from 'svelte-sonner';
+	import { goto } from '$app/navigation';
+	import { Input } from '$lib/components/ui/input';
+	import { SvelteMap } from 'svelte/reactivity';
 
 	let { data }: { data: PageData } = $props();
 	const { all_surv, draft_surv, live_surv, closed_surv, count, payment } = data;
+
+	let loading = $state(false);
+
+	type TempList = {
+		id: number;
+		qns: string;
+		name: string;
+	};
+	const tempList: Map<string, TempList[]> = new SvelteMap();
+	let temp = $state('Customer Engagement');
+	tempList.set('Customer Engagement', [
+		{
+			id: 1,
+			qns: 'What motivated you to choose our product/service?',
+			name: 'single_question'
+		},
+		{
+			id: 2,
+			qns: 'How would you describe your overall experience with us?',
+			name: 'single_question'
+		},
+		{
+			id: 3,
+			qns: 'What aspects of our product/service did you find most valuable or enjoyable?',
+			name: 'single_question'
+		},
+		{
+			id: 4,
+			qns: 'Were there any challenges or frustrations you encountered? Please explain.',
+			name: 'single_question'
+		},
+		{
+			id: 5,
+			qns: 'How can we improve our products or services to better meet your needs?',
+			name: 'single_question'
+		}
+	]);
 </script>
 
 <div class="m-4 mt-4 flex flex-col gap-10">
-	<div class="grid gap-2 md:grid-cols-3 md:gap-8">
+	<div class="grid gap-2 md:grid-cols-4 md:gap-8">
 		<Card.Root class="space-y-5">
 			<Card.Header>
 				<Card.Title>
@@ -34,6 +77,78 @@
 			</Card.Header>
 			<Card.Footer>
 				<Button variant="default" href="/client-console/surveys/create">Create New Survey</Button>
+			</Card.Footer>
+		</Card.Root>
+		<Card.Root class="max-w-lg">
+			<Card.Header class="pb-2">
+				<Card.Title class="text-3xl">1</Card.Title>
+				<Card.Description>Available Templates</Card.Description>
+			</Card.Header>
+			<Card.Content></Card.Content>
+			<Card.Footer>
+				<Portal title="Choose a template" class="max-w-[800px]" variant="default">
+					{#snippet trigger()}
+						Use Available Templates
+						<ArrowUpRight />
+					{/snippet}
+					<div class="grid grid-cols-3 gap-2">
+						<Card.Root class="bg-gradient-to-r from-rose-400 to-red-500">
+							<Card.Header>
+								<Card.Title class="text-start ">Customer Feedback</Card.Title>
+								<Card.Description class="text-white">Total questions: 5</Card.Description>
+							</Card.Header>
+							<Card.Content></Card.Content>
+							<Card.Footer>
+								<Portal title="Preview" class="max-w-[600px]">
+									{#snippet trigger()}
+										Preview Questions
+										<ArrowUpRight />
+									{/snippet}
+									<form
+										action="?/addTemplate"
+										method="post"
+										class="flex flex-col gap-2"
+										use:enhance={() => {
+											return async ({ result }) => {
+												loading = true;
+												if (result.type === 'redirect') {
+													toast.success('Added Successfully');
+													goto(result.location, { invalidateAll: true });
+												} else {
+													await applyAction(result);
+												}
+											};
+										}}
+									>
+										<div class="flex items-center justify-center gap-3">
+											<span class="font-semibold">Title</span>
+											<Input type="text" bind:value={temp} name="title" />
+										</div>
+										{#each tempList.get('Customer Engagement') ?? [] as template}
+											<div class="flex items-center justify-center gap-3">
+												<Input type="text" bind:value={template.qns} name={template.name} />
+											</div>
+										{/each}
+										<Button class="w-full" type="submit" disabled={loading} variant="black">
+											{#if loading}
+												<div class="flex gap-2">
+													<span
+														class="inline-block size-4 animate-spin rounded-full border-[3px] border-current border-t-transparent text-white dark:text-black"
+														role="status"
+														aria-label="loading"
+													></span>
+													Loading...
+												</div>
+											{:else}
+												Add
+											{/if}
+										</Button>
+									</form>
+								</Portal>
+							</Card.Footer>
+						</Card.Root>
+					</div>
+				</Portal>
 			</Card.Footer>
 		</Card.Root>
 		<Card.Root class="max-w-lg">
@@ -60,6 +175,7 @@
 				<Progress value={count} aria-label="{count / 100}% increase" />
 			</Card.Footer>
 		</Card.Root>
+
 		{#if live_surv.length > 0}
 			<Card.Root class="max-w-lg">
 				<Card.Header class="pb-2">

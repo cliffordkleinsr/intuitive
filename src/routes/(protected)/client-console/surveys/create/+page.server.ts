@@ -39,7 +39,7 @@ export const actions: Actions = {
 		const { max_responses, plan, type } = await doPriceLookup(userid);
 		const today = Date.now();
 
-		const date_val = returnDateValue(type as string, plan);
+		const date_val = 30; //returnDateValue(type as string, plan);
 		const expiry_date = addDays(today, date_val);
 		const uuid = crypto.randomUUID();
 		try {

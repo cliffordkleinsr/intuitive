@@ -40,7 +40,7 @@ export const UsersTable = pgTable('users', {
 		withTimezone: true,
 		mode: 'date'
 	}).defaultNow()
-});
+}).enableRLS();
 
 export const sessionsTable = pgTable('user_sessions', {
 	id: text('id').primaryKey(),
@@ -48,7 +48,7 @@ export const sessionsTable = pgTable('user_sessions', {
 		.notNull()
 		.references(() => UsersTable.id),
 	expiresAt: timestamp('expires_at', { withTimezone: true, mode: 'date' }).notNull()
-});
+}).enableRLS();
 
 export const agentData = pgTable('agent_data', {
 	agentid: text('agent_id')
@@ -73,7 +73,7 @@ export const agentData = pgTable('agent_data', {
 	external: boolean().default(false).notNull(),
 	reset: boolean().default(false).notNull(),
 	referall_by: text()
-});
+}).enableRLS();
 
 // export const clientData = pgTable('client_data', {
 // 	clientId: text('client_id')
@@ -143,7 +143,7 @@ export const consumerDeats = pgTable('consumer_details', {
 	})
 		.defaultNow()
 		.notNull()
-});
+}).enableRLS();
 
 export const pricingTable = pgTable('price_table', {
 	id: serial().primaryKey().notNull(),
@@ -156,7 +156,7 @@ export const pricingTable = pgTable('price_table', {
 	demographics: boolean().notNull().default(false),
 	api: boolean().notNull().default(false),
 	branding: boolean().notNull().default(false)
-});
+}).enableRLS();
 
 export const consumerPackage = pgTable('consumer_package', {
 	id: serial().notNull().primaryKey(),
@@ -177,7 +177,7 @@ export const consumerPackage = pgTable('consumer_package', {
 		withTimezone: true,
 		mode: 'date'
 	}).notNull()
-});
+}).enableRLS();
 export const emailVerification = pgTable('email_verification', {
 	userId: text('user_id')
 		.notNull()
@@ -186,7 +186,7 @@ export const emailVerification = pgTable('email_verification', {
 	token: text('token').notNull(),
 	verified: boolean('verified').default(false).notNull(),
 	receiveEmail: boolean('recieved_email').default(true).notNull()
-});
+}).enableRLS();
 
 export const smsVerification = pgTable('sms_verification', {
 	userId: text('user_id')
@@ -195,13 +195,13 @@ export const smsVerification = pgTable('sms_verification', {
 	phone: text('phone').notNull(),
 	verified: boolean('verified').default(false).notNull(),
 	receiveSMS: boolean('recieved_sms').default(true).notNull()
-});
+}).enableRLS();
 
 export const passwordReset = pgTable('password_reset', {
 	id: serial('id').notNull().primaryKey(),
 	email: text('email').notNull(),
 	token: text('token').notNull()
-});
+}).enableRLS();
 
 // Old Surveys
 export const old_SurveyTable = pgTable('old_surveys', {
@@ -218,7 +218,7 @@ export const old_SurveyTable = pgTable('old_surveys', {
 	})
 		.defaultNow()
 		.notNull()
-});
+}).enableRLS();
 
 // New Surveys
 export const SurveyTable = pgTable('survey', {
@@ -238,7 +238,7 @@ export const SurveyTable = pgTable('survey', {
 		withTimezone: true,
 		mode: 'date'
 	}).notNull()
-});
+}).enableRLS();
 
 export const progressTable = pgTable('agent_progress_table', {
 	agentid: text('agent_id')
@@ -248,7 +248,7 @@ export const progressTable = pgTable('agent_progress_table', {
 		.references(() => SurveyTable.surveyid)
 		.notNull(),
 	current_ix: integer('current_ix').default(0).notNull()
-});
+}).enableRLS();
 
 export const agentSurveysTable = pgTable('agent_surv_table', {
 	agentid: text('agent_id').notNull(),
@@ -257,13 +257,13 @@ export const agentSurveysTable = pgTable('agent_surv_table', {
 		.notNull(),
 	survey_completed: boolean('survey_completed').notNull().default(false),
 	points: integer('points_earned').notNull()
-});
+}).enableRLS();
 
 // One and the same
 // =============================================================
 export const surveyqnsTableV2 = pgTable('survey_qns_optimum', {
 	questionId: uuid('questionid').defaultRandom().primaryKey(),
-	surveid: text('surveyid').references(() => SurveyTable.surveyid),
+	surveid: text('surveyid').references(() => SurveyTable.surveyid, { onDelete: 'cascade' }),
 	questionT: text('question_type').default('Single').notNull(),
 	question: text('question').notNull(),
 	likertKey: text('likert_key'),
@@ -279,33 +279,33 @@ export const surveyqnsTableV2 = pgTable('survey_qns_optimum', {
 	})
 		.defaultNow()
 		.notNull()
-});
+}).enableRLS();
 
 export const QuestionOptions = pgTable('question_options', {
 	optionId: uuid('optionid').defaultRandom().primaryKey().notNull(),
 	questionId: uuid('questionid')
-		.references(() => surveyqnsTableV2.questionId)
+		.references(() => surveyqnsTableV2.questionId, { onDelete: 'cascade' })
 		.notNull(),
 	option: text('option').notNull(),
 	order_index: integer('order_index').default(0).notNull()
-});
+}).enableRLS();
 
 // ==============================================================
 export const QuestionBranching = pgTable('question_branching', {
 	branchId: uuid('branchid').defaultRandom().primaryKey().notNull(),
 	surveid: text('surveyid')
-		.references(() => SurveyTable.surveyid)
+		.references(() => SurveyTable.surveyid, { onDelete: 'cascade' })
 		.notNull(),
 	questionId: uuid('questionid')
-		.references(() => surveyqnsTableV2.questionId)
+		.references(() => surveyqnsTableV2.questionId, { onDelete: 'cascade' })
 		.notNull(),
 	optionId: uuid('optionid')
-		.references(() => QuestionOptions.optionId)
+		.references(() => QuestionOptions.optionId, { onDelete: 'cascade' })
 		.notNull(),
 	nextQuestionId: uuid('next_questionid')
-		.references(() => surveyqnsTableV2.questionId)
+		.references(() => surveyqnsTableV2.questionId, { onDelete: 'cascade' })
 		.notNull()
-});
+}).enableRLS();
 
 export const AnswersTable = pgTable('answers', {
 	questionId: uuid('questionid')
@@ -326,7 +326,7 @@ export const AnswersTable = pgTable('answers', {
 	})
 		.defaultNow()
 		.notNull()
-});
+}).enableRLS();
 
 export const user_analytics = pgTable('user_analytics', {
 	id: serial().primaryKey().notNull(),
@@ -340,7 +340,7 @@ export const user_analytics = pgTable('user_analytics', {
 	sub: text(),
 	client_address: text().notNull(),
 	has_completed: boolean().default(false).notNull()
-});
+}).enableRLS();
 export const response_table = pgTable('response_table', {
 	id: serial().notNull().primaryKey(),
 	questionId: uuid('questionid')
@@ -358,7 +358,7 @@ export const response_table = pgTable('response_table', {
 	})
 		.defaultNow()
 		.notNull()
-});
+}).enableRLS();
 
 export const payoutRequests = pgTable('payout_requests', {
 	payoutid: uuid('payout_id').defaultRandom().primaryKey(),
@@ -378,7 +378,7 @@ export const payoutRequests = pgTable('payout_requests', {
 		withTimezone: true,
 		mode: 'date'
 	})
-});
+}).enableRLS();
 
 export const agentTransactions = pgTable('agent_transactions', {
 	agentid: text('agentid')
@@ -393,7 +393,7 @@ export const agentTransactions = pgTable('agent_transactions', {
 	})
 		.defaultNow()
 		.notNull()
-});
+}).enableRLS();
 
 export const clientTransactions = pgTable('consumer_transactions', {
 	id: serial().notNull().primaryKey(),
@@ -409,7 +409,7 @@ export const clientTransactions = pgTable('consumer_transactions', {
 		withTimezone: true,
 		mode: 'date'
 	}).notNull()
-});
+}).enableRLS();
 export type userInsertSchema = typeof UsersTable.$inferInsert;
 // export type ClientDataInsertSchema = typeof clientData.$inferInsert;
 export type ConsumerData = typeof consumerDeats.$inferInsert;

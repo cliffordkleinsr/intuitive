@@ -9,14 +9,12 @@
 				<div class="inline-block rounded-lg bg-muted px-3 py-1 text-sm">
 					Powerful Platform Features
 				</div>
-				<h2 class="text-3xl font-bold tracking-tighter sm:text-5xl">
-					Strengthen your brand strategy
-				</h2>
+				<h2 class="text-3xl font-bold tracking-tighter sm:text-5xl">A Platform You Can Rely On</h2>
 				<p
 					class="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed"
 				>
-					We offer a wide range of features to help you gather insightful feedback, analyze data,
-					and make informed decisions. Our platform ensures you stay ahead of the competition.
+					Intuitive Insights is a trusted survey platform designed to help organizations capture
+					feedback and act on it with confidence.
 				</p>
 			</div>
 		</div>
@@ -24,34 +22,33 @@
 			class="mx-auto grid items-start gap-8 sm:max-w-4xl sm:grid-cols-2 md:gap-12 lg:max-w-5xl lg:grid-cols-3"
 		>
 			<div class="grid gap-1">
-				<h3 class="text-lg font-bold">Brand strategy & positioning</h3>
+				<h3 class="text-lg font-bold">Ready-Made Templates</h3>
 				<p class="text-sm text-muted-foreground">
-					Strengthen brand perception, trust & market relevance.
+					Accelarate your survey building process with intuitive templates
 				</p>
 			</div>
 			<div class="grid gap-1">
-				<h3 class="text-lg font-bold">Digital marketing execution</h3>
+				<h3 class="text-lg font-bold">Mobile-first design</h3>
 				<p class="text-sm text-muted-foreground">
-					Drive engagement, awareness & leads using digital tools.
+					Access your surveys through a wide range of devices
 				</p>
 			</div>
 			<div class="grid gap-1">
-				<h3 class="text-lg font-bold">Web presence consulting</h3>
+				<h3 class="text-lg font-bold">Real-time charts and reporting</h3>
 				<p class="text-sm text-muted-foreground">
-					Help clients improve or launch digital platforms that reflect customer needs.
+					See your results in realtime with our intuitive analytics dashboard
 				</p>
 			</div>
 			<div class="grid gap-1">
-				<h3 class="text-lg font-bold">Customer engagement strategy</h3>
+				<h3 class="text-lg font-bold">Export results</h3>
 				<p class="text-sm text-muted-foreground">
-					Translate insights into deeper long term engagement.
+					Access your data through a wide range of formats including CSV & PDF with custom API
+					access support
 				</p>
 			</div>
 			<div class="grid gap-1">
-				<h3 class="text-lg font-bold">Campaign strategy execution</h3>
-				<p class="text-sm text-muted-foreground">
-					Help organizations run specific campaigns for visibility, launches or repositioning.
-				</p>
+				<h3 class="text-lg font-bold">Simple, transparent pricing</h3>
+				<p class="text-sm text-muted-foreground">Flexible pricing based on budget and outcome.</p>
 			</div>
 			<!-- <div class="grid gap-1">
 				<h3 class="text-lg font-bold">Seamless Integrations</h3>

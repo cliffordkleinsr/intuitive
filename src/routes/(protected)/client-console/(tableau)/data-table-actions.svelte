@@ -43,7 +43,7 @@
 		</DropdownMenu.Content>
 	</DropdownMenu.Root>
 {:else}
-	<a class={buttonVariants({ variant: 'secondary' })} href="/client-console/analytics/{id}">
+	<a class={buttonVariants({ variant: 'secondary' })} href="/client-console/statistics/{id}">
 		Stats
 		<ArrowUpRight class="size-4" />
 	</a>

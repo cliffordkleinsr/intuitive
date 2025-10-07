@@ -8,7 +8,8 @@
 	import Mail from 'lucide-svelte/icons/mail';
 	import SettingsUpload from './settingsUpload.svelte';
 	import * as Table from '$lib/components/ui/table';
-
+	import QRCode from 'qrcode';
+	import QrCode from 'lucide-svelte/icons/qr-code';
 	let { data }: { data: PageData } = $props();
 	const {
 		shared_surv: { title, description },
@@ -18,6 +19,15 @@
 
 	let clicked = $state(false);
 	let text = `${page.url.origin}/anonymous/${page.params.surveyId}`;
+
+	let canvasEL: HTMLCanvasElement | undefined;
+	$effect(() => {
+		if (!canvasEL) return;
+		QRCode.toCanvas(canvasEL, text, function (error) {
+			if (error) console.error(error);
+			console.log('success!');
+		});
+	});
 </script>
 
 <div class="mx-auto flex max-w-xl flex-col gap-2 px-2 py-16">
@@ -58,6 +68,11 @@
 					<Mail />
 					Send Mail
 				</a>
+				<canvas width="500px" height="500px" bind:this={canvasEL} id="qrCanvas"></canvas>
+				<Button variant="secondary" onclick={() => window.print()}>
+					<QrCode />
+					Print QR Code
+				</Button>
 			</div>
 		</Card.Content>
 		<Card.Footer class="grid w-full gap-2">
@@ -91,3 +106,27 @@
 		</Card.Content>
 	</Card.Root>
 </div>
+
+<style>
+	#qrCanvas {
+		visibility: hidden;
+		display: none;
+	}
+	@media print {
+		@page {
+			size: auto; /* auto is the initial value */
+			margin: 0; /* this affects the margin in the printer settings */
+		}
+		:global(body) {
+			visibility: hidden;
+		}
+		#qrCanvas {
+			display: block;
+			visibility: visible;
+			position: absolute;
+			left: 50%;
+			top: 50%;
+			transform: translate(-50%, -50%);
+		}
+	}
+</style>

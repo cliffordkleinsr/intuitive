@@ -20,8 +20,7 @@
 					<h1
 						class="block text-xl font-semibold text-neutral-50 drop-shadow-xl dark:text-neutral-200 md:text-2xl lg:text-3xl"
 					>
-						Corporate reputation <span class=" font-extralight">|</span> Brand Image <br />Customer
-						experience
+						Stop Guessing <span class=" font-extralight">|</span> Start Asking
 					</h1>
 				</div>
 				<!-- End Title -->
@@ -30,11 +29,8 @@
 					<div class="mt-5 flex max-w-2xl gap-2">
 						<p class="text-6xl font-extralight text-white">|</p>
 						<p class="text-md text-neutral-50 drop-shadow-md dark:text-neutral-400">
-							At Intuitive Insights, we are a professional research and analytics firm dedicated to
-							helping organizations enhance their corporate reputation, customer experience, and
-							brand visibility globally. Our suite of advanced features empowers businesses to
-							gather, analyze, and act on feedback, ensuring strategic decision-making that drives
-							growth.
+							With Intuitive Insights, anyone can create surveys in minutes, share them instantly,
+							and get results in real time. Made for Africa, built for you.
 						</p>
 					</div>
 				</div>

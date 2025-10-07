@@ -31,11 +31,15 @@
 						Intuitive Insights
 					</div>
 					<h1 class="text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none">
-						Premier platform for comprehensive solutions.
+						Who We Are
 					</h1>
 					<p class="max-w-[600px] text-muted-foreground md:text-xl">
-						Intuitive Insight is the premier platform for comprehensive solutions. We focus in
-						offering solutions tailored to the unique needs of businesses across various sectors.
+						We provide businesses with a simple, secure, and user-friendly platform for gathering
+						valuable insights.
+					</p>
+					<p class="max-w-[600px] text-muted-foreground md:text-xl">
+						We believe that when organizations listen to their audiences and act on data, they can
+						make smarter decisions, strengthen relationships, and achieve sustainable growth.
 					</p>
 				</div>
 			</div>
@@ -53,12 +57,11 @@
 			/>
 		</div>
 	</section>
-
 	<section class="w-full py-12 md:py-24 lg:py-32" id="more">
 		<div class="container px-4 md:px-6">
 			<div class="flex flex-col items-center justify-center space-y-4 text-center">
 				<div class="space-y-2">
-					<div class="inline-block rounded-lg bg-muted px-3 py-1 text-sm">Our Mission</div>
+					<div class="inline-block rounded-lg bg-muted px-3 py-1 text-sm">Our Vision</div>
 					<h2 class="text-3xl font-bold tracking-tighter sm:text-5xl">
 						Empowering Businesses with Insightful Data
 					</h2>
