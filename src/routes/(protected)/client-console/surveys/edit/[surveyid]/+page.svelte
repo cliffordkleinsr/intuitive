@@ -120,7 +120,7 @@
 					</Card.Description>
 				</Card.Header>
 				<Card.Content class="grid gap-3 lg:grid-cols-2">
-					{#if surveyqns.length === features.max_questions}
+					<!-- {#if surveyqns.length === features.max_questions}
 						<div
 							class="rounded-lg border border-yellow-200 bg-yellow-100 p-4 text-sm text-yellow-800 dark:border-yellow-900 dark:bg-yellow-800/10 dark:text-yellow-500"
 							role="alert"
@@ -128,9 +128,9 @@
 							<span class="font-bold">Warning</span> alert! You have exceeded the maximum available questions
 							for your plan
 						</div>
-					{:else}
-						<RootQuest {form} />
-					{/if}
+					{:else} -->
+					<RootQuest plan={features.plan} {form} />
+					<!-- {/if} -->
 				</Card.Content>
 			</Card.Root>
 			<!-- Types of Questions  -->
@@ -361,7 +361,12 @@
 				{/each}
 			</div>
 		</Portal>
-		<Portal title="Logic Path" description="" class=" max-w-[90rem]">
+		<Portal
+			title="Logic Path"
+			description=""
+			class=" max-w-[90rem]"
+			disabled={features.plan === 'Free' || features.plan === 'Basic' ? true : false}
+		>
 			{#snippet trigger()}
 				Preview logic path
 				<ArrowUpRight />

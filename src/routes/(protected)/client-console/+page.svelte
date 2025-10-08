@@ -203,13 +203,13 @@
 			>
 		</Tabs.List>
 		<Tabs.Content value="draft">
-			<DataTable data={draft_surv} columns={columns(payment, 'Draft')} />
+			<DataTable data={draft_surv} columns={columns('Draft')} />
 		</Tabs.Content>
 		<Tabs.Content value="running">
-			<DataTable data={live_surv} columns={columns(payment, 'Live')} />
+			<DataTable data={live_surv} columns={columns('Live')} />
 		</Tabs.Content>
 		<Tabs.Content value="completed">
-			<DataTable data={closed_surv} columns={columns(payment, 'Closed')} />
+			<DataTable data={closed_surv} columns={columns('Closed')} />
 		</Tabs.Content>
 	</Tabs.Root>
 </div>

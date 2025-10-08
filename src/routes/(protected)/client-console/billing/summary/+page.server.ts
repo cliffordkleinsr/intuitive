@@ -5,7 +5,9 @@ import {
 	clientTransactions,
 	consumerDeats,
 	consumerPackage,
-	pricingTable
+	costTable,
+	pricingTable,
+	userPackage
 } from '$lib/server/db/schema';
 import { eq, sql } from 'drizzle-orm';
 import { redirect } from 'sveltekit-flash-message/server';
@@ -45,7 +47,7 @@ export const actions: Actions = {
 			plan: string;
 			packagetype: string;
 		}
-		const { phone, price, plan, packagetype } = form.data as BillingItems;
+		const { phone, price, plan } = form.data as BillingItems;
 
 		// check if there is any payment in the database
 		const details = await db
@@ -63,31 +65,48 @@ export const actions: Actions = {
 		try {
 			if (details.length > 0) {
 				const dollar_amt = parseInt(price) / 100;
-				let date_val =
-					packagetype === 'advanced' || packagetype === 'advantage'
-						? 365
-						: plan !== 'Enterprise'
-							? 30
-							: 90;
 				const [lookup] = await db
 					.select({
-						packageid: pricingTable.id
+						packageid: costTable.id
 					})
-					.from(pricingTable)
-					.where(eq(pricingTable.title, plan));
+					.from(costTable)
+					.where(eq(costTable.title, plan));
+
+				let date_val = plan === 'Basic' ? 183 : 365;
 				const date = new Date();
-
 				const dv = date.setDate(date.getDate() + date_val);
-
-				await db.insert(consumerPackage).values({
+				await db.insert(userPackage).values({
 					consumerid: userid,
 					package_id: lookup.packageid,
 					transaction_code: details[0].TransactionCode,
-					package: plan,
-					package_type: packagetype,
 					invoiced: new Date(),
 					expires: new Date(dv)
 				});
+				// let date_val =
+				// 	packagetype === 'advanced' || packagetype === 'advantage'
+				// 		? 365
+				// 		: plan !== 'Enterprise'
+				// 			? 30
+				// 			: 90;
+				// const [lookup] = await db
+				// 	.select({
+				// 		packageid: pricingTable.id
+				// 	})
+				// 	.from(pricingTable)
+				// 	.where(eq(pricingTable.title, plan));
+				// const date = new Date();
+
+				// const dv = date.setDate(date.getDate() + date_val);
+
+				// await db.insert(consumerPackage).values({
+				// 	consumerid: userid,
+				// 	package_id: lookup.packageid,
+				// 	transaction_code: details[0].TransactionCode,
+				// 	package: plan,
+				// 	package_type: packagetype,
+				// 	invoiced: new Date(),
+				// 	expires: new Date(dv)
+				// });
 			} else {
 				return message(form, {
 					alertType: 'info',

@@ -13,7 +13,7 @@ import { retSurveyInfo } from '$lib/server/db/db_utils';
 import { addDays } from '$lib/custom/functions/helpers';
 import { redirect } from '@sveltejs/kit';
 
-export const load: PageServerLoad = async ({ locals: { user }, parent }) => {
+export const load: PageServerLoad = async ({ locals: { user } }) => {
 	const userid = user?.id as string;
 	const [allsurveys, draftsurveys, livesurveys, closedsurveys] = await retSurveyInfo(userid);
 	const total_agents = await db

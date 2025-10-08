@@ -11,10 +11,9 @@
 
 	interface DataActions {
 		id: string;
-		payment_stat: boolean;
 		status: string;
 	}
-	let { id, payment_stat, status }: DataActions = $props();
+	let { id, status }: DataActions = $props();
 </script>
 
 {#if status !== 'Closed' && status !== 'Live'}

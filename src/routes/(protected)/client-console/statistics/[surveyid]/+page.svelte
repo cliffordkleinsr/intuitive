@@ -236,7 +236,7 @@
 </script>
 
 <div class="px-3 py-5">
-	<div id="kutton" class="flex gap-2 py-1">
+	<div id="kutton" class={['flex gap-2 py-1', data.features.plan === 'Free' ? 'hidden' : '']}>
 		<Button
 			variant="secondary"
 			onclick={() => {
@@ -252,7 +252,7 @@
 		</Button>
 	</div>
 	<div class="grid grid-cols-[repeat(2,1fr)] gap-x-[10px] gap-y-[10px]">
-		<div class="col-span-2">
+		<div class={['col-span-2', data.features.plan === 'Free' ? 'hidden' : '']}>
 			<Card.Root>
 				<Card.Header>
 					<Card.Title>Geographical Distribution</Card.Title>
@@ -390,7 +390,7 @@
 				<Card.Footer></Card.Footer>
 			</Card.Root>
 		</div>
-		<div class="col-span-2 md:col-span-1">
+		<div class={['col-span-2 md:col-span-1', data.features.plan === 'Free' ? 'hidden' : '']}>
 			<h1 class="text-sm text-muted-foreground">Responses by Sector</h1>
 			<div class="relative h-[350px] w-full rounded border p-4">
 				<PieChart
@@ -410,7 +410,7 @@
 				/>
 			</div>
 		</div>
-		<div class="col-span-2 md:col-span-1">
+		<div class={['col-span-2 md:col-span-1', data.features.plan === 'Free' ? 'hidden' : '']}>
 			<h1 class="text-sm text-muted-foreground">Responses by Literacy rate</h1>
 			<div class="relative h-[350px] w-full rounded border p-4">
 				<BarChart
@@ -440,7 +440,8 @@
 							<div
 								class={[
 									variable[ix] && printstate ? 'max-w-[800px]' : '',
-									'mb-3 h-96 rounded border p-4'
+									'mb-3 h-96 rounded border p-4',
+									data.features.plan === 'Free' ? 'hidden' : ''
 								]}
 							>
 								<BarChart
@@ -461,7 +462,14 @@
 							{@const textContent = statistic.answer_statistics
 								.map((stat) => stat.answer)
 								.join('.\n')}
-							<div class="place-items-center">
+							<div
+								class={[
+									'place-items-center',
+									data.features.plan === 'Premium' || data.features.plan === 'Enterprise'
+										? ''
+										: 'hidden'
+								]}
+							>
 								<WordCloud text={textContent} />
 							</div>
 						{/if}

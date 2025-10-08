@@ -30,7 +30,7 @@ export const featureList = [
 	{
 		id: '3',
 		title: 'Premium',
-		cost: '99',
+		cost: '75',
 		comments: 'Ideal for Businesses, researchers, or marketers with the need for deeper insights.',
 		features: [
 			'5 user accounts',
@@ -45,7 +45,7 @@ export const featureList = [
 	{
 		id: '4',
 		title: 'Enterprise',
-		cost: '299',
+		cost: '250',
 		comments: 'Ideal for large organizations, enterprises, or compliance-heavy industries.',
 		features: [
 			'Everything in Professional +',

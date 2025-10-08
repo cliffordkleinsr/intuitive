@@ -21,7 +21,7 @@
 	// state management
 	import { multiples, selection, rankers } from './state.svelte';
 
-	let { form }: { form?: any | Actions | undefined } = $props();
+	let { form, plan }: { form?: any | Actions | undefined; plan?: string | null } = $props();
 
 	let singleprops = {
 		title: 'Open ended Question',
@@ -132,7 +132,7 @@
 	</form>
 </Portal>
 <!-- Multi selection -->
-<Portal {...multiprops} class="">
+<Portal {...multiprops} class="" disabled={plan === 'Free' ? true : false}>
 	{#snippet trigger()}
 		<CheckCheck />
 		Add multiple selection question
@@ -195,7 +195,7 @@
 	</form>
 </Portal>
 <!-- optional selection -->
-<Portal {...optiprops} class="">
+<Portal {...optiprops} class="" disabled={plan === 'Free' ? true : false}>
 	{#snippet trigger()}
 		<Target />
 		Add a single selection question
@@ -307,7 +307,7 @@
 	</form>
 </Portal>
 <!-- Likert -->
-<Portal {...likertprops} class="">
+<Portal {...likertprops} class="" disabled={plan === 'Free' ? true : false}>
 	{#snippet trigger()}
 		<SlidersHorizontal />
 		Add a likert question
@@ -366,7 +366,7 @@
 	</form>
 </Portal>
 <!-- Rankers -->
-<Portal {...rankprops} class="">
+<Portal {...rankprops} class="" disabled={plan === 'Free' ? true : false}>
 	{#snippet trigger()}
 		<ChartBar />
 		Add a ranking question

@@ -2,6 +2,7 @@
 	import type { PageData } from './$types';
 	import Pricer from '$lib/custom/blocks/product/pricer.svelte';
 	import Pricecomponent from '$lib/custom/blocks/newproduct/Pricecomponent.svelte';
+	import BasePriceComp from '$lib/custom/blocks/newproduct/BasePriceComp.svelte';
 
 	let { data }: { data: PageData } = $props();
 	const signup = false;
@@ -15,5 +16,6 @@
 
 <div class="flex justify-center py-5">
 	<!-- <Pricer {...pricerprops} /> -->
-	<Pricecomponent {signup} />
+	<!-- <Pricecomponent {signup} /> -->
+	<BasePriceComp {signup} />
 </div>

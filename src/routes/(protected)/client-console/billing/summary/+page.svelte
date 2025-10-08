@@ -49,7 +49,7 @@
 	let payment_plan: any | { plan: string; price: string; packagetype: string } = $state();
 	let value = $state('4826298');
 	$effect(() => {
-		const plan = localStorage.getItem('aurium');
+		const plan = sessionStorage.getItem('aurium');
 		plan && (payment_plan = JSON.parse(plan));
 	});
 </script>
@@ -121,14 +121,14 @@
 					</Form.Control>
 					<Form.FieldErrors />
 				</Form.Field>
-				<Form.Field {form} name="packagetype">
+				<!-- <Form.Field {form} name="packagetype">
 					<Form.Control>
 						{#snippet children({ props })}
 							<Input {...props} value={payment_plan?.packagetype} class="hidden" />
 						{/snippet}
 					</Form.Control>
 					<Form.FieldErrors />
-				</Form.Field>
+				</Form.Field> -->
 				<!-- <SuperDebug data={$formData}/> -->
 				{#if $delayed}
 					<Button class="flex w-full gap-2" disabled={$delayed} variant="black">

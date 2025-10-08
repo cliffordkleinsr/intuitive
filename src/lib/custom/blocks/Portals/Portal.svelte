@@ -13,6 +13,7 @@
 		title: string;
 		description?: string;
 		variant?: WithElementRef<ButtonVariant>;
+		disabled?: boolean;
 		children?: Snippet;
 	}
 	let {
@@ -21,6 +22,7 @@
 		title,
 		description,
 		variant = 'outline',
+		disabled = false,
 		children
 	}: Shower = $props();
 
@@ -30,7 +32,7 @@
 
 {#if isDesktop.current}
 	<Dialog.Root bind:open>
-		<Dialog.Trigger class={buttonVariants({ variant: variant })}>
+		<Dialog.Trigger class={buttonVariants({ variant: variant })} {disabled}>
 			{@render trigger?.()}
 		</Dialog.Trigger>
 		<Dialog.Content class={classname}>

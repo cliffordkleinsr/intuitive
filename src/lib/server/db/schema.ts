@@ -158,6 +158,33 @@ export const pricingTable = pgTable('price_table', {
 	branding: boolean().notNull().default(false)
 }).enableRLS();
 
+export const costTable = pgTable('cost_table', {
+	id: serial().primaryKey().notNull(),
+	title: text().notNull(),
+	cost: text().notNull(),
+	max_responses: integer().notNull(),
+	demographics: boolean().notNull().default(false),
+	branding: boolean().notNull().default(false)
+}).enableRLS();
+
+export const userPackage = pgTable('user_package', {
+	id: serial().notNull().primaryKey(),
+	consumerid: text()
+		.references(() => UsersTable.id)
+		.notNull(),
+	package_id: integer()
+		.references(() => costTable.id)
+		.notNull(),
+	transaction_code: text().notNull(),
+	invoiced: timestamp({
+		withTimezone: true,
+		mode: 'date'
+	}).notNull(),
+	expires: timestamp({
+		withTimezone: true,
+		mode: 'date'
+	}).notNull()
+}).enableRLS();
 export const consumerPackage = pgTable('consumer_package', {
 	id: serial().notNull().primaryKey(),
 	consumerid: text()
@@ -331,7 +358,7 @@ export const AnswersTable = pgTable('answers', {
 export const user_analytics = pgTable('user_analytics', {
 	id: serial().primaryKey().notNull(),
 	surveyid: text()
-		.references(() => SurveyTable.surveyid)
+		.references(() => SurveyTable.surveyid, { onDelete: 'cascade' })
 		.notNull(),
 	level_of_education: text().notNull(),
 	sector: text().notNull(),
@@ -344,10 +371,10 @@ export const user_analytics = pgTable('user_analytics', {
 export const response_table = pgTable('response_table', {
 	id: serial().notNull().primaryKey(),
 	questionId: uuid('questionid')
-		.references(() => surveyqnsTableV2.questionId)
+		.references(() => surveyqnsTableV2.questionId, { onDelete: 'cascade' })
 		.notNull(),
 	surveid: text('surveyid')
-		.references(() => SurveyTable.surveyid)
+		.references(() => SurveyTable.surveyid, { onDelete: 'cascade' })
 		.notNull(),
 	optionId: uuid('option_id').references(() => QuestionOptions.optionId),
 	rankId: text('rankid'),
