@@ -76,15 +76,15 @@
 			</div>
 		</Card.Content>
 		<Card.Footer class="grid w-full gap-2">
-			{#if plan !== 'Basic'}
+			{#if plan === 'Premium'}
 				<SettingsUpload data={form} />
 			{/if}
 		</Card.Footer>
 	</Card.Root>
-	{#if plan !== 'Basic'}
+	{#if plan === 'Premium'}
 		<p class="text-start text-sm italic text-muted-foreground">Example Data format:</p>
 	{/if}
-	<Card.Root class={[plan !== 'Basic' ? '' : ' pointer-events-none blur-sm']}>
+	<Card.Root class={[plan === 'Premium' ? '' : 'pointer-events-none blur-sm']}>
 		<Card.Content>
 			<Table.Root>
 				<Table.Caption>list of names & emails</Table.Caption>
