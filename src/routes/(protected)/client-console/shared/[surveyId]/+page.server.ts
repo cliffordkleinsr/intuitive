@@ -11,11 +11,11 @@ import { ratelimit } from '$lib/server/redis';
 import { doPriceLookup, getNewPaymentStatus } from '$lib/server/db/db_utils';
 import { redirect } from 'sveltekit-flash-message/server';
 
-export const load = (async ({ params, parent, cookies }) => {
-	const { payment } = await parent();
-	if (!payment) {
-		redirect(303, '/client-console', { message: 'Not Authorized', type: 'warning' }, cookies);
-	}
+export const load = (async ({ params }) => {
+	// const { payment } = await parent();
+	// if (!payment) {
+	// 	redirect(303, '/client-console', { message: 'Not Authorized', type: 'warning' }, cookies);
+	// }
 	const [shared_surv] = await db
 		.select({
 			id: SurveyTable.surveyid,
