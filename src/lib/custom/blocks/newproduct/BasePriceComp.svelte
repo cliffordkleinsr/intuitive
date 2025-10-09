@@ -18,14 +18,19 @@
 	<div class="grid w-full gap-2 md:grid-cols-3">
 		{#each list as pkg}
 			<Card.Root
-				class={['flex h-full flex-col', pkg.title === 'Enterprise' && signup ? 'col-span-3' : '']}
+				class={['flex h-full flex-col', pkg.title === 'Enterprise' && signup ? 'col-span-2' : '']}
 			>
 				<Card.Header class="text-center">
 					<Card.Title>{pkg.title}</Card.Title>
 					<Card.Title class="text-4xl">
 						${pkg.cost}
 					</Card.Title>
-					<Card.Description>{pkg.comments}</Card.Description>
+					<Card.Description>
+						<span>{pkg.comments}</span>
+						{#if pkg.title === 'Enterprise'}
+							<span class="text-primary">Everything in Professional +</span>
+						{/if}
+					</Card.Description>
 				</Card.Header>
 				<Card.Content>
 					<ul class="mt-7 space-y-2.5 text-sm">

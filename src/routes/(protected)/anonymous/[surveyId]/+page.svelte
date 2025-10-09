@@ -59,7 +59,14 @@
 	</Card.Root>
 	{#if !(current_ix > 0)}
 		<div class="mx-auto flex items-center space-x-2 py-5">
-			<Checkbox id="terms" bind:checked aria-labelledby="terms-label" />
+			<div class="relative inline-flex items-center justify-center">
+				{#if !checked}
+					<span
+						class="pointer-events-none absolute inline-flex h-6 w-6 animate-ping rounded-full bg-primary opacity-75"
+					></span>
+				{/if}
+				<Checkbox id="terms" bind:checked aria-labelledby="terms-label" />
+			</div>
 			<div class="grid gap-1.5 leading-none">
 				<Label
 					for="terms1"

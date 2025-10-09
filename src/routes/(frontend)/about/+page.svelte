@@ -68,10 +68,10 @@
 					<p
 						class="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed"
 					>
-						At Intuitive Insights, our mission is to provide businesses with a powerful and user-
+						At Intuitive Insights, our vision is to provide businesses with a powerful and user-
 						friendly platform to gather valuable insights that drive informed decision-making. We
 						believe that data-driven strategies are the key to sustainable growth and success in
-						industries like retail, NGOs, healthcare, financial services, and hospitality in Kenya.
+						industries.
 					</p>
 				</div>
 			</div>
@@ -92,40 +92,36 @@
 				>
 					At the core of Intuitive Insights are our values: innovation, customer-centricity,
 					integrity, and continuous improvement. These principles shape our approach and drive us to
-					deliver exceptional experiences for our clients in Kenya and beyond.
+					deliver exceptional experiences for our clients.
 				</p>
 			</div>
 			<div class="grid gap-6">
 				<div class="grid gap-1">
 					<h3 class="text-lg font-bold">Innovation</h3>
 					<p class="text-sm text-muted-foreground">
-						We constantly explore new technologies and methodologies to enhance feedback gathering
-						and provide cutting-edge solutions that are tailored to the unique needs of Kenyan
-						businesses.
+						We continually enhance our platform with new features and technology so businesses
+						always have access to smarter, faster ways of gathering feedback.
 					</p>
 				</div>
 				<div class="grid gap-1">
 					<h3 class="text-lg font-bold">Customer-Centricity</h3>
 					<p class="text-sm text-muted-foreground">
-						Our clients&#39; success is our top priority. We work closely with them to understand
-						their unique needs and deliver tailored solutions for market research, customer
-						satisfaction surveys, and more.
+						Every feature we build is designed with our users in mind, ensuring the platform remains
+						intuitive, reliable, and impactful.
 					</p>
 				</div>
 				<div class="grid gap-1">
 					<h3 class="text-lg font-bold">Integrity</h3>
 					<p class="text-sm text-muted-foreground">
-						We are committed to maintaining the highest standards of ethics and transparency in all
-						our dealings, ensuring the reliability of our platform and services for businesses in
-						Kenya.
+						We are committed to transparency, security, and ethical practices so businesses can
+						trust every response and every report.
 					</p>
 				</div>
 				<div class="grid gap-1">
 					<h3 class="text-lg font-bold">Continuous Improvement</h3>
 					<p class="text-sm text-muted-foreground">
-						We constantly seek feedback and explore new ways to enhance our platform, ensuring that
-						our clients always have access to the latest and most effective tools for data
-						collection and customer feedback.
+						We listen to our users just as they listen to theirs, constantly improving the platform
+						to deliver more value over time.
 					</p>
 				</div>
 			</div>

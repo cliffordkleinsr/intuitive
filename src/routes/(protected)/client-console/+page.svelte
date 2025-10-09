@@ -92,9 +92,9 @@
 						<ArrowUpRight />
 					{/snippet}
 					<div class="grid grid-cols-3 gap-2">
-						<Card.Root class="bg-gradient-to-r from-rose-400 to-red-500">
+						<Card.Root class="bg-gradient-to-r from-red-500 to-orange-500">
 							<Card.Header>
-								<Card.Title class="text-start ">Customer Feedback</Card.Title>
+								<Card.Title class="text-start text-white">Customer Feedback</Card.Title>
 								<Card.Description class="text-white">Total questions: 5</Card.Description>
 							</Card.Header>
 							<Card.Content></Card.Content>

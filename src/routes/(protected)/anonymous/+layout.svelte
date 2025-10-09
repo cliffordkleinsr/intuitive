@@ -9,6 +9,10 @@
 </script>
 
 {@render children()}
+<div class="fixed bottom-0 right-0 flex items-center">
+	<img class="w-7" src="/favicon.ico" alt="logo" />
+	<h1 class="text-sm">Survey by Intuitive Insights</h1>
+</div>
 <div class="fixed bottom-9 left-[50%]">
 	<Button onclick={toggleMode} variant="ghost" size="icon">
 		<Sun

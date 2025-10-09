@@ -46,10 +46,12 @@ export const actions: Actions = {
 		const date_val = 30; //returnDateValue(type as string, plan);
 		const expiry_date = addDays(today, date_val);
 		const uuid = crypto.randomUUID();
-
-		const pre = questions.map((q) => ({
+		const now = new Date();
+		const pre = questions.map((q, i) => ({
 			surveid: uuid,
-			question: q
+			question: q,
+			created_at: new Date(now.getTime() + i * 1000), // +1s per question
+			updated_at: new Date(now.getTime() + i * 1000)
 		}));
 		try {
 			await db.transaction(async (tx) => {

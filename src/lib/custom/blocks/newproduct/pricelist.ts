@@ -16,7 +16,7 @@ export const featureList = [
 	{
 		id: '2',
 		title: 'Basic',
-		cost: '29',
+		cost: '25',
 		comments: 'Ideal for individuals, small teams, or one-off feedback needs',
 		features: [
 			'2 user accounts',
@@ -48,12 +48,11 @@ export const featureList = [
 		cost: '250',
 		comments: 'Ideal for large organizations, enterprises, or compliance-heavy industries.',
 		features: [
-			'Everything in Professional +',
-			'API access + webhooks.',
+			'API access + webhooks',
 			'Custom reports & dashboards',
 			'Branding/Logo options',
-			'On demand technical support.',
-			'Migration tools.'
+			'On demand technical support',
+			'Migration tools'
 		]
 	}
 ];

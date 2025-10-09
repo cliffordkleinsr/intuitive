@@ -51,6 +51,7 @@ export const load = (async ({ fetch, params: { surveyid } }) => {
 	// const analytics = await getAnalytics(surveyid);
 
 	const analytics = await simplifiedAnalytics(surveyid);
+	// console.log(analytics)
 	const total_responses = (
 		await db.select().from(user_analytics).where(eq(user_analytics.surveyid, surveyid))
 	).length;

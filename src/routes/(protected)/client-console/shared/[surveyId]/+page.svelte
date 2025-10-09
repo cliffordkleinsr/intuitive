@@ -68,6 +68,24 @@
 					<Mail />
 					Send Mail
 				</a>
+				<div id="brandings">
+					{#if data.features.branding}
+						<img
+							class="w-10"
+							src="https://res.cloudinary.com/dmy8yp9el/image/upload/v1732781696/bdo6gntiz5pdxptwq5fe.png"
+							alt="logo"
+						/>
+						<h1>Survey by {data.company_name}</h1>
+					{:else}
+						<img
+							class="w-10"
+							src="https://res.cloudinary.com/dmy8yp9el/image/upload/v1732781696/bdo6gntiz5pdxptwq5fe.png"
+							alt="logo"
+						/>
+						<h1>Survey by Intuitive Insights</h1>
+					{/if}
+				</div>
+
 				<canvas width="500px" height="500px" bind:this={canvasEL} id="qrCanvas"></canvas>
 				<Button variant="secondary" onclick={() => window.print()}>
 					<QrCode />
@@ -112,6 +130,10 @@
 		visibility: hidden;
 		display: none;
 	}
+	#brandings {
+		visibility: hidden;
+		display: none;
+	}
 	@media print {
 		@page {
 			size: auto; /* auto is the initial value */
@@ -119,6 +141,12 @@
 		}
 		:global(body) {
 			visibility: hidden;
+		}
+		#brandings {
+			display: flex;
+			align-items: center;
+			visibility: visible;
+			position: absolute;
 		}
 		#qrCanvas {
 			display: block;

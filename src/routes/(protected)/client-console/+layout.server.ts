@@ -2,7 +2,13 @@
 import type { LayoutServerLoad } from './$types';
 import { fetchGeoJsons, handleLoginRedirect } from '$lib/custom/functions/helpers';
 import { db } from '$lib/server/db';
-import { costTable, SurveyTable, user_analytics, userPackage } from '$lib/server/db/schema';
+import {
+	consumerDeats,
+	costTable,
+	SurveyTable,
+	user_analytics,
+	userPackage
+} from '$lib/server/db/schema';
 import { eq, sql, and, gt } from 'drizzle-orm';
 import {
 	checkOnetime,
@@ -61,6 +67,10 @@ export const load: LayoutServerLoad = async ({ locals: { user }, url, cookies })
 		.limit(1);
 
 	const features = feature[0] ?? freeTier;
+	const [{ company_name }] = await db
+		.select({ company_name: consumerDeats.company_name })
+		.from(consumerDeats)
+		.where(eq(consumerDeats.consumerid, uid));
 	const [pkg] = await db
 		.select({
 			expires: userPackage.expires,
@@ -100,6 +110,7 @@ export const load: LayoutServerLoad = async ({ locals: { user }, url, cookies })
 		features,
 		payment,
 		user,
+		company_name,
 		responses: response.length
 	};
 };
