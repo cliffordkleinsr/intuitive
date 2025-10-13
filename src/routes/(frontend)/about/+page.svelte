@@ -12,7 +12,7 @@
 	let { data }: { data: PageData } = $props();
 
 	const pageprops = {
-		title: 'About • Intuitive Insights KE',
+		title: 'About • Intuitive Insights',
 		description: 'Gather insightful feedback, analyze data, and make informed decisions.',
 		type: 'Website'
 	};
@@ -160,29 +160,33 @@
 				<div class="rounded-lg p-6 shadow-md">
 					<h2 class="mb-4 text-2xl font-semibold">Our Address</h2>
 					<div class="mb-4 flex items-start">
-						<MapPin class="mr-2 mt-1 flex-shrink-0 text-gray-500" />
-						<p>
+						<MapPin class="mr-2 mt-1 size-5 flex-shrink-0 text-gray-500" />
+						<p class="text-sm">
 							Chania Avenue, CMS Africa<br />
 							Nairobi, NA 0100<br />
 							Kenya
 						</p>
 					</div>
 					<div class="mb-4 flex items-center">
-						<Phone class="mr-2 flex-shrink-0 text-gray-500" />
-						<p>+(254) 795-057553</p>
+						<Phone class="mr-2 size-5 flex-shrink-0 text-gray-500" />
+						<p class="text-sm">+(254) 795-057553</p>
 					</div>
 					<div class="flex items-center">
-						<Mail class="mr-2 flex-shrink-0 text-gray-500" />
-						<p>info@int-insights.com</p>
+						<Mail class="mr-2 size-5 flex-shrink-0 text-gray-500" />
+						<p class="text-sm">info@int-insights.com</p>
 					</div>
 				</div>
 
 				<div class="rounded-lg p-6 shadow-md">
 					<h2 class="mb-4 text-2xl font-semibold">Business Hours</h2>
 					<ul class="space-y-2">
-						<li><span class="font-semibold">Monday - Friday:</span> 9:00 AM - 4:00 PM</li>
-						<li><span class="font-semibold">Saturday:</span> 9:00 AM - 12:00 PM</li>
-						<li><span class="font-semibold">Sunday:</span> Closed</li>
+						<li class="py-2 text-sm">
+							<span class="font-semibold">Monday - Friday:</span> 9:00 AM - 4:00 PM
+						</li>
+						<li class="py-2 text-sm">
+							<span class="font-semibold">Saturday:</span> 9:00 AM - 12:00 PM
+						</li>
+						<li class="py-2 text-sm"><span class="font-semibold">Sunday:</span> Closed</li>
 					</ul>
 				</div>
 			</div>
@@ -197,7 +201,9 @@
 						Contact Us
 					</div>
 					<h2 class="text-3xl font-bold tracking-tighter sm:text-5xl">
-						Get in touch to schedule a demo with us
+						Get in touch
+						<!-- to schedule a demo  -->
+						with us
 					</h2>
 					<p
 						class="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed"

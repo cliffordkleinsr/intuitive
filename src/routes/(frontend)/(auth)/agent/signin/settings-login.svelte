@@ -18,14 +18,14 @@
 	});
 
 	const { form: formData, enhance, delayed } = form;
-	const props = {
-		title: 'Agent Sign In • Intuitive Insights KE',
-		description: 'Gather insightful feedback, analyze data, and make informed decisions.',
-		type: 'Website'
-	};
+	// const props = {
+	// 	title: 'Agent Sign In • Intuitive Insights KE',
+	// 	description: 'Gather insightful feedback, analyze data, and make informed decisions.',
+	// 	type: 'Website'
+	// };
 </script>
 
-<Meta {...props} />
+<!-- <Meta {...props} /> -->
 <div class="mb-10 mt-10 flex flex-1 justify-center">
 	<Breadcrumb.Root>
 		<Breadcrumb.List>

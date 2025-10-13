@@ -1,3 +1,13 @@
+<script>
+	import Meta from '$lib/custom/seo/meta.svelte';
+	const pageprops = {
+		title: 'Terms • Intuitive Insights',
+		description: 'Gather Insightful feedback, analyze data, and make informed decisions.',
+		type: 'Website'
+	};
+</script>
+
+<Meta {...pageprops} />
 <div class="container prose max-w-5xl py-5 dark:prose-invert">
 	<h1>TERMS &amp; CONDITIONS</h1>
 	<p>Last updated: January 15, 2025</p>

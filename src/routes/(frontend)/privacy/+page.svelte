@@ -4,7 +4,7 @@
 
 	let { data }: { data: PageData } = $props();
 	const pageprops = {
-		title: 'Privacy • Intuitive Insights KE',
+		title: 'Privacy • Intuitive Insights',
 		description: 'Gather Insightful feedback, analyze data, and make informed decisions.',
 		type: 'Website'
 	};

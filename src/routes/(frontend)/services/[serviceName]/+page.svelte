@@ -6,21 +6,21 @@
 	let { data }: { data: PageData } = $props();
 	let endpoint = $derived(data);
 
-	let Pageprops = $state<SEO>({
-		title: '',
-		description: '',
-		type: ''
-	});
-	$effect(() => {
-		Pageprops = {
-			title: `Services • Intuitive Insights KE • ${endpoint.service.title}`,
-			description: 'Gather insightful feedback, analyze data, and make informed decisions.',
-			type: 'Website'
-		};
-	});
+	// let Pageprops = $state<SEO>({
+	// 	title: '',
+	// 	description: '',
+	// 	type: ''
+	// });
+	// $effect(() => {
+	// 	Pageprops = {
+	// 		title: `Services • Intuitive Insights KE • ${endpoint.service.title}`,
+	// 		description: 'Gather insightful feedback, analyze data, and make informed decisions.',
+	// 		type: 'Website'
+	// 	};
+	// });
 </script>
 
-<Meta {...Pageprops} />
+<!-- <Meta {...Pageprops} /> -->
 
 <section
 	class="container mx-auto grid place-content-evenly gap-16 py-10 sm:px-6 lg:grid-cols-2 lg:px-8"

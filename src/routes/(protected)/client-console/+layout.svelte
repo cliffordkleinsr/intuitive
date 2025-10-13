@@ -22,6 +22,9 @@
 	import type { LayoutData } from './$types';
 	import type { Snippet } from 'svelte';
 	import Meta from '$lib/custom/seo/meta.svelte';
+	import * as Popover from '$lib/components/ui/popover';
+	import CircleQuestionMark from 'lucide-svelte/icons/mail-question';
+	import * as Card from '$lib/components/ui/card';
 
 	let { children, data }: { data: LayoutData; children: Snippet } = $props();
 
@@ -123,6 +126,44 @@
 			</Breadcrumb.Root>
 
 			<div class="ml-auto flex gap-2">
+				<Badge variant="outline">
+					<Popover.Root>
+						<Popover.Trigger><CircleQuestionMark class="size-5" /></Popover.Trigger>
+						<Popover.Content>
+							<Card.Root>
+								<Card.Header>
+									<Card.Title class="flex justify-center">
+										<svg
+											class="size-10 text-primary"
+											xmlns="http://www.w3.org/2000/svg"
+											width="24"
+											height="24"
+											viewBox="0 0 24 24"
+											fill="none"
+											stroke="currentColor"
+											stroke-width="2"
+											stroke-linecap="round"
+											stroke-linejoin="round"
+											><path
+												d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"
+											/><path d="M12 9v4" /><path d="M12 17h.01" /></svg
+										>
+									</Card.Title>
+									<Card.Title class="text-center">Issue</Card.Title>
+									<Card.Description class="text-center">have an issue?</Card.Description>
+								</Card.Header>
+								<Card.Content>
+									<Button
+										variant="outline"
+										data-sveltekit-reload
+										href="/about#contact"
+										class="w-full">Get Help</Button
+									>
+								</Card.Content>
+							</Card.Root>
+						</Popover.Content>
+					</Popover.Root>
+				</Badge>
 				{#if !data.payment}
 					<div class="my-2 hidden h-5 md:block">
 						<Badge variant="outline"><a href="/client-console/billing">Unlock Pro</a></Badge>

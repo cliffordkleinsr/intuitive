@@ -4,7 +4,7 @@
 	import Meta from '$lib/custom/seo/meta.svelte';
 
 	const props = {
-		title: 'Intuitive Insights KE',
+		title: 'Intuitive Insights',
 		description: 'Gather Insightful feedback, analyze data, and make informed decisions.',
 		type: 'Website'
 	};
