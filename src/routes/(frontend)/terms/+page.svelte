@@ -904,7 +904,7 @@
 		communication links beyond the reasonable control of either Party.
 	</p>
 
-	<p>
+	<!-- <p>
 		<strong>I / WE (NAME OF INDIVIDUAL/CLIENT)</strong> …………………………… CONFIRM THAT THE INFORMATION INDICATED
 		IN THIS FORM IS TRUE AND ACCURATE AND I / WE FURTHER CONFIRM THAT WE HAVE READ AND UNDERSTOOD THE
 		TERMS AND CONDITIONS APPEARING OVERLEAF AND THAT I / WE AGREE TO BE BOUND BY THEM.
@@ -916,5 +916,5 @@
 	<p><strong>DATE</strong></p>
 	<p>1</p>
 	<p>2</p>
-	<p>2</p>
+	<p>2</p> -->
 </div>

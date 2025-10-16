@@ -34,6 +34,7 @@ interface SEO {
 	title: string;
 	description: string;
 	type: string;
+	index?: boolean;
 }
 
 interface C2BURLs {

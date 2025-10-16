@@ -2,7 +2,7 @@
 	import { page } from '$app/state';
 	import type { SEO } from '$lib/types';
 
-	let { title, description, type }: SEO = $props();
+	let { title, description, type, index = true }: SEO = $props();
 
 	const base = $derived(page.url.href);
 </script>
@@ -15,7 +15,7 @@
 		content="Intuitive insights, data analysis, informed decisions, feedback gathering"
 	/>
 	<meta name="author" content="Intuitive insights" />
-	<meta name="robots" content="index, follow" />
+	<meta name="robots" content={index ? 'index, follow' : 'noindex'} />
 	<link
 		rel="icon"
 		href="https://res.cloudinary.com/dmy8yp9el/image/upload/v1736759654/faviconb_zewoz3.ico"

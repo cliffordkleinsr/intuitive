@@ -40,7 +40,7 @@
 	});
 	const { form: formData, enhance, message, delayed } = form;
 	const Pageprops = {
-		title: 'Client Sign in • Intuitive Insights KE',
+		title: 'Client Sign in • Intuitive Insights',
 		description: 'Gather insightful feedback, analyze data, and make informed decisions.',
 		type: 'Website'
 	};

@@ -132,7 +132,8 @@
 	const Pageprops = {
 		title: 'Agent Sign Up • Intuitive Insights KE',
 		description: 'Gather insightful feedback, analyze data, and make informed decisions.',
-		type: 'Website'
+		type: 'Website',
+		index: false
 	};
 	const triggerId = useId();
 	// console.log('Select an income bracket'.length)
