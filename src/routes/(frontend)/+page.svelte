@@ -5,7 +5,8 @@
 
 	const props = {
 		title: 'Intuitive Insights',
-		description: 'Gather Insightful feedback, analyze data, and make informed decisions.',
+		description:
+			'Run Online Surveys Kenya, Gather Insightful feedback, analyze data, and make informed decisions.',
 		type: 'Website'
 	};
 </script>

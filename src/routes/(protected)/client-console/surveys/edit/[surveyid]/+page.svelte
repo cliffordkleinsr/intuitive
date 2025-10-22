@@ -217,7 +217,10 @@
 								</Button>
 							{:else}
 								<a
-									class={[buttonVariants({ variant: 'outline' })]}
+									class={[
+										buttonVariants({ variant: 'outline' }),
+										features.plan === 'Free' ? 'pointer-events-none opacity-50' : ''
+									]}
 									onclick={onLinkClick}
 									href="/client-console/surveys/edit/{page.params.surveyid}/{qs.id}"
 								>

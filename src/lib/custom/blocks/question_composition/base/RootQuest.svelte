@@ -83,7 +83,7 @@
 </script>
 
 <!-- Single Question -->
-<Portal {...singleprops} class="">
+<Portal {...singleprops} class="" disabled={plan === 'Free' ? true : false}>
 	{#snippet trigger()}
 		<Webcam />
 		Add an open ended question
@@ -195,7 +195,7 @@
 	</form>
 </Portal>
 <!-- optional selection -->
-<Portal {...optiprops} class="" disabled={plan === 'Free' ? true : false}>
+<Portal {...optiprops} class="">
 	{#snippet trigger()}
 		<Target />
 		Add a single selection question

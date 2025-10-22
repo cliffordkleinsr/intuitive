@@ -5,7 +5,8 @@
 	import Meta from '$lib/custom/seo/meta.svelte';
 	const props = {
 		title: 'Pricing • Intuitive Insights',
-		description: 'Gather insightful feedback, analyze data, and make informed decisions.',
+		description:
+			'Run Online Surveys Kenya, Gather insightful feedback, analyze data, and make informed decisions.',
 		type: 'Website'
 	};
 	let pricerprops = {

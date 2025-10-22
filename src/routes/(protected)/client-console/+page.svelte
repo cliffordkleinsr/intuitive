@@ -21,47 +21,15 @@
 	import { toast } from 'svelte-sonner';
 	import { goto } from '$app/navigation';
 	import { Input } from '$lib/components/ui/input';
-	import { SvelteMap } from 'svelte/reactivity';
+	import Template from '$lib/custom/blocks/Portals/Template.svelte';
+	import { tempList } from './templates';
 
 	let { data }: { data: PageData } = $props();
 	const { all_surv, draft_surv, live_surv, closed_surv, count, payment } = data;
 
 	let loading = $state(false);
 
-	type TempList = {
-		id: number;
-		qns: string;
-		name: string;
-	};
-	const tempList: Map<string, TempList[]> = new SvelteMap();
-	let temp = $state('Customer Engagement');
-	tempList.set('Customer Engagement', [
-		{
-			id: 1,
-			qns: 'What motivated you to choose our product/service?',
-			name: 'single_question'
-		},
-		{
-			id: 2,
-			qns: 'How would you describe your overall experience with us?',
-			name: 'single_question'
-		},
-		{
-			id: 3,
-			qns: 'What aspects of our product/service did you find most valuable or enjoyable?',
-			name: 'single_question'
-		},
-		{
-			id: 4,
-			qns: 'Were there any challenges or frustrations you encountered? Please explain.',
-			name: 'single_question'
-		},
-		{
-			id: 5,
-			qns: 'How can we improve our products or services to better meet your needs?',
-			name: 'single_question'
-		}
-	]);
+	let temp = $state('');
 </script>
 
 <div class="m-4 mt-4 flex flex-col gap-10">
@@ -81,7 +49,8 @@
 		</Card.Root>
 		<Card.Root class="max-w-lg">
 			<Card.Header class="pb-2">
-				<Card.Title class="text-3xl">1</Card.Title>
+				<Card.Title class="text-3xl">{data.features.plan === 'Free' ? 1 : tempList.size}</Card.Title
+				>
 				<Card.Description>Available Templates</Card.Description>
 			</Card.Header>
 			<Card.Content></Card.Content>
@@ -92,61 +61,93 @@
 						<ArrowUpRight />
 					{/snippet}
 					<div class="grid grid-cols-3 gap-2">
-						<Card.Root class="bg-gradient-to-r from-red-500 to-orange-500">
-							<Card.Header>
-								<Card.Title class="text-start text-white">Customer Feedback</Card.Title>
-								<Card.Description class="text-white">Total questions: 5</Card.Description>
-							</Card.Header>
-							<Card.Content></Card.Content>
-							<Card.Footer>
-								<Portal title="Preview" class="max-w-[600px]">
-									{#snippet trigger()}
-										Preview Questions
-										<ArrowUpRight />
-									{/snippet}
-									<form
-										action="?/addTemplate"
-										method="post"
-										class="flex flex-col gap-2"
-										use:enhance={() => {
-											return async ({ result }) => {
-												loading = true;
-												if (result.type === 'redirect') {
-													toast.success('Added Successfully');
-													goto(result.location, { invalidateAll: true });
-												} else {
-													await applyAction(result);
-												}
-											};
-										}}
+						{#each Array.from(tempList.entries()) as [title, config]}
+							<Card.Root
+								class={[
+									config.gradient,
+									data.features.plan === 'Free' && title === 'Customer Satisfaction (CSAT)'
+										? ''
+										: 'pointer-events-none select-none opacity-60 blur-sm'
+								]}
+							>
+								<Card.Header>
+									<Card.Title class="text-start text-white">{title}</Card.Title>
+									<Card.Description class="text-white"
+										>Total questions: {config.questions.length}</Card.Description
 									>
-										<div class="flex items-center justify-center gap-3">
-											<span class="font-semibold">Title</span>
-											<Input type="text" bind:value={temp} name="title" />
-										</div>
-										{#each tempList.get('Customer Engagement') ?? [] as template}
+								</Card.Header>
+								<Card.Content></Card.Content>
+								<Card.Footer>
+									<Template
+										title="Preview"
+										class="max-w-[600px]"
+										onclick={() => (temp = temp = title)}
+									>
+										<form
+											action="?/addTemplate"
+											method="post"
+											class="flex flex-col gap-2"
+											use:enhance={() => {
+												loading = true;
+												return async ({ result }) => {
+													if (result.type === 'redirect') {
+														loading = false;
+														goto(result.location, { invalidateAll: true });
+													} else {
+														await applyAction(result);
+													}
+												};
+											}}
+										>
+											<!-- Title input -->
 											<div class="flex items-center justify-center gap-3">
-												<Input type="text" bind:value={template.qns} name={template.name} />
+												<span class="font-semibold">Title</span>
+												<Input type="text" bind:value={temp} name="title" />
 											</div>
-										{/each}
-										<Button class="w-full" type="submit" disabled={loading} variant="black">
-											{#if loading}
-												<div class="flex gap-2">
-													<span
-														class="inline-block size-4 animate-spin rounded-full border-[3px] border-current border-t-transparent text-white dark:text-black"
-														role="status"
-														aria-label="loading"
-													></span>
-													Loading...
+
+											<!-- Questions -->
+											{#each config.questions as template}
+												<div class="flex items-center justify-center gap-3">
+													<span>{template.id + 1}</span>
+													<Input
+														type="text"
+														bind:value={template.qns}
+														name={template.name === 'optional_question'
+															? `${template.name}_${template.id}`
+															: template.name}
+													/>
 												</div>
-											{:else}
-												Add
-											{/if}
-										</Button>
-									</form>
-								</Portal>
-							</Card.Footer>
-						</Card.Root>
+												<div class="mx-7 mr-auto flex max-w-xs flex-col items-center gap-1">
+													{#if template.name === 'optional_question'}
+														{#each template.options as _, idx}
+															<Input
+																type="text"
+																value={template?.options?.[idx]}
+																name={`radio_option_${template.id}`}
+															/>
+														{/each}
+													{/if}
+												</div>
+											{/each}
+											<Button class="w-full" type="submit" disabled={loading} variant="black">
+												{#if loading}
+													<div class="flex gap-2">
+														<span
+															class="inline-block size-4 animate-spin rounded-full border-[3px] border-current border-t-transparent text-white dark:text-black"
+															role="status"
+															aria-label="loading"
+														></span>
+														Loading...
+													</div>
+												{:else}
+													Add
+												{/if}
+											</Button>
+										</form>
+									</Template>
+								</Card.Footer>
+							</Card.Root>
+						{/each}
 					</div>
 				</Portal>
 			</Card.Footer>

@@ -5,7 +5,8 @@
 	let { data }: { data: PageData } = $props();
 	const pageprops = {
 		title: 'Privacy • Intuitive Insights',
-		description: 'Gather Insightful feedback, analyze data, and make informed decisions.',
+		description:
+			'Run Online Surveys Kenya, Gather Insightful feedback, analyze data, and make informed decisions.',
 		type: 'Website'
 	};
 </script>

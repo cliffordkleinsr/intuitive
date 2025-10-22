@@ -41,7 +41,8 @@
 	const { form: formData, enhance, message, delayed } = form;
 	const Pageprops = {
 		title: 'Client Sign in • Intuitive Insights',
-		description: 'Gather insightful feedback, analyze data, and make informed decisions.',
+		description:
+			'Run Online Surveys Kenya, Gather insightful feedback, analyze data, and make informed decisions.',
 		type: 'Website'
 	};
 </script>

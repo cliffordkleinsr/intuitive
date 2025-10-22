@@ -2,7 +2,8 @@
 	import Meta from '$lib/custom/seo/meta.svelte';
 	const pageprops = {
 		title: 'Terms • Intuitive Insights',
-		description: 'Gather Insightful feedback, analyze data, and make informed decisions.',
+		description:
+			'Run Online Surveys Kenya, Gather Insightful feedback, analyze data, and make informed decisions.',
 		type: 'Website'
 	};
 </script>

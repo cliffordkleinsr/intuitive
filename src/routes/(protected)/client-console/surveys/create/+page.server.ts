@@ -1,7 +1,7 @@
 import { redirect } from 'sveltekit-flash-message/server';
 import type { Actions, PageServerLoad } from './$types';
 import { db } from '$lib/server/db';
-import { consumerPackage, SurveyTable } from '$lib/server/db/schema';
+import { consumerPackage, costTable, SurveyTable, userPackage } from '$lib/server/db/schema';
 import {
 	createNewSurvey,
 	doPriceLookup,
@@ -14,6 +14,7 @@ import { message, superValidate } from 'sveltekit-superforms';
 import { zod } from 'sveltekit-superforms/adapters';
 import { schema } from './schema';
 import { addDays } from '$lib/custom/functions/helpers';
+import { addYears } from 'date-fns';
 
 export const load: PageServerLoad = async ({ locals: { user } }) => {
 	const consumer_details = await getSubscriptionStatus(user?.id as string);
@@ -36,11 +37,25 @@ export const actions: Actions = {
 		}
 
 		const { title, description } = form.data;
-		const { max_responses, plan, type } = await doPriceLookup(userid);
+		// const { max_responses, plan, type } = await doPriceLookup(userid);
+		const freeTier = {
+			plan: 'Free',
+			max_responses: 800
+		};
+		const feature = await db
+			.select({
+				max_responses: costTable.max_responses,
+				plan: costTable.title
+			})
+			.from(userPackage)
+			.leftJoin(costTable, eq(userPackage.package_id, costTable.id))
+			.where(eq(userPackage.consumerid, userid))
+			.limit(1);
+		const features = feature[0] ?? freeTier;
 		const today = Date.now();
 
-		const date_val = 30; //returnDateValue(type as string, plan);
-		const expiry_date = addDays(today, date_val);
+		const date_val = features.plan === 'Free' ? 0.5 : 1; //returnDateValue(type as string, plan);
+		const expiry_date = addYears(today, date_val);
 		const uuid = crypto.randomUUID();
 		try {
 			await db.insert(SurveyTable).values({
@@ -48,7 +63,7 @@ export const actions: Actions = {
 				consumer_id: userid,
 				title: title,
 				description: description,
-				max_responses: max_responses,
+				max_responses: features.max_responses,
 				survey_expires: expiry_date
 			});
 		} catch (err) {
