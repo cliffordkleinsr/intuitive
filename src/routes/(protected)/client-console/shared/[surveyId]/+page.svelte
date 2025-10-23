@@ -76,16 +76,16 @@
 							alt="logo"
 						/>
 						<h1>Survey by {data.company_name}</h1>
-					{:else}
-						<img
-							class="w-10"
-							src="https://res.cloudinary.com/dmy8yp9el/image/upload/v1732781696/bdo6gntiz5pdxptwq5fe.png"
-							alt="logo"
-						/>
-						<h1>Survey by Intuitive Insights</h1>
 					{/if}
 				</div>
-
+				<div id="intive">
+					<img
+						class="w-10"
+						src="https://res.cloudinary.com/dmy8yp9el/image/upload/v1732781696/bdo6gntiz5pdxptwq5fe.png"
+						alt="logo"
+					/>
+					<h1>{data.features.branding ? 'Intuitive Insights' : 'Survey by Intuitive Insights'}</h1>
+				</div>
 				<canvas width="500px" height="500px" bind:this={canvasEL} id="qrCanvas"></canvas>
 				<Button variant="secondary" onclick={() => window.print()}>
 					<QrCode />
@@ -126,6 +126,10 @@
 </div>
 
 <style>
+	#intive {
+		visibility: hidden;
+		display: none;
+	}
 	#qrCanvas {
 		visibility: hidden;
 		display: none;
@@ -155,6 +159,13 @@
 			left: 50%;
 			top: 50%;
 			transform: translate(-50%, -50%);
+		}
+		#intive {
+			display: block;
+			visibility: visible;
+			position: absolute;
+			bottom: 0;
+			right: 5%;
 		}
 	}
 </style>

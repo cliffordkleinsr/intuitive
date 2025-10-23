@@ -40,6 +40,16 @@
 		>
 			About
 		</a>
+
+		<a
+			href="/templates"
+			class="{page.url.pathname === '/templates'
+				? 'text-foreground'
+				: 'text-muted-foreground'} transition-colors hover:text-primary"
+		>
+			Templates
+		</a>
+
 		<a
 			href="/pricing"
 			class="{page.url.pathname === '/pricing'
@@ -67,96 +77,7 @@
 				</a>
 				<a href="/" class="text-muted-foreground hover:text-primary"> Home </a>
 				<a href="/about" class="text-muted-foreground hover:text-primary"> About </a>
-				<Collapsible.Root class="group/collapsible space-y-2">
-					<Collapsible.Trigger class="text-muted-foreground transition-colors hover:text-primary"
-						>Industries
-					</Collapsible.Trigger>
-					<Collapsible.Content>
-						<a
-							href="/industries/hospitality"
-							class="text-muted-foreground transition-colors hover:text-primary"
-						>
-							Hospitality
-						</a>
-					</Collapsible.Content>
-					<Collapsible.Content>
-						<a
-							href="/industries/healthcare"
-							class="text-muted-foreground transition-colors hover:text-primary"
-						>
-							Healthcare
-						</a>
-					</Collapsible.Content>
-					<Collapsible.Content>
-						<a
-							href="/industries/retail_fmcg"
-							class="text-muted-foreground transition-colors hover:text-primary"
-						>
-							Retail
-						</a>
-					</Collapsible.Content>
-					<Collapsible.Content>
-						<a
-							href="/industries/financial_services"
-							class="text-muted-foreground transition-colors hover:text-primary"
-						>
-							Financial services
-						</a>
-					</Collapsible.Content>
-					<Collapsible.Content>
-						<a
-							href="/industries/ngo"
-							class="text-muted-foreground transition-colors hover:text-primary"
-						>
-							NGO's
-						</a>
-					</Collapsible.Content>
-				</Collapsible.Root>
-				<Collapsible.Root class="group/collapsible space-y-3">
-					<Collapsible.Trigger class="text-muted-foreground transition-colors hover:text-primary ">
-						Services
-					</Collapsible.Trigger>
-					<Collapsible.Content>
-						<a
-							href="/services/corp_rep"
-							class="text-muted-foreground transition-colors hover:text-primary"
-						>
-							Corporate reputation
-						</a>
-					</Collapsible.Content>
-					<Collapsible.Content>
-						<a
-							href="/services/brand_image"
-							class="text-muted-foreground transition-colors hover:text-primary"
-						>
-							Brand image
-						</a>
-					</Collapsible.Content>
-					<Collapsible.Content>
-						<a
-							href="/services/customer_experience"
-							class="text-muted-foreground transition-colors hover:text-primary"
-						>
-							Customer experience
-						</a>
-					</Collapsible.Content>
-					<!-- <Collapsible.Content>
-						<a
-							href="/services/product_assessment"
-							class="text-muted-foreground transition-colors hover:text-primary"
-						>
-							Product assessment
-						</a>
-					</Collapsible.Content> -->
-					<Collapsible.Content>
-						<a
-							href="/services/market_reaserch"
-							class="text-muted-foreground transition-colors hover:text-primary"
-						>
-							Market research
-						</a>
-					</Collapsible.Content>
-				</Collapsible.Root>
+				<a href="/templates" class="text-muted-foreground hover:text-primary"> Templates </a>
 				<a href="/pricing" class="text-muted-foreground transition-colors hover:text-primary">
 					Pricing
 				</a>

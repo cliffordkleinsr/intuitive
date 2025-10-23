@@ -167,7 +167,7 @@
 		<Card.Root class="max-w-lg">
 			<Card.Header class="pb-2">
 				<Card.Title class="text-3xl">{count}</Card.Title>
-				<Card.Description>Total agents</Card.Description>
+				<Card.Description>Total Respondent’s</Card.Description>
 			</Card.Header>
 			<Card.Content>
 				<div class="text-xs text-muted-foreground">+{count / 100}% from last month</div>

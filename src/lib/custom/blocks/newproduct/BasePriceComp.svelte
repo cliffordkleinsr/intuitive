@@ -18,12 +18,15 @@
 	<div class="grid w-full gap-2 md:grid-cols-3">
 		{#each list as pkg}
 			<Card.Root
-				class={['flex h-full flex-col', pkg.title === 'Enterprise' && signup ? 'col-span-2' : '']}
+				class={[
+					'flex h-full flex-col',
+					pkg.title === 'Enterprise' && signup ? 'col-span-2' : 'col-span-2 md:col-span-1'
+				]}
 			>
 				<Card.Header class="text-center">
 					<Card.Title>{pkg.title}</Card.Title>
 					<Card.Title class="text-4xl">
-						${pkg.cost}
+						{pkg.title === 'Free' ? '' : '$'}{pkg.cost}
 					</Card.Title>
 					<Card.Description>
 						<span>{pkg.comments}</span>

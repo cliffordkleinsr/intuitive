@@ -22,7 +22,7 @@ export const featureList = [
 			'2 user accounts',
 			'6 templates',
 			'6 question types',
-			'Up to 1200  responses per month',
+			'Up to 48000  responses per year',
 			'Basic Analytics with CSV Exports',
 			'Whatsapp & Email support'
 		]
@@ -37,7 +37,7 @@ export const featureList = [
 			'All templates',
 			'All question types with skip logic',
 			'Unlimited no. of questions per survey with custom SMS integration & bulk survey email transmission',
-			'Up to 2000  responses per month',
+			'Up to 96000  responses per year',
 			'Analytics with advanced demographic segmentation (income, education level), semantic Analysis & multiformat export',
 			'Priority support'
 		]

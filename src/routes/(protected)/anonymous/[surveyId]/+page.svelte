@@ -17,11 +17,11 @@
 <div class="mx-auto flex h-fit max-w-sm flex-col py-20">
 	<h1 class="text-center font-semibold antialiased">{title}</h1>
 	<Card.Root class="mt-5">
-		<Card.Header class="rounded-t-lg bg-yellow-300 text-center">
-			<Card.Title class="text-xl text-neutral-500">Total Survey Questions</Card.Title>
+		<Card.Header class="rounded-t-lg bg-primary text-center">
+			<Card.Title class="text-xl">Total Survey Questions</Card.Title>
 			<!-- <Card.Title class="text-sm text-neutral-500">{survId}</Card.Title> -->
 			<Card.Description>
-				<Button variant="ghost" class="hover:bg-inherit hover:text-neutral-400" size="icon">
+				<Button variant="ghost" class="text-white" size="icon">
 					<Clock class="size-5" />
 					{question_cnt}'
 				</Button>

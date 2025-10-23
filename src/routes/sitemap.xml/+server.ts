@@ -10,7 +10,7 @@ const site = dev ? 'http://localhost:5173' : 'https://int-insights.com'; // chan
 // 	'product_assessment',
 // 	'market_reaserch'
 // ];
-const pages: string[] = ['about', 'pricing', 'terms', 'privacy'];
+const pages: string[] = ['about', 'pricing', 'terms', 'privacy', 'templates'];
 export const GET: RequestHandler = async () => {
 	const body = sitemap(pages); //, services, industries);
 	const response = new Response(body);
