@@ -410,6 +410,17 @@ export const clientTransactions = pgTable('consumer_transactions', {
 		mode: 'date'
 	}).notNull()
 });
+
+export const utmSourceTracking = pgTable('utm_source_tracking', {
+	id: uuid().primaryKey().notNull(),
+	personaId: uuid().notNull(),
+	userId: text().references(() => UsersTable.id, { onDelete: 'cascade' }),
+	utmSource: text(),
+	utmMedium: text(),
+	utmCampaign: text(),
+	recordedAt: timestamp({ mode: 'date' }).defaultNow().notNull()
+}).enableRLS();
+
 export type userInsertSchema = typeof UsersTable.$inferInsert;
 // export type ClientDataInsertSchema = typeof clientData.$inferInsert;
 export type ConsumerData = typeof consumerDeats.$inferInsert;

@@ -2,7 +2,7 @@ import { redirect } from '@sveltejs/kit';
 import type { LayoutServerLoad } from './$types';
 import { handleLoginRedirect } from '$lib/custom/functions/helpers';
 import { db } from '$lib/server/db';
-import { avg, count, countDistinct, desc, eq, sql } from 'drizzle-orm';
+import { asc, avg, count, countDistinct, desc, eq, sql } from 'drizzle-orm';
 import { agentSurveysTable, AnswersTable, SurveyTable } from '$lib/server/db/schema';
 
 export const load: LayoutServerLoad = async ({ locals: { user }, url }) => {
@@ -28,7 +28,8 @@ export const load: LayoutServerLoad = async ({ locals: { user }, url }) => {
 			})
 			.from(SurveyTable)
 			.leftJoin(AnswersTable, sql`${AnswersTable.surveid} = ${SurveyTable.surveyid}`)
-			.groupBy(SurveyTable.title),
+			.groupBy(SurveyTable.title, SurveyTable.created_at)
+			.orderBy(desc(SurveyTable.created_at)),
 
 		db
 			.select()

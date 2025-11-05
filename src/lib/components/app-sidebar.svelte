@@ -12,7 +12,7 @@
 	import * as Form from '$lib/components/ui/form';
 
 	import { enhance } from '$app/forms';
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 
 	interface Barside {
 		title: string;
@@ -57,8 +57,8 @@
 					<Collapsible.Root open class="group/collapsible">
 						<Sidebar.MenuItem>
 							<Sidebar.MenuButton
-								isActive={$page.url.pathname === group.url ||
-									$page.url.pathname.split('/').at(-2)?.includes(group.title.toLowerCase())}
+								isActive={page.url.pathname === group.url ||
+									page.url.pathname.split('/').at(-2)?.includes(group.title.toLowerCase())}
 							>
 								{#snippet child({ props })}
 									<Collapsible.Trigger {...props}>

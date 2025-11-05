@@ -5,7 +5,7 @@ import {
 	surveyqnsTableV2,
 	SurveyTable
 } from '$lib/server/db/schema';
-import { and, eq, sql } from 'drizzle-orm';
+import { and, desc, eq, sql } from 'drizzle-orm';
 import type { Actions, PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async ({ locals }) => {
@@ -16,7 +16,8 @@ export const load: PageServerLoad = async ({ locals }) => {
 			expires: sql<Date>`${SurveyTable.survey_expires}::timestamp::date`,
 			status: SurveyTable.status
 		})
-		.from(SurveyTable);
+		.from(SurveyTable)
+		.orderBy(desc(SurveyTable.created_at));
 	return {
 		surv: surveys
 	};

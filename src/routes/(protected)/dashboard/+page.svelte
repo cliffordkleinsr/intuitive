@@ -41,7 +41,7 @@
 		<!-- End -->
 		<Card.Root>
 			<Card.Header class="flex flex-row items-center justify-between space-y-0 pb-2">
-				<Card.Title class="text-sm font-medium">Total Agents</Card.Title>
+				<Card.Title class="text-sm font-medium">Total Respondents</Card.Title>
 			</Card.Header>
 			<Card.Content>
 				<div class="text-2xl font-bold">{sumArray(agents)}</div>
@@ -57,8 +57,8 @@
 			</Card.Content>
 		</Card.Root>
 	</div>
-	<div class="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
-		<Card.Root class="col-span-4">
+	<div class="grid gap-4">
+		<Card.Root>
 			<Card.Header>
 				<Card.Title>Recent Surveys</Card.Title>
 				<Card.Description></Card.Description>
@@ -82,24 +82,6 @@
 						{/each}
 					</Table.Body>
 				</Table.Root>
-			</Card.Content>
-		</Card.Root>
-		<Card.Root class="col-span-3">
-			<Card.Header>
-				<Card.Title>Surveys across time</Card.Title>
-			</Card.Header>
-			<Card.Content class="pl-2">
-				<div class="h-[300px] rounded border p-4">
-					<BarChart
-						data={survey_time}
-						padding={{ left: 60, bottom: 16 }}
-						x="time"
-						y="count"
-						props={{
-							bars: { class: 'fill-sky-400' }
-						}}
-					/>
-				</div>
 			</Card.Content>
 		</Card.Root>
 	</div>

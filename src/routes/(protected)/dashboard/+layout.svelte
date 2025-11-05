@@ -27,6 +27,7 @@
 	import Info from 'lucide-svelte/icons/info';
 	import ReceiptText from 'lucide-svelte/icons/receipt-text';
 	import UserRoundCog from 'lucide-svelte/icons/user-round-cog';
+	import Globe from 'lucide-svelte/icons/globe';
 
 	let { data, children }: { data: LayoutData; children: Snippet } = $props();
 
@@ -37,7 +38,13 @@
 				title: 'Dashboard',
 				url: '/dashboard',
 				icon: House,
-				items: []
+				items: [
+					{
+						title: 'Source Statistics',
+						url: '/dashboard/sources',
+						icon: Globe
+					}
+				]
 			},
 			{
 				title: 'Users',
