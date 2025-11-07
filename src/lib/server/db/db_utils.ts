@@ -1542,7 +1542,18 @@ export const getAnalytics = async (surveyId: string) => {
 	return analytics;
 };
 
-export const simplifiedAnalytics = async (id: string) => {
+type SimplifiedAnalytics = Promise<{
+    question: string;
+    question_type: string;
+    answer_statistics: {
+        answer: string;
+        rank: string;
+        count: number;
+        percentage: number;
+    }[];
+    updated: Date;
+}[]>
+export const simplifiedAnalytics = async (id: string): SimplifiedAnalytics => {
 	const sq1 = db
 		.select({
 			question_id: response_table.questionId,
@@ -1554,16 +1565,26 @@ export const simplifiedAnalytics = async (id: string) => {
 		.where(eq(response_table.surveid, id))
 		.groupBy(response_table.answer, response_table.questionId, response_table.rankId)
 		.as('sq1');
+	// const sq2 = db
+	// 	.select({
+	// 		question_id: surveyqnsTableV2.questionId,
+	// 		count: count(user_analytics.id).as('cnt')
+	// 	})
+	// 	.from(surveyqnsTableV2)
+	// 	.rightJoin(user_analytics, sql`${user_analytics.surveyid} = ${surveyqnsTableV2.surveid}`)
+	// 	.where(eq(surveyqnsTableV2.surveid, id))
+	// 	.groupBy(surveyqnsTableV2.questionId)
+	// 	.as('sq2');
 	const sq2 = db
 		.select({
-			question_id: surveyqnsTableV2.questionId,
-			count: count(user_analytics.id).as('cnt')
+			question_id: response_table.questionId,
+			count: count().as('cnt')
 		})
-		.from(surveyqnsTableV2)
-		.rightJoin(user_analytics, sql`${user_analytics.surveyid} = ${surveyqnsTableV2.surveid}`)
-		.where(eq(surveyqnsTableV2.surveid, id))
-		.groupBy(surveyqnsTableV2.questionId)
+		.from(response_table)
+		.where(eq(response_table.surveid, id))
+		.groupBy(response_table.questionId)
 		.as('sq2');
+
 	const query = {
 		question: surveyqnsTableV2.question,
 		question_type: surveyqnsTableV2.questionT,

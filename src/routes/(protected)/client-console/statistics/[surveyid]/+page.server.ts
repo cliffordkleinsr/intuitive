@@ -51,7 +51,8 @@ export const load = (async ({ fetch, params: { surveyid } }) => {
 	// const analytics = await getAnalytics(surveyid);
 
 	const analytics = await simplifiedAnalytics(surveyid);
-	// console.log(analytics)
+	// const anal = analytics.find((f) => f.question === "Rank from the highest to lowest. How do these factors influence your purchase of filters?")
+	// console.log(anal?.answer_statistics)
 	const total_responses = (
 		await db.select().from(user_analytics).where(eq(user_analytics.surveyid, surveyid))
 	).length;

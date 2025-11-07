@@ -79,6 +79,7 @@
 		"@xyflow/svelte": "^0.1.39",
 		"arctic": "^3.7.0",
 		"bcrypt": "^6.0.0",
+		"caniuse-lite": "^1.0.30001754",
 		"compromise": "^14.14.4",
 		"compromise-stats": "^0.1.1",
 		"d3-array": "^3.2.4",

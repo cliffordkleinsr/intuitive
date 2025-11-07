@@ -439,12 +439,16 @@ export const clientTransactions = pgTable('consumer_transactions', {
 }).enableRLS();
 
 export const utmSourceTracking = pgTable('utm_source_tracking', {
-	id: uuid().primaryKey().notNull(),
+	id: uuid().defaultRandom().primaryKey().notNull(),
 	personaId: uuid().notNull(),
 	userId: text().references(() => UsersTable.id, { onDelete: 'cascade' }),
 	utmSource: text(),
 	utmMedium: text(),
 	utmCampaign: text(),
+	unTracked: boolean().default(false).notNull(),
+	userAgent: text(),
+	ipAddress: text(),
+	referrer: text(),
 	recordedAt: timestamp({ mode: 'date' }).defaultNow().notNull()
 }).enableRLS();
 

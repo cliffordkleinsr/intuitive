@@ -30,6 +30,8 @@
 			}
 			$flash = undefined;
 		}
+
+		// $inspect(detectMob())
 	});
 	let { data, children } = $props();
 </script>
