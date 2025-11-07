@@ -1,6 +1,6 @@
 import { db } from '$lib/server/db';
 import { UsersTable } from '$lib/server/db/schema';
-import { sql } from 'drizzle-orm';
+import { desc, sql } from 'drizzle-orm';
 import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async () => {
@@ -13,7 +13,8 @@ export const load: PageServerLoad = async () => {
 			createdat: sql<Date>`TO_CHAR((${UsersTable.createdAt}::timestamp AT TIME ZONE 'UTC' AT TIME ZONE ${timezone}), 'DD/MM/YYYY HH24:MI:SS')`
 		})
 		.from(UsersTable)
-		.where(sql`${UsersTable.role} = 'CLIENT'`);
+		.where(sql`${UsersTable.role} = 'CLIENT'`)
+		.orderBy(desc(UsersTable.createdAt));
 
 	return {
 		client_list

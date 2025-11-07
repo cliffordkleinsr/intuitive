@@ -33,7 +33,8 @@ export async function validateSessionToken(token: string) {
 			// Adjust user table here to tweak returned data
 			user: {
 				id: table.UsersTable.id,
-				fullname: table.UsersTable.fullname
+				fullname: table.UsersTable.fullname,
+				role: table.UsersTable.role
 			},
 			session: table.sessionsTable
 		})

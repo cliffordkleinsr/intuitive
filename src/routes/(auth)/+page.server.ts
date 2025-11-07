@@ -12,7 +12,7 @@ import { setSessionTokenCookie } from '$lib/server/auth';
 import { handleLoginRedirect } from '$lib/custom/functions/helpers';
 
 export const load: PageServerLoad = async ({ locals: { user }, url, cookies }) => {
-	if (user) {
+	if (user && user.role === 'ADMIN') {
 		redirect(
 			302,
 			handleLoginRedirect('/dashboard', url),

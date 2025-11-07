@@ -4,6 +4,29 @@
 	import { Badge } from '$lib/components/ui/badge';
 	import TriangleAlert from 'lucide-svelte/icons/triangle-alert';
 	import SettingsUtmbuilder from './settings-Utmbuilder.svelte';
+	import {
+		isSameDay,
+		isSameWeek,
+		isSameMonth,
+		isSameYear,
+		eachHourOfInterval,
+		endOfDay,
+		isSameHour,
+		startOfDay,
+		startOfHour,
+		format,
+		eachDayOfInterval,
+		endOfWeek,
+		startOfWeek,
+		endOfMonth,
+		startOfMonth,
+		eachMonthOfInterval,
+		startOfYear,
+		endOfYear
+	} from 'date-fns';
+	import * as Dialog from '$lib/components/ui/dialog';
+	import { BarChart } from 'layerchart';
+
 	let { data }: PageProps = $props();
 
 	const {
@@ -15,6 +38,50 @@
 		medium_distribution,
 		campaign_distribution
 	} = data;
+
+	const isNullSrc = (e: { source: string | null }) => e.source === null;
+	const isNullMed = (e: { medium: string | null }) => e.medium === null;
+	const isNullCamp = (e: { campaign: string | null }) => e.campaign === null;
+
+	const now = new Date();
+
+	// all 24 hours of that day
+	const hours = eachHourOfInterval({
+		start: startOfDay(now),
+		end: endOfDay(now)
+	});
+
+	// by day
+	const visits_by_hour = hours.map((hour) => {
+		const count = sources.filter((v) => isSameHour(v.recordedAt, hour)).length;
+		return {
+			date: format(startOfHour(hour), 'h a'),
+			value: count
+		};
+	});
+
+	const weekDays = eachDayOfInterval({
+		start: startOfWeek(now, { weekStartsOn: 1 }), // Monday start
+		end: endOfWeek(now, { weekStartsOn: 1 })
+	});
+
+	// by week
+	const visits_by_week = weekDays.map((day) => ({
+		date: format(startOfDay(day), 'EEE'), // e.g. Mon, Tue, Wed
+		value: sources.filter((v) => isSameDay(v.recordedAt, day)).length
+	}));
+
+	const months = eachMonthOfInterval({
+		start: startOfYear(now),
+		end: endOfYear(now)
+	});
+
+	const visits_by_month = months.map((month) => ({
+		date: format(startOfMonth(month), 'MMM'), // Jan, Feb, Mar, ...
+		value: sources.filter((v) => isSameMonth(v.recordedAt, month)).length
+	}));
+
+	// $inspect(visits_by_month)
 </script>
 
 <section class="flex flex-col gap-2 p-10">
@@ -23,15 +90,31 @@
 	<div class="grid gap-2 pt-5">
 		<h1 class="mb-3 text-xl">Source Tracking Analytics</h1>
 		<div class="grid grid-cols-4 gap-4">
-			<Card.Root>
-				<Card.Header>
-					<Card.Title>{sources.length}</Card.Title>
-				</Card.Header>
-				<Card.Content>
-					<p>Total Page Visits</p>
-				</Card.Content>
-			</Card.Root>
-			<Card.Root>
+			<Dialog.Root>
+				<Dialog.Trigger>
+					{#snippet child({ props })}
+						<Card.Root {...props} class="cursor-pointer">
+							<Card.Header>
+								<Card.Title>{sources.length}</Card.Title>
+							</Card.Header>
+							<Card.Content>Total Page Visits</Card.Content>
+						</Card.Root>
+					{/snippet}
+				</Dialog.Trigger>
+				<Dialog.Content class="w-full max-w-5xl">
+					<Dialog.Title>Test</Dialog.Title>
+					<div class="h-[450px] rounded border p-4">
+						<BarChart
+							data={visits_by_month}
+							x="date"
+							y="value"
+							props={{ bars: { class: 'fill-primary' } }}
+						/>
+					</div>
+				</Dialog.Content>
+			</Dialog.Root>
+
+			 <Card.Root>
 				<Card.Header>
 					<Card.Title>{external.length}</Card.Title>
 				</Card.Header>
@@ -67,7 +150,7 @@
 					<Card.Title class="text-center">UTM Source Distribution</Card.Title>
 				</Card.Header>
 				<Card.Content class="flex flex-col gap-3">
-					{#if source_distribution.length === 0}
+					{#if source_distribution.length === 0 || source_distribution.some(isNullSrc)}
 						<div class="grid place-content-center gap-2">
 							<TriangleAlert class="size-20 text-primary" />
 							<p class="text-lg text-muted-foreground">No Data!</p>
@@ -76,7 +159,7 @@
 						{#each source_distribution as distribution}
 							<div class="flex items-center justify-between rounded-md bg-secondary p-2">
 								<span class="flex items-center gap-2 text-sm">
-									{#if distribution.source === 'facebook'}
+									{#if distribution.source === 'faceBook'}
 										<svg
 											xmlns="http://www.w3.org/2000/svg"
 											width="24"
@@ -134,7 +217,7 @@
 					<Card.Title class="text-center">UTM Medium Distribution</Card.Title>
 				</Card.Header>
 				<Card.Content class="flex flex-col gap-3">
-					{#if medium_distribution.length === 0}
+					{#if medium_distribution.length === 0 || medium_distribution.some(isNullMed)}
 						<div class="grid place-content-center gap-2">
 							<TriangleAlert class="size-20 text-primary" />
 							<p class="text-lg text-muted-foreground">No Data!</p>
@@ -154,7 +237,7 @@
 					<Card.Title class="text-center">UTM Campaign Distribution</Card.Title>
 				</Card.Header>
 				<Card.Content class="flex flex-col gap-3">
-					{#if campaign_distribution.length === 0}
+					{#if campaign_distribution.length === 0 || campaign_distribution.some(isNullCamp)}
 						<div class="grid place-content-center gap-2">
 							<TriangleAlert class="size-20 text-primary" />
 							<p class="text-lg text-muted-foreground">No Data!</p>
