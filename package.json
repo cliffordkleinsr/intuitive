@@ -70,7 +70,7 @@
 		"d3-scale": "^4.0.2",
 		"d3-scale-chromatic": "^3.1.0",
 		"drizzle-orm": "^0.36.4",
-		"layerchart": "^0.59.6",
+		"layerchart": "^1.0.12",
 		"lucide-svelte": "^0.473.0",
 		"mode-watcher": "^0.5.0",
 		"postgres": "^3.4.5",

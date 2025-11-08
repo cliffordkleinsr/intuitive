@@ -1,10 +1,7 @@
 import { db } from '$lib/server/db';
 import { utmSourceTracking } from '$lib/server/db/schema';
-import { and, not, eq, sql, isNull, isNotNull, count, desc, asc } from 'drizzle-orm';
-import type { Actions, PageServerLoad } from './$types';
-import { fail, message, superValidate } from 'sveltekit-superforms';
-import { zod } from 'sveltekit-superforms/adapters';
-import { utmBuilder } from './schema';
+import { and, isNotNull, count, desc, isNull } from 'drizzle-orm';
+import type { PageServerLoad } from './$types';
 
 export const load = (async () => {
 	const sources = await db.select().from(utmSourceTracking);
@@ -19,7 +16,17 @@ export const load = (async () => {
 				isNotNull(utmSourceTracking.utmCampaign)
 			)
 		);
-	const total_direct = sources.length - external.length;
+	const direct = await db
+		.select()
+		.from(utmSourceTracking)
+		.where(
+			and(
+				isNull(utmSourceTracking.utmSource),
+				isNull(utmSourceTracking.utmMedium),
+				isNull(utmSourceTracking.utmCampaign)
+			)
+		);
+	// const total_direct = sources.length - external.length;
 	const t_sauce = await db
 		.select({
 			source: utmSourceTracking.utmSource,
@@ -29,7 +36,7 @@ export const load = (async () => {
 		.groupBy(utmSourceTracking.utmSource)
 		.orderBy(desc(utmSourceTracking.utmSource));
 	const top_source = t_sauce.length ? t_sauce.reduce((a, b) => (b.count > a.count ? b : a)) : null;
-
+	// console.log(top_source)
 	let source_distribution = await db
 		.select({
 			source: utmSourceTracking.utmSource,
@@ -38,7 +45,7 @@ export const load = (async () => {
 		.from(utmSourceTracking)
 		.groupBy(utmSourceTracking.utmSource)
 		.orderBy(desc(utmSourceTracking.utmSource));
-
+	// console.log(source_distribution)
 	let medium_distribution = await db
 		.select({
 			medium: utmSourceTracking.utmMedium,
@@ -105,34 +112,12 @@ export const load = (async () => {
 	// ];
 
 	return {
-		form: await superValidate(zod(utmBuilder)),
 		sources,
 		external,
-		total_direct,
+		direct,
 		top_source,
 		source_distribution,
 		medium_distribution,
 		campaign_distribution
 	};
 }) satisfies PageServerLoad;
-
-export const actions: Actions = {
-	default: async ({ request }) => {
-		const form = await superValidate(request, zod(utmBuilder));
-		console.debug(form.data);
-		// validate
-		if (!form.valid) {
-			// return message(form, {
-			// 	alertType: 'error',
-			// 	alertText: 'Please Check your entries, the form contains invalid data'
-			// });
-			return fail(400, {
-				form
-			});
-		}
-
-		return {
-			form
-		};
-	}
-};

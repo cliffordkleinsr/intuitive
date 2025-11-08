@@ -19,7 +19,7 @@ export const load: LayoutServerLoad = async ({ locals: { user }, url, cookies })
 			{ type: 'info', message: 'Log in to view page' },
 			cookies
 		);
-	} 
+	}
 	if (user.role !== 'ADMIN') {
 		redirect(303, '/', { type: 'error', message: 'Not Allowed' }, cookies);
 	}
