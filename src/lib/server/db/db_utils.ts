@@ -1542,17 +1542,19 @@ export const getAnalytics = async (surveyId: string) => {
 	return analytics;
 };
 
-type SimplifiedAnalytics = Promise<{
-    question: string;
-    question_type: string;
-    answer_statistics: {
-        answer: string;
-        rank: string;
-        count: number;
-        percentage: number;
-    }[];
-    updated: Date;
-}[]>
+type SimplifiedAnalytics = Promise<
+	{
+		question: string;
+		question_type: string;
+		answer_statistics: {
+			answer: string;
+			rank: string;
+			count: number;
+			percentage: number;
+		}[];
+		updated: Date;
+	}[]
+>;
 export const simplifiedAnalytics = async (id: string): SimplifiedAnalytics => {
 	const sq1 = db
 		.select({

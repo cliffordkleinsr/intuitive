@@ -33,9 +33,7 @@ export const load = (async ({ url, fetch, request, locals, cookies }) => {
 			cookies.set('session_visit', 'active', {
 				path: '/'
 			});
-			
 		} else if (!hasActiveSession) {
-			
 			await db.insert(utmSourceTracking).values({
 				personaId,
 				userId: userId,

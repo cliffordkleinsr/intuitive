@@ -537,7 +537,7 @@
 																</Table.Cell>
 															</Table.Row>
 															<!-- {#if res.rank === '5'} -->
-															 {#if statistic.question_type === 'Ranking' && (ix  + 1) % 5 === 0}
+															{#if statistic.question_type === 'Ranking' && (ix + 1) % 5 === 0}
 																<Table.Row class="bg-primary/5">
 																	<Table.Cell></Table.Cell>
 																	<Table.Cell></Table.Cell>
