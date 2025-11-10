@@ -91,7 +91,7 @@
 	<form
 		action="?/addSingleQns"
 		method="post"
-		class="grid items-start gap-4"
+		class="grid items-start gap-4 p-5 md:p-1"
 		use:enhance={() => {
 			sing_loading = true;
 			return async ({ result, update }) => {
@@ -140,7 +140,7 @@
 	<form
 		action="?/addMultiQns"
 		method="post"
-		class="grid items-start gap-4"
+		class="grid items-start gap-4 p-5 md:p-1"
 		use:enhance={() => {
 			multi_loading = true;
 			return async ({ result, update }) => {
@@ -158,7 +158,7 @@
 			};
 		}}
 	>
-		<div class="grid gap-2">
+		<div class="grid gap-2 overflow-y-auto">
 			<Label for="question">Question</Label>
 			<Input type="text" name="question" />
 			{#if form?.errors?.question}
@@ -203,7 +203,7 @@
 	<form
 		action="?/addOptQns"
 		method="post"
-		class="grid items-start gap-4"
+		class="grid items-start gap-4 p-5 md:p-1"
 		use:enhance={() => {
 			opti_loading = true;
 			return async ({ result, update }) => {
@@ -221,7 +221,7 @@
 			};
 		}}
 	>
-		<div class="grid gap-2">
+		<div class="grid gap-2 overflow-y-auto">
 			<Label for="question">Question</Label>
 			<Input type="text" name="radio_question" />
 			{#if form?.errors?.radio_question}
@@ -266,7 +266,7 @@
 	<form
 		action="?/addStarQns"
 		method="post"
-		class="grid items-start gap-4"
+		class="grid items-start gap-4 p-5 md:p-1"
 		use:enhance={() => {
 			starloading = true;
 			return async ({ result, update }) => {
@@ -315,7 +315,7 @@
 	<form
 		action="?/addLikQns"
 		method="post"
-		class="grid items-start gap-4"
+		class="grid items-start gap-4 p-5 md:p-1"
 		use:enhance={() => {
 			likertloading = true;
 			return async ({ result, update }) => {
@@ -374,7 +374,7 @@
 	<form
 		action="?/addRnkQns"
 		method="post"
-		class="grid items-start gap-4"
+		class="grid items-start gap-4 p-5 md:p-1"
 		use:enhance={() => {
 			rank_loading = true;
 			return async ({ result, update }) => {
@@ -392,7 +392,7 @@
 			};
 		}}
 	>
-		<div class="grid gap-2">
+		<div class="grid gap-2 overflow-y-auto">
 			<Label for="question">Question</Label>
 			<Input type="text" name="rnk_question" />
 			{#if form?.errors?.rnk_question}

@@ -30,7 +30,7 @@
 
 	// ZOD SCHEMA
 	import { registerCSchema, type RegisterCSchema } from './schema';
-
+	import * as Password from '$lib/components/ui/password';
 	// Local Variables
 	import { closeAndFocusTrigger } from '$lib/custom/functions/helpers';
 	import { sectors } from '$lib/json/index';
@@ -215,12 +215,23 @@
 						<Form.Control>
 							{#snippet children({ props })}
 								<Form.Label>Password</Form.Label>
-								<Input
+								<!-- <Input
 									{...props}
 									type="password"
 									bind:value={$formData.password}
 									placeholder="Input password"
-								/>
+								/> -->
+								<div class="max-w-3xs flex w-full flex-col gap-2">
+									<Password.Root>
+										<Password.Input
+											{...props}
+											bind:value={$formData.password as string}
+											placeholder="Input password"
+										>
+											<Password.ToggleVisibility />
+										</Password.Input>
+									</Password.Root>
+								</div>
 							{/snippet}
 						</Form.Control>
 						<Form.FieldErrors />
@@ -231,12 +242,23 @@
 						<Form.Control>
 							{#snippet children({ props })}
 								<Form.Label>Confirm Password</Form.Label>
-								<Input
+								<!-- <Input
 									{...props}
 									type="password"
 									bind:value={$formData.passwordConfirm}
 									placeholder="Confirm password"
-								/>
+								/> -->
+								<div class="max-w-3xs flex w-full flex-col gap-2">
+									<Password.Root>
+										<Password.Input
+											{...props}
+											bind:value={$formData.passwordConfirm as string}
+											placeholder="Confirm password"
+										>
+											<Password.ToggleVisibility />
+										</Password.Input>
+									</Password.Root>
+								</div>
 							{/snippet}
 						</Form.Control>
 						<Form.FieldErrors />

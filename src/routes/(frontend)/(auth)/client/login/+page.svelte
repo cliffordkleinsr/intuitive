@@ -5,7 +5,7 @@
 	import { Input } from '$lib/components/ui/input/index.js';
 	import * as Form from '$lib/components/ui/form/index.js';
 	import * as Breadcrumb from '$lib/components/ui/breadcrumb/index.js';
-
+	import * as Password from '$lib/components/ui/password';
 	// SUPER FORMS
 	import type { Infer, SuperValidated } from 'sveltekit-superforms';
 	import SuperDebug, { superForm } from 'sveltekit-superforms';
@@ -75,7 +75,12 @@
 						<Form.Control>
 							{#snippet children({ props })}
 								<Form.Label>Email</Form.Label>
-								<Input {...props} type="email" bind:value={$formData.email} />
+								<Input
+									{...props}
+									type="email"
+									bind:value={$formData.email}
+									placeholder="Input your email"
+								/>
 							{/snippet}
 						</Form.Control>
 						<Form.FieldErrors />
@@ -85,7 +90,18 @@
 							<Form.Control>
 								{#snippet children({ props })}
 									<Form.Label>Password</Form.Label>
-									<Input {...props} type="password" bind:value={$formData.password} />
+									<!-- <Input {...props} type="password" bind:value={$formData.password} /> -->
+									<div class="max-w-3xs flex w-full flex-col gap-2">
+										<Password.Root>
+											<Password.Input
+												{...props}
+												bind:value={$formData.password as string}
+												placeholder="Input password"
+											>
+												<Password.ToggleVisibility />
+											</Password.Input>
+										</Password.Root>
+									</div>
 								{/snippet}
 							</Form.Control>
 							<Form.FieldErrors />

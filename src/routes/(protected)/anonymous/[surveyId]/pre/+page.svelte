@@ -17,6 +17,8 @@
 	import { LocationSelector } from '$lib/components/ui/location-input';
 	import { ScrollArea } from '$lib/components/ui/scroll-area';
 	import { countyMap } from '$lib/json/subcountis';
+	import { ArrowLeft } from 'lucide-svelte';
+	import { page } from '$app/state';
 
 	let { data }: { data: PageData } = $props();
 	const { uri } = data;
@@ -66,7 +68,7 @@
 		<Card.Header>
 			<Card.Title>Before you begin</Card.Title>
 			<Card.Description>
-				<!-- <p>We kindly ask that you accept any propmts requested for this page</p> -->
+				<p>You can tell us more about yourself. This information is optional.</p>
 			</Card.Description>
 		</Card.Header>
 		<Card.Content>
@@ -75,7 +77,11 @@
 					<Form.Field {form} name="education">
 						<Form.Control>
 							{#snippet children({ props })}
-								<Label class="font-medium">Education Background</Label>
+								<Label class="font-medium"
+									>Education Background <span
+										class="text-pretty text-xs italic text-primary antialiased">(Optional)</span
+									></Label
+								>
 								<Select.Root type="single" bind:value={$formData.education} name={props.name}>
 									<Select.Trigger {...props}>
 										{$formData.education
@@ -97,7 +103,11 @@
 					<Form.Field {form} name="sector">
 						<Form.Control>
 							{#snippet children({ props })}
-								<Form.Label>Sectors</Form.Label>
+								<Form.Label
+									>Sectors <span class="text-pretty text-xs italic text-primary antialiased"
+										>(Optional)</span
+									></Form.Label
+								>
 								<Select.Root type="single" bind:value={$formData.sector} name={props.name}>
 									<Select.Trigger {...props}>
 										{$formData.sector ? $formData.sector : 'Select your a sector'}
@@ -137,7 +147,11 @@
 					<Form.Field {form} name="loc">
 						<Form.Control>
 							{#snippet children({ props })}
-								<Form.Label>Select Country</Form.Label>
+								<Form.Label
+									>Select Country <span class="text-pretty text-xs italic text-primary antialiased"
+										>(Optional)</span
+									></Form.Label
+								>
 								<LocationSelector
 									{...props}
 									bind:selectedCountry
@@ -220,6 +234,9 @@
 					{/if}
 				</div>
 			</form>
+			<Button variant="outline" class="w-full" href={`/anonymous/${page.params.surveyId}`}
+				><ArrowLeft /> Go Back</Button
+			>
 			<!-- <SuperDebug data={$formData} /> -->
 		</Card.Content>
 		<Card.Footer></Card.Footer>

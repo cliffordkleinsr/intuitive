@@ -31,7 +31,7 @@
 	const { form: formData, enhance, message, delayed } = form;
 </script>
 
-<form method="post" action="?/goLive" use:enhance>
+<form method="post" action="?/goLive" use:enhance class="px-5 md:px-1">
 	{#if $delayed}
 		<Button class="flex w-full gap-2" disabled={$delayed} variant="outline">
 			<span
@@ -42,6 +42,6 @@
 			Loading...
 		</Button>
 	{:else}
-		<Form.Button class="w-full" variant="outline">Go Live</Form.Button>
+		<Form.Button class="w-full" variant="default">Go Live</Form.Button>
 	{/if}
 </form>

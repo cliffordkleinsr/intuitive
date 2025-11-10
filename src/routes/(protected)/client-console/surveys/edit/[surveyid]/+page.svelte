@@ -376,16 +376,19 @@
 			{/snippet}
 			<Flow {nodes} {edges} />
 		</Portal>
-		<Portal title={surveydata.title} description={surveydata.desc as string} variant="secondary">
-			{#snippet trigger()}
-				Going Live
-			{/snippet}
-			<img
-				class="mx-auto w-48 shrink-0"
-				src="https://res.cloudinary.com/dmy8yp9el/image/upload/v1725974109/anfir41re6vnhxecg52s.png"
-				alt="live"
-			/>
-			<SettingsLive data={data.live_form} />
-		</Portal>
+		{#if surveyqns.length > 0}
+			<Portal title={surveydata.title} description={surveydata.desc as string} variant="secondary">
+				{#snippet trigger()}
+					Going Live
+				{/snippet}
+				<img
+					class="mx-auto w-48 shrink-0"
+					src="https://res.cloudinary.com/dmy8yp9el/image/upload/v1725974109/anfir41re6vnhxecg52s.png"
+					alt="live"
+				/>
+
+				<SettingsLive data={data.live_form} />
+			</Portal>
+		{/if}
 	</div>
 </div>

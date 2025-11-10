@@ -62,7 +62,6 @@ export const load: PageServerLoad = async ({ params, locals: { user }, cookies }
 	// console.log(qns)
 	// for the optionalschema
 	// const optionalSchema = enumBuilder(pool_questions.options);
-	// console.debug(questions)
 	return {
 		surveydata: title_desc,
 		surveyqns: questions,

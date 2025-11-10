@@ -17,7 +17,7 @@
 		children?: Snippet;
 	}
 	let {
-		class: classname = 'sm:max-w-[425px]',
+		class: classname,
 		trigger,
 		title,
 		description,
@@ -35,7 +35,7 @@
 		<Dialog.Trigger class={buttonVariants({ variant: variant })} {disabled}>
 			{@render trigger?.()}
 		</Dialog.Trigger>
-		<Dialog.Content class={classname}>
+		<Dialog.Content class={[classname, 'sm:max-w-[425px]']}>
 			<Dialog.Header>
 				<Dialog.Title>
 					{title}
@@ -49,10 +49,10 @@
 	</Dialog.Root>
 {:else}
 	<Drawer.Root bind:open>
-		<Drawer.Trigger class={buttonVariants({ variant: 'outline' })}>
+		<Drawer.Trigger class={buttonVariants({ variant: 'outline' })} {disabled}>
 			{@render trigger?.()}
 		</Drawer.Trigger>
-		<Drawer.Content class={cn(classname)}>
+		<Drawer.Content class={[classname, 'sm:max-w-[425px]']}>
 			<Drawer.Header class="text-left">
 				<Drawer.Title>
 					{title}
