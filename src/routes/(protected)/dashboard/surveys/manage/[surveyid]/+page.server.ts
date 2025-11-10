@@ -282,10 +282,6 @@ export const actions: Actions = {
 		const { questionId } = data;
 
 		try {
-			await db.delete(QuestionBranching).where(eq(QuestionBranching.nextQuestionId, questionId));
-			await db.delete(QuestionBranching).where(eq(QuestionBranching.questionId, questionId));
-			await db.delete(QuestionOptions).where(eq(QuestionOptions.questionId, questionId));
-			await db.delete(surveyqnsTableV2).where(eq(surveyqnsTableV2.questionId, questionId));
 			await db.delete(surveyqnsTableV2).where(eq(surveyqnsTableV2.questionId, questionId));
 		} catch (err) {
 			console.error(err);

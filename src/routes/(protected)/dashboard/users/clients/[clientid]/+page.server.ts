@@ -7,43 +7,68 @@ import { redirect } from '@sveltejs/kit';
 export const load = (async ({ params }) => {
 	const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
-	const [clients] = await db
+	// const [clients] = await db
+	// 	.select({
+	// 		id: UsersTable.id,
+	// 		name: UsersTable.fullname,
+	// 		email: consumerDeats.email,
+	// 		phone: consumerDeats.phone,
+	// 		company: consumerDeats.company_name,
+	// 		inactive: consumerDeats.disabled,
+	// 		packagetype: consumerPackage.package_type,
+	// 		surveys: count(SurveyTable.surveyid)
+	// 	})
+	// 	.from(UsersTable)
+	// 	.leftJoin(consumerDeats, eq(consumerDeats.consumerid, params.clientid))
+	// 	.rightJoin(
+	// 		SurveyTable,
+	// 		sql`${SurveyTable.consumer_id} = ${params.clientid}
+    //     `
+	// 	)
+	// 	.rightJoin(consumerPackage, eq(consumerPackage.consumerid, params.clientid))
+	// 	.where(eq(UsersTable.id, params.clientid))
+	// 	.groupBy(
+	// 		UsersTable.id,
+	// 		consumerDeats.email,
+	// 		consumerDeats.phone,
+	// 		consumerDeats.disabled,
+	// 		consumerDeats.company_name,
+	// 		consumerPackage.package_type
+	// 	);
+
+	const [details] = await db
 		.select({
-			id: UsersTable.id,
+			id: consumerDeats.consumerid,
 			name: UsersTable.fullname,
 			email: consumerDeats.email,
 			phone: consumerDeats.phone,
 			company: consumerDeats.company_name,
 			inactive: consumerDeats.disabled,
-			packagetype: consumerPackage.package_type,
+			packagetype: sql<string>`COALESCE(${consumerPackage.package_type}, 'Free')`,
 			surveys: count(SurveyTable.surveyid)
 		})
-		.from(UsersTable)
-		.leftJoin(consumerDeats, eq(consumerDeats.consumerid, params.clientid))
-		.rightJoin(
-			SurveyTable,
-			sql`${SurveyTable.consumer_id} = ${params.clientid}
-        `
-		)
-		.rightJoin(consumerPackage, eq(consumerPackage.consumerid, params.clientid))
+		.from(consumerDeats)
+		.leftJoin(SurveyTable, eq(SurveyTable.consumer_id, consumerDeats.consumerid))
+		.leftJoin(UsersTable, eq(UsersTable.id, consumerDeats.consumerid))
+		.leftJoin(consumerPackage, eq(consumerPackage.consumerid, consumerDeats.consumerid))
 		.where(eq(UsersTable.id, params.clientid))
 		.groupBy(
-			UsersTable.id,
+			consumerDeats.consumerid,
+			UsersTable.fullname,
 			consumerDeats.email,
 			consumerDeats.phone,
-			consumerDeats.disabled,
 			consumerDeats.company_name,
-			consumerPackage.package_type
-		);
-
-	// console.log(clients)
-	return { clients };
+			consumerDeats.disabled,
+			consumerPackage.package_type,
+		)
+	return { details };
 }) satisfies PageServerLoad;
 
 export const actions: Actions = {
-	default: async ({ request, params }) => {
+	disableUser: async ({ request, params }) => {
 		const data = await request.formData();
 		const active = data.get('active') === 'true';
+		
 		try {
 			await db.transaction(async (tx) => {
 				await tx
@@ -62,6 +87,14 @@ export const actions: Actions = {
 		} catch (error) {
 			console.error(error);
 		}
-		redirect(302, `/dashboard/users/clients/${params.clientid}`);
+		// redirect(302, `/dashboard/users/clients/${params.clientid}`);
+	},
+	deleteUser: async ({ params }) => {
+		try {
+			await db.delete(UsersTable).where(eq(UsersTable.id, params.clientid))
+		} catch (error) {
+			console.error(error);
+		}
+		redirect(302, '/dashboard/users/clients')
 	}
 };

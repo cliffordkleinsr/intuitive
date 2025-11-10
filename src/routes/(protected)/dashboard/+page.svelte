@@ -3,6 +3,8 @@
 	import * as Card from '$lib/components/ui/card';
 	import * as Table from '$lib/components/ui/table';
 	import { BarChart } from 'layerchart';
+	import { Button } from '$lib/components/ui/button';
+	import ArrowUpRight from 'lucide-svelte/icons/arrow-up-right';
 
 	let { data }: { data: PageData } = $props();
 	const { survey_time, surveys, count } = data;
@@ -28,6 +30,9 @@
 					{survey_count}
 				</div>
 			</Card.Content>
+			<Card.Footer class="flex justify-end">
+				<Button class="w-full" variant="outline" href="/dashboard/surveys/manage"> View All <ArrowUpRight/> </Button>
+			</Card.Footer>
 		</Card.Root>
 		<!-- End -->
 		<Card.Root>
@@ -55,6 +60,9 @@
 			<Card.Content>
 				<div class="text-2xl font-bold">{count}</div>
 			</Card.Content>
+			<Card.Footer class="flex justify-end">
+				<Button class="w-full" variant="outline" href="/dashboard/surveys/manage"> Manage All <ArrowUpRight/> </Button>
+			</Card.Footer>
 		</Card.Root>
 	</div>
 	<div class="grid gap-4">

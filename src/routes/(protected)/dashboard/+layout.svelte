@@ -61,16 +61,16 @@
 					// 	url: '/dashboard/users/agents',
 					// 	icon: UserSearch
 					// },
-					{
-						title: 'Report',
-						url: '/dashboard/users/report',
-						icon: ChartArea
-					},
-					{
-						title: 'Modify',
-						url: '/dashboard/users/modify',
-						icon: UserRoundCog
-					}
+					// {
+					// 	title: 'Report',
+					// 	url: '/dashboard/users/report',
+					// 	icon: ChartArea
+					// },
+					// {
+					// 	title: 'Modify',
+					// 	url: '/dashboard/users/modify',
+					// 	icon: UserRoundCog
+					// }
 				]
 			},
 			{

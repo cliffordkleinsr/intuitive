@@ -41,6 +41,7 @@
 	let { surveydata, surveyqns, branches, flow } = $derived(data);
 
 	let loading = $state(false);
+	let save_loading = $state(false);
 	let open = $state(false);
 
 	async function onLinkClick(e: MouseEvent & { currentTarget: HTMLAnchorElement }) {
@@ -78,7 +79,7 @@
 	let newflow = () => flow;
 	let nodes = writable(newflow().nodes);
 	let edges = writable(newflow().edges);
-	$inspect(surveydata.status);
+	// $inspect(surveydata.status);
 </script>
 
 <div class="m-3">
@@ -149,7 +150,7 @@
 								<a
 									class={[buttonVariants({ variant: 'outline' })]}
 									onclick={onLinkClick}
-									href="/client-console/surveys/edit/{page.params.surveyid}/{qs.id}"
+									href="/dashboard/surveys/manage/{page.params.surveyid}/{qs.id}"
 								>
 									Branch
 									<Split />
@@ -185,7 +186,21 @@
 						{/if}
 
 						{#snippet edits()}
-							<form action="?/editSurvQns" method="post" use:enhance>
+							<form 
+								action="?/editSurvQns" 
+								method="post" 
+								use:enhance={() => {
+									return async ({ result }) => {
+										save_loading = true;
+										if (result.type === 'redirect') {
+											toast.success('Updated Successfully');
+											goto(result.location, { invalidateAll: true });
+										} else {
+											await applyAction(result);
+										}
+									};
+								}}
+							>
 								<AlertDialog.Footer>
 									<div class="grid w-full gap-2">
 										<Input type="text" value={qs.question} name="question" />
@@ -266,16 +281,18 @@
 			{/snippet}
 			<Flow {nodes} {edges} />
 		</Portal> -->
-		<Portal title={surveydata.title} description={surveydata.desc as string} variant="secondary">
-			{#snippet trigger()}
-				Going Live
-			{/snippet}
-			<img
-				class="mx-auto w-48 shrink-0"
-				src="https://res.cloudinary.com/dmy8yp9el/image/upload/v1725974109/anfir41re6vnhxecg52s.png"
-				alt="live"
-			/>
-			<SettingsLive data={data.live_form} />
-		</Portal>
+		{#if surveydata.status !== 'Live'}
+			<Portal title={surveydata.title} description={surveydata.desc as string} variant="secondary">
+				{#snippet trigger()}
+					Going Live
+				{/snippet}
+				<img
+					class="mx-auto w-48 shrink-0"
+					src="https://res.cloudinary.com/dmy8yp9el/image/upload/v1725974109/anfir41re6vnhxecg52s.png"
+					alt="live"
+				/>
+				<SettingsLive data={data.live_form} />
+			</Portal>
+		{/if}
 	</div>
 </div>

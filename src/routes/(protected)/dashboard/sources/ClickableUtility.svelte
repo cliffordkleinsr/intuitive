@@ -130,7 +130,7 @@
 					</DropdownMenu.Trigger>
 					<DropdownMenu.Content>
 						<DropdownMenu.Group>
-							<DropdownMenu.GroupHeading>Select a filter</DropdownMenu.GroupHeading>
+							<DropdownMenu.GroupHeading>Choose a filter</DropdownMenu.GroupHeading>
 							<DropdownMenu.Separator />
 							<DropdownMenu.Item>
 								<Button
@@ -146,7 +146,7 @@
 											d="M12 20a8 8 0 0 0 8-8a8 8 0 0 0-8-8a8 8 0 0 0-8 8a8 8 0 0 0 8 8m0-18a10 10 0 0 1 10 10a10 10 0 0 1-10 10C6.47 22 2 17.5 2 12A10 10 0 0 1 12 2m.5 5v5.25l4.5 2.67l-.75 1.23L11 13V7z"
 										/></svg
 									>
-									Filter By Hour
+									Today
 								</Button>
 							</DropdownMenu.Item>
 							<DropdownMenu.Item>
@@ -163,7 +163,7 @@
 											d="M12 12h5v5h-5zm7-9h-1V1h-2v2H8V1H6v2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2m0 2v2H5V5zM5 19V9h14v10z"
 										/></svg
 									>
-									Filter By Week
+									Last 7 Days
 								</Button>
 							</DropdownMenu.Item>
 							<DropdownMenu.Item>
@@ -184,7 +184,7 @@
 											d="M1664 512h256v1536H256V512h256V384h128v128h896V384h128zm128 128h-128v128h128zm-256 0H640v128h896zm-1024 0H384v128h128zM384 1920h1408V896H384zM256 384V256H128v1408H0V128h256V0h128v128h896V0h128v128h256v128h-256v128h-128V256H384v128zm384 1024v-128h128v128zm256 0v-128h128v128zm256 0v-128h128v128zm256 0v-128h128v128zm-768 256v-128h128v128zm256 0v-128h128v128zm256 0v-128h128v128zm-256-512v-128h128v128zm256 0v-128h128v128zm256 0v-128h128v128z"
 										/></svg
 									>
-									Filter By Month
+									Last Year
 								</Button>
 							</DropdownMenu.Item>
 						</DropdownMenu.Group>
