@@ -7,7 +7,7 @@
 	import ArrowUpRight from 'lucide-svelte/icons/arrow-up-right';
 
 	let { data }: { data: PageData } = $props();
-	const { survey_time, surveys, count } = data;
+	const { survey_time, surveys, count, total_clients } = data;
 
 	const responses = surveys.map((e) => e.responses);
 	const survey_count = surveys.map((e) => e.title).length;
@@ -44,15 +44,23 @@
 			</Card.Content>
 		</Card.Root>
 		<!-- End -->
-		<Card.Root>
+		<!-- <Card.Root>
 			<Card.Header class="flex flex-row items-center justify-between space-y-0 pb-2">
 				<Card.Title class="text-sm font-medium">Total Respondents</Card.Title>
 			</Card.Header>
 			<Card.Content>
 				<div class="text-2xl font-bold">{sumArray(agents)}</div>
 			</Card.Content>
-		</Card.Root>
+		</Card.Root> -->
 		<!--  End -->
+		  <Card.Root>
+			<Card.Header class="flex flex-row items-center justify-between space-y-0 pb-2">
+				<Card.Title class="text-sm font-medium">Total Clients</Card.Title>
+			</Card.Header>
+			<Card.Content>
+				<div class="text-2xl font-bold">{total_clients}</div>
+			</Card.Content>
+		</Card.Root>
 		<Card.Root>
 			<Card.Header class="flex flex-row items-center justify-between space-y-0 pb-2">
 				<Card.Title class="text-sm font-medium">Active Surveys</Card.Title>

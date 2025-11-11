@@ -6,6 +6,7 @@ import { and, asc, avg, count, countDistinct, desc, eq, not, sql } from 'drizzle
 import {
 	agentSurveysTable,
 	AnswersTable,
+	consumerDeats,
 	response_table,
 	SurveyTable,
 	user_analytics
@@ -51,6 +52,12 @@ export const load: LayoutServerLoad = async ({ locals: { user }, url, cookies })
 			.where(sql`${SurveyTable.status} = 'Live'`)
 	]);
 
+	const [{total_clients}] = await db
+		.select({ 
+			total_clients: count()
+		})
+		.from(consumerDeats)
+
 	const survs = await db
 		.select({
 			title: SurveyTable.title,
@@ -72,6 +79,7 @@ export const load: LayoutServerLoad = async ({ locals: { user }, url, cookies })
 		user,
 		survey_time,
 		surveys: survs,
-		count: live.length
+		count: live.length,
+		total_clients
 	};
 };

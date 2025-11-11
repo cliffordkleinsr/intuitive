@@ -113,6 +113,11 @@
 	</Dialog.Trigger>
 	<Dialog.Content class="w-full max-w-5xl">
 		<Dialog.Title class="m-1 flex gap-2 rounded-md bg-secondary p-10">
+			<div class="mr-auto">
+				<h1 class="text-2xl font-semibold">Page Visits Analytics</h1>
+				<p class="text-sm text-muted-foreground">tracking performance insights</p>
+				<p class="text-4xl font-semibold mt-3">{count}</p>
+			</div>
 			<div class="ml-auto">
 				<DropdownMenu.Root>
 					<DropdownMenu.Trigger>
@@ -184,7 +189,7 @@
 											d="M1664 512h256v1536H256V512h256V384h128v128h896V384h128zm128 128h-128v128h128zm-256 0H640v128h896zm-1024 0H384v128h128zM384 1920h1408V896H384zM256 384V256H128v1408H0V128h256V0h128v128h896V0h128v128h256v128h-256v128h-128V256H384v128zm384 1024v-128h128v128zm256 0v-128h128v128zm256 0v-128h128v128zm256 0v-128h128v128zm-768 256v-128h128v128zm256 0v-128h128v128zm256 0v-128h128v128zm-256-512v-128h128v128zm256 0v-128h128v128zm256 0v-128h128v128z"
 										/></svg
 									>
-									Last Year
+									Monthly
 								</Button>
 							</DropdownMenu.Item>
 						</DropdownMenu.Group>
