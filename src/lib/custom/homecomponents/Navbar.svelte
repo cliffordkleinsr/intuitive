@@ -58,6 +58,15 @@
 		>
 			Pricing
 		</a>
+
+		<a
+			href="/faq"
+			class="{page.url.pathname === '/faq'
+				? 'text-foreground'
+				: 'text-muted-foreground'} transition-colors hover:text-primary"
+		>
+			FAQ
+		</a>
 	</nav>
 	<Sheet.Root>
 		<Sheet.Trigger
@@ -78,6 +87,7 @@
 				<a href="/" class="text-muted-foreground hover:text-primary"> Home </a>
 				<a href="/about" class="text-muted-foreground hover:text-primary"> About </a>
 				<a href="/templates" class="text-muted-foreground hover:text-primary"> Templates </a>
+				<a href="/faq" class="text-muted-foreground hover:text-primary"> FAQ </a>
 				<a href="/pricing" class="text-muted-foreground transition-colors hover:text-primary">
 					Pricing
 				</a>

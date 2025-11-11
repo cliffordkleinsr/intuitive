@@ -28,39 +28,33 @@
 			</Card.Description>
 		</Card.Header>
 		<Card.Content class="py-10 text-center">
-			<!-- {#if page.params?.surveyId === '5b16a8fd-85b3-43ff-9180-1a97a53f7bc5'}
+			{#if page.params?.surveyId === '5b16a8fd-85b3-43ff-9180-1a97a53f7bc5'}
 				<Button
-				variant="outline"
-				class="rounded-xl"
-				size="lg"
-				disabled={!checked && !(current_ix > 0)}
-				href={checked
-					? current_ix === 0
-						? uri
-						: uri
-					: current_ix > 0
-						? uri
-						: undefined}
-			>
-				{current_ix > 0 ? 'Continue where you left off' : 'Start the survey'}
-			</Button>
-			{:else} -->
-			<Button
-				variant="outline"
-				class="rounded-xl"
-				size="lg"
-				disabled={!checked && !(current_ix > 0)}
-				href={checked
-					? current_ix === 0
-						? `/anonymous/${page.params.surveyId}/pre`
-						: uri
-					: current_ix > 0
-						? uri
-						: undefined}
-			>
-				{current_ix > 0 ? 'Continue where you left off' : 'Start the survey'}
-			</Button>
-			<!-- {/if} -->
+					variant="outline"
+					class="rounded-xl"
+					size="lg"
+					disabled={!checked && !(current_ix > 0)}
+					href={checked ? (current_ix === 0 ? uri : uri) : current_ix > 0 ? uri : undefined}
+				>
+					{current_ix > 0 ? 'Continue where you left off' : 'Start the survey'}
+				</Button>
+			{:else}
+				<Button
+					variant="outline"
+					class="rounded-xl"
+					size="lg"
+					disabled={!checked && !(current_ix > 0)}
+					href={checked
+						? current_ix === 0
+							? `/anonymous/${page.params.surveyId}/pre`
+							: uri
+						: current_ix > 0
+							? uri
+							: undefined}
+				>
+					{current_ix > 0 ? 'Continue where you left off' : 'Start the survey'}
+				</Button>
+			{/if}
 		</Card.Content>
 		<Card.Footer>
 			<div class="flex flex-col gap-2 text-center">

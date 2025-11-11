@@ -55,12 +55,12 @@
 			</Card.Header>
 			<Card.Content></Card.Content>
 			<Card.Footer>
-				<Portal title="Choose a template" class="max-w-[800px]" variant="default">
+				<Portal title="Choose a template" class="w-full max-w-[800px]" variant="default">
 					{#snippet trigger()}
 						Use Available Templates
 						<ArrowUpRight />
 					{/snippet}
-					<div class="grid grid-cols-3 gap-2">
+					<div class="grid h-96 gap-2 overflow-y-auto md:grid-cols-3">
 						{#each Array.from(tempList.entries()) as [title, config]}
 							<Card.Root
 								class={[

@@ -17,7 +17,7 @@
 		children?: Snippet;
 	}
 	let {
-		class: classname,
+		class: classname = 'sm:max-w-[425px]',
 		trigger,
 		title,
 		description,
@@ -35,7 +35,7 @@
 		<Dialog.Trigger class={buttonVariants({ variant: variant })} {disabled}>
 			{@render trigger?.()}
 		</Dialog.Trigger>
-		<Dialog.Content class={[classname, 'sm:max-w-[425px]']}>
+		<Dialog.Content class={[classname]}>
 			<Dialog.Header>
 				<Dialog.Title>
 					{title}
