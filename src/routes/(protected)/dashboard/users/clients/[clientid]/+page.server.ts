@@ -23,7 +23,7 @@ export const load = (async ({ params }) => {
 	// 	.rightJoin(
 	// 		SurveyTable,
 	// 		sql`${SurveyTable.consumer_id} = ${params.clientid}
-    //     `
+	//     `
 	// 	)
 	// 	.rightJoin(consumerPackage, eq(consumerPackage.consumerid, params.clientid))
 	// 	.where(eq(UsersTable.id, params.clientid))
@@ -59,8 +59,8 @@ export const load = (async ({ params }) => {
 			consumerDeats.phone,
 			consumerDeats.company_name,
 			consumerDeats.disabled,
-			consumerPackage.package_type,
-		)
+			consumerPackage.package_type
+		);
 	return { details };
 }) satisfies PageServerLoad;
 
@@ -68,7 +68,7 @@ export const actions: Actions = {
 	disableUser: async ({ request, params }) => {
 		const data = await request.formData();
 		const active = data.get('active') === 'true';
-		
+
 		try {
 			await db.transaction(async (tx) => {
 				await tx
@@ -91,10 +91,10 @@ export const actions: Actions = {
 	},
 	deleteUser: async ({ params }) => {
 		try {
-			await db.delete(UsersTable).where(eq(UsersTable.id, params.clientid))
+			await db.delete(UsersTable).where(eq(UsersTable.id, params.clientid));
 		} catch (error) {
 			console.error(error);
 		}
-		redirect(302, '/dashboard/users/clients')
+		redirect(302, '/dashboard/users/clients');
 	}
 };

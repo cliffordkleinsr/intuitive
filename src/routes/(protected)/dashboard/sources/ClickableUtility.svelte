@@ -97,7 +97,13 @@
 	const visits_by_week = groupVisitsByTime(variable, 'day', now);
 	const visits_by_month = groupVisitsByTime(variable, 'month', now);
 
-	let filter = $state(visits_by_month);
+	let filter = $state(visits_by_hour);
+	let filterLabel = $state('Last 24 Hours');
+	let countForFilter = $derived.by(() => {
+		return Array.isArray(filter)
+			? filter.reduce((sum, item) => sum + (Number(item.value) || 0), 0)
+			: 0;
+	});
 </script>
 
 <Dialog.Root>
@@ -116,14 +122,15 @@
 			<div class="mr-auto">
 				<h1 class="text-2xl font-semibold">Page Visits Analytics</h1>
 				<p class="text-sm text-muted-foreground">tracking performance insights</p>
-				<p class="text-4xl font-semibold mt-3">{count}</p>
+				<p class="mt-3 text-4xl font-semibold">{countForFilter}</p>
+				<p class="text-sm text-muted-foreground">{filterLabel}</p>
 			</div>
 			<div class="ml-auto">
 				<DropdownMenu.Root>
 					<DropdownMenu.Trigger>
 						{#snippet child({ props })}
 							<Button variant="black" {...props} size="sm">
-								<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+								<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
 									><path
 										fill="currentColor"
 										d="M15 19.88c.04.3-.06.62-.29.83a.996.996 0 0 1-1.41 0L9.29 16.7a.99.99 0 0 1-.29-.83v-5.12L4.21 4.62a1 1 0 0 1 .17-1.4c.19-.14.4-.22.62-.22h14c.22 0 .43.08.62.22a1 1 0 0 1 .17 1.4L15 10.75zM7.04 5L11 10.06v5.52l2 2v-7.53L16.96 5z"
@@ -143,7 +150,10 @@
 									variant="ghost"
 									size="sm"
 									class="w-full text-start"
-									onclick={() => (filter = visits_by_hour)}
+									onclick={() => {
+										filter = visits_by_hour;
+										filterLabel = 'Last 24 Hours';
+									}}
 								>
 									<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
 										><path
@@ -151,7 +161,7 @@
 											d="M12 20a8 8 0 0 0 8-8a8 8 0 0 0-8-8a8 8 0 0 0-8 8a8 8 0 0 0 8 8m0-18a10 10 0 0 1 10 10a10 10 0 0 1-10 10C6.47 22 2 17.5 2 12A10 10 0 0 1 12 2m.5 5v5.25l4.5 2.67l-.75 1.23L11 13V7z"
 										/></svg
 									>
-									Today
+									Last 24 Hours
 								</Button>
 							</DropdownMenu.Item>
 							<DropdownMenu.Item>
@@ -160,7 +170,10 @@
 									variant="ghost"
 									size="sm"
 									class="text-start"
-									onclick={() => (filter = visits_by_week)}
+									onclick={() => {
+										filter = visits_by_week;
+										filterLabel = 'Last 7 Days';
+									}}
 								>
 									<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
 										><path
@@ -177,7 +190,10 @@
 									variant="ghost"
 									size="sm"
 									class="text-start"
-									onclick={() => (filter = visits_by_month)}
+									onclick={() => {
+										filter = visits_by_month;
+										filterLabel = 'Last 12 Months';
+									}}
 								>
 									<svg
 										xmlns="http://www.w3.org/2000/svg"
@@ -189,7 +205,7 @@
 											d="M1664 512h256v1536H256V512h256V384h128v128h896V384h128zm128 128h-128v128h128zm-256 0H640v128h896zm-1024 0H384v128h128zM384 1920h1408V896H384zM256 384V256H128v1408H0V128h256V0h128v128h896V0h128v128h256v128h-256v128h-128V256H384v128zm384 1024v-128h128v128zm256 0v-128h128v128zm256 0v-128h128v128zm256 0v-128h128v128zm-768 256v-128h128v128zm256 0v-128h128v128zm256 0v-128h128v128zm-256-512v-128h128v128zm256 0v-128h128v128zm256 0v-128h128v128z"
 										/></svg
 									>
-									Monthly
+									Last 12 Months
 								</Button>
 							</DropdownMenu.Item>
 						</DropdownMenu.Group>

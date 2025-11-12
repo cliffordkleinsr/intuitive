@@ -186,9 +186,9 @@
 						{/if}
 
 						{#snippet edits()}
-							<form 
-								action="?/editSurvQns" 
-								method="post" 
+							<form
+								action="?/editSurvQns"
+								method="post"
 								use:enhance={() => {
 									return async ({ result }) => {
 										save_loading = true;

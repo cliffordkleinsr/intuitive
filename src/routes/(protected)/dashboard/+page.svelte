@@ -31,7 +31,9 @@
 				</div>
 			</Card.Content>
 			<Card.Footer class="flex justify-end">
-				<Button class="w-full" variant="outline" href="/dashboard/surveys/manage"> View All <ArrowUpRight/> </Button>
+				<Button class="w-full" variant="outline" href="/dashboard/surveys/manage">
+					View All <ArrowUpRight />
+				</Button>
 			</Card.Footer>
 		</Card.Root>
 		<!-- End -->
@@ -53,13 +55,18 @@
 			</Card.Content>
 		</Card.Root> -->
 		<!--  End -->
-		  <Card.Root>
+		<Card.Root>
 			<Card.Header class="flex flex-row items-center justify-between space-y-0 pb-2">
 				<Card.Title class="text-sm font-medium">Total Clients</Card.Title>
 			</Card.Header>
 			<Card.Content>
 				<div class="text-2xl font-bold">{total_clients}</div>
 			</Card.Content>
+			<Card.Footer class="flex justify-end">
+				<Button class="w-full" variant="outline" href="/dashboard/users/clients">
+					Manage Clients <ArrowUpRight />
+				</Button>
+			</Card.Footer>
 		</Card.Root>
 		<Card.Root>
 			<Card.Header class="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -69,7 +76,9 @@
 				<div class="text-2xl font-bold">{count}</div>
 			</Card.Content>
 			<Card.Footer class="flex justify-end">
-				<Button class="w-full" variant="outline" href="/dashboard/surveys/manage"> Manage All <ArrowUpRight/> </Button>
+				<Button class="w-full" variant="outline" href="/dashboard/surveys/manage">
+					Manage All <ArrowUpRight />
+				</Button>
 			</Card.Footer>
 		</Card.Root>
 	</div>

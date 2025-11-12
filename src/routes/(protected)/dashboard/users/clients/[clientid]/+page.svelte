@@ -9,16 +9,14 @@
 	import { enhance, applyAction } from '$app/forms';
 	import { goto, invalidate, invalidateAll, preloadData } from '$app/navigation';
 	import { toast } from 'svelte-sonner';
-	
+
 	let { data }: { data: PageData } = $props();
 	const { details } = $derived(data);
 	let dis_loading = $state(false);
-	let del_loading = $state(false)
+	let del_loading = $state(false);
 </script>
 
-<Card.Root
-	class="m-5 mx-auto grid max-w-md select-none gap-2 rounded-md p-4 shadow-sm lg:max-w-xl"
->
+<Card.Root class="m-5 mx-auto grid max-w-md select-none gap-2 rounded-md p-4 shadow-sm lg:max-w-xl">
 	<div class="flex gap-3">
 		<UserRound class="size-8" />
 		<p class="text-2xl font-semibold">{details.name}</p>
@@ -73,7 +71,9 @@
 			<Card.Title class="mx-auto">Danger Zone</Card.Title>
 		</Card.Header>
 		<Card.Content class="flex flex-col gap-2">
-			<form method="post" action="?/disableUser" 
+			<form
+				method="post"
+				action="?/disableUser"
 				use:enhance={() => {
 					dis_loading = true;
 					return async ({ result }) => {
@@ -84,16 +84,12 @@
 						} else {
 							await applyAction(result);
 						}
-					};	
+					};
 				}}
 			>
 				<input type="text" value={!details.inactive} name="active" hidden />
 				<input type="text" value={true} name="delete" hidden />
-				<Button 
-					type="submit"
-					variant="secondary"
-					class="w-full"
-				>
+				<Button type="submit" variant="secondary" class="w-full">
 					{#if dis_loading}
 						<div class="flex gap-2">
 							<span
@@ -108,7 +104,9 @@
 					{/if}
 				</Button>
 			</form>
-			<form method="post" action="?/deleteUser"
+			<form
+				method="post"
+				action="?/deleteUser"
 				use:enhance={() => {
 					del_loading = true;
 					return async ({ result }) => {
@@ -119,23 +117,19 @@
 						} else {
 							await applyAction(result);
 						}
-					};	
+					};
 				}}
 			>
-				<Button 
-					type="submit"
-					variant="destructive" 
-					class="w-full"
-				>	
+				<Button type="submit" variant="destructive" class="w-full">
 					{#if del_loading}
-							<div class="flex gap-2">
-								<span
-									class="inline-block size-4 animate-spin rounded-full border-[3px] border-current border-t-transparent text-white"
-									role="status"
-									aria-label="loading"
-								></span>
-								Loading...
-							</div>
+						<div class="flex gap-2">
+							<span
+								class="inline-block size-4 animate-spin rounded-full border-[3px] border-current border-t-transparent text-white"
+								role="status"
+								aria-label="loading"
+							></span>
+							Loading...
+						</div>
 					{:else}
 						Delete this user
 					{/if}

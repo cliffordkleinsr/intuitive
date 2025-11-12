@@ -52,11 +52,11 @@ export const load: LayoutServerLoad = async ({ locals: { user }, url, cookies })
 			.where(sql`${SurveyTable.status} = 'Live'`)
 	]);
 
-	const [{total_clients}] = await db
-		.select({ 
+	const [{ total_clients }] = await db
+		.select({
 			total_clients: count()
 		})
-		.from(consumerDeats)
+		.from(consumerDeats);
 
 	const survs = await db
 		.select({

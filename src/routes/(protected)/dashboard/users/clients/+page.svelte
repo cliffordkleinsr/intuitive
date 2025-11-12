@@ -7,4 +7,6 @@
 	const { client_list } = data;
 </script>
 
-<DataTable data={client_list} {columns} filter="name" />
+<div class="h-dvh">
+	<DataTable data={client_list} {columns} filter="name" />
+</div>

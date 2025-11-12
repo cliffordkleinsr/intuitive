@@ -28,6 +28,7 @@
 	import ReceiptText from 'lucide-svelte/icons/receipt-text';
 	import UserRoundCog from 'lucide-svelte/icons/user-round-cog';
 	import Globe from 'lucide-svelte/icons/globe';
+	import Smartphone from 'lucide-svelte/icons/smartphone';
 
 	let { data, children }: { data: LayoutData; children: Snippet } = $props();
 
@@ -43,6 +44,11 @@
 						title: 'Source Statistics',
 						url: '/dashboard/sources',
 						icon: Globe
+					},
+					{
+						title: 'Device Statistics',
+						url: '/dashboard/devices',
+						icon: Smartphone
 					}
 				]
 			},
@@ -55,7 +61,7 @@
 						title: 'Clients',
 						url: '/dashboard/users/clients',
 						icon: UserPen
-					},
+					}
 					// {
 					// 	title: 'Agents',
 					// 	url: '/dashboard/users/agents',
