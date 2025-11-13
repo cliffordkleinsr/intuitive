@@ -1,3 +1,5 @@
+import { browser } from '$app/environment';
+import { page } from '$app/state';
 import { DateFormatter } from '@internationalized/date';
 import type { FeatureCollection } from 'geojson';
 import { tick } from 'svelte';
@@ -345,6 +347,49 @@ async function fetchGeoJsons() {
 	};
 }
 
+const getCookie = (name: string) => {
+	const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+	return match ? decodeURIComponent(match[2]) : null;
+};
+
+const setCookie = (name: any, value: string | number | boolean) => {
+	const expires = new Date(Date.now() + 365 * 864e5).toUTCString();
+	document.cookie = `${name}=${encodeURIComponent(value)}; expires=${expires}; path=/`;
+};
+
+export function initChatwoot(): void {
+	if (!browser) return;
+	window.chatwootSettings = {
+		position: 'right',
+		type: 'expanded_bubble',
+		launcherTitle: 'Chat with us'
+	};
+	const BASE_URL = 'https://support.int-insights.com';
+
+	// Prevent loading multiple times
+	if (window.chatwootSDK) {
+		window.chatwootSDK.run({
+			websiteToken: 'Paqe4x6hgva1rTRmibgSHh5C',
+			baseUrl: BASE_URL
+		});
+		return;
+	}
+
+	const script = document.createElement('script');
+	script.src = `${BASE_URL}/packs/js/sdk.js`;
+	script.async = true;
+	script.defer = true;
+
+	script.onload = () => {
+		window.chatwootSDK?.run({
+			websiteToken: 'Paqe4x6hgva1rTRmibgSHh5C',
+			baseUrl: BASE_URL
+		});
+	};
+
+	document.head.appendChild(script);
+}
+
 export {
 	items,
 	df,
@@ -363,5 +408,7 @@ export {
 	addDays,
 	addMonths,
 	fetchGeoJsons,
-	exportRaw
+	exportRaw,
+	getCookie,
+	setCookie
 };

@@ -23,18 +23,68 @@
 	import { Input } from '$lib/components/ui/input';
 	import Template from '$lib/custom/blocks/Portals/Template.svelte';
 	import { tempList } from './templates';
-
+	import { driver } from 'driver.js';
+	import { onMount } from 'svelte';
+	import { mode } from 'mode-watcher';
+	import { getCookie, setCookie } from '$lib/custom/functions/helpers';
 	let { data }: { data: PageData } = $props();
 	const { all_surv, draft_surv, live_surv, closed_surv, count, payment } = data;
 
 	let loading = $state(false);
 
 	let temp = $state('');
+
+	onMount(() => {
+		const hasSeenTour = getCookie('hasSeenTour');
+		if (hasSeenTour) return;
+		const driverObj = driver({
+			showProgress: true,
+			overlayColor: mode.current === 'dark' ? 'white' : 'black',
+			steps: [
+				{
+					element: '#welcome',
+					popover: { title: 'Intuitive Insights', description: 'Welcome to your dashboard' }
+				},
+				{
+					element: '#create-survey',
+					popover: { title: 'Create', description: 'Here you can create your engaging surveys' }
+				},
+				{
+					element: '#template-survey',
+					popover: {
+						title: 'Templates',
+						description: 'Here you can use handcrafted templates to create engaging surveys'
+					}
+				},
+				{
+					element: '#total-survey',
+					popover: { title: 'Total Surveys', description: 'You can see your total surveys here' }
+				},
+				{
+					element: '#total-respondents',
+					popover: {
+						title: 'Total Respondents',
+						description: 'You can see your total engagements here'
+					}
+				},
+				{
+					element: '#share-survey',
+					popover: {
+						title: 'Share Surveys',
+						description: 'In this section you can share your surveys to gather engagements'
+					}
+				}
+			]
+		});
+		driverObj.drive();
+
+		setCookie('hasSeenTour', 'true');
+	});
 </script>
 
-<div class="m-4 mt-4 flex flex-col gap-10">
+<div class="m-4 mt-4 flex flex-col gap-10" id="welcome">
 	<div class="grid gap-2 md:grid-cols-4 md:gap-8">
-		<Card.Root class="space-y-5">
+		<Card.Root class="space-y-5" id="create-survey">
 			<Card.Header>
 				<Card.Title>
 					<ChartLine class="size-6 text-primary" />
@@ -47,7 +97,7 @@
 				<Button variant="default" href="/client-console/surveys/create">Create New Survey</Button>
 			</Card.Footer>
 		</Card.Root>
-		<Card.Root class="max-w-lg">
+		<Card.Root class="max-w-lg" id="template-survey">
 			<Card.Header class="pb-2">
 				<Card.Title class="text-3xl">{data.features.plan === 'Free' ? 1 : tempList.size}</Card.Title
 				>
@@ -152,7 +202,7 @@
 				</Portal>
 			</Card.Footer>
 		</Card.Root>
-		<Card.Root class="max-w-lg">
+		<Card.Root class="max-w-lg" id="total-survey">
 			<Card.Header class="pb-2 ">
 				<Card.Title class="text-4xl">{all_surv.length}</Card.Title>
 				<Card.Description>Total surveys</Card.Description>
@@ -164,7 +214,7 @@
 				<Progress value={all_surv.length} aria-label="{all_surv.length}% increase" />
 			</Card.Footer>
 		</Card.Root>
-		<Card.Root class="max-w-lg">
+		<Card.Root class="max-w-lg" id="total-respondents">
 			<Card.Header class="pb-2">
 				<Card.Title class="text-3xl">{count}</Card.Title>
 				<Card.Description>Total Respondent’s</Card.Description>
@@ -178,7 +228,7 @@
 		</Card.Root>
 
 		{#if live_surv.length > 0}
-			<Card.Root class="max-w-lg">
+			<Card.Root class="max-w-lg" id="share-survey">
 				<Card.Header class="pb-2">
 					<Card.Title class="text-end text-lg">Total Running Surveys</Card.Title>
 					<Card.Description class="text-end text-lg">

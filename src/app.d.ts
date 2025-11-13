@@ -17,5 +17,24 @@ declare global {
 			available_qns: clientData;
 		}
 	}
+
+	interface Window {
+		chatwootSDK?: {
+			run: (config: { websiteToken: string; baseUrl: string }) => void;
+		};
+		chatwootSettings?: {
+			hideMessageBubble?: boolean;
+			position?: 'left' | 'right';
+			locale?: string;
+			type?: 'standard' | 'expanded_bubble';
+			launcherTitle?: string;
+			darkMode?: 'auto' | 'light' | 'dark';
+			launcherColor?: string;
+			showPopoutButton?: boolean;
+			openOnLoad?: boolean;
+			// You can add more based on your Chatwoot config usage
+			[extra: string]: unknown;
+		};
+	}
 }
 export {};

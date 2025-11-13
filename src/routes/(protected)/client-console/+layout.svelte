@@ -20,11 +20,14 @@
 	import SlidersVertical from 'lucide-svelte/icons/sliders-vertical';
 	import { Settings } from '$lib/custom/shardedlayouts';
 	import type { LayoutData } from './$types';
-	import type { Snippet } from 'svelte';
+	import { onMount, type Snippet } from 'svelte';
 	import Meta from '$lib/custom/seo/meta.svelte';
 	import * as Popover from '$lib/components/ui/popover';
 	import CircleQuestionMark from 'lucide-svelte/icons/mail-question';
 	import * as Card from '$lib/components/ui/card';
+	import FaqPopup from '$lib/custom/blocks/popups/FaqPopup.svelte';
+	import 'driver.js/dist/driver.css';
+	import { initChatwoot } from '$lib/custom/functions/helpers';
 
 	let { children, data }: { data: LayoutData; children: Snippet } = $props();
 
@@ -98,6 +101,10 @@
 		description: 'Your all in one analysis tool',
 		type: 'Website'
 	};
+
+	onMount(() => {
+		initChatwoot();
+	});
 </script>
 
 <Meta {...pageprops} />
@@ -126,7 +133,7 @@
 			</Breadcrumb.Root>
 
 			<div class="ml-auto flex gap-2">
-				<div class="flex items-center justify-center">
+				<!-- <div class="flex items-center justify-center">
 					<a href="/faq" aria-label="faq">
 						<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
 							><g
@@ -181,7 +188,7 @@
 							</Card.Root>
 						</Popover.Content>
 					</Popover.Root>
-				</Badge>
+				</Badge> -->
 				{#if !data.payment}
 					<div class="my-2 hidden h-5 md:block">
 						<Badge variant="outline"><a href="/client-console/billing">Unlock Pro</a></Badge>
@@ -205,6 +212,7 @@
 			</div>
 		</header>
 		<main>
+			<FaqPopup />
 			{@render children?.()}
 		</main>
 	</Sidebar.Inset>
