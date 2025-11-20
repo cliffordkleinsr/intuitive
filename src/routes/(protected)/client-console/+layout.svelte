@@ -84,7 +84,7 @@
 				items: []
 			},
 			{
-				title: 'FAQ',
+				title: 'User Guide',
 				url: '/faq',
 				icon: HeartHandshake,
 				items: []
