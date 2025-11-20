@@ -6,15 +6,13 @@
 	import { Button } from '$lib/components/ui/button';
 	import { toggleMode } from 'mode-watcher';
 	import { Badge } from '$lib/components/ui/badge';
-
 	// Lucide Svelte
 	import Sun from 'lucide-svelte/icons/sun';
 	import Moon from 'lucide-svelte/icons/moon';
 	import House from 'lucide-svelte/icons/house';
 	import Table from 'lucide-svelte/icons/table';
 	import ChartLine from 'lucide-svelte/icons/chart-line';
-	import Earth from 'lucide-svelte/icons/earth';
-	import RadioTower from 'lucide-svelte/icons/radio-tower';
+	import HeartHandshake from 'lucide-svelte/icons/heart-handshake';
 	import Coins from 'lucide-svelte/icons/coins';
 	import ChartCandlestick from 'lucide-svelte/icons/chart-candlestick';
 	import SlidersVertical from 'lucide-svelte/icons/sliders-vertical';
@@ -22,10 +20,6 @@
 	import type { LayoutData } from './$types';
 	import { onMount, type Snippet } from 'svelte';
 	import Meta from '$lib/custom/seo/meta.svelte';
-	import * as Popover from '$lib/components/ui/popover';
-	import CircleQuestionMark from 'lucide-svelte/icons/mail-question';
-	import * as Card from '$lib/components/ui/card';
-	import FaqPopup from '$lib/custom/blocks/popups/FaqPopup.svelte';
 	import 'driver.js/dist/driver.css';
 	import { initChatwoot } from '$lib/custom/functions/helpers';
 
@@ -87,6 +81,12 @@
 				title: 'Statistics',
 				url: '/client-console/statistics',
 				icon: ChartLine,
+				items: []
+			},
+			{
+				title: 'FAQ',
+				url: '/faq',
+				icon: HeartHandshake,
 				items: []
 			}
 		],
@@ -212,7 +212,6 @@
 			</div>
 		</header>
 		<main>
-			<FaqPopup />
 			{@render children?.()}
 		</main>
 	</Sidebar.Inset>

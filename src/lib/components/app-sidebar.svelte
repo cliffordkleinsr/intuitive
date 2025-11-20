@@ -79,10 +79,17 @@
 								<Sidebar.MenuButton>
 									{#snippet child({ props })}
 										<Collapsible.Trigger {...props}>
-											<a href={group.url} {...props}>
-												<group.icon />
-												<span>{group.title}</span>
-											</a>
+											{#if group.url === '/faq'}
+												<a href={group.url} {...props} target="_blank">
+													<group.icon />
+													<span>{group.title}</span>
+												</a>
+											{:else}
+												<a href={group.url} {...props}>
+													<group.icon />
+													<span>{group.title}</span>
+												</a>
+											{/if}
 										</Collapsible.Trigger>
 										<Collapsible.Content>
 											<Sidebar.MenuSub>

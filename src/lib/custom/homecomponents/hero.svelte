@@ -36,7 +36,7 @@
 				</div>
 				<div class="flex justify-center gap-5 pt-10 lg:justify-start">
 					<!-- <Button href="/agent/signin" size="lg" variant="secondary">Agent Login</Button> -->
-					<Button variant="black" href="/client/login" size="lg">Client Signup</Button>
+					<Button variant="black" href="/client/login" size="lg">Start Now</Button>
 					<Button data-sveltekit-reload href="/about#address" size="lg" variant="secondary"
 						>Contact</Button
 					>
