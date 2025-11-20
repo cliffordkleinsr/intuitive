@@ -9,7 +9,7 @@
 	let { data }: { data: PageData } = $props();
 	const { survey_time, surveys, count, total_clients } = data;
 
-	const responses = surveys.map((e) => e.responses);
+	const questions = surveys.map((e) => e.questions);
 	const survey_count = surveys.map((e) => e.title).length;
 	const agents = surveys.map((e) => e.total);
 
@@ -39,11 +39,16 @@
 		<!-- End -->
 		<Card.Root>
 			<Card.Header class="flex flex-row items-center justify-between space-y-0 pb-2">
-				<Card.Title class="text-sm font-medium">Total Responses</Card.Title>
+				<Card.Title class="text-sm font-medium">Total Questions</Card.Title>
 			</Card.Header>
 			<Card.Content>
-				<div class="text-2xl font-bold">{sumArray(responses)}</div>
+				<div class="text-2xl font-bold">{sumArray(questions)}</div>
 			</Card.Content>
+			<Card.Footer class="flex justify-end">
+				<Button class="w-full" variant="outline" href="/dashboard/surveys/manage">
+					View All <ArrowUpRight />
+				</Button>
+			</Card.Footer>
 		</Card.Root>
 		<!-- End -->
 		<!-- <Card.Root>
@@ -93,7 +98,7 @@
 					<Table.Header>
 						<Table.Row>
 							<Table.Head>Survey</Table.Head>
-							<Table.Head>Responses</Table.Head>
+							<Table.Head>Total Questions</Table.Head>
 							<Table.Head>Total Agents</Table.Head>
 						</Table.Row>
 					</Table.Header>
@@ -101,7 +106,7 @@
 						{#each surveys as survey}
 							<Table.Row>
 								<Table.Cell class="font-medium">{survey.title}</Table.Cell>
-								<Table.Cell>{survey.responses}</Table.Cell>
+								<Table.Cell>{survey.questions}</Table.Cell>
 								<Table.Cell>{survey.total}</Table.Cell>
 							</Table.Row>
 						{/each}

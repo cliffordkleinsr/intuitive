@@ -2,6 +2,8 @@ import { db } from '$lib/server/db';
 import { utmSourceTracking } from '$lib/server/db/schema';
 import { and, isNotNull, count, desc, isNull } from 'drizzle-orm';
 import type { PageServerLoad } from './$types';
+import { normalizeCampaign, normalizeUtm } from '$lib/custom/functions/helpers';
+import { date } from 'drizzle-orm/mysql-core';
 
 export const load = (async () => {
 	const sources = await db.select().from(utmSourceTracking);
@@ -37,15 +39,25 @@ export const load = (async () => {
 		.orderBy(desc(utmSourceTracking.utmSource));
 	const top_source = t_sauce.length ? t_sauce.reduce((a, b) => (b.count > a.count ? b : a)) : null;
 	// console.log(top_source)
-	let source_distribution = await db
+
+	// let source_distribution = await db
+	// 	.select({
+	// 		source: utmSourceTracking.utmSource,
+	// 		count: count(utmSourceTracking.utmSource)
+	// 	})
+	// 	.from(utmSourceTracking)
+	// 	.groupBy(utmSourceTracking.utmSource)
+	// 	.orderBy(desc(utmSourceTracking.utmSource));
+	let rawSourceDist = await db
 		.select({
 			source: utmSourceTracking.utmSource,
-			count: count(utmSourceTracking.utmSource)
+			count: count(utmSourceTracking.utmSource),
+			date: utmSourceTracking.recordedAt
 		})
 		.from(utmSourceTracking)
-		.groupBy(utmSourceTracking.utmSource)
+		.groupBy(utmSourceTracking.utmSource, utmSourceTracking.recordedAt)
 		.orderBy(desc(utmSourceTracking.utmSource));
-	// console.log(source_distribution)
+	// console.log(rawSourceDist)
 	let medium_distribution = await db
 		.select({
 			medium: utmSourceTracking.utmMedium,
@@ -55,7 +67,7 @@ export const load = (async () => {
 		.groupBy(utmSourceTracking.utmMedium)
 		.orderBy(desc(utmSourceTracking.utmMedium));
 
-	let campaign_distribution = await db
+	let rawCampaignDist = await db
 		.select({
 			campaign: utmSourceTracking.utmCampaign,
 			count: count(utmSourceTracking.utmCampaign)
@@ -64,52 +76,57 @@ export const load = (async () => {
 		.groupBy(utmSourceTracking.utmCampaign)
 		.orderBy(desc(utmSourceTracking.utmCampaign));
 
-	// source_distribution = [
-	// 	{
-	// 		source: 'facebook',
-	// 		count: 7111
-	// 	},
-	// 	{
-	// 		source: 'google',
-	// 		count: 2000
-	// 	},
-	// 	{
-	// 		source: 'instagram',
-	// 		count: 500
-	// 	},
-	// 	{
-	// 		source: 'linkedin',
-	// 		count: 8
-	// 	}
-	// ];
-	// medium_distribution = [
-	// 	{
-	// 		medium: 'Cpc ',
-	// 		count: 17756
-	// 	},
-	// 	{
-	// 		medium: 'paid social',
-	// 		count: 26
-	// 	},
-	// 	{
-	// 		medium: 'Social',
-	// 		count: 6
-	// 	}
-	// ];
-	// campaign_distribution = [
-	// 	{
-	// 		campaign: 'social media campaign ',
-	// 		count: 156
-	// 	},
-	// 	{
-	// 		campaign: 'automotive parts tyres',
-	// 		count: 2556
-	// 	},
-	// 	{
-	// 		campaign: 'spare parts',
-	// 		count: 64654
-	// 	}
-	// ];
+	type NormalizedSource = string;
+
+	const source_distribution_lst: Record<NormalizedSource, number> = rawSourceDist.reduce<
+		Record<NormalizedSource, number>
+	>((acc, row) => {
+		const norm = normalizeUtm(row.source);
+
+		if (!acc[norm]) acc[norm] = 0;
+		acc[norm] += row.count;
+
+		return acc;
+	}, {});
+
+	const source_distribution = Object.entries(source_distribution_lst)
+		.map(([source, count]) => ({ source, count }))
+		.sort((a, b) => b.count - a.count)
+		.filter((f) => f.source !== 'unknown');
+
+	const mergedCampaigns: Record<string, number> = {};
+
+	for (const row of rawCampaignDist) {
+		const norm = normalizeCampaign(row.campaign);
+
+		if (!mergedCampaigns[norm]) mergedCampaigns[norm] = 0;
+		mergedCampaigns[norm] += row.count;
+	}
+	const campaign_distribution = Object.entries(mergedCampaigns)
+		.map(([campaign, count]) => ({ campaign, count }))
+		.sort((a, b) => b.count - a.count)
+		.filter((f) => f.campaign !== 'unknown');
+
+	// console.log(source_distribution)
+	type RawRow = {
+		source: string | null;
+		count: number;
+		date: Date;
+	};
+
+	type NormalizedRow = {
+		source: string;
+		count: number;
+		date: Date;
+	};
+
+	const timeseries: NormalizedRow[] = rawSourceDist
+		.map((row) => ({
+			source: normalizeUtm(row.source), // <-- normalize here
+			count: row.count,
+			date: row.date
+		}))
+		.filter((f) => f.source !== 'unknown');
 
 	return {
 		sources,
@@ -118,6 +135,7 @@ export const load = (async () => {
 		top_source,
 		source_distribution,
 		medium_distribution,
-		campaign_distribution
+		campaign_distribution,
+		timeseries
 	};
 }) satisfies PageServerLoad;

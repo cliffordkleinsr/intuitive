@@ -25,12 +25,19 @@
 		columns: ColumnDef<TData, TValue>[];
 		filter?: string;
 		data: TData[];
+		no_page?: boolean;
 		children?: Snippet;
 	};
 
-	let { data, columns, filter = 'title', children }: DateTableProps<TData, TValue> = $props();
+	let {
+		data,
+		columns,
+		filter = 'title',
+		no_page = false,
+		children
+	}: DateTableProps<TData, TValue> = $props();
 
-	let pagination = $state<PaginationState>({ pageIndex: 0, pageSize: 7 });
+	let pagination = $state<PaginationState>({ pageIndex: 0, pageSize: no_page ? 50 : 7 });
 	let columnFilters = $state<ColumnFiltersState>([]);
 	let sorting = $state<SortingState>([]);
 
@@ -153,7 +160,7 @@
 			<ChevronRight />
 		</Button>
 	</div>
-	<div class="absolute bottom-48 flex-1 text-sm text-muted-foreground">
+	<div class="absolute bottom-0 flex-1 text-sm text-muted-foreground">
 		Showing page {pagination.pageIndex} out of{' '}
 		{table.getPageCount() - 1}.
 	</div>

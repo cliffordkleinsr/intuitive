@@ -5,6 +5,7 @@
 	import TriangleAlert from 'lucide-svelte/icons/triangle-alert';
 	import SettingsUtmbuilder from './settings-Utmbuilder.svelte';
 	import ClickableUtility from './ClickableUtility.svelte';
+	import SourcesUtility from './SourcesUtility.svelte';
 	let { data }: PageProps = $props();
 
 	const {
@@ -14,7 +15,8 @@
 		top_source,
 		source_distribution,
 		medium_distribution,
-		campaign_distribution
+		campaign_distribution,
+		timeseries
 	} = data;
 </script>
 
@@ -63,9 +65,10 @@
 					{:else}
 						{#each source_distribution as distribution}
 							{#if distribution.source}
+								{@const curr_series = timeseries.filter((r) => r.source === distribution.source)}
 								<div class="flex items-center justify-between rounded-md bg-secondary p-2">
 									<span class="flex items-center gap-2 text-sm">
-										{#if distribution.source === 'faceBook' || distribution.source === 'fb'}
+										{#if distribution.source === 'facebook'}
 											<svg
 												xmlns="http://www.w3.org/2000/svg"
 												width="24"
@@ -87,6 +90,17 @@
 													d="M7.8 2h8.4C19.4 2 22 4.6 22 7.8v8.4a5.8 5.8 0 0 1-5.8 5.8H7.8C4.6 22 2 19.4 2 16.2V7.8A5.8 5.8 0 0 1 7.8 2m-.2 2A3.6 3.6 0 0 0 4 7.6v8.8C4 18.39 5.61 20 7.6 20h8.8a3.6 3.6 0 0 0 3.6-3.6V7.6C20 5.61 18.39 4 16.4 4zm9.65 1.5a1.25 1.25 0 0 1 1.25 1.25A1.25 1.25 0 0 1 17.25 8A1.25 1.25 0 0 1 16 6.75a1.25 1.25 0 0 1 1.25-1.25M12 7a5 5 0 0 1 5 5a5 5 0 0 1-5 5a5 5 0 0 1-5-5a5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3a3 3 0 0 0 3 3a3 3 0 0 0 3-3a3 3 0 0 0-3-3"
 												/></svg
 											>
+										{:else if distribution.source === 'android'}
+											<svg
+												xmlns="http://www.w3.org/2000/svg"
+												width="24"
+												height="24"
+												viewBox="0 0 24 24"
+												><path
+													fill="currentColor"
+													d="M1 18q.225-2.675 1.638-4.925T6.4 9.5L4.55 6.3q-.15-.225-.075-.475T4.8 5.45q.2-.125.45-.05t.4.3L7.5 8.9Q9.65 8 12 8t4.5.9l1.85-3.2q.15-.225.4-.3t.45.05q.25.125.325.375t-.075.475L17.6 9.5q2.35 1.325 3.762 3.575T23 18zm6-2.75q.525 0 .888-.363T8.25 14t-.363-.888T7 12.75t-.888.363T5.75 14t.363.888t.887.362m10 0q.525 0 .888-.363T18.25 14t-.363-.888T17 12.75t-.888.363t-.362.887t.363.888t.887.362"
+												/></svg
+											>
 										{:else if distribution.source === 'google'}
 											<svg
 												xmlns="http://www.w3.org/2000/svg"
@@ -98,7 +112,7 @@
 													d="M21.35 11.1h-9.17v2.73h6.51c-.33 3.81-3.5 5.44-6.5 5.44C8.36 19.27 5 16.25 5 12c0-4.1 3.2-7.27 7.2-7.27c3.09 0 4.9 1.97 4.9 1.97L19 4.72S16.56 2 12.1 2C6.42 2 2.03 6.8 2.03 12c0 5.05 4.13 10 10.22 10c5.35 0 9.25-3.67 9.25-9.09c0-1.15-.15-1.81-.15-1.81"
 												/></svg
 											>
-										{:else if distribution.source === 'linkedin'}
+										{:else if distribution.source === 'linkedin' || distribution.source === 'unknown-linkedin'}
 											<svg
 												xmlns="http://www.w3.org/2000/svg"
 												width="24"
@@ -110,9 +124,10 @@
 												/></svg
 											>
 										{/if}
-										{distribution.source === 'fb' ? 'Facebook' : distribution.source}
+										{distribution.source}
 									</span>
-									<Badge variant="default">{distribution.count}</Badge>
+									<SourcesUtility series={curr_series} label={distribution.count} />
+									<!-- <Badge variant="default">{distribution.count}</Badge> -->
 								</div>
 							{/if}
 						{/each}

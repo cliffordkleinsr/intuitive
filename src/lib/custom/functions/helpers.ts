@@ -307,6 +307,74 @@ type FlyAndScaleParams = {
 	duration?: number;
 };
 
+function normalizeUtm(value?: string | null) {
+	if (!value) return 'unknown';
+
+	const key = value.toLowerCase().trim();
+
+	const map: Record<string, string> = {
+		fb: 'facebook',
+		facebook: 'facebook',
+		faceBook: 'facebook',
+		ig: 'instagram',
+		insta: 'instagram',
+		google: 'google',
+		g: 'google',
+		an: 'android',
+		x: 'twitter',
+		tw: 'twitter',
+		email: 'email',
+		em: 'email',
+		mail: 'email'
+	};
+
+	if (map[key]) return map[key];
+
+	// Campaign ID
+	if (/^\d+$/.test(key)) return `campaign-id-${key}`;
+
+	// Not set
+	if (key === '(not set)') return 'unknown';
+
+	// Fallback
+	return `unknown-${key}`;
+}
+
+function normalizeCampaign(value: string | null): string {
+	if (!value || value.trim() === '') {
+		return 'unknown';
+	}
+
+	const key = value.trim().toLowerCase();
+
+	// Known campaign names you want to prettify
+	const prettyMap: Record<string, string> = {
+		social_media_campaign: 'Social Media Campaign',
+		launch: 'Product Launch',
+		summer_sale: 'Summer Sale'
+	};
+
+	if (prettyMap[key]) {
+		return prettyMap[key];
+	}
+
+	// Pure numbers → treat as campaign IDs
+	if (/^\d+$/.test(key)) {
+		return `Campaign ID: ${value}`;
+	}
+
+	// snake_case → Title Case
+	if (key.includes('_')) {
+		return key
+			.split('_')
+			.map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+			.join(' ');
+	}
+
+	// fallback → capitalized
+	return value.charAt(0).toUpperCase() + value.slice(1);
+}
+
 export {
 	items,
 	df,
@@ -322,5 +390,7 @@ export {
 	handleExternal,
 	capitalizeFirstLetter,
 	calculateAge,
-	deductAmount
+	deductAmount,
+	normalizeUtm,
+	normalizeCampaign
 };

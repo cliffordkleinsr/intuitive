@@ -8,6 +8,7 @@ import {
 	AnswersTable,
 	consumerDeats,
 	response_table,
+	surveyqnsTableV2,
 	SurveyTable,
 	user_analytics
 } from '$lib/server/db/schema';
@@ -61,7 +62,7 @@ export const load: LayoutServerLoad = async ({ locals: { user }, url, cookies })
 	const survs = await db
 		.select({
 			title: SurveyTable.title,
-			responses: count(response_table.answer),
+			questions: countDistinct(surveyqnsTableV2.questionId),
 			total: countDistinct(user_analytics.id)
 		})
 		.from(SurveyTable)
@@ -71,10 +72,11 @@ export const load: LayoutServerLoad = async ({ locals: { user }, url, cookies })
 				not(eq(SurveyTable.surveyid, 'c082054d-46e4-4bdf-ac24-810d17406e7c')) //Amber peak
 			)
 		)
-		.leftJoin(response_table, eq(response_table.surveid, SurveyTable.surveyid))
+		.leftJoin(surveyqnsTableV2, eq(surveyqnsTableV2.surveid, SurveyTable.surveyid))
 		.leftJoin(user_analytics, eq(user_analytics.surveyid, SurveyTable.surveyid))
 		.groupBy(SurveyTable.title, SurveyTable.created_at)
 		.orderBy(desc(SurveyTable.created_at));
+
 	return {
 		user,
 		survey_time,

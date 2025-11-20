@@ -1,63 +1,42 @@
 <script lang="ts">
-	import * as Card from '$lib/components/ui/card';
+	import * as Dialog from '$lib/components/ui/dialog';
+	import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
+	import { Button } from '$lib/components/ui/button/index.js';
+
+	import { Badge } from '$lib/components/ui/badge/index.js';
+	import { Axis, Chart, Svg, Tooltip, Highlight, Bar } from 'layerchart';
+	import { scaleBand } from 'd3-scale';
 	import {
-		isSameDay,
-		isSameMonth,
 		eachHourOfInterval,
-		endOfDay,
-		isSameHour,
-		startOfDay,
-		startOfHour,
-		format,
 		eachDayOfInterval,
-		endOfWeek,
+		eachMonthOfInterval,
+		startOfHour,
+		startOfDay,
 		startOfWeek,
 		startOfMonth,
-		eachMonthOfInterval,
 		startOfYear,
+		endOfDay,
+		endOfWeek,
 		endOfYear,
+		isSameHour,
+		isSameDay,
+		isSameMonth,
+		format,
 		endOfMonth,
 		subDays,
 		subMonths
 	} from 'date-fns';
-	import * as Dialog from '$lib/components/ui/dialog';
-	import { Axis, Bar, Chart, Svg, Tooltip, Highlight } from 'layerchart';
-	import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
-	import { Button } from '$lib/components/ui/button';
-	import { scaleBand } from 'd3-scale';
 	import { cubicInOut } from 'svelte/easing';
-	import type { Snippet } from 'svelte';
 
-	type Source = {
-		recordedAt: Date;
-		id: string;
-		userId: string | null;
-		personaId: string;
-		utmSource: string | null;
-		utmMedium: string | null;
-		utmCampaign: string | null;
-		unTracked: boolean;
-		userAgent: string | null;
-		ipAddress: string | null;
-		referrer: string | null;
-	};
-	type Utlity = {
-		variable: Source[];
+	type TimeseriesPoint = {
+		source: string;
 		count: number;
-		children: Snippet;
+		date: Date;
 	};
-	let { variable, count, children }: Utlity = $props();
-	const now = new Date();
 	type Period = 'hour' | 'day' | 'month' | 'past_two_weeks' | 'last_month';
 
-	/**
-	 * Generic function to group data by a given time unit
-	 * @param {Array} sources - The list of data with `recordedAt` timestamps
-	 * @param {'hour'|'day'|'month'} type - The grouping type
-	 * @param {Date} [referenceDate=new Date()] - The reference date (optional)
-	 */
-	export function groupVisitsByTime(
-		sources: Source[],
+	function groupTimeseriesByPeriod(
+		data: TimeseriesPoint[],
 		type: Period = 'month',
 		referenceDate = new Date()
 	) {
@@ -86,6 +65,7 @@
 				formatStr = 'EEE';
 				startFn = startOfDay;
 				break;
+
 			case 'past_two_weeks': {
 				const start = subDays(referenceDate, 13); // 14 days including today
 				const end = referenceDate;
@@ -107,8 +87,8 @@
 				startFn = startOfDay;
 				break;
 			}
-
 			case 'month':
+
 			default:
 				intervals = eachMonthOfInterval({
 					start: startOfYear(referenceDate),
@@ -120,18 +100,27 @@
 				break;
 		}
 
-		return intervals.map((time) => ({
-			date: format(startFn(time), formatStr),
-			value: sources.filter((v) => isSameFn(v.recordedAt, time)).length
-		}));
-	}
-	const visits_by_hour = groupVisitsByTime(variable, 'hour');
-	const visits_by_week = groupVisitsByTime(variable, 'day');
-	const last14Days = groupVisitsByTime(variable, 'past_two_weeks');
-	const previousMonth = groupVisitsByTime(variable, 'last_month');
-	const visits_by_month = groupVisitsByTime(variable, 'month');
+		return intervals.map((interval) => {
+			const total = data
+				.filter((row) => isSameFn(row.date, interval))
+				.reduce((sum, r) => sum + r.count, 0);
 
-	let filter = $state(visits_by_hour);
+			return {
+				date: format(startFn(interval), formatStr),
+				value: total
+			};
+		});
+	}
+
+	let { series, label } = $props();
+
+	const hour = groupTimeseriesByPeriod(series, 'hour');
+	const week = groupTimeseriesByPeriod(series, 'day');
+	const last14Days = groupTimeseriesByPeriod(series, 'past_two_weeks');
+	const previousMonth = groupTimeseriesByPeriod(series, 'last_month');
+	const monthly = groupTimeseriesByPeriod(series, 'month');
+
+	let filter = $state(hour);
 	let filterLabel = $state('Last 24 Hours');
 	let countForFilter = $derived.by(() => {
 		return Array.isArray(filter)
@@ -143,19 +132,13 @@
 <Dialog.Root>
 	<Dialog.Trigger>
 		{#snippet child({ props })}
-			<Card.Root {...props} class="cursor-pointer">
-				<Card.Header>
-					<Card.Title>{count}</Card.Title>
-				</Card.Header>
-				<Card.Content>{@render children?.()}</Card.Content>
-			</Card.Root>
+			<Badge variant="default" {...props}>{label}</Badge>
 		{/snippet}
 	</Dialog.Trigger>
 	<Dialog.Content class="w-full max-w-5xl">
 		<Dialog.Title class="m-1 flex gap-2 rounded-md bg-secondary p-10">
 			<div class="mr-auto">
-				<h1 class="text-2xl font-semibold">Page Visits Analytics</h1>
-				<p class="text-sm text-muted-foreground">tracking performance insights</p>
+				<h1 class="text-2xl font-semibold">Source Distribution Analytics</h1>
 				<p class="mt-3 text-4xl font-semibold">{countForFilter}</p>
 				<p class="text-sm text-muted-foreground">{filterLabel}</p>
 			</div>
@@ -185,7 +168,7 @@
 									size="sm"
 									class="w-full text-start"
 									onclick={() => {
-										filter = visits_by_hour;
+										filter = hour;
 										filterLabel = 'Last 24 Hours';
 									}}
 								>
@@ -205,7 +188,7 @@
 									size="sm"
 									class="text-start"
 									onclick={() => {
-										filter = visits_by_week;
+										filter = week;
 										filterLabel = 'Last 7 Days';
 									}}
 								>
@@ -265,7 +248,7 @@
 									size="sm"
 									class="text-start"
 									onclick={() => {
-										filter = visits_by_month;
+										filter = monthly;
 										filterLabel = 'Last 12 Months';
 									}}
 								>
@@ -287,7 +270,7 @@
 				</DropdownMenu.Root>
 			</div>
 		</Dialog.Title>
-		<div class="h-[450px] rounded border p-4">
+		<div class="h-[300px] rounded border p-4">
 			<Chart
 				data={filter}
 				x="date"

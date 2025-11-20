@@ -7,6 +7,6 @@
 	const { surv } = data;
 </script>
 
-<div class="h-dvh">
+<div class="h-full">
 	<DataTable data={surv} {columns} />
 </div>
