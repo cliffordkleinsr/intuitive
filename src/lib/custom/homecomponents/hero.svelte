@@ -1,5 +1,21 @@
 <script>
+	import { page } from '$app/state';
 	import { Button } from '$lib/components/ui/button';
+
+	const handleSignUpClick = async () => {
+		try {
+			await fetch('/api/upIncrement');
+		} catch (err) {
+			console.error('Error fetching data:', err);
+		}
+	};
+	const handleSignInClick = async () => {
+		try {
+			await fetch('/api/inIncrement');
+		} catch (err) {
+			console.error('Error fetching data:', err);
+		}
+	};
 </script>
 
 <!-- Hero -->
@@ -36,9 +52,26 @@
 				</div>
 				<div class="flex justify-center gap-5 pt-10 lg:justify-start">
 					<!-- <Button href="/agent/signin" size="lg" variant="secondary">Agent Login</Button> -->
-					<Button variant="black" href="/client/login" size="lg">Start Now</Button>
-					<Button data-sveltekit-reload href="/about#address" size="lg" variant="secondary"
-						>Contact</Button
+					<Button
+						variant="black"
+						onclick={handleSignInClick}
+						href="/client/login"
+						size="lg"
+						class="text-sm">Client Login</Button
+					>
+					<Button
+						variant="black"
+						onclick={handleSignUpClick}
+						href="/client/signup"
+						size="lg"
+						class="text-sm">Client Signup</Button
+					>
+					<Button
+						data-sveltekit-reload
+						href="/about#address"
+						size="lg"
+						class="text-sm"
+						variant="secondary">Contact</Button
 					>
 				</div>
 			</div>

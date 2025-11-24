@@ -15,11 +15,7 @@
 	import { mode } from 'mode-watcher';
 
 	let { data }: { data: PageData } = $props();
-	const {
-		payment,
-		features,
-		consumer: { businessName, businessAddressLine1, invoiceNumber, invoiceDate, expiryDates }
-	} = data;
+	const { payment, features, consumer } = data;
 	// $inspect(type, price)
 </script>
 
@@ -29,7 +25,7 @@
 		<div class="mb-12 flex items-center justify-between">
 			<!-- Logo and Title -->
 			<div class="flex items-center">
-				{#if $mode === 'light'}
+				{#if mode.current === 'light'}
 					<img
 						src="https://res.cloudinary.com/dmy8yp9el/image/upload/v1736234406/faviconbk_pdt2fp.ico"
 						alt="Company Logo"
@@ -48,8 +44,8 @@
 
 			<!-- Contact Details and Address -->
 			<div id="contact-details" class="text-left">
-				<p class="font-customHeading font-semibold">{businessName}</p>
-				<p>{businessAddressLine1}</p>
+				<p class="font-customHeading font-semibold">{consumer.businessName}</p>
+				<p>{consumer.businessAddressLine1}</p>
 				<p></p>
 			</div>
 		</div>
@@ -57,8 +53,8 @@
 		<div class="mb-12 flex items-start justify-between">
 			<div id="billed-to" class="mt-6">
 				<h2 class="font-customHeading pb-1 text-lg font-medium">BILLED TO:</h2>
-				<p>{businessName}</p>
-				<p>{businessAddressLine1}</p>
+				<p>{consumer.businessName}</p>
+				<p>{consumer.businessAddressLine1}</p>
 			</div>
 
 			<div class="mt-6">
@@ -68,10 +64,10 @@
 					<span class="text-right">{features?.plan}</span>
 
 					<span class="text-left">Invoice Date:</span>
-					<span class="text-right">{invoiceDate}</span>
+					<span class="text-right">{consumer.invoiceDate}</span>
 
 					<span class="text-left">Expiry Dates:</span>
-					<span class="text-right">{expiryDates}</span>
+					<span class="text-right">{consumer.expiryDates}</span>
 				</div>
 			</div>
 		</div>
@@ -85,7 +81,7 @@
 					</tr>
 					<tr class="">
 						<th class="font-customHeading w-24 p-1 text-left font-medium">Due Date:</th>
-						<th class="p-1 text-left indent-2">{invoiceDate}</th>
+						<th class="p-1 text-left indent-2">{consumer.invoiceDate}</th>
 					</tr>
 				</thead>
 			</table>
@@ -96,7 +92,7 @@
 				<h2 class="font-customHeading pb-1 text-lg font-medium">PAYMENT INFORMATION:</h2>
 				<div id="invoice-info" class="w-84 grid grid-cols-2 gap-x-2">
 					<span class="text-left">Account Name:</span>
-					<span class="text-left">{businessName}</span>
+					<span class="text-left">{consumer.businessName}</span>
 
 					<span class="text-left">Account Number:</span>
 					<span class="text-left uppercase">xxxxxxxxxxx</span>
@@ -105,7 +101,7 @@
 
 			<div>
 				<p class="font-customHeading pb-1 text-lg font-medium">SIGNATURE:</p>
-				{#if $mode === 'dark'}
+				{#if mode.current === 'dark'}
 					<img
 						src="https://res.cloudinary.com/dmy8yp9el/image/upload/v1740574483/signature_1_bwjxjs.png"
 						alt="Signature"

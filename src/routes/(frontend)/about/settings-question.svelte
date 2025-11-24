@@ -4,7 +4,7 @@
 	import * as Form from '$lib/components/ui/form/index.js';
 	import type { Infer, SuperValidated } from 'sveltekit-superforms';
 	import { superForm } from 'sveltekit-superforms';
-	import { zodClient } from 'sveltekit-superforms/adapters';
+	import { zod4Client } from 'sveltekit-superforms/adapters';
 	import { subjectSchema, type SubjectSchema } from './schema';
 	import { Textarea } from '$lib/components/ui/textarea';
 	import { toast } from 'svelte-sonner';
@@ -13,7 +13,7 @@
 	export let data: SuperValidated<Infer<SubjectSchema>>;
 
 	const form = superForm(data, {
-		validators: zodClient(subjectSchema),
+		validators: zod4Client(subjectSchema),
 		onUpdated: () => {
 			if (!$message) return;
 
@@ -58,7 +58,7 @@
 		<Form.Field {form} name="subject">
 			<Form.Control>
 				{#snippet children({ props })}
-					<Form.Label>Label</Form.Label>
+					<Form.Label>Subject</Form.Label>
 					<Textarea {...props} bind:value={$formData.subject} />
 				{/snippet}
 			</Form.Control>

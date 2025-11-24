@@ -9,7 +9,7 @@
 
 	// superforms
 	import SuperDebug, { superForm } from 'sveltekit-superforms';
-	import { zodClient } from 'sveltekit-superforms/adapters';
+	import { zod4Client } from 'sveltekit-superforms/adapters';
 	// schema
 	import { billingSchema } from './billing';
 	// sonner
@@ -18,7 +18,7 @@
 	let { data }: { data: PageData } = $props();
 
 	const form = superForm(data.form, {
-		validators: zodClient(billingSchema),
+		validators: zod4Client(billingSchema),
 		onUpdated: () => {
 			if (!$message) return;
 
@@ -39,9 +39,9 @@
 
 	const { phoneno } = data;
 
-	let ref_number = $state<string>();
-	if (phoneno.startsWith('+254')) {
-		ref_number = '0' + phoneno.split('+254')[1];
+	let ref_number = $state<string | null>();
+	if (phoneno?.startsWith('+254')) {
+		ref_number = '0' + phoneno?.split('+254')[1];
 	} else {
 		ref_number = phoneno;
 	}
@@ -83,7 +83,7 @@
 		</Card.Content>
 		<Card.Footer class="grid max-w-sm gap-1">
 			<p class="text-sm text-muted-foreground">Enter account number</p>
-			<Input class="font-extrabold" value={ref_number} disabled />
+			<Input class="font-extrabold" value={ref_number ?? 'Your phone number'} disabled />
 		</Card.Footer>
 		<Card.Footer class="grid max-w-sm gap-1">
 			<p class="text-sm text-muted-foreground">Enter amount in KES</p>

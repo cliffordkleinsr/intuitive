@@ -5,7 +5,7 @@
 	} from '$lib/custom/blocks/reader/super_schema';
 	import { toast } from 'svelte-sonner';
 	import SuperDebug, { superForm, type Infer, type SuperValidated } from 'sveltekit-superforms';
-	import { zodClient } from 'sveltekit-superforms/adapters';
+	import { zod4Client } from 'sveltekit-superforms/adapters';
 	import * as Select from '$lib/components/ui/select';
 	import type { clientData } from '$lib/types';
 	import * as Form from '$lib/components/ui/form/index.js';
@@ -34,7 +34,7 @@
 	// };
 	const selectSchema = buildSelectSchema(qs.options.length);
 	const form = superForm(data, {
-		validators: zodClient(selectSchema),
+		validators: zod4Client(selectSchema),
 		onUpdated: () => {
 			if (!$message) return;
 			const { alertType, alertText } = $message;

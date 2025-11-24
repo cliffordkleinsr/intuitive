@@ -37,14 +37,14 @@ export const load: LayoutServerLoad = async ({ locals: { user }, url, cookies })
 		);
 	}
 
-	if (Boolean(update_registry)) {
-		redirect(
-			303,
-			'/client-console/update-registry',
-			{ type: 'info', message: 'Please update your registry before proceeding' },
-			cookies
-		);
-	}
+	// if (Boolean(update_registry)) {
+	// 	redirect(
+	// 		303,
+	// 		'/client-console/update-registry',
+	// 		{ type: 'info', message: 'Please update your registry before proceeding' },
+	// 		cookies
+	// 	);
+	// }
 
 	const freeTier = {
 		plan: 'Free',
@@ -67,7 +67,7 @@ export const load: LayoutServerLoad = async ({ locals: { user }, url, cookies })
 		.limit(1);
 
 	const features = feature[0] ?? freeTier;
-	const [{ company_name }] = await db
+	const [company_name] = await db
 		.select({ company_name: consumerDeats.company_name })
 		.from(consumerDeats)
 		.where(eq(consumerDeats.consumerid, uid));
@@ -110,7 +110,7 @@ export const load: LayoutServerLoad = async ({ locals: { user }, url, cookies })
 		features,
 		payment,
 		user,
-		company_name,
+		company_name: company_name,
 		responses: response.length
 	};
 };

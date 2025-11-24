@@ -28,7 +28,7 @@
 	const dropProps = [
 		{
 			label: 'Profile',
-			href: '##'
+			href: '/client-console/profile'
 		},
 		{
 			label: 'Subscription',

@@ -13,7 +13,7 @@ import { eq, sql } from 'drizzle-orm';
 import { redirect } from 'sveltekit-flash-message/server';
 import { message, superValidate } from 'sveltekit-superforms';
 import { billingSchema } from './billing';
-import { zod } from 'sveltekit-superforms/adapters';
+import { zod4 } from 'sveltekit-superforms/adapters';
 
 export const load: PageServerLoad = async ({ locals: { user } }) => {
 	const userid = user?.id as string;
@@ -25,7 +25,7 @@ export const load: PageServerLoad = async ({ locals: { user } }) => {
 		.from(consumerDeats)
 		.where(eq(consumerDeats.consumerid, userid));
 	return {
-		form: await superValidate(zod(billingSchema)),
+		form: await superValidate(zod4(billingSchema)),
 		phoneno: details.phone
 	};
 };
@@ -33,7 +33,7 @@ export const load: PageServerLoad = async ({ locals: { user } }) => {
 export const actions: Actions = {
 	default: async ({ request, locals: { user }, cookies }) => {
 		const userid = user?.id as string;
-		const form = await superValidate(request, zod(billingSchema));
+		const form = await superValidate(request, zod4(billingSchema));
 		// validate
 		if (!form.valid) {
 			return message(form, {

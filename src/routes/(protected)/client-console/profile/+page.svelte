@@ -1,8 +1,8 @@
 <script lang="ts">
 	import type { PageProps } from './$types';
-	import SettingsLogin from './settings-Login.svelte';
+	import SettingsProfile from './settings-Profile.svelte';
 
 	let { data }: PageProps = $props();
 </script>
 
-<SettingsLogin data={data.form} />
+<SettingsProfile data={data.form} />

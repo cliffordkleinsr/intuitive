@@ -6,13 +6,13 @@ import type { clientData } from '$lib/types';
 import { getsurveyQuestionByID, getsurveyQuestions } from '$lib/server/db/db_utils';
 import { buildSelectSchema } from '$lib/custom/blocks/reader/super_schema';
 import { message, setError, superValidate } from 'sveltekit-superforms';
-import { zod } from 'sveltekit-superforms/adapters';
+import { zod4 } from 'sveltekit-superforms/adapters';
 
 export const load = (async ({ params: { surveyid, questionid } }) => {
 	const questions = await getsurveyQuestions(surveyid);
 	const [available_qns] = await getsurveyQuestionByID(questionid);
 	const selectSchema = buildSelectSchema(available_qns.options.length);
-	const selectForm = await superValidate(zod(selectSchema));
+	const selectForm = await superValidate(zod4(selectSchema));
 	const pre = {
 		available_qns,
 		questions
@@ -26,7 +26,7 @@ export const actions: Actions = {
 	default: async ({ request, params: { questionid, surveyid } }) => {
 		const [available_qns] = await getsurveyQuestionByID(questionid);
 		const selectSchema = buildSelectSchema(available_qns.options.length);
-		const selectForm = await superValidate(request, zod(selectSchema));
+		const selectForm = await superValidate(request, zod4(selectSchema));
 
 		// validate
 		if (!selectForm.valid) {

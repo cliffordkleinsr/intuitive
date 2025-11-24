@@ -28,9 +28,9 @@ export const UsersTable = pgTable('users', {
 	googleId: text(),
 	fullname: text('fullname').notNull(),
 	email: text('email').unique(),
-	isEmailVerified: boolean('is_email_verified').notNull().default(false),
+	isEmailVerified: boolean('is_email_verified').notNull().default(true),
 	password: text('password'), //.notNull(),
-	role: UserRole('userole').default('AGENT').notNull(),
+	role: UserRole('userole').default('CLIENT').notNull(),
 	age: integer('age'),
 	gender: text('gender'),
 	pfp: text('profile_pic'),
@@ -46,7 +46,7 @@ export const sessionsTable = pgTable('user_sessions', {
 	id: text('id').primaryKey(),
 	userId: text('user_id')
 		.notNull()
-		.references(() => UsersTable.id),
+		.references(() => UsersTable.id, { onDelete: 'cascade' }),
 	expiresAt: timestamp('expires_at', { withTimezone: true, mode: 'date' }).notNull()
 }).enableRLS();
 
@@ -125,17 +125,17 @@ export const agentData = pgTable('agent_data', {
 
 export const consumerDeats = pgTable('consumer_details', {
 	consumerid: text()
-		.references(() => UsersTable.id)
+		.references(() => UsersTable.id, { onDelete: 'cascade' })
 		.primaryKey()
 		.notNull(),
 	email: text()
-		.references(() => UsersTable.email)
+		.references(() => UsersTable.email, { onDelete: 'cascade' })
 		.notNull(),
-	company_name: text().notNull(),
-	phone: text().notNull(),
-	country: text().notNull(),
-	state: text().notNull(),
-	sector: text().notNull(),
+	company_name: text(), //.notNull(),
+	phone: text(), //.notNull(),
+	country: text(), //.notNull(),
+	state: text(), //.notNull(),
+	sector: text(), //.notNull(),
 	disabled: boolean().notNull().default(false),
 	created_at: timestamp('created_at', {
 		withTimezone: true,
@@ -170,7 +170,7 @@ export const costTable = pgTable('cost_table', {
 export const userPackage = pgTable('user_package', {
 	id: serial().notNull().primaryKey(),
 	consumerid: text()
-		.references(() => UsersTable.id)
+		.references(() => UsersTable.id, { onDelete: 'cascade' })
 		.notNull(),
 	package_id: integer()
 		.references(() => costTable.id)
@@ -188,7 +188,7 @@ export const userPackage = pgTable('user_package', {
 export const consumerPackage = pgTable('consumer_package', {
 	id: serial().notNull().primaryKey(),
 	consumerid: text()
-		.references(() => UsersTable.id)
+		.references(() => UsersTable.id, { onDelete: 'cascade' })
 		.notNull(),
 	package_id: integer()
 		.references(() => pricingTable.id)
@@ -218,7 +218,7 @@ export const emailVerification = pgTable('email_verification', {
 export const smsVerification = pgTable('sms_verification', {
 	userId: text('user_id')
 		.notNull()
-		.references(() => UsersTable.id),
+		.references(() => UsersTable.id, { onDelete: 'cascade' }),
 	phone: text('phone').notNull(),
 	verified: boolean('verified').default(false).notNull(),
 	receiveSMS: boolean('recieved_sms').default(true).notNull()

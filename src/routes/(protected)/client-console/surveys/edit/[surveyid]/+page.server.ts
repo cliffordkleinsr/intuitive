@@ -26,7 +26,7 @@ import {
 import { ZodError } from 'zod';
 import { fail } from '@sveltejs/kit';
 import { message, superValidate } from 'sveltekit-superforms';
-import { zod } from 'sveltekit-superforms/adapters';
+import { zod4 } from 'sveltekit-superforms/adapters';
 import { schema } from './(live)/schema';
 import { redirect } from 'sveltekit-flash-message/server';
 
@@ -67,7 +67,7 @@ export const load: PageServerLoad = async ({ params, locals: { user }, cookies }
 		surveyqns: questions,
 		branches,
 		flow,
-		live_form: await superValidate(zod(schema))
+		live_form: await superValidate(zod4(schema))
 	};
 };
 
@@ -357,7 +357,7 @@ export const actions: Actions = {
 	},
 
 	goLive: async ({ request, params, cookies }) => {
-		let live_form = await superValidate(request, zod(schema));
+		let live_form = await superValidate(request, zod4(schema));
 		// validate
 		if (!live_form.valid) {
 			return message(live_form, {

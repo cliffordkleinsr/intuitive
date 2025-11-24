@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { superForm, type Infer, type SuperValidated } from 'sveltekit-superforms';
 	import type { PageData } from '../$types';
-	import { zodClient } from 'sveltekit-superforms/adapters';
+	import { zod4Client } from 'sveltekit-superforms/adapters';
 	import { schema, type LiveSchema } from './schema';
 	import { toast } from 'svelte-sonner';
 	import * as Form from '$lib/components/ui/form';
@@ -15,7 +15,7 @@
 	} = $props();
 
 	const form = superForm(data, {
-		validators: zodClient(schema),
+		validators: zod4Client(schema),
 		onUpdated: () => {
 			if (!$message) return;
 			const { alertType, alertText } = $message;

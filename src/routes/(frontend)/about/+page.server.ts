@@ -1,7 +1,7 @@
 import { message, setError, superValidate } from 'sveltekit-superforms';
 import type { Actions, PageServerLoad } from './$types';
 import { subjectSchema } from './schema';
-import { zod } from 'sveltekit-superforms/adapters';
+import { zod4 } from 'sveltekit-superforms/adapters';
 import { sendQuestionEmail } from '$lib/server/emailconfigs/email-messages';
 import { RetryAfterRateLimiter } from 'sveltekit-rate-limiter/server';
 const limiter = new RetryAfterRateLimiter({
@@ -19,7 +19,7 @@ const limiter = new RetryAfterRateLimiter({
 export const load: PageServerLoad = async (event) => {
 	await limiter.cookieLimiter?.preflight(event);
 	return {
-		form: await superValidate(zod(subjectSchema))
+		form: await superValidate(zod4(subjectSchema))
 	};
 };
 
@@ -30,7 +30,7 @@ export const actions: Actions = {
 		const per = Math.round(status.retryAfter / 3600);
 
 		const { request } = event;
-		const form = await superValidate(request, zod(subjectSchema));
+		const form = await superValidate(request, zod4(subjectSchema));
 		// No way
 
 		if (await limiter.isLimited(event))

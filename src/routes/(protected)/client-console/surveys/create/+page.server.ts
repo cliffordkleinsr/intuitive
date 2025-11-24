@@ -11,7 +11,7 @@ import {
 } from '$lib/server/db/db_utils';
 import { eq, lt, and, ne } from 'drizzle-orm';
 import { message, superValidate } from 'sveltekit-superforms';
-import { zod } from 'sveltekit-superforms/adapters';
+import { zod4 } from 'sveltekit-superforms/adapters';
 import { schema } from './schema';
 import { addDays } from '$lib/custom/functions/helpers';
 import { addYears } from 'date-fns';
@@ -20,7 +20,7 @@ export const load: PageServerLoad = async ({ locals: { user } }) => {
 	const consumer_details = await getSubscriptionStatus(user?.id as string);
 	// console.log(consumer_details)
 	return {
-		form: await superValidate(zod(schema)),
+		form: await superValidate(zod4(schema)),
 		consumer_details
 	};
 };
@@ -28,7 +28,7 @@ export const load: PageServerLoad = async ({ locals: { user } }) => {
 export const actions: Actions = {
 	default: async ({ locals, request, cookies }) => {
 		let userid = locals.user?.id as string;
-		let form = await superValidate(request, zod(schema));
+		let form = await superValidate(request, zod4(schema));
 		if (!form.valid) {
 			return message(form, {
 				alertType: 'error',
@@ -63,7 +63,7 @@ export const actions: Actions = {
 				consumer_id: userid,
 				title: title,
 				description: description,
-				max_responses: features.max_responses,
+				max_responses: features?.max_responses as number,
 				survey_expires: expiry_date
 			});
 		} catch (err) {

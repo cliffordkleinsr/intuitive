@@ -3,7 +3,7 @@ import { SurveyTable } from '$lib/server/db/schema';
 import { eq } from 'drizzle-orm';
 import type { Actions, PageServerLoad } from './$types';
 import { message, superValidate, setError } from 'sveltekit-superforms';
-import { zod } from 'sveltekit-superforms/adapters';
+import { zod4 } from 'sveltekit-superforms/adapters';
 import { fileSchema } from './schema';
 import { csvParse, autoType } from 'd3-dsv';
 import { sendBulkEmailCSV } from '$lib/server/emailconfigs/bulk';
@@ -27,7 +27,7 @@ export const load = (async ({ params }) => {
 
 	return {
 		shared_surv,
-		form: await superValidate(zod(fileSchema))
+		form: await superValidate(zod4(fileSchema))
 	};
 }) satisfies PageServerLoad;
 
@@ -35,7 +35,7 @@ export const actions: Actions = {
 	default: async ({ request, locals: { user }, url, params }) => {
 		const username = user?.fullname as string;
 		const userid = user?.id as string;
-		const form = await superValidate(request, zod(fileSchema));
+		const form = await superValidate(request, zod4(fileSchema));
 		// validate
 		if (!form.valid) {
 			return message(form, {

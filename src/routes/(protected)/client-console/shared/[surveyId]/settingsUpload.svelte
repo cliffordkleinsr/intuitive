@@ -7,7 +7,7 @@
 		type SuperValidated
 	} from 'sveltekit-superforms';
 	import { fileSchema, type Fileschema } from './schema';
-	import { zodClient } from 'sveltekit-superforms/adapters';
+	import { zod4Client } from 'sveltekit-superforms/adapters';
 	import { toast } from 'svelte-sonner';
 	import { Input } from '$lib/components/ui/input';
 
@@ -15,7 +15,7 @@
 
 	let { data }: { data: SuperValidated<Infer<Fileschema>> } = $props();
 	const form = superForm(data, {
-		validators: zodClient(fileSchema),
+		validators: zod4Client(fileSchema),
 		onUpdated: () => {
 			if (!$message) return;
 
