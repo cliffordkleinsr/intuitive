@@ -54,25 +54,25 @@
 					<!-- <Button href="/agent/signin" size="lg" variant="secondary">Agent Login</Button> -->
 					<Button
 						variant="black"
-						onclick={handleSignInClick}
-						href="/client/login"
-						size="lg"
-						class="text-sm">Client Login</Button
-					>
-					<Button
-						variant="black"
 						onclick={handleSignUpClick}
 						href="/client/signup"
 						size="lg"
-						class="text-sm">Client Signup</Button
+						class="text-sm">Signup</Button
 					>
 					<Button
+						variant="secondary"
+						onclick={handleSignInClick}
+						href="/client/login"
+						size="lg"
+						class="text-sm">Login</Button
+					>
+					<!-- <Button
 						data-sveltekit-reload
 						href="/about#address"
 						size="lg"
 						class="text-sm"
 						variant="secondary">Contact</Button
-					>
+					> -->
 				</div>
 			</div>
 		</div>
