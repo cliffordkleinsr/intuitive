@@ -5,9 +5,10 @@
 	import { BarChart } from 'layerchart';
 	import { Button } from '$lib/components/ui/button';
 	import ArrowUpRight from 'lucide-svelte/icons/arrow-up-right';
+	import { format, compareAsc } from 'date-fns';
 
 	let { data }: { data: PageData } = $props();
-	const { survey_time, surveys, count, total_clients } = data;
+	const { survey_time, surveys, count, total_clients, stats } = data;
 
 	const questions = surveys.map((e) => e.questions);
 	const survey_count = surveys.map((e) => e.title).length;
@@ -20,7 +21,7 @@
 	<div class="flex items-center justify-between space-y-2">
 		<h2 class="text-3xl font-bold tracking-tight">Dashboard</h2>
 	</div>
-	<div class="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+	<div class="grid gap-4 md:grid-cols-2 lg:grid-cols-6">
 		<Card.Root>
 			<Card.Header class="flex flex-row items-center justify-between space-y-0 pb-2">
 				<Card.Title class="text-sm font-medium">Total Surveys</Card.Title>
@@ -84,6 +85,34 @@
 				<Button class="w-full" variant="outline" href="/dashboard/surveys/manage">
 					Manage All <ArrowUpRight />
 				</Button>
+			</Card.Footer>
+		</Card.Root>
+		<Card.Root>
+			<Card.Header class="flex flex-row items-center justify-between space-y-0 pb-2">
+				<Card.Title class="text-sm font-medium">Login Statistics</Card.Title>
+			</Card.Header>
+			<Card.Content class="flex flex-row items-center justify-start">
+				<div class="text-5xl font-bold text-primary">{stats.count_signin}</div>
+			</Card.Content>
+			<Card.Footer class="flex justify-start">
+				<p class="text-sm">Last called at: {format(stats.last_called_signin!, 'MM/dd/yyyy')}</p>
+				<!-- <Button class="w-full" variant="outline" href="/dashboard/surveys/manage">
+					Manage All <ArrowUpRight />
+				</Button> -->
+			</Card.Footer>
+		</Card.Root>
+		<Card.Root>
+			<Card.Header class="flex flex-row items-center justify-between space-y-0 pb-2">
+				<Card.Title class="text-sm font-medium">SignUp Statistics</Card.Title>
+			</Card.Header>
+			<Card.Content class="flex flex-row items-center justify-start">
+				<div class="text-5xl font-bold text-primary">{stats.count_signup}</div>
+			</Card.Content>
+			<Card.Footer class="flex justify-start">
+				<p class="text-sm">Last called at: {format(stats.last_called_signup!, 'MM/dd/yyyy')}</p>
+				<!-- <Button class="w-full" variant="outline" href="/dashboard/surveys/manage">
+					Manage All <ArrowUpRight />
+				</Button> -->
 			</Card.Footer>
 		</Card.Root>
 	</div>

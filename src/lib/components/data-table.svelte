@@ -160,7 +160,7 @@
 			<ChevronRight />
 		</Button>
 	</div>
-	<div class="absolute bottom-0 flex-1 text-sm text-muted-foreground">
+	<div class={['absolute bottom-0 flex-1 text-sm text-muted-foreground', no_page ? 'hidden' : '']}>
 		Showing page {pagination.pageIndex} out of{' '}
 		{table.getPageCount() - 1}.
 	</div>

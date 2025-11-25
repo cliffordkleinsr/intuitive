@@ -61,6 +61,7 @@
 		"@types/d3-scale": "^4.0.8",
 		"@types/d3-scale-chromatic": "^3.1.0",
 		"@types/geojson": "^7946.0.15",
+		"@upstash/redis": "^1.35.6",
 		"@xyflow/svelte": "^1.2.1",
 		"bcrypt": "^6.0.0",
 		"caniuse-lite": "^1.0.30001726",
