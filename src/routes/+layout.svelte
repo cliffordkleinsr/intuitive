@@ -5,7 +5,8 @@
 	import { Toaster } from '$lib/components/ui/sonner';
 	import { getFlash } from 'sveltekit-flash-message';
 	// import { page } from '$app/stores';
-	import { page } from '$app/state';
+	import { navigating, page } from '$app/state';
+	import Clockloader from '$lib/custom/blocks/spinner/Clockloader.svelte';
 
 	const flash = getFlash(page);
 
@@ -31,4 +32,17 @@
 
 <ModeWatcher />
 <Toaster position="top-right" richColors />
-{@render children()}
+{#if navigating.to}
+	<div class="flex min-h-screen flex-col items-center justify-center">
+		<div class="mb-8">
+			<Clockloader size="60" color="#FF3E00" unit="px" duration="5s" />
+		</div>
+		<div class="mx-auto max-w-md px-4">
+			<p class="text-center text-lg font-semibold text-primary">Loading...</p>
+			<!-- <p class="text-center font-semibold italic">{data.quote}</p>
+			<p class="text-center text-xs italic">by {data.author}</p> -->
+		</div>
+	</div>
+{:else}
+	{@render children()}
+{/if}

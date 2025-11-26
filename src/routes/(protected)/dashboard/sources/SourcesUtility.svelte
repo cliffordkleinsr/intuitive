@@ -132,7 +132,7 @@
 <Dialog.Root>
 	<Dialog.Trigger>
 		{#snippet child({ props })}
-			<Badge variant="default" {...props}>{label}</Badge>
+			<Badge class="cursor-pointer" variant="default" {...props}>{label}</Badge>
 		{/snippet}
 	</Dialog.Trigger>
 	<Dialog.Content class="w-full max-w-5xl">
