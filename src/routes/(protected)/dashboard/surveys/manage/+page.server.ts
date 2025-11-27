@@ -3,7 +3,8 @@ import {
 	QuestionBranching,
 	QuestionOptions,
 	surveyqnsTableV2,
-	SurveyTable
+	SurveyTable,
+	UsersTable
 } from '$lib/server/db/schema';
 import { and, desc, eq, sql } from 'drizzle-orm';
 import type { Actions, PageServerLoad } from './$types';
@@ -13,10 +14,12 @@ export const load: PageServerLoad = async ({ locals }) => {
 		.select({
 			id: SurveyTable.surveyid,
 			title: SurveyTable.title,
+			by: UsersTable.fullname,
 			expires: sql<Date>`${SurveyTable.survey_expires}::timestamp::date`,
 			status: SurveyTable.status
 		})
 		.from(SurveyTable)
+		.leftJoin(UsersTable, eq(UsersTable.id, SurveyTable.consumer_id))
 		.orderBy(desc(SurveyTable.created_at));
 	return {
 		surv: surveys
