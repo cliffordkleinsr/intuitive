@@ -57,7 +57,7 @@
 						onclick={handleSignUpClick}
 						href="/client/signup"
 						size="lg"
-						class="text-sm">Signup</Button
+						class="text-sm">Start Free Now</Button
 					>
 					<Button
 						variant="secondary"
