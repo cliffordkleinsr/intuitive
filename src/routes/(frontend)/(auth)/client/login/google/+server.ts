@@ -5,7 +5,7 @@ import { google } from '$lib/server/oauth';
 export const GET: RequestHandler = async ({ cookies }) => {
 	const state = generateState();
 	const codeVerifier = generateCodeVerifier();
-	const url = google.createAuthorizationURL(state, codeVerifier, ['openid', 'profile']);
+	const url = google.createAuthorizationURL(state, codeVerifier, ['openid', 'profile', 'email']);
 	cookies.set('google_oauth_state', state, {
 		path: '/',
 		httpOnly: true,

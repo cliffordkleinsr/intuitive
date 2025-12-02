@@ -121,18 +121,41 @@ export const checkUserRole = async (email: string) => {
 	return queryResult;
 };
 
-export const createGoogleUser = async (googleUserId: string, username: string, picture: string) => {
-	return await db
-		.insert(UsersTable)
-		.values({
-			id: crypto.randomUUID(),
+export const createGoogleUser = async (
+	googleUserId: string,
+	username: string,
+	picture: string,
+	email: string
+) => {
+	const uuid = crypto.randomUUID();
+	await db.transaction(async (tx) => {
+		await tx.insert(UsersTable).values({
+			id: uuid,
 			googleId: googleUserId,
 			fullname: username,
+			email: email,
 			pfp: picture,
-			role: 'CLIENT',
-			update_registry: true
-		})
-		.returning({ id: UsersTable.id });
+			role: 'CLIENT'
+		});
+		await tx.insert(consumerDeats).values({
+			consumerid: uuid,
+			email
+		});
+	});
+	return uuid;
+
+	// await db
+	// 	.insert(UsersTable)
+	// 	.values({
+	// 		id: crypto.randomUUID(),
+	// 		googleId: googleUserId,
+	// 		fullname: username,
+	// 		email: email,
+	// 		pfp: picture,
+	// 		role: 'CLIENT',
+	// 		// update_registry: true
+	// 	})
+	//
 };
 
 export const getRegistryState = async (id: string): Promise<Boolean | null> => {

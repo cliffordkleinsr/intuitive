@@ -6,7 +6,6 @@ import type { OAuth2Tokens } from 'arctic';
 import type { GoogleIdTokenPayload } from '$lib/types';
 import { createGoogleUser, getUserFromGoogleId } from '$lib/server/db/db_utils';
 import { redirect } from 'sveltekit-flash-message/server';
-
 export const GET: RequestHandler = async ({ url, cookies }) => {
 	const code = url.searchParams.get('code');
 	const state = url.searchParams.get('state');
@@ -40,6 +39,7 @@ export const GET: RequestHandler = async ({ url, cookies }) => {
 	const googleUserId = claims.sub;
 	const username = claims.name as string;
 	const picture = claims.picture as string;
+	const email = claims.email as string;
 	const existingUser = await getUserFromGoogleId(googleUserId);
 	if (typeof existingUser !== 'undefined') {
 		const sessionToken = generateSessionToken();
@@ -54,9 +54,9 @@ export const GET: RequestHandler = async ({ url, cookies }) => {
 		// });
 	}
 	// TODO: Replace this with your own DB query.
-	const [user] = await createGoogleUser(googleUserId, username, picture);
+	const id = await createGoogleUser(googleUserId, username, picture, email);
 	const sessionToken = generateSessionToken();
-	const session = await createSession(sessionToken, user.id);
+	const session = await createSession(sessionToken, id);
 	setSessionTokenCookie(cookies, sessionToken, session.expiresAt);
 	// cookie to update-registry
 	// Done change to db call
@@ -67,7 +67,7 @@ export const GET: RequestHandler = async ({ url, cookies }) => {
 	// Done show toast
 	redirect(
 		302,
-		'/client-console/update-registry',
+		'/client-console',
 		{ type: 'success', message: 'User Registered Successfully' },
 		cookies
 	);

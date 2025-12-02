@@ -46,7 +46,7 @@
 	</Breadcrumb.Root>
 </div>
 
-<form method="post" class="m-2" use:enhance>
+<form method="post" class="m-2 h-[80dvh]" use:enhance>
 	<Card.Root class="mx-auto max-w-lg">
 		<Card.Header>
 			<Card.Title class="text-xl text-primary">Sign Up</Card.Title>
