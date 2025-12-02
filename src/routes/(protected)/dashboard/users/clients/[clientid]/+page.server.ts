@@ -35,33 +35,58 @@ export const load = (async ({ params }) => {
 	// 		consumerDeats.company_name,
 	// 		consumerPackage.package_type
 	// 	);
-
-	const [details] = await db
-		.select({
-			id: consumerDeats.consumerid,
-			name: UsersTable.fullname,
-			email: consumerDeats.email,
-			phone: consumerDeats.phone,
-			company: consumerDeats.company_name,
-			inactive: consumerDeats.disabled,
-			packagetype: sql<string>`COALESCE(${consumerPackage.package_type}, 'Free')`,
-			surveys: count(SurveyTable.surveyid)
-		})
-		.from(consumerDeats)
-		.leftJoin(SurveyTable, eq(SurveyTable.consumer_id, consumerDeats.consumerid))
-		.leftJoin(UsersTable, eq(UsersTable.id, consumerDeats.consumerid))
-		.leftJoin(consumerPackage, eq(consumerPackage.consumerid, consumerDeats.consumerid))
-		.where(eq(UsersTable.id, params.clientid))
-		.groupBy(
-			consumerDeats.consumerid,
+	const [information] = await db.
+	select({
+		id: UsersTable.id,
+		name: UsersTable.fullname,
+		email: UsersTable.email,
+		company: consumerDeats.company_name,
+		phone: consumerDeats.phone,
+		inactive: UsersTable.disabled,
+		packagetype: sql<string>`COALESCE(${consumerPackage.package_type}, 'Free')`,
+		surveys: count(SurveyTable.surveyid)
+	})
+	.from(UsersTable)
+	.leftJoin(consumerDeats, eq(consumerDeats.consumerid, UsersTable.id))
+	.leftJoin(consumerPackage, eq(consumerPackage.consumerid, UsersTable.id))
+	.leftJoin(SurveyTable, eq(SurveyTable.consumer_id, UsersTable.id))
+	.where(eq(UsersTable.id, params.clientid))
+	.groupBy(
+			UsersTable.id,
 			UsersTable.fullname,
-			consumerDeats.email,
+			UsersTable.email,
 			consumerDeats.phone,
 			consumerDeats.company_name,
-			consumerDeats.disabled,
+			UsersTable.disabled,
 			consumerPackage.package_type
 		);
-	return { details };
+	// const [details] = await db
+	// 	.select({
+	// 		id: consumerDeats.consumerid,
+	// 		name: UsersTable.fullname,
+	// 		email: consumerDeats.email,
+	// 		phone: consumerDeats.phone,
+	// 		company: consumerDeats.company_name,
+	// 		inactive: consumerDeats.disabled,
+	// 		packagetype: sql<string>`COALESCE(${consumerPackage.package_type}, 'Free')`,
+	// 		surveys: count(SurveyTable.surveyid)
+	// 	})
+	// 	.from(consumerDeats)
+	// 	.leftJoin(SurveyTable, eq(SurveyTable.consumer_id, consumerDeats.consumerid))
+	// 	.leftJoin(UsersTable, eq(UsersTable.id, consumerDeats.consumerid))
+	// 	.leftJoin(consumerPackage, eq(consumerPackage.consumerid, consumerDeats.consumerid))
+	// 	.where(eq(UsersTable.id, params.clientid))
+	// 	.groupBy(
+	// 		consumerDeats.consumerid,
+	// 		UsersTable.fullname,
+	// 		consumerDeats.email,
+	// 		consumerDeats.phone,
+	// 		consumerDeats.company_name,
+	// 		consumerDeats.disabled,
+	// 		consumerPackage.package_type
+	// 	);
+
+	return { details:information };
 }) satisfies PageServerLoad;
 
 export const actions: Actions = {

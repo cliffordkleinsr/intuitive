@@ -141,15 +141,15 @@
 			<Breadcrumb.Root>
 				<Breadcrumb.List>
 					<Breadcrumb.Item>
-						<Breadcrumb.Link href="##">Audience</Breadcrumb.Link>
+						<Breadcrumb.Link href="/dashboard">Dashboard</Breadcrumb.Link>
 					</Breadcrumb.Item>
 					<Breadcrumb.Separator />
 					<Breadcrumb.Item>
-						<Breadcrumb.Link href="##">Users</Breadcrumb.Link>
+						<Breadcrumb.Link href="/dashboard/users/clients/">Users</Breadcrumb.Link>
 					</Breadcrumb.Item>
 					<Breadcrumb.Separator />
 					<Breadcrumb.Item>
-						<Breadcrumb.Page>Dashboard</Breadcrumb.Page>
+						<Breadcrumb.Page></Breadcrumb.Page>
 					</Breadcrumb.Item>
 				</Breadcrumb.List>
 			</Breadcrumb.Root>
