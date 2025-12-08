@@ -58,7 +58,7 @@
 			</div> -->
 		</div>
 		<div class="flex flex-row items-start justify-center gap-4">
-			<Button href="/client/login" variant="black" size="lg">Start for Free</Button>
+			<Button href="/client/login" variant="black" size="lg">Start for free</Button>
 			<Button data-sveltekit-reload href="/about#contact" variant="outline" size="lg"
 				>Schedule a Demo</Button
 			>
