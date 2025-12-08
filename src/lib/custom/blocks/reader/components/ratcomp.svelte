@@ -1,7 +1,7 @@
 <script lang="ts">
 	import * as Form from '$lib/components/ui/form';
 	import SuperDebug, { superForm, type Infer, type SuperValidated } from 'sveltekit-superforms';
-	import { zodClient } from 'sveltekit-superforms/adapters';
+	import { zod4Client } from 'sveltekit-superforms/adapters';
 	import { ratingSchema, type RateSchema } from '../super_schema';
 	import { toast } from 'svelte-sonner';
 	import { Button } from '$lib/components/ui/button';
@@ -19,7 +19,7 @@
 
 	const form = superForm(data, {
 		id: cur_id,
-		validators: zodClient(ratingSchema),
+		validators: zod4Client(ratingSchema),
 		onUpdated: () => {
 			if (!$message) return;
 

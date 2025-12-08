@@ -7,7 +7,7 @@
 	import CheckCheck from 'lucide-svelte/icons/check-check';
 	// superforms
 	import SuperDebug, { superForm, type Infer, type SuperValidated } from 'sveltekit-superforms';
-	import { zodClient } from 'sveltekit-superforms/adapters';
+	import { zod4Client } from 'sveltekit-superforms/adapters';
 	import {
 		enumBuilder,
 		openEndedSchema,
@@ -33,7 +33,7 @@
 	// const optionalSchema = enumBuilder(options);
 	const form = superForm(data, {
 		id: cur_id,
-		validators: zodClient(openEndedSchema),
+		validators: zod4Client(openEndedSchema),
 		onUpdated: () => {
 			if (!$message) return;
 

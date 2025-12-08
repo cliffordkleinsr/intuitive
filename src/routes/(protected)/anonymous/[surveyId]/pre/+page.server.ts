@@ -1,5 +1,5 @@
 import { message, superValidate } from 'sveltekit-superforms';
-import { zod } from 'sveltekit-superforms/adapters';
+import { zod4 } from 'sveltekit-superforms/adapters';
 import type { Actions, PageServerLoad } from './$types';
 import { schema } from './schema';
 import type { IP_API, NominatimResponse } from '$lib/types';
@@ -15,13 +15,13 @@ export const load = (async ({ cookies, parent }) => {
 		redirect(303, uri, { type: 'warning', message: 'Not allowed survey has began' }, cookies);
 	}
 	return {
-		form: await superValidate(zod(schema))
+		form: await superValidate(zod4(schema))
 	};
 }) satisfies PageServerLoad;
 
 export const actions: Actions = {
 	default: async ({ request, fetch, params: { surveyId }, cookies, getClientAddress }) => {
-		const form = await superValidate(request, zod(schema));
+		const form = await superValidate(request, zod4(schema));
 		// validate
 		if (!form.valid) {
 			return message(form, {

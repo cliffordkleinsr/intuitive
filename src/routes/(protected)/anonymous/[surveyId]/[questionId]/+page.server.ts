@@ -18,7 +18,7 @@ import {
 	validateAnswerNotExists
 } from '$lib/server/db/db_utils';
 import { message, superValidate } from 'sveltekit-superforms';
-import { zod } from 'sveltekit-superforms/adapters';
+import { zod4 } from 'sveltekit-superforms/adapters';
 import type { Actions, PageServerLoad } from './$types';
 import { QuestionOptions, response_table, surveyqnsTableV2 } from '$lib/server/db/schema';
 import { db } from '$lib/server/db';
@@ -41,11 +41,11 @@ export const load = (async ({ params: { surveyId, questionId }, cookies }) => {
 	const rankSchema = rankBuilder(pool_questions.options);
 	const [openEndedForm, optionalForm, rankForm, multiForm, rateForm] = await Promise.all([
 		// schemas
-		superValidate(zod(openEndedSchema)),
-		superValidate(zod(optionalSchema)),
-		superValidate(zod(rankSchema)),
-		superValidate(zod(multipleSchema)),
-		superValidate(zod(ratingSchema))
+		superValidate(zod4(openEndedSchema)),
+		superValidate(zod4(optionalSchema)),
+		superValidate(zod4(rankSchema)),
+		superValidate(zod4(multipleSchema)),
+		superValidate(zod4(ratingSchema))
 	]);
 	let current_ix = parseInt(cookies.get('current_ix') ?? '0');
 
@@ -72,7 +72,7 @@ export const load = (async ({ params: { surveyId, questionId }, cookies }) => {
 
 export const actions: Actions = {
 	singleform: async ({ request, params: { surveyId, questionId }, cookies, getClientAddress }) => {
-		const openEndedForm = await superValidate(request, zod(openEndedSchema));
+		const openEndedForm = await superValidate(request, zod4(openEndedSchema));
 		// validate
 		if (!openEndedForm.valid) {
 			return message(openEndedForm, {
@@ -106,7 +106,7 @@ export const actions: Actions = {
 		const surveyqns = await getsurveyQuestionByID(questionId);
 		const optionalSchema = enumBuilder(surveyqns[0]?.options);
 
-		const optionalForm = await superValidate(request, zod(optionalSchema));
+		const optionalForm = await superValidate(request, zod4(optionalSchema));
 		// validate
 		if (!optionalForm.valid) {
 			return message(optionalForm, {
@@ -156,7 +156,7 @@ export const actions: Actions = {
 		const surveyqns = await getsurveyQuestionByID(questionId);
 		const rankSchema = rankBuilder(surveyqns[0]?.options);
 
-		const rankForm = await superValidate(request, zod(rankSchema));
+		const rankForm = await superValidate(request, zod4(rankSchema));
 		// validate
 		if (!rankForm.valid) {
 			return message(rankForm, {
@@ -200,7 +200,7 @@ export const actions: Actions = {
 		cookies,
 		getClientAddress
 	}) => {
-		const multiForm = await superValidate(request, zod(multipleSchema));
+		const multiForm = await superValidate(request, zod4(multipleSchema));
 		// validate
 		if (!multiForm.valid) {
 			return message(multiForm, {
@@ -232,7 +232,7 @@ export const actions: Actions = {
 		return await handleSurveyProgressExt({ surveyId, cookies, address: ip });
 	},
 	rateform: async ({ request, params: { surveyId, questionId }, cookies, getClientAddress }) => {
-		const rateForm = await superValidate(request, zod(ratingSchema));
+		const rateForm = await superValidate(request, zod4(ratingSchema));
 		// validate
 		if (!rateForm.valid) {
 			return message(rateForm, {

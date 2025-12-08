@@ -4,7 +4,7 @@
 	import * as Card from '$lib/components/ui/card';
 	import CheckCheck from 'lucide-svelte/icons/check-check';
 	import SuperDebug, { superForm, type Infer, type SuperValidated } from 'sveltekit-superforms';
-	import { zodClient } from 'sveltekit-superforms/adapters';
+	import { zod4Client } from 'sveltekit-superforms/adapters';
 	import { toast } from 'svelte-sonner';
 	import { rankBuilder, type RankSchema } from '../super_schema';
 	import { Input } from '$lib/components/ui/input';
@@ -24,7 +24,7 @@
 	const rankSchema = rankBuilder(options);
 	const form = superForm(data, {
 		id: cur_id,
-		validators: zodClient(rankSchema),
+		validators: zod4Client(rankSchema),
 		onUpdated: () => {
 			if (!$message) return;
 			const { alertType, alertText } = $message;

@@ -10,7 +10,7 @@
 
 	import { sectors } from '$lib/json/index';
 	import SuperDebug, { superForm } from 'sveltekit-superforms';
-	import { zod, zodClient } from 'sveltekit-superforms/adapters';
+	import { zod4Client } from 'sveltekit-superforms/adapters';
 	import { schema } from './schema';
 	import { toast } from 'svelte-sonner';
 	import { educations } from '$lib/json';
@@ -26,7 +26,7 @@
 	let stateName = $state('') as string;
 	const form = superForm(data.form, {
 		dataType: 'json',
-		validators: zodClient(schema),
+		validators: zod4Client(schema),
 		onUpdated: () => {
 			if (!$message) return;
 

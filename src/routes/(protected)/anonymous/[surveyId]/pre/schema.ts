@@ -4,7 +4,7 @@ export let schema = z.object({
 	sector: z.string().optional(),
 	others: z.string().optional(),
 	loc: z.object({
-		country: z.string(),
+		country: z.string().optional(),
 		state: z.string().optional()
 	}),
 	sub: z.string().optional(),

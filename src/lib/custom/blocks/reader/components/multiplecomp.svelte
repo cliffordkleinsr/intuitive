@@ -8,7 +8,7 @@
 	import CheckCheck from 'lucide-svelte/icons/check-check';
 	// superforms
 	import SuperDebug, { superForm, type Infer, type SuperValidated } from 'sveltekit-superforms';
-	import { zodClient } from 'sveltekit-superforms/adapters';
+	import { zod4Client } from 'sveltekit-superforms/adapters';
 	import { multipleSchema, type MultipleSchema } from '../super_schema';
 	// sonner
 	import { toast } from 'svelte-sonner';
@@ -35,7 +35,7 @@
 	const form = superForm(data, {
 		id: cur_id,
 		dataType: 'json',
-		validators: zodClient(multipleSchema),
+		validators: zod4Client(multipleSchema),
 		onUpdated: () => {
 			if (!$message) return;
 
