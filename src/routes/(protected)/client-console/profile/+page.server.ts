@@ -23,11 +23,12 @@ export const actions: Actions = {
 				alertText: 'Please Check your entries, the form contains invalid data'
 			});
 		}
-		const { company, location, sector } = form.data;
+		const { company, location, sector, phoneno } = form.data;
 		try {
 			await db
 				.update(consumerDeats)
 				.set({
+					phone: phoneno,
 					company_name: company,
 					country: location.country,
 					state: location.state,

@@ -216,14 +216,14 @@
 		</Card.Root>
 		<Card.Root class="max-w-lg" id="total-respondents">
 			<Card.Header class="pb-2">
-				<Card.Title class="text-3xl">{count}</Card.Title>
+				<Card.Title class="text-3xl">{count.cnt}</Card.Title>
 				<Card.Description>Total Respondent’s</Card.Description>
 			</Card.Header>
 			<Card.Content>
-				<div class="text-xs text-muted-foreground">+{count / 100}% from last month</div>
+				<div class="text-xs text-muted-foreground">+{count.cnt / 100}% from last month</div>
 			</Card.Content>
 			<Card.Footer>
-				<Progress value={count} aria-label="{count / 100}% increase" />
+				<Progress value={count.cnt} aria-label="{count.cnt / 100}% increase" />
 			</Card.Footer>
 		</Card.Root>
 

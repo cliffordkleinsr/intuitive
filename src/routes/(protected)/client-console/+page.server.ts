@@ -5,12 +5,13 @@ import {
 	costTable,
 	pricingTable,
 	QuestionOptions,
+	response_table,
 	surveyqnsTableV2,
 	SurveyTable,
 	user_analytics,
 	userPackage
 } from '$lib/server/db/schema';
-import { eq, sql, and } from 'drizzle-orm';
+import { eq, sql, and, count, countDistinct } from 'drizzle-orm';
 import type { Actions, PageServerLoad } from './$types';
 import { retSurveyInfo } from '$lib/server/db/db_utils';
 // import { addDays } from '$lib/custom/functions/helpers';
@@ -26,8 +27,15 @@ export const load: PageServerLoad = async ({ locals: { user } }) => {
 		.leftJoin(SurveyTable, eq(SurveyTable.surveyid, user_analytics.surveyid))
 		.where(eq(SurveyTable.consumer_id, userid));
 
+	const [tot_agents] = await db
+		.select({
+			cnt: countDistinct(response_table.questionId)
+		})
+		.from(response_table)
+		.leftJoin(SurveyTable, eq(SurveyTable.surveyid, response_table.surveid))
+		.where(eq(SurveyTable.consumer_id, userid));
 	return {
-		count: total_agents.length,
+		count: tot_agents,
 		all_surv: allsurveys,
 		draft_surv: draftsurveys,
 		live_surv: livesurveys,

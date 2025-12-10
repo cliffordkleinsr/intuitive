@@ -24,6 +24,7 @@
 	import Meta from '$lib/custom/seo/meta.svelte';
 	import { useId } from 'bits-ui';
 	import { LocationSelector } from '$lib/components/ui/location-input';
+	import { PhoneInput } from '$lib/components/ui/phone-input';
 
 	let { data }: { data: SuperValidated<Infer<ProfileSchema>> } = $props();
 
@@ -77,6 +78,23 @@
 											{...props}
 											bind:value={$formData.company}
 											placeholder="Input company name"
+										/>
+									{/snippet}
+								</Form.Control>
+								<Form.FieldErrors />
+							</Form.Field>
+						</div>
+						<div class="grid gap-2">
+							<Form.Field {form} name="phoneno">
+								<Form.Control>
+									{#snippet children({ props })}
+										<Form.Label>Phone Number</Form.Label>
+										<PhoneInput
+											{...props}
+											class="w-full"
+											country="KE"
+											placeholder="Enter a phone number"
+											bind:value={$formData.phoneno}
 										/>
 									{/snippet}
 								</Form.Control>
