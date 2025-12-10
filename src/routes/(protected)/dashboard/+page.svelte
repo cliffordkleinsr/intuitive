@@ -95,7 +95,9 @@
 				<div class="text-5xl font-bold text-primary">{stats.count_signin}</div>
 			</Card.Content>
 			<Card.Footer class="flex justify-start">
-				<p class="text-sm">Last called at: {format(stats.last_called_signup!, 'MM/dd/yyyy hh:mm:ss a')}</p>
+				<p class="text-sm">
+					Last called at: {format(stats.last_called_signup!, 'MM/dd/yyyy hh:mm:ss a')}
+				</p>
 				<!-- <Button class="w-full" variant="outline" href="/dashboard/surveys/manage">
 					Manage All <ArrowUpRight />
 				</Button> -->
@@ -109,7 +111,9 @@
 				<div class="text-5xl font-bold text-primary">{stats.count_signup}</div>
 			</Card.Content>
 			<Card.Footer class="flex justify-start">
-				<p class="text-sm">Last called at: {format(stats.last_called_signup!, 'MM/dd/yyyy hh:mm:ss a')}</p>
+				<p class="text-sm">
+					Last called at: {format(stats.last_called_signup!, 'MM/dd/yyyy hh:mm:ss a')}
+				</p>
 				<!-- <Button class="w-full" variant="outline" href="/dashboard/surveys/manage">
 					Manage All <ArrowUpRight />
 				</Button> -->

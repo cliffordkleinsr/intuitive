@@ -82,6 +82,26 @@ export const load: LayoutServerLoad = async ({ locals: { user }, url, cookies })
 		.leftJoin(user_analytics, eq(user_analytics.surveyid, SurveyTable.surveyid))
 		.groupBy(SurveyTable.title, SurveyTable.created_at)
 		.orderBy(desc(SurveyTable.created_at));
+	const surv2 = await db
+		.select({
+			title: SurveyTable.title,
+			questions: countDistinct(surveyqnsTableV2.questionId),
+			total: countDistinct(response_table.questionId)
+		})
+		.from(SurveyTable)
+		.where(
+			and(
+				not(eq(SurveyTable.surveyid, '7adba2c0-f1f2-40bd-b1b0-2ffefa755348')), //aliquant,
+				not(eq(SurveyTable.surveyid, 'c082054d-46e4-4bdf-ac24-810d17406e7c')) //Amber peak
+			)
+		)
+		.leftJoin(surveyqnsTableV2, eq(surveyqnsTableV2.surveid, SurveyTable.surveyid))
+		.leftJoin(response_table, eq(response_table.surveid, SurveyTable.surveyid))
+		.groupBy(SurveyTable.title, SurveyTable.created_at)
+		.orderBy(desc(SurveyTable.created_at));
+	// .limit(5);
+
+	// console.log(surv2)
 
 	const count_signup = await redis.get<number>('signup_api_call_counter');
 	const count_signin = await redis.get<number>('signin_api_call_counter');
@@ -97,7 +117,7 @@ export const load: LayoutServerLoad = async ({ locals: { user }, url, cookies })
 	return {
 		user,
 		survey_time,
-		surveys: survs,
+		surveys: surv2,
 		count: live.length,
 		total_clients,
 		stats

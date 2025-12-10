@@ -15,6 +15,7 @@ export const load: PageServerLoad = async ({ locals }) => {
 			id: SurveyTable.surveyid,
 			title: SurveyTable.title,
 			by: UsersTable.fullname,
+			created: sql<Date>`${SurveyTable.created_at}::timestamp::date`,
 			expires: sql<Date>`${SurveyTable.survey_expires}::timestamp::date`,
 			status: SurveyTable.status
 		})

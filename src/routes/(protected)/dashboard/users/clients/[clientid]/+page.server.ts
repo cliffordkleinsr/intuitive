@@ -35,23 +35,23 @@ export const load = (async ({ params }) => {
 	// 		consumerDeats.company_name,
 	// 		consumerPackage.package_type
 	// 	);
-	const [information] = await db.
-	select({
-		id: UsersTable.id,
-		name: UsersTable.fullname,
-		email: UsersTable.email,
-		company: consumerDeats.company_name,
-		phone: consumerDeats.phone,
-		inactive: UsersTable.disabled,
-		packagetype: sql<string>`COALESCE(${consumerPackage.package_type}, 'Free')`,
-		surveys: count(SurveyTable.surveyid)
-	})
-	.from(UsersTable)
-	.leftJoin(consumerDeats, eq(consumerDeats.consumerid, UsersTable.id))
-	.leftJoin(consumerPackage, eq(consumerPackage.consumerid, UsersTable.id))
-	.leftJoin(SurveyTable, eq(SurveyTable.consumer_id, UsersTable.id))
-	.where(eq(UsersTable.id, params.clientid))
-	.groupBy(
+	const [information] = await db
+		.select({
+			id: UsersTable.id,
+			name: UsersTable.fullname,
+			email: UsersTable.email,
+			company: consumerDeats.company_name,
+			phone: consumerDeats.phone,
+			inactive: UsersTable.disabled,
+			packagetype: sql<string>`COALESCE(${consumerPackage.package_type}, 'Free')`,
+			surveys: count(SurveyTable.surveyid)
+		})
+		.from(UsersTable)
+		.leftJoin(consumerDeats, eq(consumerDeats.consumerid, UsersTable.id))
+		.leftJoin(consumerPackage, eq(consumerPackage.consumerid, UsersTable.id))
+		.leftJoin(SurveyTable, eq(SurveyTable.consumer_id, UsersTable.id))
+		.where(eq(UsersTable.id, params.clientid))
+		.groupBy(
 			UsersTable.id,
 			UsersTable.fullname,
 			UsersTable.email,
@@ -86,7 +86,7 @@ export const load = (async ({ params }) => {
 	// 		consumerPackage.package_type
 	// 	);
 
-	return { details:information };
+	return { details: information };
 }) satisfies PageServerLoad;
 
 export const actions: Actions = {

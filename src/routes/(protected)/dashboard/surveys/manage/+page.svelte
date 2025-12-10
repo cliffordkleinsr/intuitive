@@ -8,5 +8,5 @@
 </script>
 
 <div class="h-full">
-	<DataTable data={surv} {columns} no_page={true}/>
+	<DataTable data={surv} {columns} no_page={true} />
 </div>

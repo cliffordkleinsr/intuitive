@@ -7,6 +7,7 @@ export type Survey = {
 	id: string;
 	title: string;
 	by: string | null;
+	created: Date;
 	expires: Date;
 	status: string;
 };
@@ -25,6 +26,10 @@ export const columns: ColumnDef<Survey>[] = [
 	{
 		accessorKey: 'by',
 		header: 'By'
+	},
+	{
+		accessorKey: 'created',
+		header: 'Created At'
 	},
 	{
 		accessorKey: 'expires',

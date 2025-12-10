@@ -7,9 +7,9 @@ export const load: PageServerLoad = async () => {
 	const survey_list = await db
 		.select({
 			id: SurveyTable.surveyid,
-			title: SurveyTable.surveyTitle,
+			title: SurveyTable.title,
 			status: SurveyTable.status,
-			created: sql<Date>`${SurveyTable.createdAt}::timestamp::date`
+			created: SurveyTable.created_at
 		})
 		.from(SurveyTable);
 
