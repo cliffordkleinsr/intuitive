@@ -115,7 +115,7 @@
 							<Card.Root
 								class={[
 									config.gradient,
-									data.features.plan === 'Free' && title === 'Customer Satisfaction (CSAT)'
+									data.features.plan !== 'Free' || title === 'Customer Satisfaction (CSAT)'
 										? ''
 										: 'pointer-events-none select-none opacity-60 blur-sm'
 								]}
