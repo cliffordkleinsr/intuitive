@@ -376,7 +376,7 @@ export const actions: Actions = {
 
 		redirect(
 			303,
-			'/client-console',
+			`/client-console/shared/${params.surveyid}`,
 			{
 				type: 'info',
 				message: `Survey ${params.surveyid} has been marked as Live and will expire on ${live_survey.expiry}`
