@@ -6,9 +6,10 @@
 	import { Button } from '$lib/components/ui/button';
 	import ArrowUpRight from 'lucide-svelte/icons/arrow-up-right';
 	import { format, compareAsc } from 'date-fns';
+	import ClientClicker from './sources/ClientClicker.svelte';
 
 	let { data }: { data: PageData } = $props();
-	const { survey_time, surveys, count, total_clients, stats } = data;
+	const { survey_time, surveys, count, total_clients, stats, series } = data;
 
 	const questions = surveys.map((e) => e.questions);
 	const survey_count = surveys.map((e) => e.title).length;
@@ -61,7 +62,8 @@
 			</Card.Content>
 		</Card.Root> -->
 		<!--  End -->
-		<Card.Root>
+		<ClientClicker {series} {total_clients} />
+		<!-- <Card.Root>
 			<Card.Header class="flex flex-row items-center justify-between space-y-0 pb-2">
 				<Card.Title class="text-sm font-medium">Total Clients</Card.Title>
 			</Card.Header>
@@ -73,7 +75,7 @@
 					Manage Clients <ArrowUpRight />
 				</Button>
 			</Card.Footer>
-		</Card.Root>
+		</Card.Root> -->
 		<Card.Root>
 			<Card.Header class="flex flex-row items-center justify-between space-y-0 pb-2">
 				<Card.Title class="text-sm font-medium">Active Surveys</Card.Title>
@@ -82,7 +84,7 @@
 				<div class="text-2xl font-bold">{count}</div>
 			</Card.Content>
 			<Card.Footer class="flex justify-end">
-				<Button class="w-full" variant="outline" href="/dashboard/surveys/manage">
+				<Button class="w-full" variant="outline" href="/dashboard/surveys/summary">
 					Manage All <ArrowUpRight />
 				</Button>
 			</Card.Footer>

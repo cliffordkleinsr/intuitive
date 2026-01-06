@@ -64,24 +64,23 @@ export const load: LayoutServerLoad = async ({ locals: { user }, url, cookies })
 			total_clients: count()
 		})
 		.from(consumerDeats);
-
-	const survs = await db
-		.select({
-			title: SurveyTable.title,
-			questions: countDistinct(surveyqnsTableV2.questionId),
-			total: countDistinct(user_analytics.id)
-		})
-		.from(SurveyTable)
-		.where(
-			and(
-				not(eq(SurveyTable.surveyid, '7adba2c0-f1f2-40bd-b1b0-2ffefa755348')), //aliquant,
-				not(eq(SurveyTable.surveyid, 'c082054d-46e4-4bdf-ac24-810d17406e7c')) //Amber peak
-			)
-		)
-		.leftJoin(surveyqnsTableV2, eq(surveyqnsTableV2.surveid, SurveyTable.surveyid))
-		.leftJoin(user_analytics, eq(user_analytics.surveyid, SurveyTable.surveyid))
-		.groupBy(SurveyTable.title, SurveyTable.created_at)
-		.orderBy(desc(SurveyTable.created_at));
+	// const survs = await db
+	// 	.select({
+	// 		title: SurveyTable.title,
+	// 		questions: countDistinct(surveyqnsTableV2.questionId),
+	// 		total: countDistinct(user_analytics.id)
+	// 	})
+	// 	.from(SurveyTable)
+	// 	.where(
+	// 		and(
+	// 			not(eq(SurveyTable.surveyid, '7adba2c0-f1f2-40bd-b1b0-2ffefa755348')), //aliquant,
+	// 			not(eq(SurveyTable.surveyid, 'c082054d-46e4-4bdf-ac24-810d17406e7c')) //Amber peak
+	// 		)
+	// 	)
+	// 	.leftJoin(surveyqnsTableV2, eq(surveyqnsTableV2.surveid, SurveyTable.surveyid))
+	// 	.leftJoin(user_analytics, eq(user_analytics.surveyid, SurveyTable.surveyid))
+	// 	.groupBy(SurveyTable.title, SurveyTable.created_at)
+	// 	.orderBy(desc(SurveyTable.created_at));
 	const surv2 = await db
 		.select({
 			title: SurveyTable.title,
@@ -99,9 +98,19 @@ export const load: LayoutServerLoad = async ({ locals: { user }, url, cookies })
 		.leftJoin(response_table, eq(response_table.surveid, SurveyTable.surveyid))
 		.groupBy(SurveyTable.title, SurveyTable.created_at)
 		.orderBy(desc(SurveyTable.created_at));
+
 	// .limit(5);
 
 	// console.log(surv2)
+	const clnts = await db
+		.select({
+			total_clients: count(),
+			timestamp: consumerDeats.created_at
+		})
+		.from(consumerDeats)
+		.groupBy(consumerDeats.created_at)
+		.orderBy(desc(consumerDeats.created_at))
+		.limit(10);
 
 	const count_signup = await redis.get<number>('signup_api_call_counter');
 	const count_signin = await redis.get<number>('signin_api_call_counter');
@@ -114,12 +123,18 @@ export const load: LayoutServerLoad = async ({ locals: { user }, url, cookies })
 		count_signin,
 		last_called_signin
 	};
+	const series = clnts.map((r) => ({
+		count: Number(r.total_clients),
+		date: new Date(r.timestamp)
+	}));
+
 	return {
 		user,
 		survey_time,
 		surveys: surv2,
 		count: live.length,
 		total_clients,
+		series,
 		stats
 	};
 };

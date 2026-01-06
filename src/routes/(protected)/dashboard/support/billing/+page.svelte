@@ -12,7 +12,7 @@
 
 <div class="mx-auto px-4 py-8">
 	<h1 class="text-center text-3xl font-semibold">Select Billing Role</h1>
-	<div class="mx-auto grid max-w-3xl gap-6 py-9 md:grid-cols-2">
+	<div class="mx-auto grid max-w-3xl gap-6 py-9">
 		<Card.Root>
 			<Card.Header>
 				<Card.Title class="flex items-center gap-2">
@@ -23,11 +23,13 @@
 			</Card.Header>
 			<Card.Content></Card.Content>
 			<Card.Footer>
-				<Button variant="secondary" class="w-full">Select</Button>
+				<Button variant="secondary" class="w-full" href="/dashboard/support/billing/client"
+					>Select</Button
+				>
 			</Card.Footer>
 		</Card.Root>
-		<Card.Root>
-			<Card.Header>
+		<!-- <Card.Root> -->
+		<!-- <Card.Header>
 				<Card.Title class="flex items-center gap-2">
 					<UserSearch />
 					<span>Agent</span>
@@ -38,6 +40,6 @@
 			<Card.Footer>
 				<Button variant="secondary" class="w-full">Select</Button>
 			</Card.Footer>
-		</Card.Root>
+		</Card.Root> -->
 	</div>
 </div>

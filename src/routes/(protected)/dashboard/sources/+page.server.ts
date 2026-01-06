@@ -127,7 +127,6 @@ export const load = (async () => {
 			date: row.date
 		}))
 		.filter((f) => f.source !== 'unknown');
-
 	return {
 		sources,
 		external,

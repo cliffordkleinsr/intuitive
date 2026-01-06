@@ -29,6 +29,7 @@
 	import UserRoundCog from 'lucide-svelte/icons/user-round-cog';
 	import Globe from 'lucide-svelte/icons/globe';
 	import Smartphone from 'lucide-svelte/icons/smartphone';
+	import MessageSquare from 'lucide-svelte/icons/message-square';
 
 	let { data, children }: { data: LayoutData; children: Snippet } = $props();
 
@@ -106,15 +107,15 @@
 						url: '/dashboard/support/billing',
 						icon: Receipt
 					},
+					// {
+					// 	title: 'Create Ticket',
+					// 	url: '/dashboard/support/create',
+					// 	icon: ReceiptText
+					// },
 					{
-						title: 'Create Ticket',
-						url: '/dashboard/support/create',
-						icon: ReceiptText
-					},
-					{
-						title: 'Tickets',
-						url: '/dashboard/support/tickets',
-						icon: Tickets
+						title: 'Chat Support',
+						url: 'https://support.int-insights.com/',
+						icon: MessageSquare 
 					}
 				]
 			}

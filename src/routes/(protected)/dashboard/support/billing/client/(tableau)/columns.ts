@@ -13,10 +13,8 @@ export type Survey = {
 
 export const columns: ColumnDef<Survey>[] = [
 	{
-		accessorKey: ' ',
-		cell: ({ row }) => {
-			return renderComponent(DataTableActions, { id: row.original.id });
-		}
+		accessorKey: 'id',
+		header: 'Transaction Code'
 	},
 	{
 		accessorKey: 'name',

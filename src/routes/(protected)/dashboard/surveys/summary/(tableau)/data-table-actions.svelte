@@ -6,6 +6,6 @@
 </script>
 
 <a class={buttonVariants({ variant: 'secondary' })} href="/dashboard/surveys/manage/{id}">
-	Stats
+	Manage
 	<ArrowUpRight class="size-4" />
 </a>
