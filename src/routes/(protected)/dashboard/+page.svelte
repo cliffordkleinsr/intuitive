@@ -48,7 +48,7 @@
 			</Card.Content>
 			<Card.Footer class="flex justify-end">
 				<Button class="w-full" variant="outline" href="/dashboard/surveys/manage">
-					View All <ArrowUpRight />
+					View <ArrowUpRight />
 				</Button>
 			</Card.Footer>
 		</Card.Root>
@@ -85,7 +85,7 @@
 			</Card.Content>
 			<Card.Footer class="flex justify-end">
 				<Button class="w-full" variant="outline" href="/dashboard/surveys/summary">
-					Manage All <ArrowUpRight />
+					View<ArrowUpRight />
 				</Button>
 			</Card.Footer>
 		</Card.Root>
@@ -138,7 +138,7 @@
 						</Table.Row>
 					</Table.Header>
 					<Table.Body>
-						{#each surveys as survey}
+						{#each surveys.slice(0, 7) as survey}
 							<Table.Row>
 								<Table.Cell class="font-medium">{survey.title}</Table.Cell>
 								<Table.Cell>{survey.questions}</Table.Cell>
