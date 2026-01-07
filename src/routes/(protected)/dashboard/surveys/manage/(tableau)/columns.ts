@@ -27,10 +27,10 @@ export const columns: ColumnDef<Survey>[] = [
 		accessorKey: 'by',
 		header: 'By'
 	},
-	{
-		accessorKey: 'created',
-		header: 'Created At'
-	},
+	// {
+	// 	accessorKey: 'created',
+	// 	header: 'Created At'
+	// },
 	{
 		accessorKey: 'expires',
 		header: 'Expiry'

@@ -73,7 +73,11 @@
 												<Sidebar.MenuSubItem>
 													<Sidebar.MenuButton>
 														{#snippet child({ props })}
-															<a href={item.url} {...props}>
+															<a
+																href={item.url}
+																{...props}
+																target={item.title === 'Chat Support' ? '_blank' : '_self'}
+															>
 																<item.icon />
 																{item.title}
 															</a>

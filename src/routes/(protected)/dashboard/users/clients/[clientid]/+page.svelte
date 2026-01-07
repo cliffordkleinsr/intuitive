@@ -89,7 +89,7 @@
 			>
 				<input type="text" value={!details.inactive} name="active" hidden />
 				<input type="text" value={true} name="delete" hidden />
-				<Button type="submit" variant="secondary" class="w-full">
+				<Button type="submit" variant="secondary" class="w-full" disabled>
 					{#if dis_loading}
 						<div class="flex gap-2">
 							<span
@@ -120,7 +120,7 @@
 					};
 				}}
 			>
-				<Button type="submit" variant="destructive" class="w-full">
+				<Button type="submit" variant="destructive" class="w-full" disabled>
 					{#if del_loading}
 						<div class="flex gap-2">
 							<span

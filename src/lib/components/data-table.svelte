@@ -26,6 +26,7 @@
 		filter?: string;
 		data: TData[];
 		no_page?: boolean;
+		page_size?: number;
 		children?: Snippet;
 	};
 
@@ -34,10 +35,11 @@
 		columns,
 		filter = 'title',
 		no_page = false,
+		page_size = 7,
 		children
 	}: DateTableProps<TData, TValue> = $props();
 
-	let pagination = $state<PaginationState>({ pageIndex: 0, pageSize: no_page ? 50 : 7 });
+	let pagination = $state<PaginationState>({ pageIndex: 0, pageSize: no_page ? 50 : page_size });
 	let columnFilters = $state<ColumnFiltersState>([]);
 	let sorting = $state<SortingState>([]);
 

@@ -103,8 +103,8 @@
 				icon: Info,
 				items: [
 					{
-						title: 'Billing',
-						url: '/dashboard/support/billing',
+						title: 'Subscriptions',
+						url: '/dashboard/support/subscriptions',
 						icon: Receipt
 					},
 					// {
@@ -115,7 +115,7 @@
 					{
 						title: 'Chat Support',
 						url: 'https://support.int-insights.com/',
-						icon: MessageSquare 
+						icon: MessageSquare
 					}
 				]
 			}

@@ -97,7 +97,8 @@ export const load: LayoutServerLoad = async ({ locals: { user }, url, cookies })
 		.leftJoin(surveyqnsTableV2, eq(surveyqnsTableV2.surveid, SurveyTable.surveyid))
 		.leftJoin(response_table, eq(response_table.surveid, SurveyTable.surveyid))
 		.groupBy(SurveyTable.title, SurveyTable.created_at)
-		.orderBy(desc(SurveyTable.created_at));
+		.orderBy(desc(SurveyTable.created_at))
+		.limit(7);
 
 	// .limit(5);
 
@@ -109,8 +110,7 @@ export const load: LayoutServerLoad = async ({ locals: { user }, url, cookies })
 		})
 		.from(consumerDeats)
 		.groupBy(consumerDeats.created_at)
-		.orderBy(desc(consumerDeats.created_at))
-		.limit(10);
+		.orderBy(desc(consumerDeats.created_at));
 
 	const count_signup = await redis.get<number>('signup_api_call_counter');
 	const count_signin = await redis.get<number>('signin_api_call_counter');

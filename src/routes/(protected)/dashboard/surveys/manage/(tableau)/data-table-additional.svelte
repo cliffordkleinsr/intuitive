@@ -10,10 +10,11 @@
 </script>
 
 <AlertDialog.Root>
-	<AlertDialog.Trigger
+	<!-- <AlertDialog.Trigger
 		class={[buttonVariants({ variant: 'destructive', size: 'icon' })]}
 		disabled={status === 'Closed'}
-	>
+	> -->
+	<AlertDialog.Trigger class={[buttonVariants({ variant: 'destructive', size: 'icon' })]} disabled>
 		<Trash2 class="size-4" />
 	</AlertDialog.Trigger>
 	<AlertDialog.Content>
