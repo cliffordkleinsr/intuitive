@@ -25,29 +25,35 @@
 
 	let singleprops = {
 		title: 'Open ended Question',
-		description: 'Enter Question (This question will have a single input option)'
+		description: 'Enter Question (This question will have a single input option)',
+		disabled: true
 	};
 	let multiprops = {
 		title: 'Multiple Selection Question',
-		description: 'Enter Question (This question can have multiple answers which can be ticked)'
+		description: 'Enter Question (This question can have multiple answers which can be ticked)',
+		disabled: true
 	};
 
 	let optiprops = {
 		title: 'Single Selection Question',
 		description:
-			'Enter Question (This question will have one optional answer with multiple selections)'
+			'Enter Question (This question will have one optional answer with multiple selections)',
+		disabled: true
 	};
 	let ratingprops = {
 		title: 'Rating Question',
-		description: 'Enter Question (This question will have 5 stars to choose from)'
+		description: 'Enter Question (This question will have 5 stars to choose from)',
+		disabled: true
 	};
 	let likertprops = {
 		title: 'Likert Question',
-		description: 'Enter Question (This question will have one optinionative selection)'
+		description: 'Enter Question (This question will have one optinionative selection)',
+		disabled: true
 	};
 	let rankprops = {
 		title: 'Ranking Question',
-		description: 'Enter Question (This question will have a rank of 1 to 5)'
+		description: 'Enter Question (This question will have a rank of 1 to 5)',
+		disabled: true
 	};
 
 	let singledialog = $state(false);
@@ -83,7 +89,7 @@
 </script>
 
 <!-- Single Question -->
-<Portal {...singleprops} class="">
+<Portal {...singleprops} d>
 	{#snippet trigger()}
 		<Webcam />
 		Add an open ended question

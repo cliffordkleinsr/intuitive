@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { buttonVariants } from '$lib/components/ui/button';
+	// import { buttonVariants } from '$lib/components/ui/button';
 	import ArrowUpRight from 'lucide-svelte/icons/arrow-up-right';
 	import { Button } from '$lib/components/ui/button/index.js';
 
@@ -9,6 +9,6 @@
 <!-- <a class={[buttonVariants({ variant: 'secondary' })]} href="/dashboard/surveys/manage/{id}">
 	
 </a> -->
-<Button variant="secondary" disabled={true}>
+<Button variant="secondary" href="/dashboard/surveys/manage/{id}">
 	Edit <ArrowUpRight class="size-4" />
 </Button>

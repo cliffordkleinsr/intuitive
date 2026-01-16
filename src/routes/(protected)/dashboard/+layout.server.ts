@@ -97,8 +97,7 @@ export const load: LayoutServerLoad = async ({ locals: { user }, url, cookies })
 		.leftJoin(surveyqnsTableV2, eq(surveyqnsTableV2.surveid, SurveyTable.surveyid))
 		.leftJoin(response_table, eq(response_table.surveid, SurveyTable.surveyid))
 		.groupBy(SurveyTable.title, SurveyTable.created_at)
-		.orderBy(desc(SurveyTable.created_at))
-		
+		.orderBy(desc(SurveyTable.created_at));
 
 	// .limit(5);
 

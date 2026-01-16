@@ -137,8 +137,8 @@
 	const monthly = groupTimeseriesByPeriod(series, 'month');
 	const past_year = groupTimeseriesByPeriod(series, 'past_year');
 
-	let filter = $state(hour);
-	let filterLabel = $state('Last 24 Hours');
+	let filter = $state(past_year);
+	let filterLabel = $state('Past year');
 	let countForFilter = $derived.by(() => {
 		return Array.isArray(filter)
 			? filter.reduce((sum, item) => sum + (Number(item.value) || 0), 0)
@@ -155,6 +155,10 @@
 			<Card.Root>
 				<Card.Header class="flex flex-row items-center justify-between space-y-0 pb-2">
 					<Card.Title class="text-sm font-medium">Total Clients</Card.Title>
+					<div class="grid gap-2">
+						<p class="text-[9px]">Target 250</p>
+						<p class="text-pretty text-[9px] ordinal antialiased">By 31st March 2026</p>
+					</div>
 				</Card.Header>
 				<Card.Content>
 					<div class="text-2xl font-bold">{total_clients}</div>
@@ -163,7 +167,7 @@
 					<Button class="w-full" variant="outline" {...props}>
 						Stats <ArrowUpRight />
 					</Button>
-					<CustomProgress label="Q1 Progress..." valueLabel="{value}%" {value} />
+					<CustomProgress label="Progress" valueLabel="{value}%" {value} />
 				</Card.Footer>
 			</Card.Root>
 		{/snippet}

@@ -8,5 +8,5 @@
 </script>
 
 <div class="h-[240dvh]">
-	<DataTable data={client_list} {columns} filter="name" no_page={false} page_size={10} />
+	<DataTable data={client_list} {columns} filter="name" no_page={true} />
 </div>

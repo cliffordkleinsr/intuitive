@@ -96,6 +96,11 @@
 		{#if surveydata.desc}
 			<p><span class="font-semibold">Description:</span> {surveydata.desc}</p>
 		{/if}
+		<p>
+			Survey Status: <span class={[surveydata.status === 'Live' ? 'text-green-500' : '']}
+				>{surveydata.status}</span
+			>
+		</p>
 		<!-- Survey Questionnaire -->
 		<div class="grid gap-2 md:grid-cols-2">
 			<Card.Root class="space-y-3">
@@ -147,14 +152,18 @@
 									<Split />
 								</Button>
 							{:else}
-								<a
+								<Button variant="outline" disabled>
+									Branch
+									<Split />
+								</Button>
+								<!-- <a
 									class={[buttonVariants({ variant: 'outline' })]}
 									onclick={onLinkClick}
 									href="/dashboard/surveys/manage/{page.params.surveyid}/{qs.id}"
 								>
 									Branch
 									<Split />
-								</a>
+								</a> -->
 							{/if}
 							{#if isDesktop.current}
 								<Dialog.Root
@@ -281,7 +290,7 @@
 			{/snippet}
 			<Flow {nodes} {edges} />
 		</Portal> -->
-		{#if surveydata.status !== 'Live'}
+		<!-- {#if surveydata.status !== 'Live'}
 			<Portal title={surveydata.title} description={surveydata.desc as string} variant="secondary">
 				{#snippet trigger()}
 					Going Live
@@ -293,6 +302,6 @@
 				/>
 				<SettingsLive data={data.live_form} />
 			</Portal>
-		{/if}
+		{/if} -->
 	</div>
 </div>
