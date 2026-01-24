@@ -30,6 +30,7 @@
 	import Globe from 'lucide-svelte/icons/globe';
 	import Smartphone from 'lucide-svelte/icons/smartphone';
 	import MessageSquare from 'lucide-svelte/icons/message-square';
+	import MessageCircleHeart from 'lucide-svelte/icons/message-circle-heart';
 
 	let { data, children }: { data: LayoutData; children: Snippet } = $props();
 
@@ -118,6 +119,12 @@
 						icon: MessageSquare
 					}
 				]
+			},
+			{
+				title: 'Feedback',
+				url: '/dashboard/feedback',
+				icon: MessageCircleHeart,
+				items: []
 			}
 		],
 		user: fullname,
