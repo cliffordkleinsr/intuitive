@@ -13,7 +13,7 @@
 	<img class="w-6" src="/favicon.ico" alt="logo" />
 	<h1 class="text-xs">Survey by Intuitive Insights</h1>
 </div>
-<div class="fixed bottom-9 left-[50%]">
+<div class="fixed bottom-5 left-[50%]">
 	<Button onclick={toggleMode} variant="ghost" size="icon">
 		<Sun
 			class="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0"

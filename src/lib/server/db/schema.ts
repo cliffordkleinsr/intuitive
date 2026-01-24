@@ -452,6 +452,13 @@ export const utmSourceTracking = pgTable('utm_source_tracking', {
 	recordedAt: timestamp({ mode: 'date' }).defaultNow().notNull()
 }).enableRLS();
 
+export const feedbackCollection = pgTable('feedback_collection', {
+	id: uuid().defaultRandom().primaryKey().notNull(),
+	name: text().notNull(),
+	email: text().notNull(),
+	feedback: text().notNull()
+}).enableRLS();
+
 export type userInsertSchema = typeof UsersTable.$inferInsert;
 // export type ClientDataInsertSchema = typeof clientData.$inferInsert;
 export type ConsumerData = typeof consumerDeats.$inferInsert;

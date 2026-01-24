@@ -1,10 +1,5 @@
 <script lang="ts">
-	import { Button } from '$lib/components/ui/button';
 	import { Confetti } from 'svelte-confetti';
-	import SettingsFeedback from './settingsFeedback.svelte';
-	import type { PageData } from './$types';
-
-	let { data }: { data: PageData } = $props();
 </script>
 
 <div class="fullscreen">
@@ -27,7 +22,7 @@
 	/>
 </div>
 <div class="mt-24 flex flex-1 justify-center">
-	<SettingsFeedback data={data.form} />
+	<h1 class="text-xl">You can now close this tab</h1>
 </div>
 <div class="mt-4 flex flex-1 justify-center">
 	<!-- <p>Or go back <a class="underline underline-offset-1" href="/">Home</a></p>   -->
