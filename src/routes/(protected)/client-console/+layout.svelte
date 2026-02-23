@@ -189,7 +189,7 @@
 						</Popover.Content>
 					</Popover.Root>
 				</Badge> -->
-				{#if !data.payment}
+				{#if data.features.plan === "Free"}
 					<div class="my-2 hidden h-5 md:block">
 						<Badge variant="outline"><a href="/client-console/billing">Unlock Pro</a></Badge>
 					</div>

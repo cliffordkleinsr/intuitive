@@ -30,8 +30,8 @@ class Options {
 	}
 }
 
-const multiples = new Options(5);
-const selection = new Options(5);
-const rankers = new Options(5);
+const multiples = new Options(4);
+const selection = new Options(4);
+const rankers = new Options(4);
 
 export { multiples, selection, rankers };

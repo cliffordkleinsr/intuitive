@@ -53,6 +53,13 @@ export const load: LayoutServerLoad = async ({ locals: { user }, url, cookies })
 		demographics: false,
 		branding: false
 	};
+	const premiumTier = {
+		plan: 'Premium',
+		price: '75',
+		max_responses: 8000,
+		demographics: true,
+		branding: false
+	};
 	const feature = await db
 		.select({
 			plan: costTable.title,
@@ -66,7 +73,8 @@ export const load: LayoutServerLoad = async ({ locals: { user }, url, cookies })
 		.where(eq(userPackage.consumerid, uid))
 		.limit(1);
 
-	const features = feature[0] ?? freeTier;
+	const features = feature[0] ?? premiumTier;
+
 	const [company_name] = await db
 		.select({ company_name: consumerDeats.company_name })
 		.from(consumerDeats)
@@ -105,7 +113,7 @@ export const load: LayoutServerLoad = async ({ locals: { user }, url, cookies })
 	// 	// expire survey
 	// 	disableSurvey(user.id)
 	// ]);
-
+	console.log(pkg)
 	return {
 		features,
 		payment,

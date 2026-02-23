@@ -150,7 +150,7 @@ tempList.set('Employee Engagement Survey', {
 });
 
 tempList.set('Workplace Culture and Inclusion Survey', {
-	gradient: 'bg-gradient-to-r from-red-500 to-orange-500',
+	gradient: 'bg-gradient-to-r from-slate-500 to-slate-800',
 	questions: [
 		{
 			id: 0,
@@ -177,6 +177,39 @@ tempList.set('Workplace Culture and Inclusion Survey', {
 		{
 			id: 4,
 			qns: 'What would improve team collaboration?',
+			name: 'single_question'
+		}
+	]
+});
+
+tempList.set('Employee Growth and Development Survey', {
+	gradient: 'bg-gradient-to-r from-slate-500 to-slate-800',
+	questions: [
+		{
+			id: 0,
+			qns: 'How satisfied are you with professional development opportunities?',
+			name: 'rating_question'
+		},
+		{
+			id: 1,
+			qns: 'Do you receive clear performance expectations?',
+			options: ['Always', 'Sometimes', 'Rarely'],
+			name: 'optional_question'
+		},
+		{
+			id: 2,
+			qns: 'How would you rate leadership transparency?',
+			name: 'rating_question'
+		},
+		{
+			id: 3,
+			qns: 'Do you see a future for yourself in this organization?',
+			options: ['Yes', 'Unsure', 'No'],
+			name: 'optional_question'
+		},
+		{
+			id: 4,
+			qns: 'What training or support would help you perform better?',
 			name: 'single_question'
 		}
 	]
@@ -363,6 +396,39 @@ tempList.set('Pricing and Affordability Survey', {
 	]
 });
 
+tempList.set('New Product Concept Validation Survey', {
+	gradient: 'bg-gradient-to-r from-slate-500 to-slate-800',
+	questions: [
+		{
+			id: 0,
+			qns: 'How appealing is this new product idea to you?',
+			name: 'rating_question'
+		},
+		{
+			id: 1,
+			qns: 'What would most influence your decision to try it?',
+			options: ['Price', 'Quality', 'Convenience'],
+			name: 'optional_question'
+		},
+		{
+			id: 2,
+			qns: 'How likely are you to switch from your current provider?',
+			name: 'rating_question'
+		},
+		{
+			id: 3,
+			qns: 'Would you recommend this new concept to others?',
+			options: ['Yes', 'Maybe', 'No'],
+			name: 'optional_question'
+		},
+		{
+			id: 4,
+			qns: 'What features would make this product more useful to you?',
+			name: 'single_question'
+		}
+	]
+});
+
 tempList.set('Patient Experience Survey', {
 	gradient: 'bg-gradient-to-r from-slate-500 to-slate-800',
 	questions: [
@@ -500,6 +566,39 @@ tempList.set('Community / Program Impact Survey', {
 		{
 			id: 5,
 			qns: 'What changes or additions would make future programs more effective?',
+			name: 'single_question'
+		}
+	]
+});
+
+tempList.set('Program Accessibility Survey', {
+	gradient: 'bg-gradient-to-r from-slate-500 to-slate-800',
+	questions: [
+		{
+			id: 0,
+			qns: 'How accessible was the program location or platform?',
+			name: 'rating_question'
+		},
+		{
+			id: 1,
+			qns: 'How did you hear about the program?',
+			options: ['Social media', 'Community leader', 'Word of mouth'],
+			name: 'optional_question'
+		},
+		{
+			id: 2,
+			qns: 'How would you rate communication about program activities?',
+			name: 'rating_question'
+		},
+		{
+			id: 3,
+			qns: 'Was the program schedule convenient?',
+			options: ['Yes', 'Maybe', 'No'],
+			name: 'optional_question'
+		},
+		{
+			id: 4,
+			qns: 'What barriers did you face in participating?',
 			name: 'single_question'
 		}
 	]

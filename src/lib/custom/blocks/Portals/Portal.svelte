@@ -53,7 +53,7 @@
 			{@render trigger?.()}
 		</Drawer.Trigger>
 		<Drawer.Content class={[classname, 'sm:max-w-[425px]']}>
-			<Drawer.Header class="text-left">
+			<Drawer.Header>
 				<Drawer.Title>
 					{title}
 				</Drawer.Title>
