@@ -34,8 +34,9 @@ export const load: PageServerLoad = async ({ locals: { user } }) => {
 		.from(response_table)
 		.leftJoin(SurveyTable, eq(SurveyTable.surveyid, response_table.surveid))
 		.where(eq(SurveyTable.consumer_id, userid));
+	
 	return {
-		count: tot_agents,
+		count: total_agents.length,
 		all_surv: allsurveys,
 		draft_surv: draftsurveys,
 		live_surv: livesurveys,

@@ -113,7 +113,6 @@ export const load: LayoutServerLoad = async ({ locals: { user }, url, cookies })
 	// 	// expire survey
 	// 	disableSurvey(user.id)
 	// ]);
-	console.log(pkg)
 	return {
 		features,
 		payment,
