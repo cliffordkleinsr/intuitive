@@ -1,21 +1,37 @@
-<script>
+<script lang="ts">
 	import { page } from '$app/state';
 	import { Button } from '$lib/components/ui/button';
 
-	const handleSignUpClick = async () => {
-		try {
-			await fetch('/api/upIncrement');
-		} catch (err) {
-			console.error('Error fetching data:', err);
-		}
-	};
-	const handleSignInClick = async () => {
-		try {
-			await fetch('/api/inIncrement');
-		} catch (err) {
-			console.error('Error fetching data:', err);
-		}
-	};
+	// const handleSignUpClick = async () => {
+	// 	try {
+	// 		await fetch('/api/upIncrement');
+	// 	} catch (err) {
+	// 		console.error('Error fetching data:', err);
+	// 	}
+	// };
+	// const handleSignInClick = async () => {
+	// 	try {
+	// 		await fetch('/api/inIncrement');
+	// 	} catch (err) {
+	// 		console.error('Error fetching data:', err);
+	// 	}
+	// };
+	const logAuthAction = async (action: "signup" | "signin") => {
+	try {
+		await fetch("/api/auth-log", {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json"
+			},
+			body: JSON.stringify({ action })
+		});
+	} catch (err) {
+		console.error("Error logging action:", err);
+	}
+};
+
+const handleSignUpClick = () => logAuthAction("signup");
+const handleSignInClick = () => logAuthAction("signin");
 </script>
 
 <!-- Hero -->
