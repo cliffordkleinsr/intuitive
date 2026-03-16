@@ -9,6 +9,7 @@
 	let { data }: PageProps = $props();
 
 	const {
+		unique,
 		sources,
 		external,
 		direct,
@@ -34,6 +35,9 @@
 			</ClickableUtility>
 			<ClickableUtility variable={direct} count={direct.length}>
 				Total Direct Visits
+			</ClickableUtility>
+			<ClickableUtility variable={sources} count={unique}>
+				Total Unique Visits
 			</ClickableUtility>
 			<Card.Root>
 				<Card.Header>

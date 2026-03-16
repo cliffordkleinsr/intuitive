@@ -7,9 +7,10 @@
 	import ArrowUpRight from 'lucide-svelte/icons/arrow-up-right';
 	import { format, compareAsc } from 'date-fns';
 	import ClientClicker from './sources/ClientClicker.svelte';
+	import AuthChart from './AuthChart.svelte';
 
 	let { data }: { data: PageData } = $props();
-	const { survey_time, surveys, count, total_clients, stats, series } = data;
+	const { survey_time, surveys, count, total_clients, stats, series,  } = data;
 
 	const questions = surveys.map((e) => e.questions);
 	const survey_count = surveys.map((e) => e.title).length;
@@ -22,7 +23,7 @@
 	<div class="flex items-center justify-between space-y-2">
 		<h2 class="text-3xl font-bold tracking-tight">Dashboard</h2>
 	</div>
-	<div class="grid gap-4 md:grid-cols-2 lg:grid-cols-6">
+	<div class="grid gap-4 md:grid-cols-2 lg:grid-cols-5">
 		<Card.Root>
 			<Card.Header class="flex flex-row items-center justify-between space-y-0 pb-2">
 				<Card.Title class="text-sm font-medium">Total Surveys</Card.Title>
@@ -76,7 +77,7 @@
 				</Button>
 			</Card.Footer>
 		</Card.Root> -->
-		<Card.Root>
+		<!-- <Card.Root>
 			<Card.Header class="flex flex-row items-center justify-between space-y-0 pb-2">
 				<Card.Title class="text-sm font-medium">Active Surveys</Card.Title>
 			</Card.Header>
@@ -88,8 +89,19 @@
 					View<ArrowUpRight />
 				</Button>
 			</Card.Footer>
-		</Card.Root>
-		<Card.Root>
+		</Card.Root> -->
+		<AuthChart
+			title="Signin Analytics"
+			series={stats.signinSeries}
+			total={stats.signinTotal}
+		/>
+
+		<AuthChart
+			title="Signup Analytics"
+			series={stats.signupSeries}
+			total={stats.signupTotal}
+		/>
+		<!-- <Card.Root>
 			<Card.Header class="flex flex-row items-center justify-between space-y-0 pb-2">
 				<Card.Title class="text-sm font-medium">Login Statistics</Card.Title>
 			</Card.Header>
@@ -100,9 +112,6 @@
 				<p class="text-sm">
 					Last called at: {format(stats.last_called_signup!, 'MM/dd/yyyy hh:mm:ss a')}
 				</p>
-				<!-- <Button class="w-full" variant="outline" href="/dashboard/surveys/manage">
-					Manage All <ArrowUpRight />
-				</Button> -->
 			</Card.Footer>
 		</Card.Root>
 		<Card.Root>
@@ -116,11 +125,8 @@
 				<p class="text-sm">
 					Last called at: {format(stats.last_called_signup!, 'MM/dd/yyyy hh:mm:ss a')}
 				</p>
-				<!-- <Button class="w-full" variant="outline" href="/dashboard/surveys/manage">
-					Manage All <ArrowUpRight />
-				</Button> -->
 			</Card.Footer>
-		</Card.Root>
+		</Card.Root> -->
 	</div>
 	<div class="grid gap-4">
 		<Card.Root>

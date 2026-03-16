@@ -48,7 +48,7 @@
 	};
 	let { variable, count, children }: Utlity = $props();
 	const now = new Date();
-	type Period = 'hour' | 'day' | 'month' | 'past_two_weeks' | 'last_month';
+	type Period = 'hour' | 'day' | 'month' | 'past_two_weeks' | 'last_month'| 'past_year';
 
 	/**
 	 * Generic function to group data by a given time unit
@@ -108,6 +108,16 @@
 				break;
 			}
 
+			case 'past_year': {
+				const start = startOfMonth(subMonths(referenceDate, 11));
+				const end = endOfMonth(referenceDate);
+
+				intervals = eachMonthOfInterval({ start, end });
+				isSameFn = isSameMonth;
+				formatStr = 'MMM';
+				startFn = startOfMonth;
+				break;
+			}
 			case 'month':
 			default:
 				intervals = eachMonthOfInterval({
@@ -130,6 +140,7 @@
 	const last14Days = groupVisitsByTime(variable, 'past_two_weeks');
 	const previousMonth = groupVisitsByTime(variable, 'last_month');
 	const visits_by_month = groupVisitsByTime(variable, 'month');
+	const past_year = groupVisitsByTime(variable, 'past_year');
 
 	let filter = $state(visits_by_hour);
 	let filterLabel = $state('Last 24 Hours');
@@ -280,6 +291,30 @@
 										/></svg
 									>
 									Last 12 Months
+								</Button>
+							</DropdownMenu.Item>
+							<DropdownMenu.Item>
+								<Button
+									type="button"
+									variant="ghost"
+									size="sm"
+									class="text-start"
+									onclick={() => {
+										filter = past_year;
+										filterLabel = 'Past year';
+									}}
+								>
+									<svg
+										xmlns="http://www.w3.org/2000/svg"
+										width="24"
+										height="24"
+										viewBox="0 0 2048 2048"
+										><path
+											fill="currentColor"
+											d="M1664 512h256v1536H256V512h256V384h128v128h896V384h128zm128 128h-128v128h128zm-256 0H640v128h896zm-1024 0H384v128h128zM384 1920h1408V896H384zM256 384V256H128v1408H0V128h256V0h128v128h896V0h128v128h256v128h-256v128h-128V256H384v128zm384 1024v-128h128v128zm256 0v-128h128v128zm256 0v-128h128v128zm256 0v-128h128v128zm-768 256v-128h128v128zm256 0v-128h128v128zm256 0v-128h128v128zm-256-512v-128h128v128zm256 0v-128h128v128zm256 0v-128h128v128z"
+										/></svg
+									>
+									Past year
 								</Button>
 							</DropdownMenu.Item>
 						</DropdownMenu.Group>

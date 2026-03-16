@@ -12,14 +12,15 @@ import {
 	SurveyTable,
 	user_analytics
 } from '$lib/server/db/schema';
-import { Redis } from '@upstash/redis';
-import { UPSTASH_REDIS_REST_URL, UPSTASH_REDIS_REST_TOKEN } from '$env/static/private';
+import { getAuthAnalytics } from '$lib/server/analytics';
+// import { Redis } from '@upstash/redis';
+// import { UPSTASH_REDIS_REST_URL, UPSTASH_REDIS_REST_TOKEN } from '$env/static/private';
 
 export const load: LayoutServerLoad = async ({ locals: { user }, url, cookies }) => {
-	const redis = new Redis({
-		url: UPSTASH_REDIS_REST_URL,
-		token: UPSTASH_REDIS_REST_TOKEN
-	});
+	// const redis = new Redis({
+	// 	url: UPSTASH_REDIS_REST_URL,
+	// 	token: UPSTASH_REDIS_REST_TOKEN
+	// });
 	if (!user) {
 		redirect(
 			302,
@@ -111,22 +112,30 @@ export const load: LayoutServerLoad = async ({ locals: { user }, url, cookies })
 		.groupBy(consumerDeats.created_at)
 		.orderBy(desc(consumerDeats.created_at));
 
-	const count_signup = await redis.get<number>('signup_api_call_counter');
-	const count_signin = await redis.get<number>('signin_api_call_counter');
-	const last_called_signup = await redis.get<string>('last_called_signup');
-	const last_called_signin = await redis.get<string>('last_called_signin');
+	// const count_signup = await redis.get<number>('signup_api_call_counter');
+	// const count_signin = await redis.get<number>('signin_api_call_counter');
+	// const last_called_signup = await redis.get<string>('last_called_signup');
+	// const last_called_signin = await redis.get<string>('last_called_signin');
 
-	const stats = {
-		count_signup,
-		last_called_signup,
-		count_signin,
-		last_called_signin
-	};
+	// const stats = {
+	// 	count_signup,
+	// 	last_called_signup,
+	// 	count_signin,
+	// 	last_called_signin
+	// };
 	const series = clnts.map((r) => ({
 		count: Number(r.total_clients),
 		date: new Date(r.timestamp)
 	}));
+	const analytics = await getAuthAnalytics();
+	const stats = {
+		signinSeries: analytics.signinSeries,
+		signupSeries: analytics.signupSeries,
+		signinTotal: analytics.signinTotal,
+		signupTotal: analytics.signupTotal
+	}
 
+	// console.log(analytics)
 	return {
 		user,
 		survey_time,

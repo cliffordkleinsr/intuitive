@@ -1,13 +1,16 @@
 import { db } from '$lib/server/db';
 import { utmSourceTracking } from '$lib/server/db/schema';
-import { and, isNotNull, count, desc, isNull } from 'drizzle-orm';
+import { and, isNotNull, count, desc, isNull, countDistinct } from 'drizzle-orm';
 import type { PageServerLoad } from './$types';
 import { normalizeCampaign, normalizeUtm } from '$lib/custom/functions/helpers';
 import { date } from 'drizzle-orm/mysql-core';
 
 export const load = (async () => {
 	const sources = await db.select().from(utmSourceTracking);
-	// console.log(sources)
+	const unique_count = await db.select({
+		id: countDistinct(utmSourceTracking.personaId)
+	}).from(utmSourceTracking);
+	// console.log()
 	const external = await db
 		.select()
 		.from(utmSourceTracking)
@@ -128,6 +131,7 @@ export const load = (async () => {
 		}))
 		.filter((f) => f.source !== 'unknown');
 	return {
+		unique: unique_count[0].id,
 		sources,
 		external,
 		direct,
