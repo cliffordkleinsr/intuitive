@@ -49,7 +49,7 @@
 	</Dialog.Root>
 {:else}
 	<Drawer.Root bind:open>
-		<Drawer.Trigger class={buttonVariants({ variant: 'outline' })} {disabled}>
+		<Drawer.Trigger class={[buttonVariants({ variant: 'outline' })]} {disabled}>
 			{@render trigger?.()}
 		</Drawer.Trigger>
 		<Drawer.Content class={[classname, 'sm:max-w-[425px]']}>

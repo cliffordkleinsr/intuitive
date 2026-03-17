@@ -4,6 +4,6 @@
 	let { data }: PageProps = $props();
 </script>
 
-<div class="h-screen">
+<div class="min-h-screen">
 	<SettingsSignup data={data.form} />
 </div>

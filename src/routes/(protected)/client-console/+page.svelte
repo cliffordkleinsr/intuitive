@@ -105,12 +105,11 @@
 			</Card.Header>
 			<Card.Content></Card.Content>
 			<Card.Footer>
-				<Portal title="Choose a template" class="w-full max-w-[800px] max-h-72" variant="default">
+				<Portal title="Choose a template" class="w-full max-w-[900px] max-h-[80vh]"variant="default">
 					{#snippet trigger()}
 						Use Available Templates
-						<ArrowUpRight />
 					{/snippet}
-					<div class="grid h-96 gap-2 overflow-y-auto md:grid-cols-3">
+					<div class="grid gap-3 overflow-y-auto scrollbar-thin pr-1 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 max-h-[65vh]">
 						{#each Array.from(tempList.entries()) as [title, config]}
 							<Card.Root
 								class={[
@@ -121,7 +120,7 @@
 								]}
 							>
 								<Card.Header>
-									<Card.Title class="text-start text-white">{title}</Card.Title>
+									<Card.Title class="text-start text-white line-clamp-2">{title}</Card.Title>
 									<Card.Description class="text-white"
 										>Total questions: {config.questions.length}</Card.Description
 									>
@@ -130,13 +129,14 @@
 								<Card.Footer>
 									<Template
 										title="Preview"
-										class="max-w-[600px]"
+										class="max-w-[500px]"
 										onclick={() => (temp = temp = title)}
 									>
+									<div class="flex max-h-[85vh] flex-col">
 										<form
 											action="?/addTemplate"
 											method="post"
-											class="flex flex-col gap-2"
+											class="flex flex-1 flex-col gap-2 overflow-hidden"
 											use:enhance={() => {
 												loading = true;
 												return async ({ result }) => {
@@ -149,8 +149,9 @@
 												};
 											}}
 										>
+										<div class="flex-1 overflow-y-auto pr-1">
 											<!-- Title input -->
-											<div class="flex items-center justify-center gap-3">
+											 <div class="flex items-center justify-center gap-3">
 												<span class="font-semibold">Title</span>
 												<Input type="text" bind:value={temp} name="title" />
 											</div>
@@ -179,6 +180,7 @@
 													{/if}
 												</div>
 											{/each}
+											</div>
 											<Button class="w-full" type="submit" disabled={loading} variant="black">
 												{#if loading}
 													<div class="flex gap-2">
@@ -194,6 +196,7 @@
 												{/if}
 											</Button>
 										</form>
+									</div>
 									</Template>
 								</Card.Footer>
 							</Card.Root>
