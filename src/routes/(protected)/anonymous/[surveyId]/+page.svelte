@@ -33,7 +33,15 @@
 				class="rounded-xl"
 				size="lg"
 				disabled={!checked && !(current_ix > 0)}
-				href={checked ? (current_ix === 0 ? uri : uri) : current_ix > 0 ? uri : undefined}
+				href={checked
+					? page.params.surveyId === '377db4fa-c085-4cb3-b77e-c17e860e6fd4'
+						? `/anonymous/${page.params.surveyId}/all`
+						: current_ix === 0
+							? uri
+							: uri
+					: current_ix > 0
+						? uri
+						: undefined}
 			>
 				{current_ix > 0 ? 'Continue where you left off' : 'Start the survey'}
 			</Button>
