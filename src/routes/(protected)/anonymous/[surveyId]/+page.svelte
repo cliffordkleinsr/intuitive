@@ -34,7 +34,7 @@
 				size="lg"
 				disabled={!checked && !(current_ix > 0)}
 				href={checked
-					? page.params.surveyId === '377db4fa-c085-4cb3-b77e-c17e860e6fd4'
+					? page.params.surveyId === '377db4fa-c085-4cb3-b77e-c17e860e6fd4' || page.params.surveyId === "8cfce5fd-0f58-446c-8009-901cf289869a"
 						? `/anonymous/${page.params.surveyId}/all`
 						: current_ix === 0
 							? uri
