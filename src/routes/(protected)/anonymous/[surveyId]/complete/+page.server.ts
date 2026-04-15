@@ -24,6 +24,7 @@ export const actions: Actions = {
 		const { name, email, feedback } = form.data;
 		try {
 			await db.insert(feedbackCollection).values({
+				surveyid: params.surveyId,
 				name,
 				email,
 				feedback

@@ -1,3 +1,4 @@
+import { sql } from 'drizzle-orm';
 import {
 	pgTable,
 	serial,
@@ -454,9 +455,11 @@ export const utmSourceTracking = pgTable('utm_source_tracking', {
 
 export const feedbackCollection = pgTable('feedback_collection', {
 	id: uuid().defaultRandom().primaryKey().notNull(),
+	surveyid: text().references(() => SurveyTable.surveyid, { onDelete: 'cascade' }),
 	name: text().notNull(),
 	email: text().notNull(),
-	feedback: text().notNull()
+	feedback: text().notNull(),
+	createdAt: timestamp("created_at", { withTimezone: true, mode: 'string' }).default(sql`(now() AT TIME ZONE 'utc'::text)`).notNull(),
 }).enableRLS();
 
 export type userInsertSchema = typeof UsersTable.$inferInsert;

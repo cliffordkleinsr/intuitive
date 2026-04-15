@@ -24,6 +24,6 @@
 	</div>
 
 	<div class="mt-10 flex justify-center">
-		<Button variant="outline" href="/">Go Home</Button>
+		<Button variant="outline" href={`/anonymous/${page.params.surveyId}/complete`}>Finish</Button>
 	</div>
 </div>
