@@ -364,11 +364,11 @@
 				{/each}
 			</div>
 		</Portal>
+		<!-- 			disabled={features.plan === 'Free' || features.plan === 'Basic' ? true : false} -->
 		<Portal
 			title="Logic Path"
 			description=""
 			class=" max-w-[90rem]"
-			disabled={features.plan === 'Free' || features.plan === 'Basic' ? true : false}
 		>
 			{#snippet trigger()}
 				Preview logic path
