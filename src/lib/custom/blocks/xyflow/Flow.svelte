@@ -9,7 +9,7 @@
 	} from '@xyflow/svelte';
 	// 👇 always import the styles
 	import '@xyflow/svelte/dist/style.css';
-	import { writable, type Writable } from 'svelte/store';
+	import type { Writable } from 'svelte/store';
 	import { mode } from 'mode-watcher';
 
 	let {
@@ -20,7 +20,7 @@
 		edges: Writable<Edge[]>;
 	} = $props();
 
-	let colorMode: ColorMode = $mode || 'dark';
+	let colorMode: ColorMode = $derived(mode.current ?? 'dark');
 </script>
 
 <main class="h-[70vh]">
