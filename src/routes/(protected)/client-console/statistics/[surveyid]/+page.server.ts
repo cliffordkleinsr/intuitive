@@ -7,7 +7,12 @@ import { getAnalytics, simplifiedAnalytics } from '$lib/server/db/db_utils';
 import type { FeatureCollection } from 'geojson';
 import { fetchGeoJsons } from '$lib/custom/functions/helpers';
 
-export const load = (async ({ fetch, params: { surveyid } }) => {
+export const load = (async ({ fetch, params: { surveyid }, url }) => {
+	const startDateParam = url.searchParams.get('startDate');
+	const endDateParam = url.searchParams.get('endDate');
+	const startDate = startDateParam ? new Date(`${startDateParam}T00:00:00.000Z`) : undefined;
+	const endDate = endDateParam ? new Date(`${endDateParam}T23:59:59.999Z`) : undefined;
+
 	const res = await fetch('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json');
 	const geojson = (await res.json()) as Topology<{
 		countries: GeometryCollection<{ name: string }>;
@@ -50,7 +55,7 @@ export const load = (async ({ fetch, params: { surveyid } }) => {
 	// console.debug(popn)
 	// const analytics = await getAnalytics(surveyid);
 
-	const analytics = await simplifiedAnalytics(surveyid);
+	const analytics = await simplifiedAnalytics(surveyid, startDate, endDate);
 	// const anal = analytics.find((f) => f.question === "Rank from the highest to lowest. How do these factors influence your purchase of filters?")
 	// console.log(anal?.answer_statistics)
 	const total_responses = (
@@ -89,6 +94,8 @@ export const load = (async ({ fetch, params: { surveyid } }) => {
 		sec,
 		edu,
 		analytics,
-		total_responses
+		total_responses,
+		startDateParam,
+		endDateParam
 	};
 }) satisfies PageServerLoad;

@@ -28,12 +28,20 @@
 	import { Progress } from '$lib/components/ui/progress';
 	import { cn } from '$lib/utils';
 	import type { Feature, FeatureCollection } from 'geojson';
-	import { exportRaw } from '$lib/custom/functions/helpers';
+	import { exportRaw, df } from '$lib/custom/functions/helpers';
 	import { toast } from 'svelte-sonner';
 	import { innerWidth } from 'svelte/reactivity/window';
 	import { IsMobile } from '$lib/hooks/is-mobile.svelte';
 	import { MediaQuery } from 'svelte/reactivity';
 	import WordCloud from '$lib/custom/blocks/wordcloud/WordCloud.svelte';
+	import { goto } from '$app/navigation';
+	import { page } from '$app/stores';
+	import { parseDate, getLocalTimeZone } from '@internationalized/date';
+	import type { DateRange } from 'bits-ui';
+	import { RangeCalendar } from '$lib/components/ui/range-calendar';
+	import * as Popover from '$lib/components/ui/popover';
+	import CalendarIcon from 'lucide-svelte/icons/calendar';
+	import X from 'lucide-svelte/icons/x';
 	let { data }: { data: PageData } = $props();
 
 	let variable = $state() as boolean[];
@@ -122,6 +130,39 @@
 		color: string;
 	}
 	let printstate = $state(false) as boolean;
+
+	let dateRange = $state<DateRange>({
+		start: data.startDateParam ? parseDate(data.startDateParam) : undefined,
+		end: data.endDateParam ? parseDate(data.endDateParam) : undefined
+	});
+	let calendarOpen = $state(false);
+
+	function applyDateFilter() {
+		const url = new URL($page.url);
+		if (dateRange.start) {
+			url.searchParams.set('startDate', dateRange.start.toString());
+		} else {
+			url.searchParams.delete('startDate');
+		}
+		if (dateRange.end) {
+			url.searchParams.set('endDate', dateRange.end.toString());
+		} else {
+			url.searchParams.delete('endDate');
+		}
+		calendarOpen = false;
+		goto(url.toString());
+	}
+
+	function clearDateFilter() {
+		dateRange = { start: undefined, end: undefined };
+		const url = new URL($page.url);
+		url.searchParams.delete('startDate');
+		url.searchParams.delete('endDate');
+		calendarOpen = false;
+		goto(url.toString());
+	}
+
+	const isFiltered = $derived(!!(data.startDateParam || data.endDateParam));
 	let processedData: RankingRow[] = $state([]);
 	let proxyprocessedData = () => processedData;
 	let rankData: any[] = [];
@@ -236,7 +277,7 @@
 </script>
 
 <div class="px-3 py-5">
-	<div id="kutton" class={['flex gap-2 py-1', data.features.plan === 'Free' ? 'hidden' : '']}>
+	<div id="kutton" class={['flex items-center gap-2 py-1', data.features.plan === 'Free' ? 'hidden' : '']}>
 		<Button
 			variant="secondary"
 			onclick={() => {
@@ -250,6 +291,38 @@
 		>
 			Export PDF <FileText />
 		</Button>
+		<Popover.Root bind:open={calendarOpen}>
+			<Popover.Trigger>
+				{#snippet child({ props })}
+					<Button
+						variant={isFiltered ? 'default' : 'outline'}
+						size="sm"
+						{...props}
+					>
+						<CalendarIcon class="mr-1 size-4" />
+						{#if dateRange.start && dateRange.end}
+							{df.format(dateRange.start.toDate(getLocalTimeZone()))} – {df.format(dateRange.end.toDate(getLocalTimeZone()))}
+						{:else if dateRange.start}
+							{df.format(dateRange.start.toDate(getLocalTimeZone()))}
+						{:else}
+							Filter by date
+						{/if}
+					</Button>
+				{/snippet}
+			</Popover.Trigger>
+			<Popover.Content class="w-auto p-0" align="start">
+				<RangeCalendar bind:value={dateRange} numberOfMonths={2} />
+				<div class="flex gap-2 border-t p-3">
+					<Button size="sm" class="flex-1" onclick={applyDateFilter} disabled={!dateRange.start || !dateRange.end}>
+						Apply
+					</Button>
+					<Button size="sm" variant="outline" onclick={clearDateFilter}>
+						<X class="size-4" />
+						Clear
+					</Button>
+				</div>
+			</Popover.Content>
+		</Popover.Root>
 	</div>
 	<div class="grid grid-cols-[repeat(2,1fr)] gap-x-[10px] gap-y-[10px]">
 		<div class={['col-span-2', data.features.plan === 'Free' ? 'hidden' : '']}>

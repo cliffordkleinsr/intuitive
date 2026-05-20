@@ -1,4 +1,4 @@
-import { and, asc, eq, gt, sql, lt, count, desc, countDistinct, ne, sum } from 'drizzle-orm';
+import { and, asc, eq, gt, sql, lt, gte, lte, count, desc, countDistinct, ne, sum } from 'drizzle-orm';
 import { db } from './index';
 
 import {
@@ -1578,7 +1578,11 @@ type SimplifiedAnalytics = Promise<
 		updated: Date;
 	}[]
 >;
-export const simplifiedAnalytics = async (id: string): SimplifiedAnalytics => {
+export const simplifiedAnalytics = async (
+	id: string,
+	startDate?: Date,
+	endDate?: Date
+): SimplifiedAnalytics => {
 	const sq1 = db
 		.select({
 			question_id: response_table.questionId,
@@ -1587,7 +1591,13 @@ export const simplifiedAnalytics = async (id: string): SimplifiedAnalytics => {
 			rank: response_table.rankId
 		})
 		.from(response_table)
-		.where(eq(response_table.surveid, id))
+		.where(
+			and(
+				eq(response_table.surveid, id),
+				startDate ? gte(response_table.updatedAt, startDate) : undefined,
+				endDate ? lte(response_table.updatedAt, endDate) : undefined
+			)
+		)
 		.groupBy(response_table.answer, response_table.questionId, response_table.rankId)
 		.as('sq1');
 	// const sq2 = db
@@ -1606,7 +1616,13 @@ export const simplifiedAnalytics = async (id: string): SimplifiedAnalytics => {
 			count: count().as('cnt')
 		})
 		.from(response_table)
-		.where(eq(response_table.surveid, id))
+		.where(
+			and(
+				eq(response_table.surveid, id),
+				startDate ? gte(response_table.updatedAt, startDate) : undefined,
+				endDate ? lte(response_table.updatedAt, endDate) : undefined
+			)
+		)
 		.groupBy(response_table.questionId)
 		.as('sq2');
 
